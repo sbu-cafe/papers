@@ -13,6 +13,12 @@
 \newcommand{\amrex}{{\sffamily AMReX}}
 
 
+\usepackage{color}
+\setlength{\marginparwidth}{0.75in}
+\newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
+
+
+
 \begin{document}
 
 \title{Meeting the Challenges of Modeling Astrophysical Thermonuclear Explosions:
@@ -106,71 +112,91 @@ nature of the progenitor?  About 20 years ago, the community had
 mostly converged up the single-degenerate scenario---a
 Chandrasekhar-mass C/O white dwarf that accretes from its companion,
 eventually leading to runaway at the center that burns through the
-star (see~\cite{hillebrandtniemeyer2000} for the state of the field
-at that time).  Since then, the wealth of observations has show that
+star (see~\cite{hillebrandtniemeyer2000} for the state of the field at
+that time).  Since then, the wealth of observations has show that
 there is a lot of diversity in SNe Ia, and searches for progenitor
-systems have not shown that Chandra-mass white dwarfs can explain all
+systems have not shown that Chandra-mass white dwarfs can explain most
 SNe Ia.  Today, merging white dwarfs (the double degenerate scenario)
-have become the most popular model.  Other progenitors, like He
-burning on the surface of a sub-Chandra white dwarf have also seen
+have perhaps become the most popular model.  Other progenitors, like
+He burning on the surface of a sub-Chandra white dwarf have also seen
 interest in explaining some of the observed diversity.
+See~\cite{araa-maoz} for a review.
 
 There are open questions in all of these scenarios which can be
 addressed through simulation.  For the Chandra and sub-Chandra models,
 what is the distribution (spatial and temporal) of the hotspots setup
-by turbulent convection that give rise to burning fronts.  Can you
-create a detonation in the He layer in the double detonation model?
-For double degenerates, does the burning take place promptly?  Is it
-possible to accurate model a detonation in this case, given our
-resolution constraints?  These are some of the questions we seek to
-answer.
+by turbulent convection that give rise to burning fronts?  A
+longstanding question with the Chandra model is, can a deflagration
+transition to a detonation during the burning front propagation
+through the star.  For the sub-Chandra double detonation model, is it
+possible to create a detonation in the thin surface He layer?  For
+double degenerates, does the burning take place promptly? and can we
+avoid an accretion-induced collapse to a neutron star.  For many of
+these, we have the question of whether it is possible to accurately
+model the ignition of a detonation with the spatial resolution we can
+attain?  These are some of the questions we seek to answer.
 
 \subsection{XRBs}
 
 X-ray bursts, the burning of accreted H/He on the surface of a neutron
 star, can be important probes of neutron star structure.  Interpreting
-observations requests that we understand what we are seeing, which can
+observations requires that we understand what we are seeing, which can
 be influenced by the products of the burning and how the burning
 spreads across the star.  Many efforts have focused on different
 aspects of these events.  One-dimensional models capture the
 energetics well and inform us about the nucleosynthesis
 \cite{woosley-xrb}.  Global models show the importance of rotation in
-confining the burning \cite{SPIT_ETAL02}, why models inspired from
+confining the burning \cite{SPIT_ETAL02}, while models inspired from
 atmospheric science can explore the vertical structure
 \cite{cavecchi:2012}.  However, the resolution differences from the
 scale of the burning to a reasonable fraction of the neutron star
 surface has prevented detailed explorations of the burning in resolved
 calculations and how it feeds back on the flame structure and
-propagation.  
+propagation.  Algorithms and computing architectures are starting to
+reach the point where we can span the gaps in spatial scales between
+these calculations to provide a better understanding of the ignition
+and propagation of the burning front, and the nucleosynthesis produced.
 
 
 \subsection{Requirements}
 
-conservation of gravity / angular momentum
-                strong coupling of hydrodynamics and burning
-                long timescale evolution
+These problems share common algorithmic requirements: strong coupling
+between hydrodynamics and burning, support for a general equation of state,
+self-gravity, including isolated boundary conditions, and long timescale
+evolution for the convective phases.  All of these problems are inherently
+three-dimensional, as turbulence, fluid instabilities, and rotation affect
+the dynamics.  Conservation is important as well, suggesting approaches
+which implement gravitational and rotation sources conservatively, and
+methods for improving angular momentum conservation.
 
-                3-d, turbulence, instabilities, rotation, ...
 
 \section{AMReX Astrophysics Suite}
 
 Our suite of application codes is built on the
 \amrex\ block-structured adaptive mesh refinement (AMR) library.  The
-basic programming model is that \amrex\ manages the grid
-data-structures and parallelism, and calls the computational kernels
-on a patch-by-patch basis.  AMReX supports subcycling in time, which
-we use in \castro.
+basic programming model has \amrex\ managing the grid data-structures
+and parallel communications, and it calls the computational kernels on
+a patch-by-patch basis.  The core library is written in C++ with the
+computational kernels written in Fortran\footnote{Currently
+  \maestro\ is using an older pure-Fortran interface, but this will be
+  ported to the C++ AMReX this coming year.}---this allows us to take
+advantage of the strengths of both languages.AMReX supports subcycling
+in time, which we use in \castro.
 
-\amrex\ uses a hybrid approach to parallelism.  Tiling is used to
-logically subdivide AMR patches to increase the parallelism for
+\amrex\ uses a hybrid MPI + OpenMP approach to parallelism.
+Distribution of grid patches to nodes using MPI provides a natural
+coarse-grained approach to distributing the computational work, while
+threading of loops over zones in a grid using OpenMP provides
+effective fine-grained parallelization.  For \castro\, tiling is used
+to logically subdivide AMR patches to increase the parallelism for
 OpenMP, without incurring the memory overheads that using many more
 smaller grids would bring~\cite{tiling}.  This strategy is especially
-important for many core architectures like the Intel Phi.  Ongoing development
-is being done to support GPU offloading, using managed memory provided
-by the latest generations of GPUs.
+important for many core architectures like the Intel Phi.  Ongoing
+development is being done to support GPU offloading, using managed
+memory provided by the latest generations of GPUs.
 
 There are many application codes built on \amrex, including those in
-combustion, ...  In astrophysics, these include \maestro\ and
+combustion, ... \MarginPar{domains?} In astrophysics, these include \maestro\ and
 \castro\ for stellar and nuclear astrophysics applications and
 \nyx~\cite{nyx} for cosmological applications.  Here we focus on the
 former two.
@@ -178,44 +204,70 @@ former two.
 \subsection{\maestro}
 
 \maestro~\cite{MAESTRO:Multilevel} is a low Mach number stellar
-hydrodynamics code.  \maestro\ has been applied to convection in the
-Chandrasekhar-mass model for Type Ia supernovae (SNe Ia)
+hydrodynamics code designed for efficiently modeling convection in
+stars.  \maestro\ decomposes the state into a one-dimensional
+hydrostatic base state and a three-dimensional Cartesian state that
+evolves the departures from HSE.  A constraint equation is derived by
+requiring that the pressure everywhere be close to the background
+hydrostatic state.  The constraint acts to enforce instantaneous
+acoustic equilibriation, effectively filtering soundwaves from the
+system, while retaining the compressibility effects due to the
+background stratification of the star and local heat release, as well
+as the hydrostatic adjustment of the star.  In this fashion, it is
+more general than traditional anelastic methods.  The timestep
+constraint for these equations depends only on the fluid velocity, not
+the sound speed, enabling much larger timesteps than compressible
+codes for highly subsonic flows.  
+
+The state is advanced using a second-order accurate projection method.
+Fluid quantities are advected using an unsplit Godunov method, with
+reactions incorporated via operator splitting.  The provisional
+velocities are then projected onto the space that satisfies the
+divergence constraint.  The projections involve elliptic solves,
+solving a variable-coefficient Poisson problem, computed using a
+multigrid algorithm.  Low speed methods have seen a lot of recent
+development~\cite{kleinpauluis,vasil:2013}, which has been
+incorporated into \maestro.  The next development effort for
+\maestro\ will be to allow for moderate rotation of the star.
+
+\maestro\ has been applied to convection in the Chandrasekhar-mass
+model for Type Ia supernovae (SNe Ia)
 \cite{ZABNW:IV,wdconvect,wdturb}, the sub-Chandra model for SNe Ia
 \cite{subchandra,subchandra2} X-ray bursts~\cite{xrb,xrb2,xrb3}, and
 convection in massive stars \cite{ms_cc}.
 
-\maestro\ decomposes the state into a one-dimensional hydrostatic base
-state and a three-dimensional Cartesian state that evolves the
-departures from HSE.  A constraint equation is derived by requiring
-that the pressure everywhere be close to the background hydrostatic
-state.  The constraint acts to enforce instantaneous acoustic
-equilibriation, effectively filtering soundwaves from the system,
-while retaining the compressibility effects due to the background
-stratification of the star and local heat release, as well as the
-hydrostatic adjustment of the star.  In this fashion, it is more
-general than traditional anelastic methods.  Low speed methods have
-seen a lot of recent development~\cite{kleinpauluis,vasil:2013}, which
-has been incorporated into \maestro.  The next development effort for
-\maestro\ will be to allow for moderate rotation of the star.
+
+
+
 
 \subsection{\castro}
 
 \castro~\cite{castro,castroII,castroIII} is a fully-compressible
 radiation hydrodynamics code that supports arbitrary equations of
-state, nuclear reaction networks, and Poisson gravity.  \castro\ has
-been applied to core-collapse supernovae~\cite{castro-ccsne},
-population III pair-instability
+state, nuclear reaction networks, and Poisson gravity using geometric
+multigrid.  The main hydrodynamics scheme in \castro\ is an unsplit
+piecewise parabolic method.  Recent developments have improved
+conservation with gravity sources and rotation~\cite{wdmergerI}.  The
+radiation solver in \castro\ uses the flux-limited diffusion
+approximation for gray or multigroup radiation.  The integration
+algorithm on the grid hierarchy is a recursive procedure in which
+coarse grids are advanced in time, fine grids are advanced multiple
+steps to reach the same time as the coarse grids and the data at
+different levels are then synchronized. The synchronization for
+self-gravity is similar to the algorithm introduced by
+\cite{miniati-colella}.
+
+\castro\ has been applied to core-collapse
+supernovae~\cite{castro-ccsne}, population III pair-instability
 supernovae~\cite{castro-pairinstability}, and white dwarf mergers as a
 model for SNe Ia~\cite{wdmergerI}.  Recent work has focused on
 improving energy conservation with gravitational and rotational
 sources and new integration methods that more accurately couple hydro
-and reactions.
-
-For \maestro\ simulations that evolve from the subsonic regime to the
-sonic regime, we have demonstrated the ability to restart the
-calculations in \castro\ to continue the evolution into the sonic
-regime~\cite{scidac-petascale,malone:2014} (in this case, for Chandra
-model SNe Ia).
+and reactions.  For \maestro\ simulations that evolve from the
+subsonic regime to the sonic regime, we have demonstrated the ability
+to restart the calculations in \castro\ to continue the evolution into
+the sonic regime~\cite{scidac-petascale,malone:2014} (in this case,
+for Chandra model SNe Ia).
 
 \subsection{\starkiller\ Microphysics}
 
@@ -238,6 +290,8 @@ anyone to see and contribute to using issues and pull-requests.
 published science results are also available in the code repos.}  When
 feasible, the git hashes for the published results are included in paper
 acknowledgements.
+
+regression testing
 
 
 \section{Parallel Performance and GPUs}
