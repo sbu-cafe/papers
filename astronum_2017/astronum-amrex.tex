@@ -286,12 +286,16 @@ All of our simulation codes are open source and follow a fully open
 development model---the development git repos are hosted on
 github\footnote{\url{https://github.com/AMReX-Astro/}}, available for
 anyone to see and contribute to using issues and pull-requests.
+New changes are put into the {\tt development} branch in each repo.
+Nightly regression testing is used to ensure that no new bugs were
+introduced.  Once a month, {\tt development} is merged into {\tt
+  master}.
 {\em All source files, model files, input parameters, etc.\ for any
 published science results are also available in the code repos.}  When
 feasible, the git hashes for the published results are included in paper
 acknowledgements.
 
-regression testing
+
 
 
 \section{Parallel Performance and GPUs}
