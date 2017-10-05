@@ -1,0 +1,13 @@
+# these are numbers from Max running StarLord on summitdev
+#
+# nodes   GPUs/node     probsize   FOM
+1           1             128       0.95
+1           2             128       1.8
+1           4             128       3.1
+#
+2           4             256       7.0
+4           4             256      12.6
+8           4             256      23.0
+#
+16          4             512      62.3
+32          4             512      95.6
