@@ -9,6 +9,7 @@
 \newcommand{\maestro}{{\sffamily Maestro}}
 \newcommand{\castro}{{\sffamily Castro}}
 \newcommand{\starkiller}{{\sffamily StarKiller}}
+\newcommand{\starlord}{{\sffamily StarLord}}
 \newcommand{\nyx}{{\sffamily Nyx}}
 \newcommand{\amrex}{{\sffamily AMReX}}
 
@@ -307,9 +308,12 @@ GPUs
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.48\linewidth]{titan_xrb_scaling}
+\includegraphics[width=0.48\linewidth]{titan_edison_maestro_scaling}
 \includegraphics[width=0.48\linewidth]{summitdev_scaling}
-\caption{\label{fig:maestro_scaling} blah}
+\caption{\label{fig:scaling} (left) \maestro\ strong scaling on NERSC edison
+and OCLF titan for a 3-d XRB problem.  Two different problem sizes are show.
+(right) \starlord\ scaling across nodes on the OLCF summitdev platform, using
+up to 4 GPUs per node.}
 \end{figure}
 
 Figure~\ref{fig:maestro_scaling} shows strong scaling for \maestro\ on the 3-d
