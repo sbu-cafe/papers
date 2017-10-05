@@ -275,10 +275,18 @@ for Chandra model SNe Ia).
 \maestro\ and \castro\ share the same microphysics, available as the
 \starkiller\ astrophysics github
 project\footnote{\url{https://github.com/StarKiller-astro/microphysics/}}.
-This includes equations of state and nuclear reaction networks.  The
-reaction networks are written such that that rates and integration
-strategy are decoupled, allowing us to change the integration strategy
-for a set of rates.  
+This includes equations of state and nuclear reaction
+networks\footnote{Several of the reaction network righthand sides and
+  the EOS were provided from Frank Timmes' {\em cococubed} software
+  instruments page
+  \url{http://cococubed.asu.edu/code_pages/codes.shtml}.  We thank him
+  for making them available.}.  The reaction networks are written such
+that that rates and integration strategy are decoupled, allowing us to
+change the integration strategy for a set of rates.  They are also
+written to be threadsafe and with GPUs in mind (more on that
+below).  The goal of \starkiller\ is to evolve the code so that it is
+able to be used in a variety of nuclear astrophysics codes, not just
+those discussed here.
 
 
 \subsection{Open source and reproducibility}
@@ -441,7 +449,8 @@ computing system at the Institute for Advanced Computational Science
 at Stony Brook University, which was obtained through the Empire State
 Development grant NYS \#28451.  The GPU work benefited from a grant of
 an Titan X Pascal board from Nvidia Corp through the GPU Grant
-Program.
+Program.  This research has made use of NASA's Astrophysics Data
+System Bibliographic Services.
 
 \section*{References}
 
