@@ -1,8 +1,9 @@
 ALL: astronum-amrex.pdf
 
 PNGS := $(wildcard *.png)
+PDFS := $(filter-out astronum-amrex.pdf,$(wildcard *.pdf))
 
-astronum-amrex.pdf: astronum-amrex.tex ws.bib $(PNGS)
+astronum-amrex.pdf: astronum-amrex.tex ws.bib $(PNGS) $(PDFS)
 	pdflatex astronum-amrex
 	bibtex astronum-amrex
 	pdflatex astronum-amrex

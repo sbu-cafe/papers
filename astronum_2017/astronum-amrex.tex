@@ -302,9 +302,10 @@ acknowledgements.
 \section{Parallel Performance and GPUs}
 
 
-GPUs
-
-     . show Don's plot
+A key design goal of our application codes is performance portability.
+We want the same kernels to run on clusters, manycore machines (like
+Intel KNL), and GPU-based machines.  Our development has balanced this
+need with architecture-specific optimizations to maximize code reuse.
 
 \begin{figure}[t]
 \centering
@@ -316,20 +317,83 @@ and OCLF titan for a 3-d XRB problem.  Two different problem sizes are show.
 up to 4 GPUs per node.}
 \end{figure}
 
-Figure~\ref{fig:maestro_scaling} shows strong scaling for \maestro\ on the 3-d
-XRB problem.
+Figure~\ref{fig:scaling} shows strong scaling for \maestro\ on the 3-d
+XRB problem.  We see that the code scales well to $\mathcal{O}(10^4)$
+processors.  The main limitation to the scaling at the moment are the
+multigrid solves used to enforce the projection (in particular the
+nodal solver).  \maestro\ also does not yet take advantage of the
+tiling capabilities offered in \amrex.  These will be addressed in the
+future as we port \maestro\ to the C++ \amrex\ codebase to take advantage
+of ongoing development.
 
-show new scaling
+Castro scaling...
 
-Our latest focus has been on GPUs
+Our latest focus has been on GPU ports of our application codes.  A
+small proxy app, \starlord, was created from \castro\ with just the
+hydrodynamics and stellar equation of state.  It uses a simple
+method-of-lines formulation of the hydrodynamics and advects 13
+nuclear species in addition to the hydrodynamics.  To offload work on
+GPUs, GPU support was added directly into \amrex.  In \amrex, grids
+consist of a number of boxes that enable domain decomposition for
+parallelism.  An iterator loops over all of the boxes at the same
+level of refinement and passes a data pointer into a Fortran kernel
+function where the work is done. For the simulation state data that
+resides in each box, we have modified the memory allocator so that it
+can use a CUDA allocator (either device or managed memory).  The
+domain iterator is configured to handle data motion to and from the
+device, so that the compute kernels can operate on data which is
+presumed to already be there, and the computation is decoupled from
+the memory management. Computation on the data can then be performed
+with OpenACC, CUDA Fortran, or (more recently) OpenMP 4.5. We have
+also built CUDA compute support into \amrex\ so that a compute kernel
+can be transparently operated on using CUDA Fortran without
+substantially modifying the kernels (and we anticipate using a similar
+strategy to use OpenACC and/or OpenMP in the future). This helps
+ensure that we can continue to maintain performance portability in our
+simulation codes, by decoupling the physics algorithms from the
+backend support used to implement them on various compute
+architectures.\MarginPar{add CPU time for reference}
+
+Figure~\ref{fig:scaling} shows the performance of \starlord\ on the
+summitdev platform at OLCF\footnote{summitdev consists of 2 IBM Power8
+  processors and 4 Nvidia Pascal GPUs per node.}.  The highest GPU
+count (128) corresponds to 32 nodes on summitdev.  We see a nearly
+linear speedup with the number of GPUs, indicating good weak scaling
+on this machine.  Efforts are underway to complete the port of the GPU
+developments into \castro.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.48\linewidth]{CUDA-Fortran-VODE-Integrator}
+\begin{minipage}[b]{0.48\linewidth}
+\caption{\label{fig:scaling} (left) \maestro\ strong scaling on NERSC edison
+and OCLF titan for a 3-d XRB problem.  Two different problem sizes are show.
+(right) \starlord\ scaling across nodes on the OLCF summitdev platform, using
+up to 4 GPUs per node.\vspace{2em}}
+\end{minipage}
+\end{figure}
+
+A parallel effort is porting our microphysics, in particular reaction
+networks to GPUs.  Our strategy is to do the entire ODE integration on
+the GPU, i.e., the data for a patch of zones is passed to the GPU, all
+righthand size and Jacobian evaluations and the timestepping itself is
+done on the GPU and once all zones are burned, we access the data as
+needed on the CPU.  To enable this, we ported our workhorse ODE
+integrator (VODE~\cite{vode}) to CUDA Fortran. This required extensive
+rewrites of the internals of VODE, which was originally written using
+Fortran 77 syntax unsupported by CUDA Fortran. Accelerating VODE with
+CUDA Fortran has proven successful, and we now see significant
+performance gains with the CUDA version of our reaction networks, even
+for moderate sized networks (a 13-isotope standard network).
+Figure~\ref{fig:cudaode} shows the speed-ups on a GPU vs.\ single CPU
+core.
 
 
 
 \section{Science results}
 
 \begin{figure}[t]
-\centering
-\includegraphics[height=1.8in]{subch_h}
+\centering \includegraphics[height=1.8in]{subch_h}
 \includegraphics[height=1.8in]{xrb_compact}
 \includegraphics[height=1.8in]{wdmerger_08030_new}
 \caption{\label{fig:current-runs} (left) Convective plumes in a
@@ -367,16 +431,17 @@ Computational Impact on Theory and Experiment (INCITE) program.  This
 research used resources of the Oak Ridge Leadership Computing Facility
 at the Oak Ridge National Laboratory, which is supported by the Office
 of Science of the U.S. Department of Energy under Contract
-No.\ DE-AC05-00OR22725.  This research used resources of the National
-Energy Research Scientific Computing Center, which is supported by the
-Office of Science of the U.S. Department of Energy under Contract
-No.\ DE-AC02-05CH11231.  Results in this paper were obtained using the
-high-performance LIred computing system at the Institute for Advanced
-Computational Science at Stony Brook University, which was obtained
-through the Empire State Development grant NYS \#28451.  The GPU work
-benefited from a grant of an Titan X Pascal board from Nvidia Corp
-through the GPU Grant Program.
-                          
+No.\ DE-AC05-00OR22725.  We appreciate the efforts of the OLCF (and in
+particular Fernanda Foertter) in organizing the GPU hackathons.  This
+research used resources of the National Energy Research Scientific
+Computing Center, which is supported by the Office of Science of the
+U.S. Department of Energy under Contract No.\ DE-AC02-05CH11231.
+Results in this paper were obtained using the high-performance LIred
+computing system at the Institute for Advanced Computational Science
+at Stony Brook University, which was obtained through the Empire State
+Development grant NYS \#28451.  The GPU work benefited from a grant of
+an Titan X Pascal board from Nvidia Corp through the GPU Grant
+Program.
 
 \section*{References}
 

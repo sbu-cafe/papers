@@ -12,8 +12,9 @@ FOM = data[:,3]
 
 num_gpus = nodes*GPUs
 
-plt.scatter(num_gpus, FOM)
 
+plt.scatter(num_gpus, FOM)
+plt.plot(num_gpus, num_gpus/num_gpus[0]*FOM[0], ls=":")
 plt.xlabel("# of GPUs", fontsize="medium")
 plt.ylabel(r"zones/$\mu$s updated", fontsize="medium")
 
