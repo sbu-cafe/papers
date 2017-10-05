@@ -218,7 +218,7 @@ as the hydrostatic adjustment of the star.  In this fashion, it is
 more general than traditional anelastic methods.  The timestep
 constraint for these equations depends only on the fluid velocity, not
 the sound speed, enabling much larger timesteps than compressible
-codes for highly subsonic flows.  
+codes for highly subsonic flows.
 
 The state is advanced using a second-order accurate projection method.
 Fluid quantities are advected using an unsplit Godunov method, with
@@ -318,7 +318,8 @@ need with architecture-specific optimizations to maximize code reuse.
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.48\linewidth]{titan_edison_maestro_scaling}
-\includegraphics[width=0.48\linewidth]{summitdev_scaling}
+\includegraphics[width=0.48\linewidth]{summitdev_scaling} \\
+\includegraphics[width=0.48\linewidth]{castro_scaling}
 \caption{\label{fig:scaling} (left) \maestro\ strong scaling on NERSC edison
 and OCLF titan for a 3-d XRB problem.  Two different problem sizes are show.
 (right) \starlord\ scaling across nodes on the OLCF summitdev platform, using
@@ -334,7 +335,7 @@ tiling capabilities offered in \amrex.  These will be addressed in the
 future as we port \maestro\ to the C++ \amrex\ codebase to take advantage
 of ongoing development.
 
-Castro scaling...
+Castro scaling is a placeholder...
 
 Our latest focus has been on GPU ports of our application codes.  A
 small proxy app, \starlord, was created from \castro\ with just the
@@ -374,10 +375,14 @@ developments into \castro.
 \centering
 \includegraphics[width=0.48\linewidth]{CUDA-Fortran-VODE-Integrator}
 \begin{minipage}[b]{0.48\linewidth}
-\caption{\label{fig:scaling} (left) \maestro\ strong scaling on NERSC edison
-and OCLF titan for a 3-d XRB problem.  Two different problem sizes are show.
-(right) \starlord\ scaling across nodes on the OLCF summitdev platform, using
-up to 4 GPUs per node.\vspace{2em}}
+\caption{\label{fig:cudaode} GPU speed up over single CPU core for two
+  reaction networks.  The 13-isotope alpha-chain is a
+  potential network for the sub-Chandra simulations we propose here.
+  The 9-isotope Urca network is used for our Urca simulations.  A
+  variety of grid sizes were used, $16^3$, $32^3$, $64^3$, and
+  $128^3$.  In all cases, we see significant speed up on the GPU
+  vs.\ a single core.  These speed-up numbers are from our testbed
+  workstation with a Titan X Pascal board and Intel Xeon X5650 processors.}
 \end{minipage}
 \end{figure}
 
@@ -398,7 +403,7 @@ core.
 
 
 
-\section{Science results}
+\section{Some science results}
 
 \begin{figure}[t]
 \centering \includegraphics[height=1.8in]{subch_h}
@@ -412,7 +417,7 @@ core.
   levels.}
 \end{figure}
 
-Figure~\ref{fig:current-runs} shows some of our most recent science
+Figure~\ref{fig:current-runs} shows some of our recent science
 simulations.  The left panel is an image of convection in the helium
 layer on a sub-Chandra white dwarf.  This is part of a study of the
 early stages of the double detonation SNe Ia model.  Using \maestro,
@@ -424,11 +429,30 @@ burning~\cite{subchandra2}.
 
 The middle figure shows convection in a H/He layer on a neutron star,
 as a model of the early burning in an XRB.  This \maestro\ model was
-the first 3D model of convection for this problem~\cite{xrb3}.
+the first 3D model of convection for this problem~\cite{xrb3}.  This
+study showed that the convective field became fully turbulent,
+achieving a Kolmogorov spectrum, and the overall dynamics was very
+different than our earlier 2-d simulations.
 
 The rightmost image is the coalesced remains of the merger of a
-0.9~$M_\odot$ and 0.6~$M_\odot$ WD.
+0.9~$M_\odot$ and 0.6~$M_\odot$ WD performed with \castro.  This used
+the developments from \cite{wdmergerI}.  Our primary focus with this
+suite of simulations is understanding the numerical sensitivity of
+mergers and collisions on the burning that takes place.
 
+
+\section{Summary and future development}
+
+We described our suite of astrophysics codes built on the
+\amrex\ framework.  These codes were developed to model problems in
+stellar astrophysics spanning from low speed convection to explosive
+burning.  A major theme of the codes is the open development model,
+with the code development done on github and all problem files needed
+to recreate any science results freely available.  Future development
+efforts for \maestro\ include higher-order hydrodynamics and
+time-integration and rotation.  For \castro, we are investigating
+strong coupling between hydrodynamics and reactions, new solvers
+(including MHD), and finishing the GPU port.
 
 
 
