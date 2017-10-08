@@ -1,0 +1,20 @@
+# this was run on 2017-10-07 using the Detonation problem in 3-d on
+# titan with the PGI 17.7 compilers.
+
+# problem size: 256^3.
+# single level
+
+# MPI    OMP    cores     nodes     max_grid    max_level    avg-time-per-step    stddev
+ 2048     1     2048       128         32          0
+ 4096     1     4096       256         32          0               447.106          56.5171
+ 4096     2     8192       512         32          0               262.877          30.3592
+ 4096     4    16384      1024         32          0               148.463          16.1173
+ 4096     8    32768      2048         32          0
+
+# base + 1 level
+# MPI    OMP    cores     nodes     max_grid    max_level    avg-time-per-step
+ 2048     1     2048       128         32          1
+ 4096     1     4096       256         32          1
+ 4096     2     8192       512         32          1
+ 4096     4    16384      1024         32          1
+ 4096     8    32768      2048         32          1
