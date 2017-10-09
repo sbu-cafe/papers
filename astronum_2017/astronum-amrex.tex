@@ -326,14 +326,19 @@ need with architecture-specific optimizations to maximize code reuse.
 \end{figure}
 
 \begin{figure}[t]
+\centering
 \includegraphics[width=0.48\linewidth]{sedov_scaling}
-\includegraphics[width=0.48\linewidth]{wdmerger_scaling} \\
+\includegraphics[width=0.48\linewidth]{wdmerger_scaling}
+\caption{\label{fig:castro-scaling} (left) \castro\ strong scaling on OLCF titan
+for a pure hydro (Sedov) problem; (right) \castro\ strong scaling
+on OLCF titan for a hydro + Poisson gravity (wdmerger) problem.}
+\end{figure}
+
+\begin{figure}[t]
+\centering
 \includegraphics[width=0.48\linewidth]{summitdev_scaling}
 \includegraphics[width=0.48\linewidth]{cori_scaling}
-\caption{\label{fig:scaling} (left) \maestro\ strong scaling on NERSC edison
-and OCLF titan for a 3-d XRB problem.  Two different problem sizes are show.
-(right) \starlord\ scaling across nodes on the OLCF summitdev platform, using
-up to 4 GPUs per node.}
+\caption{\label{fig:knl-gpu-scaling} \castro\ scaling on new architectures.}
 \end{figure}
 
 Figure~\ref{fig:scaling} shows strong scaling for \maestro\ on the 3-d
@@ -345,7 +350,7 @@ tiling capabilities offered in \amrex.  These will be addressed in the
 future as we port \maestro\ to the C++ \amrex\ codebase to take advantage
 of ongoing development.
 
-Castro scaling is a placeholder...
+Figure~\ref{fig:castro-scaling} 
 
 Our latest focus has been on GPU ports of our application codes.  A
 small proxy app, \starlord, was created from \castro\ with just the
@@ -373,7 +378,7 @@ simulation codes, by decoupling the physics algorithms from the
 backend support used to implement them on various compute
 architectures.\MarginPar{add CPU time for reference}
 
-Figure~\ref{fig:scaling} shows the performance of \starlord\ on the
+Figure~\ref{fig:knl-gpu-scaling} shows the performance of \starlord\ on the
 summitdev platform at OLCF\footnote{summitdev consists of 2 IBM Power8
   processors and 4 Nvidia Pascal GPUs per node.}.  The highest GPU
 count (128) corresponds to 32 nodes on summitdev.  We see a nearly
