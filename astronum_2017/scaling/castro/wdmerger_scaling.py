@@ -55,4 +55,4 @@ plt.yscale("log")
 
 plt.xlabel("cores")
 plt.ylabel("avg. time / step")
-plt.savefig("wdmerger_scaling.png", dpi=150)
+plt.savefig("wdmerger_scaling.pdf", dpi=150, bbox_inches="tight")

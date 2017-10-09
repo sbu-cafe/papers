@@ -43,4 +43,4 @@ plt.yscale("log")
 
 plt.xlabel("cores")
 plt.ylabel("avg. time / step")
-plt.savefig("sedov_scaling.png")
+plt.savefig("sedov_scaling.pdf", dpi=150, bbox_inches="tight")
