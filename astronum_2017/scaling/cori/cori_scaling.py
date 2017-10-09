@@ -1,7 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
-matplotlib.rcParams.update({'font.size': 14})
+
+plt.rcParams.update({'xtick.labelsize': 14,
+                     'ytick.labelsize': 14,
+                     'font.size': 14})
+
+plt.rc("axes", linewidth=1.5)
+plt.rc("lines", markeredgewidth=1.5)
 
 data = np.loadtxt("single_level.txt")
 
@@ -33,7 +38,7 @@ plt.xlim(10, 256)
 plt.xlabel("# of nodes", fontsize="medium")
 plt.ylabel(r"avg time to update step", fontsize="medium")
 
-plt.legend(frameon=False)
+plt.legend(frameon=False, loc=3)
 
 ax = plt.gca()
 ax.set_xscale("log")
@@ -44,8 +49,13 @@ ax2 = ax.twiny()
 ax2.set_xlim(10*threads_per_node, 256*threads_per_node)
 ax2.set_xlabel("# of threads")
 
+ax = plt.gca()
+plt.text(0.95, 0.95, "Castro KNL scaling (wdmerger)", 
+         fontsize="small", horizontalalignment="right", transform = ax.transAxes)
+
+
 f = plt.gcf()
 f.set_size_inches(8, 6)
 
 plt.tight_layout()
-plt.savefig("cori_scaling.pdf")
+plt.savefig("cori_scaling.pdf", dpi=150, bbox_inches="tight")
