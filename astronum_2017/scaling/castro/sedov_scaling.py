@@ -52,8 +52,11 @@ plt.ylim(1, 50)
 plt.xlabel("number of cores")
 plt.ylabel("avg. time / step")
 
-f
-or i, nz in enumerate(sizes):
+# custom legend
+legs = []
+legnames = []
+
+for i, nz in enumerate(sizes):
     color="C{:1d}".format(int(i % len(sizes)))
     legs.append(plt.Line2D((0,1),(0,0), color=color))
     legnames.append(r"${}^3$".format(nz))
