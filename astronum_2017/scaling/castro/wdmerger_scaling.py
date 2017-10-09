@@ -1,6 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+plt.rcParams.update({'xtick.labelsize': 14,
+                     'ytick.labelsize': 14,
+                     'font.size': 14})
+
+plt.rc("axes", linewidth=1.5)
+plt.rc("lines", markeredgewidth=1.5)
+
 class ScalingRun(object):
     def __init__(self, MPI=1, OMP=1, max_grid=1, nzones=1, max_level=1, time=0.0, std=0.0):
         self.MPI = MPI
@@ -14,7 +21,7 @@ class ScalingRun(object):
 
 
 def trend_line(c, t):
-    cnew = np.array(list(set(c)))
+    cnew = np.array(sorted(list(set(c))))
     print(cnew)
     trend = t[0]*c[0]/cnew[:]
     return cnew, trend
@@ -28,7 +35,7 @@ for row in data:
                            nzones=row[5], max_level=row[6], time=row[7], std=row[8]))
 
 
-sizes = set([q.nzones for q in runs])
+sizes = set([int(q.nzones) for q in runs])
 #sizes = [512]
 levels = [0, 1]#set([int(q.max_level) for q in runs])
 
@@ -53,6 +60,30 @@ for nl in levels:
 plt.xscale("log")
 plt.yscale("log")
 
-plt.xlabel("cores")
+plt.ylim(1, 200.)
+
+plt.xlabel("number of cores")
 plt.ylabel("avg. time / step")
+
+# custom legend
+legs = []
+legnames = []
+
+for i, nz in enumerate(sizes):
+    color="C{:1d}".format(int(i % len(sizes)))
+    legs.append(plt.Line2D((0,1),(0,0), color=color))
+    legnames.append(r"${}^3$".format(nz))
+
+plt.legend(legs, legnames, frameon=False,
+           fontsize="small", numpoints=1, loc=3)
+
+ax = plt.gca()
+plt.text(0.95, 0.95, "Castro 3-d wdmerger (hydro + Poisson gravity)", 
+         fontsize="small", horizontalalignment="right", transform = ax.transAxes)
+
+plt.tight_layout()
+
+f = plt.gcf()
+f.set_size_inches(8, 6)
+
 plt.savefig("wdmerger_scaling.pdf", dpi=150, bbox_inches="tight")
