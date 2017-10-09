@@ -163,13 +163,13 @@ def scaling():
     plt.ylabel("avg. time / step")
 
     ax = plt.gca()
-    plt.text(0.9, 0.9, "Maestro 3-d XRB", fontsize="small", horizontalalignment="right", transform = ax.transAxes)
+    plt.text(0.95, 0.95, "Maestro 3-d XRB", fontsize="small", horizontalalignment="right", transform = ax.transAxes)
 
     plt.tight_layout()
 
     f = plt.gcf()
     f.set_size_inches(8, 6)
-    plt.savefig("titan_edison_maestro_scaling.png")
+
     plt.savefig("titan_edison_maestro_scaling.pdf", dpi=150, bbox_inches="tight")
 
 
