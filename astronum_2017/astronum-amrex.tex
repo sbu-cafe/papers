@@ -321,7 +321,8 @@ need with architecture-specific optimizations to maximize code reuse.
 \begin{minipage}[b]{0.48\linewidth}
 \caption{\label{fig:maestro_scaling} \maestro\ strong scaling on NERSC
   edison and OLCF titan for a 3-d XRB problem.  Two different problem
-  sizes are shown.\vspace{2em}}
+  sizes are shown.  We see excellent strong scaling to high core counts
+  for this problem.\vspace{2em}}
 \end{minipage}
 \end{figure}
 
@@ -329,28 +330,58 @@ need with architecture-specific optimizations to maximize code reuse.
 \centering
 \includegraphics[width=0.48\linewidth]{sedov_scaling}
 \includegraphics[width=0.48\linewidth]{wdmerger_scaling}
-\caption{\label{fig:castro-scaling} (left) \castro\ strong scaling on OLCF titan
-for a pure hydro (Sedov) problem; (right) \castro\ strong scaling
-on OLCF titan for a hydro + Poisson gravity (wdmerger) problem.}
+\caption{\label{fig:castro-scaling} (left) \castro\ strong scaling on
+  OLCF titan for a pure hydro (Sedov w/ real EOS) problem.  The
+  different colors represent different base resolutions.  We see
+  excellent strong and weak scaling for the single level runs.  For
+  the $1024^3$ run, we also ran with one $2\times$ jump level of
+  refinment (triangles) and see good strong scaling.  The variability
+  (shown by the error bars) at high core counts shows we are becoming
+  work-starved. (right) \castro\ strong scaling on OLCF titan for a
+  hydro + Poisson gravity (wdmerger) problem.  This problem uses a
+  multipole solver to determine Dirichlet boundary conditions
+  representing an isolated mass distribution, and then geometric
+  multigrid to solve for the potential in the interior.  Two coarse
+  grid sizes are shown, and demonstrate great strong scaling.  We also
+  look at a single level of refinement (a $4\times$ jump) on top of
+  this coarse grid.}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.48\linewidth]{summitdev_scaling}
 \includegraphics[width=0.48\linewidth]{cori_scaling}
-\caption{\label{fig:knl-gpu-scaling} \castro\ scaling on new architectures.}
+\caption{\label{fig:knl-gpu-scaling} \castro\ scaling on new
+  architectures.  The left figure shows the \castro\ GPU proxy app
+  (\starlord) on OLCF summitdev.  We see good scaling behavior to 64
+  GPUs in this test of a pure hydro problem (Sedov w/ real EOS).  On the
+right, we explore performance on NERSC Cori (and Intel KNL platform).}
 \end{figure}
 
 Figure~\ref{fig:scaling} shows strong scaling for \maestro\ on the 3-d
-XRB problem.  We see that the code scales well to $\mathcal{O}(10^4)$
-processors.  The main limitation to the scaling at the moment are the
-multigrid solves used to enforce the projection (in particular the
-nodal solver).  \maestro\ also does not yet take advantage of the
-tiling capabilities offered in \amrex.  These will be addressed in the
-future as we port \maestro\ to the C++ \amrex\ codebase to take advantage
-of ongoing development.
+XRB problem.  We ran on both OLCF titan and NERSC edison.  We see that
+the code scales well to $\mathcal{O}(10^4)$ processors.  The main
+limitation to the scaling at the moment are the multigrid solves used
+to enforce the projection (in particular the nodal solver).
+\maestro\ also does not yet take advantage of the tiling capabilities
+offered in \amrex.  These will be addressed in the future as we port
+\maestro\ to the C++ \amrex\ codebase to take advantage of ongoing
+development.
 
-Figure~\ref{fig:castro-scaling} 
+Figure~\ref{fig:castro-scaling} shows scaling behavior for a pure
+hydro + real EOS problem and a hydro / real EOS, + self-gravity
+problem.  All tests were run on OLCF titan.  The AMD processors in
+titan can be used in a 8 or 16 cores / node configuration.  For all
+these runs, we ran in the 16 cores / node mode.  All runs also used
+the PGI 17.7 compilers.  We see excellent scaling behavior for the
+pure hydro problem.  For the self-gravity problem, we scale well with
+a uniform grid, but with a $4\times$ jump for the AMR level on top of
+this, we do worse at higher core counts.  This is a challenging
+problem, as only 3\% of the domain volume is refined.  For a given
+core count, there are a number of different combinations of MPI ranks
+and OpenMP threads we can use.  In general, with multilevel problems,
+we found the best performance with fewer MPI ranks and more OpenMP
+threads.
 
 Our latest focus has been on GPU ports of our application codes.  A
 small proxy app, \starlord, was created from \castro\ with just the
@@ -378,13 +409,20 @@ simulation codes, by decoupling the physics algorithms from the
 backend support used to implement them on various compute
 architectures.\MarginPar{add CPU time for reference}
 
-Figure~\ref{fig:knl-gpu-scaling} shows the performance of \starlord\ on the
-summitdev platform at OLCF\footnote{summitdev consists of 2 IBM Power8
-  processors and 4 Nvidia Pascal GPUs per node.}.  The highest GPU
-count (128) corresponds to 32 nodes on summitdev.  We see a nearly
-linear speedup with the number of GPUs, indicating good weak scaling
-on this machine.  Efforts are underway to complete the port of the GPU
-developments into \castro.
+
+Figure~\ref{fig:knl-gpu-scaling} shows the performance of
+\starlord\ on the summitdev platform at OLCF\footnote{summitdev
+  consists of 2 IBM Power8 processors and 4 Nvidia Pascal GPUs per
+  node.}.  The highest GPU count (128) corresponds to 32 nodes on
+summitdev.  We see a nearly linear speedup with the number of GPUs,
+indicating good weak scaling on this machine.  Efforts are underway to
+complete the port of the GPU developments into \castro.  This figure
+also shows our performance on the Intel KNL manycore processors (using
+NERSC Cori).  This is for the same problem as the self-gravity test on
+titan. \MarginPar{need more info: base grid?}  The KNL chips in Cori
+have 68 cores than can be run with 1, 2, or 4 hardware threads each.
+For all these runs, we ran with 4 threads / core (effectively 272
+threads / chip).
 
 \begin{figure}[t]
 \centering
