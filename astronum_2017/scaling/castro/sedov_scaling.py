@@ -33,17 +33,24 @@ for row in data:
                            nzones=row[5], max_level=row[6], time=row[7], std=row[8]))
 
 
-sizes = sorted(list(set([int(q.nzones) for q in runs])))
+sizes = set([int(q.nzones) for q in runs])
+levels = [0, 1]#set([int(q.max_level) for q in runs])
 
-for i, nz in enumerate(sizes):
-    nz_runs = [q for q in runs if q.nzones == nz]
-    c = [q.cores for q in nz_runs]
-    t = [q.time for q in nz_runs]
-    err = [q.std for q in nz_runs]
+markers = ["o", "^", "s"]
 
-    color="C{:1d}".format(int(i % len(sizes)))
-    plt.errorbar(c, t, yerr=err, fmt="o", color=color)
-    plt.plot(c, trend_line(c, t), ls=":", color=color)
+for nl in levels:
+    for i, nz in enumerate(sizes):
+        nz_runs = [q for q in runs if q.nzones == nz and q.max_level == nl]
+        if len(nz_runs) == 0:
+            continue
+
+        c = [q.cores for q in nz_runs]
+        t = [q.time for q in nz_runs]
+        err = [q.std for q in nz_runs]
+
+        color="C{:1d}".format(int(i % len(sizes)))
+        plt.errorbar(c, t, yerr=err, fmt=markers[nl], color=color)
+        plt.plot(c, trend_line(c, t), ls=":", color=color)
 
 plt.xscale("log")
 plt.yscale("log")
