@@ -55,7 +55,7 @@ for nl in levels:
 plt.xscale("log")
 plt.yscale("log")
 
-plt.ylim(1, 50)
+plt.ylim(1, 100)
 plt.xlabel("number of cores")
 plt.ylabel("avg. time / step")
 
