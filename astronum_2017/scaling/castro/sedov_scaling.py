@@ -34,11 +34,12 @@ for row in data:
 
 
 sizes = set([int(q.nzones) for q in runs])
-levels = [0, 1]#set([int(q.max_level) for q in runs])
+levels = set([int(q.max_level) for q in runs])
 
 markers = ["o", "^", "s"]
 
 for nl in levels:
+    
     for i, nz in enumerate(sizes):
         nz_runs = [q for q in runs if q.nzones == nz and q.max_level == nl]
         if len(nz_runs) == 0:
@@ -49,13 +50,13 @@ for nl in levels:
         err = [q.std for q in nz_runs]
 
         color="C{:1d}".format(int(i % len(sizes)))
-        plt.errorbar(c, t, yerr=err, fmt=markers[nl], color=color)
+        plt.errorbar(c, t, yerr=err, fmt=markers[min(nl, len(markers)-1)], color=color)
         plt.plot(c, trend_line(c, t), ls=":", color=color)
 
 plt.xscale("log")
 plt.yscale("log")
 
-plt.ylim(1, 100)
+plt.ylim(1, 500)
 plt.xlabel("number of cores")
 plt.ylabel("avg. time / step")
 
