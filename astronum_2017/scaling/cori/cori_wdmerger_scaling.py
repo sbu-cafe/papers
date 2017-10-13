@@ -9,9 +9,10 @@ plt.rc("axes", linewidth=1.5)
 plt.rc("lines", markeredgewidth=1.5)
 
 class ScalingRun(object):
-    def __init__(self, MPI=1, OMP=1, max_grid=1, nzones=1, max_level=1, time=0.0, std=0.0):
+    def __init__(self, MPI=1, OMP=1, max_grid=1, nzones=1, nodes=1, max_level=1, time=0.0, std=0.0):
         self.MPI = MPI
         self.OMP = OMP
+        self.nodes = nodes
         self.cores = MPI * OMP
         self.max_grid = max_grid
         self.nzones = nzones
@@ -32,7 +33,7 @@ data = np.loadtxt("castro-wdmerger-scaling.txt")
 
 
 for row in data:
-    runs.append(ScalingRun(MPI=row[0], OMP=row[1], max_grid=row[4], 
+    runs.append(ScalingRun(MPI=row[0], OMP=row[1], nodes=row[3], max_grid=row[4], 
                            nzones=row[5], max_level=row[6], time=row[7]))
 
 
@@ -48,24 +49,33 @@ for nl in levels:
         if len(nz_runs) == 0:
             continue
 
-        c = [q.cores for q in nz_runs]
+        n = [q.nodes for q in nz_runs]
         t = [q.time for q in nz_runs]
         #err = [q.std for q in nz_runs]
 
         color="C{:1d}".format(int(i % len(levels)))
         print(color, nz)
-        plt.scatter(c,t,c=color,marker=markers[nl])
-        #plt.errorbar(c, t, yerr=err, fmt=markers[nl], color=color)
-        ctrend, trend = trend_line(c, t)
-        plt.plot(ctrend, trend, ls=":", color=color)
+        plt.scatter(n, t, c=color, marker=markers[nl])
+        #plt.errorbar(n, t, yerr=err, fmt=markers[nl], color=color)
+        ntrend, trend = trend_line(n, t)
+        plt.plot(ntrend, trend, ls=":", color=color)
 
 plt.xscale("log")
 plt.yscale("log")
 
-plt.ylim(1, 2000.)
+plt.ylim(10, 2000.)
 
-plt.xlabel("number of cores")
+plt.xlabel("number of nodes")
 plt.ylabel("avg. time / step")
+
+threads_per_node = 68*4
+ax = plt.gca()
+ax.set_xlim(4, 256)
+
+ax2 = ax.twiny()
+ax2.set_xlim(4*threads_per_node, 256*threads_per_node)
+ax2.set_xlabel("number of threads")
+
 
 # custom legend
 legs = []
@@ -88,4 +98,4 @@ plt.tight_layout()
 f = plt.gcf()
 f.set_size_inches(8, 6)
 
-plt.savefig("wdmerger_scaling.pdf", dpi=150, bbox_inches="tight")
+plt.savefig("cori_scaling.pdf", dpi=150, bbox_inches="tight")

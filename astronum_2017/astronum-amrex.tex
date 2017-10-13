@@ -1,4 +1,4 @@
-\documentclass[letterpaper]{jpconf}
+\documentclass[a4paper]{jpconf}
 
 \usepackage{graphicx}
 
@@ -13,6 +13,8 @@
 \newcommand{\nyx}{{\sffamily Nyx}}
 \newcommand{\amrex}{{\sffamily AMReX}}
 
+
+\newcommand{\cpp}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
 
 \usepackage{color}
 \setlength{\marginparwidth}{0.75in}
@@ -87,7 +89,7 @@ No single algorithm meets all of the demands imposed by these events.
 Instead, we advance our understanding of these events by piecing
 together simulations of different phases of the evolution from
 different codes.  Here we discuss our simulation codes, \maestro\ and
-\castro\ designed to perform three-dimensional models of the early
+\castro, designed to perform three-dimensional models of the early
 subsonic evolution leading to runaway and the subsequent expolosion.
 Together this suite of codes allows us to address many problems in
 stellar and nuclear astrophysics.  We describe some of the design
@@ -97,14 +99,14 @@ below.
 \section{Science drivers and challenges}
 
 Our interests are thermonuclear explosions, including Type Ia
-supernovae, X-ray bursts, and novae.  The basic ingredients for these
-events are thermonuclear energy release and a degenerate equation of
-state that allows a runaway to build without a pressure response.
-Most of the current models for these events are characterized by a
-long timescale ``simmmering'' phase where reactions heat the star or
-layer and drive convection.  Eventually, reactions become vigorous
-enough that a runaway takes place, perhaps with an accompanying
-burning front that spreads through the star.
+supernovae (SNe Ia), X-ray bursts (XRBs), and novae.  The basic
+ingredients for these events are thermonuclear energy release and a
+degenerate equation of state that allows a runaway to build without a
+pressure response.  Most of the current models for these events are
+characterized by a long timescale ``simmmering'' phase where reactions
+heat the star or layer and drive convection.  Eventually, reactions
+become vigorous enough that a runaway takes place, perhaps with an
+accompanying burning front that spreads through the star.
 
 \subsection{Type Ia supernovae}
 
@@ -133,9 +135,10 @@ through the star.  For the sub-Chandra double detonation model, is it
 possible to create a detonation in the thin surface He layer?  For
 double degenerates, does the burning take place promptly? and can we
 avoid an accretion-induced collapse to a neutron star.  For many of
-these, we have the question of whether it is possible to accurately
-model the ignition of a detonation with the spatial resolution we can
-attain?  These are some of the questions we seek to answer.
+these, we also need to address numerical issues, such as whether it is
+possible to accurately model the ignition of a detonation with the
+spatial resolution we can attain?  These are some of the questions we
+seek to answer.
 
 \subsection{XRBs}
 
@@ -177,10 +180,10 @@ Our suite of application codes is built on the
 \amrex\ block-structured adaptive mesh refinement (AMR) library.  The
 basic programming model has \amrex\ managing the grid data-structures
 and parallel communications, and it calls the computational kernels on
-a patch-by-patch basis.  The core library is written in C++ with the
+a patch-by-patch basis.  The core library is written in \cpp\ with the
 computational kernels written in Fortran\footnote{Currently
   \maestro\ is using an older pure-Fortran interface, but this will be
-  ported to the C++ AMReX this coming year.}---this allows us to take
+  ported to the \cpp\ AMReX this coming year.}---this allows us to take
 advantage of the strengths of both languages.AMReX supports subcycling
 in time, which we use in \castro.
 
@@ -228,8 +231,7 @@ divergence constraint.  The projections involve elliptic solves,
 solving a variable-coefficient Poisson problem, computed using a
 multigrid algorithm.  Low speed methods have seen a lot of recent
 development~\cite{kleinpauluis,vasil:2013}, which has been
-incorporated into \maestro.  The next development effort for
-\maestro\ will be to allow for moderate rotation of the star.
+incorporated into \maestro.
 
 \maestro\ has been applied to convection in the Chandrasekhar-mass
 model for Type Ia supernovae (SNe Ia)
@@ -247,16 +249,18 @@ convection in massive stars \cite{ms_cc}.
 radiation hydrodynamics code that supports arbitrary equations of
 state, nuclear reaction networks, and Poisson gravity using geometric
 multigrid.  The main hydrodynamics scheme in \castro\ is an unsplit
-piecewise parabolic method.  Recent developments have improved
-conservation with gravity sources and rotation~\cite{wdmergerI}.  The
-radiation solver in \castro\ uses the flux-limited diffusion
-approximation for gray or multigroup radiation.  The integration
-algorithm on the grid hierarchy is a recursive procedure in which
-coarse grids are advanced in time, fine grids are advanced multiple
-steps to reach the same time as the coarse grids and the data at
-different levels are then synchronized. The synchronization for
-self-gravity is similar to the algorithm introduced by
-\cite{miniati-colella}.
+piecewise parabolic method.  The radiation solver in \castro\ uses the
+flux-limited diffusion approximation for gray or multigroup radiation.
+The integration algorithm on the grid hierarchy is a recursive
+procedure in which coarse grids are advanced in time, fine grids are
+advanced multiple steps to reach the same time as the coarse grids and
+the data at different levels are then synchronized. The
+synchronization for self-gravity is similar to the algorithm
+introduced by \cite{miniati-colella}.  Recent developments in
+\castro\ include a deferred-correction method of coupling
+hydrodynamics and reactions, a conservative gravity and rotation
+source formulation~\cite{wdmergerI}, and retry mechanism to redo a
+step based on criteria evaluated during the integration.\MarginPar{more new stuff?}
 
 \castro\ has been applied to core-collapse
 supernovae~\cite{castro-ccsne}, population III pair-instability
@@ -283,10 +287,10 @@ networks\footnote{Several of the reaction network righthand sides and
   for making them available.}.  The reaction networks are written such
 that that rates and integration strategy are decoupled, allowing us to
 change the integration strategy for a set of rates.  They are also
-written to be threadsafe and with GPUs in mind (more on that
-below).  The goal of \starkiller\ is to evolve the code so that it is
-able to be used in a variety of nuclear astrophysics codes, not just
-those discussed here.
+written to be threadsafe and with GPUs in mind (more on that below).
+The goal of \starkiller\ is to create a set of community microphysics
+solvers that can be used in a variety of nuclear astrophysics codes,
+not just those discussed here.
 
 
 \subsection{Open source and reproducibility}
@@ -295,14 +299,15 @@ All of our simulation codes are open source and follow a fully open
 development model---the development git repos are hosted on
 github\footnote{\url{https://github.com/AMReX-Astro/}}, available for
 anyone to see and contribute to using issues and pull-requests.
-New changes are put into the {\tt development} branch in each repo.
-Nightly regression testing is used to ensure that no new bugs were
-introduced.  Once a month, {\tt development} is merged into {\tt
-  master}.
-{\em All source files, model files, input parameters, etc.\ for any
-published science results are also available in the code repos.}  When
-feasible, the git hashes for the published results are included in paper
-acknowledgements.
+Additionally, we have mailing lists for discussions and asking for
+help.  Several branches are used in our workflow.  New changes are put
+into the {\tt development} branch in each repo.  Nightly regression
+testing is used to ensure that no new bugs were introduced.  Once a
+month, {\tt development} is merged into {\tt master}.  Finally, {\em all source
+  files, model files, input parameters, etc.\ for any published
+  science results are also available in the code repos.}  When
+feasible, the git hashes for the published results are included in
+paper acknowledgements.
 
 
 
@@ -358,15 +363,16 @@ need with architecture-specific optimizations to maximize code reuse.
 right, we explore performance on NERSC Cori (and Intel KNL platform).}
 \end{figure}
 
-Figure~\ref{fig:scaling} shows strong scaling for \maestro\ on the 3-d
-XRB problem.  We ran on both OLCF titan and NERSC edison.  We see that
-the code scales well to $\mathcal{O}(10^4)$ processors.  The main
-limitation to the scaling at the moment are the multigrid solves used
-to enforce the projection (in particular the nodal solver).
-\maestro\ also does not yet take advantage of the tiling capabilities
-offered in \amrex.  These will be addressed in the future as we port
-\maestro\ to the C++ \amrex\ codebase to take advantage of ongoing
-development.
+Figure~\ref{fig:maestro_scaling} shows strong scaling for \maestro\ on the 3-d
+XRB problem.  This is a typical \maestro\ application~\cite{xrb3}, where burning
+can be a significant part of the overall evolution.  We ran on both
+OLCF titan and NERSC edison.  We see that the code scales well to
+$\mathcal{O}(10^4)$ processors.  The main limitation to the scaling at
+the moment are the multigrid solves used to enforce the projection (in
+particular the nodal solver).  \maestro\ also does not yet take
+advantage of the tiling capabilities offered in \amrex.  These will be
+addressed in the future as we port \maestro\ to the
+\cpp\ \amrex\ codebase to take advantage of ongoing development.
 
 Figure~\ref{fig:castro-scaling} shows scaling behavior for a pure
 hydro + real EOS problem and a hydro / real EOS, + self-gravity
@@ -388,26 +394,27 @@ small proxy app, \starlord, was created from \castro\ with just the
 hydrodynamics and stellar equation of state.  It uses a simple
 method-of-lines formulation of the hydrodynamics and advects 13
 nuclear species in addition to the hydrodynamics.  To offload work on
-GPUs, GPU support was added directly into \amrex.  In \amrex, grids
-consist of a number of boxes that enable domain decomposition for
-parallelism.  An iterator loops over all of the boxes at the same
-level of refinement and passes a data pointer into a Fortran kernel
-function where the work is done. For the simulation state data that
-resides in each box, we have modified the memory allocator so that it
-can use a CUDA allocator (either device or managed memory).  The
-domain iterator is configured to handle data motion to and from the
-device, so that the compute kernels can operate on data which is
-presumed to already be there, and the computation is decoupled from
-the memory management. Computation on the data can then be performed
-with OpenACC, CUDA Fortran, or (more recently) OpenMP 4.5. We have
-also built CUDA compute support into \amrex\ so that a compute kernel
-can be transparently operated on using CUDA Fortran without
-substantially modifying the kernels (and we anticipate using a similar
-strategy to use OpenACC and/or OpenMP in the future). This helps
-ensure that we can continue to maintain performance portability in our
-simulation codes, by decoupling the physics algorithms from the
-backend support used to implement them on various compute
-architectures.\MarginPar{add CPU time for reference}
+GPUs, GPU support was added directly into \amrex\footnote{This support
+  is currently on a feature branch in the git repo, awaiting merge
+  into {\tt development}.}.  In \amrex, grids consist of a number of
+boxes that enable domain decomposition for parallelism.  An iterator
+loops over all of the boxes at the same level of refinement and passes
+a data pointer into a Fortran kernel function where the work is
+done. For the simulation state data that resides in each box, we have
+modified the memory allocator so that it can use a CUDA allocator
+(either device or managed memory).  The domain iterator is configured
+to handle data motion to and from the device, so that the compute
+kernels can operate on data which is presumed to already be there, and
+the computation is decoupled from the memory management. Computation
+on the data can then be performed with OpenACC, CUDA Fortran, or (more
+recently) OpenMP 4.5. We have also built CUDA compute support into
+\amrex\ so that a compute kernel can be transparently operated on
+using CUDA Fortran without substantially modifying the kernels (and we
+anticipate using a similar strategy to use OpenACC and/or OpenMP in
+the future). This helps ensure that we can continue to maintain
+performance portability in our simulation codes, by decoupling the
+physics algorithms from the backend support used to implement them on
+various compute architectures.\MarginPar{add CPU time for reference}
 
 
 Figure~\ref{fig:knl-gpu-scaling} shows the performance of
@@ -478,34 +485,37 @@ we are able to model the convection in the He layer for many turnover
 times and saw a range of outcomes depending on the mass of the white
 dwarf and He layer, including a global He-nova-like behavior where the
 entire layer runsway together and localized
-burning~\cite{subchandra2}.
+burning~\cite{subchandra2}.  Work continues to characterize the ignition.
 
 The middle figure shows convection in a H/He layer on a neutron star,
 as a model of the early burning in an XRB.  This \maestro\ model was
 the first 3D model of convection for this problem~\cite{xrb3}.  This
 study showed that the convective field became fully turbulent,
 achieving a Kolmogorov spectrum, and the overall dynamics was very
-different than our earlier 2-d simulations.
+different than our earlier 2-d simulations.  This calculation acts as 
+a bridge to our next set of studies that will look at larger scales.
 
 The rightmost image is the coalesced remains of the merger of a
 0.9~$M_\odot$ and 0.6~$M_\odot$ WD performed with \castro.  This used
 the developments from \cite{wdmergerI}.  Our primary focus with this
 suite of simulations is understanding the numerical sensitivity of
-mergers and collisions on the burning that takes place.
+mergers and collisions on the burning that takes place.  This work
+is ongoing.
 
 
 \section{Summary and future development}
 
 We described our suite of astrophysics codes built on the
-\amrex\ framework.  These codes were developed to model problems in
-stellar astrophysics spanning from low speed convection to explosive
-burning.  A major theme of the codes is the open development model,
-with the code development done on github and all problem files needed
-to recreate any science results freely available.  Future development
-efforts for \maestro\ include higher-order hydrodynamics and
-time-integration and rotation.  For \castro, we are investigating
-strong coupling between hydrodynamics and reactions, new solvers
-(including MHD), and finishing the GPU port.
+\amrex\ block-structured adaptive mesh refinement framework.  These
+codes were developed to model problems in stellar astrophysics
+spanning from low speed convection to explosive burning.  A major
+theme of the codes is the open development model, with the code
+development done on github and all problem files needed to recreate
+any science results freely available.  Future development efforts for
+\maestro\ include higher-order hydrodynamics and time-integration and
+rotation.  For \castro, we are investigating stronger coupling between
+hydrodynamics and reactions, new solvers (including MHD), and
+finishing the GPU port.
 
 
 
