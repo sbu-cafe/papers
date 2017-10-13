@@ -62,7 +62,7 @@ for nl in levels:
 plt.xscale("log")
 plt.yscale("log")
 
-plt.ylim(1, 2000.)
+plt.ylim(10, 2000.)
 
 plt.xlabel("number of cores")
 plt.ylabel("avg. time / step")
@@ -88,4 +88,4 @@ plt.tight_layout()
 f = plt.gcf()
 f.set_size_inches(8, 6)
 
-plt.savefig("wdmerger_scaling.pdf", dpi=150, bbox_inches="tight")
+plt.savefig("cori_scaling.pdf", dpi=150, bbox_inches="tight")
