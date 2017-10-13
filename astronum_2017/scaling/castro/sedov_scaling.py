@@ -50,13 +50,14 @@ for nl in levels:
         err = [q.std for q in nz_runs]
 
         color="C{:1d}".format(int(i % len(sizes)))
-        plt.errorbar(c, t, yerr=err, fmt=markers[min(nl, len(markers)-1)], color=color)
+        plt.errorbar(c, t, yerr=err, fmt=markers[min(len(markers)-1,nl)], color=color)
         plt.plot(c, trend_line(c, t), ls=":", color=color)
 
 plt.xscale("log")
 plt.yscale("log")
 
-plt.ylim(1, 500)
+plt.ylim(1, 200)
+
 plt.xlabel("number of cores")
 plt.ylabel("avg. time / step")
 
