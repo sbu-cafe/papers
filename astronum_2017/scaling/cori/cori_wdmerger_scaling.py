@@ -63,7 +63,7 @@ for nl in levels:
 plt.xscale("log")
 plt.yscale("log")
 
-plt.ylim(10, 2000.)
+plt.ylim(0., 200.)
 
 plt.xlabel("number of nodes")
 plt.ylabel("avg. time / step")
