@@ -36,7 +36,7 @@ for row in data:
 sizes = set([int(q.nzones) for q in runs])
 levels = set([int(q.max_level) for q in runs])
 
-markers = ["o", "^", "s"]
+markers = ["o", "s", "^"]
 
 for nl in levels:
     
@@ -70,8 +70,20 @@ for i, nz in enumerate(sizes):
     legs.append(plt.Line2D((0,1),(0,0), color=color))
     legnames.append(r"${}^3$".format(nz))
 
+legs.append(plt.Line2D((0,1),(0,0), color="k",
+                       marker="o", markeredgecolor="k", markerfacecolor="k", linestyle="none"))
+legnames.append("no AMR")
+
+legs.append(plt.Line2D((0,1),(0,0), color="k",
+                       marker="s", markeredgecolor="k", markerfacecolor="k",  linestyle="none"))
+legnames.append("base + one 2x level")
+
+legs.append(plt.Line2D((0,1),(0,0), color="k",
+                       marker="^", markeredgecolor="k", markerfacecolor="k",  linestyle="none"))
+legnames.append("base + one 4x level")
+
 plt.legend(legs, legnames, frameon=False,
-           fontsize="small", numpoints=1, loc=3)
+           fontsize="11", numpoints=1, loc=3, ncol=2)
 
 
 ax = plt.gca()
