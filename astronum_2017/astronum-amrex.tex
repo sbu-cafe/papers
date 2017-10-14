@@ -363,21 +363,25 @@ need with architecture-specific optimizations to maximize code reuse.
 right, we explore performance on NERSC Cori (and Intel KNL platform).}
 \end{figure}
 
-Figure~\ref{fig:maestro_scaling} shows strong scaling for \maestro\ on the 3-d
-XRB problem.  This is a typical \maestro\ application~\cite{xrb3}, where burning
-can be a significant part of the overall evolution.  We ran on both
-OLCF titan and NERSC edison.  We see that the code scales well to
-$\mathcal{O}(10^4)$ processors.  The main limitation to the scaling at
-the moment are the multigrid solves used to enforce the projection (in
-particular the nodal solver).  \maestro\ also does not yet take
-advantage of the tiling capabilities offered in \amrex.  These will be
-addressed in the future as we port \maestro\ to the
-\cpp\ \amrex\ codebase to take advantage of ongoing development.
+Figure~\ref{fig:maestro_scaling} shows strong scaling for \maestro\ on
+the 3-d XRB problem.  This is a typical
+\maestro\ application~\cite{xrb3}, where burning can be a significant
+part of the overall evolution.  We ran on both OLCF titan and NERSC
+edison.  We see that the code scales well to $\mathcal{O}(10^4)$
+processors.  The upturn at the end of the scaling curves on titan
+reflect the change from 1 MPI task / 8 OpenMP threads per NUMA node to
+1 MPI task / 16 OpenMP threads per compute node (2 NUMA nodes).  The
+main limitation to the scaling at the moment are the multigrid solves
+used to enforce the projection (in particular the nodal solver).
+\maestro\ also does not yet take advantage of the tiling capabilities
+offered in \amrex.  These will be addressed in the future as we port
+\maestro\ to the \cpp\ \amrex\ codebase to take advantage of ongoing
+development.
 
 Figure~\ref{fig:castro-scaling} shows scaling behavior for a pure
 hydro + real EOS problem and a hydro / real EOS, + self-gravity
 problem.  All tests were run on OLCF titan.  The AMD processors in
-titan can be used in a 8 or 16 cores / node configuration.  For all
+titan can be used in an 8 or 16 cores / node configuration.  For all
 these runs, we ran in the 16 cores / node mode.  All runs also used
 the PGI 17.7 compilers.  We see excellent scaling behavior for the
 pure hydro problem.  For the self-gravity problem, we scale well with
