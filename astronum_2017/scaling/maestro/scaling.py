@@ -36,35 +36,19 @@ def scaling():
     # symbols for pure MPI
 
     idx_384 = width[:] == 384
-    idx_MPI_384 = np.logical_and(width[:] == 384, N_omp[:] == 1)
-    idx_OMP_384 = np.logical_and(width[:] == 384, N_omp[:] != 1)
 
-    plt.errorbar(cores[idx_MPI_384], t_total[idx_MPI_384], yerr=std_total[idx_MPI_384],
-                 marker="o", markeredgecolor="C0", markerfacecolor="none",
-                 markersize=7, markeredgewidth=1.25,
-                 color="C0", ls="none")
+    plt.errorbar(cores[idx_384], t_total[idx_384], yerr=std_total[idx_384],
+                 marker="o", markersize=7, color="C0", ls="none")
 
-    plt.errorbar(cores[idx_OMP_384], t_total[idx_OMP_384], yerr=std_total[idx_OMP_384],
-                 marker="o", markeredgecolor="C0", markersize=7, markeredgewidth=1.25,
-                 color="C0", ls="none")
-
-    plt.plot(cores[idx_384], t_total[idx_384], color="C0", ls="-", lw=1.5)
+    #plt.plot(cores[idx_384], t_total[idx_384], color="C0", ls="-", lw=1.5)
 
 
     idx_768 = width[:] == 768
-    idx_MPI_768 = np.logical_and(width[:] == 768, N_omp[:] == 1)
-    idx_OMP_768 = np.logical_and(width[:] == 768, N_omp[:] != 1)
 
-    plt.errorbar(cores[idx_MPI_768], t_total[idx_MPI_768], yerr=std_total[idx_MPI_768],
-                 marker="^", markeredgecolor="C0", markerfacecolor="none",
-                 markersize=7, markeredgewidth=1.25,
-                 color="C0", ls="none")
+    plt.errorbar(cores[idx_768], t_total[idx_768], yerr=std_total[idx_768],
+                 marker="^", markersize=7, color="C0", ls="none")
 
-    plt.errorbar(cores[idx_OMP_768], t_total[idx_OMP_768], yerr=std_total[idx_OMP_768],
-                 marker="^", markeredgecolor="C0", markersize=7, markeredgewidth=1.25,
-                 color="C0", ls="none")
-
-    plt.plot(cores[idx_768], t_total[idx_768], color="C0", ls="-", lw=1.5)
+    #plt.plot(cores[idx_768], t_total[idx_768], color="C0", ls="-", lw=1.5)
 
 
     ax = plt.gca()
@@ -75,12 +59,12 @@ def scaling():
     cm = np.min(cores[idx_384])
     cM = np.max(cores[idx_384])
     id = np.argmin(cores[idx_384])
-    plt.loglog([cm, cM], t_total[idx_384][id]*cm/np.array([cm, cM]), ":", color="k")
+    plt.loglog([cm, cM], t_total[idx_384][id]*cm/np.array([cm, cM]), ":", color="C0")
 
     cm = np.min(cores[idx_768])
     cM = np.max(cores[idx_768])
     id = np.argmin(cores[idx_768])
-    plt.loglog([cm, cM], t_total[idx_768][id]*cm/np.array([cm, cM]), ":", color="k")
+    plt.loglog([cm, cM], t_total[idx_768][id]*cm/np.array([cm, cM]), ":", color="C0")
 
 
     # edison data
@@ -103,26 +87,18 @@ def scaling():
 
 
     idx_cray = comp[:] == 2
-    idx_MPI_cray = np.logical_and(comp[:] == 2, N_omp[:] == 1)
-    idx_OMP_cray = np.logical_and(comp[:] == 2, N_omp[:] != 1)
 
-    plt.errorbar(cores[idx_MPI_cray], t_total[idx_MPI_cray], yerr=std_total[idx_MPI_cray],
-                 marker="o", markeredgecolor="C1", markerfacecolor="none",
-                 markersize=7, markeredgewidth=1.25,
-                 color="C1", ls="none")
+    plt.errorbar(cores[idx_cray], t_total[idx_cray], yerr=std_total[idx_cray],
+                 marker="o", color="C1", markersize=7, ls="none")
 
-    plt.errorbar(cores[idx_OMP_cray], t_total[idx_OMP_cray], yerr=std_total[idx_OMP_cray],
-                 marker="o", markeredgecolor="C1", markersize=7, markeredgewidth=1.25,
-                 color="C1", ls="none")
-
-    plt.plot(cores[idx_cray], t_total[idx_cray], color="C1", ls="-", lw=1.5)
+    #plt.plot(cores[idx_cray], t_total[idx_cray], color="C1", ls="-", lw=1.5)
 
 
     # ideal
     cm = np.min(cores[idx_cray])
     cM = np.max(cores[idx_cray])
     id = np.argmin(cores[idx_cray])
-    plt.loglog([cm, cM], t_total[idx_cray][id]*cm/np.array([cm, cM]), ":", color="k")
+    plt.loglog([cm, cM], t_total[idx_cray][id]*cm/np.array([cm, cM]), ":", color="C1")
 
 
 
@@ -136,18 +112,10 @@ def scaling():
     legs = []
     legnames = []
     legs.append(plt.Line2D((0,1),(0,0), color="k", marker="o"))
-    legnames.append(r"384$\times$384$\times$768")
+    legnames.append(r"$384^2 \times 768$")
 
     legs.append(plt.Line2D((0,1),(0,0), color="k", marker="^", markeredgecolor="k"))
-    legnames.append(r"768$\times$768$\times$768")
-
-    legs.append(plt.Line2D((0,1),(0,0), color="k",
-                           marker="o", markeredgecolor="k", linestyle="none"))
-    legnames.append("MPI + OpenMP")
-
-    legs.append(plt.Line2D((0,1),(0,0), color="k",
-                           marker="o", markeredgecolor="k", markerfacecolor="none", linestyle="none"))
-    legnames.append("pure MPI")
+    legnames.append(r"$768^3$")
 
     legs.append(plt.Line2D((0,1),(0,0), color="C0"))
     legnames.append(r"OLCF titan")
@@ -156,8 +124,8 @@ def scaling():
     legnames.append(r"NERSC edison")
 
 
-    plt.legend(legs, legnames, ncol=3, frameon=False,
-                 fontsize="small", numpoints=1)
+    plt.legend(legs, legnames, ncol=2, frameon=False,
+               fontsize="small", numpoints=1, loc=3)
 
     plt.xlabel("number of cores")
     plt.ylabel("avg. time / step")
