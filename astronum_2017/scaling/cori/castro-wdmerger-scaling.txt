@@ -15,9 +15,17 @@
 # one AMR level (2x)
 
 # MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step    
-  128    16     2048        8         32         256        1               20.9518            0
-  256    16     4096       16         32         256        1               16.7221            0
-  512    16     8192       32         32         256        1               14.7324            0
+#  128    16     2048        8         32         256        1               20.9518            0
+#  256    16     4096       16         32         256        1               16.7221            0
+#  512    16     8192       32         32         256        1               14.7324            0
+
+# one AMR level (4x)
+
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step
+  128    16     2048        8         32         256        1               59.1691            0
+  256    16     4096       16         32         256        1               39.9383            0
+  512    16     8192       32         32         256        1               27.3897            0
+
 
 # problem size: 512^3, max_grid_size = 32
 # single level: 4096 boxes at max
@@ -32,17 +40,67 @@
 
 # one AMR level (2x)
 # MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step    
-  256    16     4096        16         32         512        1                55.1505          0
-  512    16     8192        32         32         512        1                37.8781          0
- 1024    16    16384        64         32         512        1                28.5724          0
- 2048    16    32768       128         32         512        1                23.9241          0
- 3072    16    49052       192         32         512        1                23.9855          0
+#  256    16     4096        16         32         512        1                55.1505          0
+#  512    16     8192        32         32         512        1                37.8781          0
+# 1024    16    16384        64         32         512        1                28.5724          0
+# 2048    16    32768       128         32         512        1                23.9241          0
+# 3072    16    49052       192         32         512        1                23.9855          0
+
+# one AMR level (4x)
+
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step
+#  256    16     4096        16         32         256        1        Exceeded step memory limit at some point           0
+  512    16     8192        32         32         256        1               106.28           0
+ 1024    16    16384        64         32         512        1                71.1            0
+ 2048    16    32768       128         32         512        1                52.5013         0
+ 3072    16    49052       192         32         512        1                47.8754         0
+
+
+#************** intel compilers
+
+# problem size: 256^3, max_grid_size=32
+# single level: 512 boxes at max
+
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step     compiler:
+  128    16      2048        8         32         256        0                 3.93892        1
+  256    16      4096       16         32         256        0                 2.9577         1
+  512    16      8192       32         32         256        0                 2.29388        1
+
+
+# one AMR level (2x)
+
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step
+#  128    16     2048        8         32         256        1                 16.2951           1
+#  256    16     4096       16         32         256        1                 13.8361           1
+#  512    16     8192       32         32         256        1                 12.6123           1
+
+# one AMR level (4x)
+
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step
+  128    16     2048        8         32         256        1                 44.7328           1
+  256    16     4096       16         32         256        1                 32.4357           1
+  512    16     8192       32         32         256        1                 24.4319           1
 
 #single level with intel compilers
 # MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step
-  256    16     4096        16         32         512        0               16.6178          1
-  512    16     8192        32         32         512        0                9.92387         1
- 1024    16    16384        64         32         512        0                6.64496         1
- 2048    16    32768       128         32         512        0                5.62592         1
- 3072    16    49052       192         32         512        0                5.74141         1
+  256    16     4096        16         32         512        0                16.6178           1
+  512    16     8192        32         32         512        0                 9.92387          1
+ 1024    16    16384        64         32         512        0                 6.64496          1
+ 2048    16    32768       128         32         512        0                 5.62592          1
+ 3072    16    49052       192         32         512        0                 5.74141          1
 
+# one AMR level (2x)
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step
+#  256    16     4096        16         32         512        1                44.1966           1
+#  512    16     8192        32         32         512        1                32.7234           1
+# 1024    16    16384        64         32         512        1                26.0742           1
+# 2048    16    32768       128         32         512        1                22.1294           1
+# 3072    16    49052       192         32         512        1                22.3635           1
+
+# one AMR level (2x)
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step
+#  256    16     4096        16         32         512        1      Exceeded step memory limit at some point                   1
+# 512    16     8192        32         32         512        1                89.6095           1
+# 1024    16    16384        64         32         512        1                64.1343           1
+# 2048    16    32768       128         32         512        1                         1
+# 3072    16    49052       192         32         512        1                         1
