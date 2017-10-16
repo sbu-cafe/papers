@@ -108,7 +108,7 @@ legnames.append("no AMR")
 
 legs.append(plt.Line2D((0,1),(0,0), color="k",
                        marker="^", markeredgecolor="k", markerfacecolor="k",  linestyle="none"))
-legnames.append("base + one 2x level")
+legnames.append("base + one 4x level")
 
 plt.legend(legs, legnames, frameon=False,
            fontsize="11", numpoints=1, loc=3, ncol=3)
