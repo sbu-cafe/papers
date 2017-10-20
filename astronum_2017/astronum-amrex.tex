@@ -191,7 +191,7 @@ computational kernels written in Fortran\footnote{Currently
 ---this allows us to take
 advantage of the strengths of both languages. \amrex\ supports subcycling
 in time, which we use in \castro.
-\begin{figure}[htb]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.48\linewidth]{ppsn-amr.png}
 \begin{minipage}[b]{0.48\linewidth}
@@ -335,7 +335,7 @@ We want the same kernels to run on clusters, manycore machines (e.g.
 Intel KNL), and GPU-based machines.  Our development has balanced this
 need with architecture-specific optimizations to maximize code reuse.
 
-\begin{figure}[htb]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.48\linewidth]{titan_edison_maestro_scaling}
 \begin{minipage}[b]{0.48\linewidth}
@@ -346,7 +346,7 @@ need with architecture-specific optimizations to maximize code reuse.
 \end{minipage}
 \end{figure}
 
-\begin{figure}[htb]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.48\linewidth]{sedov_scaling}
 \includegraphics[width=0.48\linewidth]{wdmerger_scaling}
@@ -367,7 +367,7 @@ need with architecture-specific optimizations to maximize code reuse.
   refinement (by a factor of 4) on top of this coarse grid.}
 \end{figure}
 
-\begin{figure}[htb]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.48\linewidth]{summitdev_scaling}
 \includegraphics[width=0.48\linewidth]{cori_scaling}
@@ -450,7 +450,7 @@ have 68 cores than can be run with 1, 2, or 4 hardware threads each.
 For all these runs, we ran with 4 threads / core (effectively 272
 threads / chip).
 
-\begin{figure}[htb]
+\begin{figure}[t]
 \centering
 \includegraphics[width=0.48\linewidth]{CUDA-Fortran-VODE-Integrator}
 \begin{minipage}[b]{0.48\linewidth}
@@ -484,7 +484,7 @@ core.
 
 \section{Some science results}
 
-\begin{figure}[htb]
+\begin{figure}[t]
 \centering \includegraphics[height=1.8in]{subch_h}
 \includegraphics[height=1.8in]{xrb_compact}
 \includegraphics[height=1.8in]{wdmerger_08030_new}
