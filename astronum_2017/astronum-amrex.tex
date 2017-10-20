@@ -186,10 +186,20 @@ basic programming model has \amrex\ managing the grid data-structures
 and parallel communications, and it calls the computational kernels on
 a patch-by-patch basis.  The core library is written in \cpp\ with 
 computational kernels written in Fortran\footnote{Currently
-  \maestro\ is written in pure-Fortran, but will be
-  ported to the updated \cpp\ \amrex\ framework this coming year.}---this allows us to take
+\maestro\ is written in pure-Fortran, but will be
+ ported to the updated \cpp\ \amrex\ framework this coming year.}
+---this allows us to take
 advantage of the strengths of both languages. \amrex\ supports subcycling
 in time, which we use in \castro.
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.48\linewidth]{ppsn-amr.png}
+\begin{minipage}[b]{0.48\linewidth}
+\caption{\label{fig:amr_grid} Colormap of density and the associated AMR 
+grid structure in a pulsational pair-instability supernova simulation.  
+Image courtesy of Ken Chen \cite{chen2014two}.}
+\end{minipage}
+\end{figure}
 
 \amrex\ uses a hybrid MPI + OpenMP approach to parallelism.
 Distribution of grid patches to nodes using MPI provides a natural
@@ -210,7 +220,6 @@ combustion, multiphase flow, accelerator design, and microfluidics. In
 astrophysics, these include \maestro\ and \castro\ for stellar and
 nuclear astrophysics applications and \nyx~\cite{nyx} for cosmological
 applications.  Here we focus on the former two.
-\MarginPar{ajn - I want to put a grid picture in this doc somewhere}
 
 \subsection{\maestro}
 
@@ -326,7 +335,7 @@ We want the same kernels to run on clusters, manycore machines (e.g.
 Intel KNL), and GPU-based machines.  Our development has balanced this
 need with architecture-specific optimizations to maximize code reuse.
 
-\begin{figure}[t]
+\begin{figure}[htb]
 \centering
 \includegraphics[width=0.48\linewidth]{titan_edison_maestro_scaling}
 \begin{minipage}[b]{0.48\linewidth}
@@ -337,7 +346,7 @@ need with architecture-specific optimizations to maximize code reuse.
 \end{minipage}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[htb]
 \centering
 \includegraphics[width=0.48\linewidth]{sedov_scaling}
 \includegraphics[width=0.48\linewidth]{wdmerger_scaling}
@@ -358,7 +367,7 @@ need with architecture-specific optimizations to maximize code reuse.
   refinement (by a factor of 4) on top of this coarse grid.}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[htb]
 \centering
 \includegraphics[width=0.48\linewidth]{summitdev_scaling}
 \includegraphics[width=0.48\linewidth]{cori_scaling}
@@ -441,7 +450,7 @@ have 68 cores than can be run with 1, 2, or 4 hardware threads each.
 For all these runs, we ran with 4 threads / core (effectively 272
 threads / chip).
 
-\begin{figure}[t]
+\begin{figure}[htb]
 \centering
 \includegraphics[width=0.48\linewidth]{CUDA-Fortran-VODE-Integrator}
 \begin{minipage}[b]{0.48\linewidth}
@@ -475,7 +484,7 @@ core.
 
 \section{Some science results}
 
-\begin{figure}[t]
+\begin{figure}[htb]
 \centering \includegraphics[height=1.8in]{subch_h}
 \includegraphics[height=1.8in]{xrb_compact}
 \includegraphics[height=1.8in]{wdmerger_08030_new}
