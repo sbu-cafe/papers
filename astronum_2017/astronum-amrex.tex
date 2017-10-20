@@ -118,14 +118,14 @@ eventually leading to runaway at the center that burns through the
 star (see~\cite{hillebrandtniemeyer2000} for the state of the field at
 that time).  Since then, the wealth of observations has show that
 there is a lot of diversity in SNe Ia, and searches for progenitor
-systems have not shown that Chandra-mass white dwarfs can explain most
-SNe Ia.  Today, merging white dwarfs (the double degenerate scenario)
-have perhaps become the most popular model.  Other progenitors, like
-He burning on the surface of a sub-Chandra white dwarf have also seen
-interest in explaining some of the observed diversity.
-See~\cite{araa-maoz} for a review.
+systems have strongly suggested that Chandra-mass white dwarfs cannot
+explain most SNe Ia.  Today, merging white dwarfs (the double
+degenerate scenario) have perhaps become the most popular model.
+Other progenitors, like He burning on the surface of a sub-Chandra
+white dwarf have also seen interest in explaining some of the observed
+diversity.  See~\cite{araa-maoz} for a review.
 
-There are open questions in all of these scenarios which can be
+There are open questions in all of these scenarios that can be
 addressed through simulation.  For the Chandra and sub-Chandra models,
 what is the distribution (spatial and temporal) of the hotspots setup
 by turbulent convection that give rise to burning fronts?  A
@@ -180,7 +180,7 @@ Our suite of application codes is built on the
 \amrex\ block-structured adaptive mesh refinement (AMR) library.  The
 basic programming model has \amrex\ managing the grid data-structures
 and parallel communications, and it calls the computational kernels on
-a patch-by-patch basis.  The core library is written in \cpp\ with the
+a patch-by-patch basis.  The core library is written in \cpp\ with 
 computational kernels written in Fortran\footnote{Currently
   \maestro\ is using an older pure-Fortran interface, but this will be
   ported to the \cpp\ \amrex\ this coming year.}---this allows us to take
@@ -190,20 +190,22 @@ in time, which we use in \castro.
 \amrex\ uses a hybrid MPI + OpenMP approach to parallelism.
 Distribution of grid patches to nodes using MPI provides a natural
 coarse-grained approach to distributing the computational work, while
-threading of loops over zones in a grid using OpenMP provides
-effective fine-grained parallelization.  For \castro\, tiling is used
-to logically subdivide AMR patches to increase the parallelism for
-OpenMP, without incurring the memory overheads that using many more
-smaller grids would bring~\cite{tiling}.  This strategy is especially
-important for many core architectures like the Intel Phi.  Ongoing
-development is being done to support GPU offloading, using managed
-memory provided by the latest generations of GPUs.
+subdividing patches into tiles and using threads to parallelize over
+tiles using OpenMP provides effective fine-scale parallelization and
+amortizes thread overhead over large units of work.  For \castro\,
+this tiling logically subdivides AMR patches to increase the
+parallelism for OpenMP, without incurring a large increase in metadata
+that would be associated with using smaller patches in a flat MPI
+mode~\cite{tiling}.  This strategy is especially important for many
+core architectures like the Intel Phi.  Ongoing development is being
+done to support GPU offloading, using managed memory provided by the
+latest generations of GPUs.
 
 There are many application codes built on \amrex, including those in
-combustion, ... \MarginPar{domains?} In astrophysics, these include \maestro\ and
-\castro\ for stellar and nuclear astrophysics applications and
-\nyx~\cite{nyx} for cosmological applications.  Here we focus on the
-former two.
+combustion, multiphase flow, accelerator design, and microfluidics. In
+astrophysics, these include \maestro\ and \castro\ for stellar and
+nuclear astrophysics applications and \nyx~\cite{nyx} for cosmological
+applications.  Here we focus on the former two.
 
 \subsection{\maestro}
 
@@ -227,10 +229,10 @@ The state is advanced using a second-order accurate projection method.
 Fluid quantities are advected using an unsplit Godunov method, with
 reactions incorporated via operator splitting.  The provisional
 velocities are then projected onto the space that satisfies the
-divergence constraint.  The projections involve elliptic solves,
-solving a variable-coefficient Poisson problem, computed using a
-multigrid algorithm.  Low speed methods have seen a lot of recent
-development~\cite{kleinpauluis,vasil:2013}, which has been
+divergence constraint.  The projections require solving a variable
+coefficient elliptic equations, which is done numerically using a
+multigrid algorithm.  A number of recent advances in low Mach
+number modeling~\cite{kleinpauluis,vasil:2013} have been
 incorporated into \maestro.
 
 \maestro\ has been applied to convection in the Chandrasekhar-mass
@@ -257,7 +259,7 @@ advanced multiple steps to reach the same time as the coarse grids and
 the data at different levels are then synchronized. The
 synchronization for self-gravity is similar to the algorithm
 introduced by \cite{miniati-colella}.  Recent developments in
-\castro\ include a deferred-correction method of coupling
+\castro\ include a spectral-deferred correction method of coupling
 hydrodynamics and reactions, a conservative gravity and rotation
 source formulation~\cite{wdmergerI}, and retry mechanism to redo a
 step based on criteria evaluated during the integration.\MarginPar{more new stuff?}
@@ -285,12 +287,12 @@ networks\footnote{Several of the reaction network righthand sides and
   instruments page
   \url{http://cococubed.asu.edu/code_pages/codes.shtml}.  We thank him
   for making them available.}.  The reaction networks are written such
-that that rates and integration strategy are decoupled, allowing us to
-change the integration strategy for a set of rates.  They are also
-written to be threadsafe and with GPUs in mind (more on that below).
-The goal of \starkiller\ is to create a set of community microphysics
-solvers that can be used in a variety of nuclear astrophysics codes,
-not just those discussed here.
+that the rates and integration strategy are decoupled, allowing us to
+change the integration strategy for a given set of rates.  They are
+also written to be threadsafe and with GPUs in mind (more on that
+below).  The goal of \starkiller\ is to create a set of community
+microphysics solvers that can be used in a variety of nuclear
+astrophysics codes, not just those discussed here.
 
 
 \subsection{Open source and reproducibility}
@@ -339,17 +341,17 @@ need with architecture-specific optimizations to maximize code reuse.
   OLCF titan for a pure hydro (Sedov w/ real EOS) problem.  The
   different colors represent different base resolutions.  We see
   excellent strong and weak scaling for the single level runs.  For
-  the $1024^3$ run, we also ran with one $2\times$ jump level of
-  refinment (triangles) and see good strong scaling.  The variability
-  (shown by the error bars) at high core counts shows we are becoming
-  work-starved. (right) \castro\ strong scaling on OLCF titan for a
-  hydro + Poisson gravity (wdmerger) problem.  This problem uses a
-  multipole solver to determine Dirichlet boundary conditions
-  representing an isolated mass distribution, and then geometric
-  multigrid to solve for the potential in the interior.  Two coarse
-  grid sizes are shown, and demonstrate great strong scaling.  We also
-  look at a single level of refinement (a $4\times$ jump) on top of
-  this coarse grid.}
+  the $1024^3$ run, we also ran with one level of refinment by a
+  factor of 2 (triangles) or a factor of 4 (squares), and see good
+  strong scaling.  The variability (shown by the error bars) at high
+  core counts shows we are becoming work-starved. (right)
+  \castro\ strong scaling on OLCF titan for a hydro + Poisson gravity
+  (wdmerger) problem.  This problem uses a multipole solver to
+  determine Dirichlet boundary conditions representing an isolated
+  mass distribution, and then geometric multigrid to solve for the
+  potential in the interior.  Two coarse grid sizes are shown, and
+  demonstrate great strong scaling.  We also look at a single level of
+  refinement (by a factor of 4) on top of this coarse grid.}
 \end{figure}
 
 \begin{figure}[t]
@@ -371,7 +373,7 @@ edison.  We see that the code scales well to $\mathcal{O}(10^4)$
 processors.  The upturn at the end of the scaling curves on titan
 reflect the change from 1 MPI task / 8 OpenMP threads per NUMA node to
 1 MPI task / 16 OpenMP threads per compute node (2 NUMA nodes).  The
-main limitation to the scaling at the moment are the multigrid solves
+main limitation to the scaling at the moment is the multigrid solves
 used to enforce the projection (in particular the nodal solver).
 \maestro\ also does not yet take advantage of the tiling capabilities
 offered in \amrex.  These will be addressed in the future as we port
@@ -385,13 +387,13 @@ titan can be used in an 8 or 16 cores / node configuration.  For all
 these runs, we ran in the 16 cores / node mode.  All runs also used
 the PGI 17.7 compilers.  We see excellent scaling behavior for the
 pure hydro problem.  For the self-gravity problem, we scale well with
-a uniform grid, but with a $4\times$ jump for the AMR level on top of
-this, we do worse at higher core counts.  This is a challenging
-problem, as only 3\% of the domain volume is refined.  For a given
-core count, there are a number of different combinations of MPI ranks
-and OpenMP threads we can use.  In general, with multilevel problems,
-we found the best performance with fewer MPI ranks and more OpenMP
-threads.
+a uniform grid, but with a factor of 4 refinement for the AMR level on
+top of this, we observe degraded performance at higher core counts.
+This is a challenging problem, as only 3\% of the domain volume is
+refined.  For a given core count, there are a number of different
+combinations of MPI ranks and OpenMP threads we can use.  In general,
+with multilevel problems, we found the best performance with fewer MPI
+ranks and more OpenMP threads.
 
 Our latest focus has been on GPU ports of our application codes.  A
 small proxy app, \starlord, was created from \castro\ with just the
@@ -408,7 +410,7 @@ done. For the simulation state data that resides in each box, we have
 modified the memory allocator so that it can use a CUDA allocator
 (either device or managed memory).  The domain iterator is configured
 to handle data motion to and from the device, so that the compute
-kernels can operate on data which is presumed to already be there, and
+kernels can operate on data that is presumed to already be there, and
 the computation is decoupled from the memory management. Computation
 on the data can then be performed with OpenACC, CUDA Fortran, or (more
 recently) OpenMP 4.5. We have also built CUDA compute support into
@@ -454,7 +456,7 @@ A parallel effort is porting our microphysics, in particular reaction
 networks to GPUs.  Our strategy is to do the entire ODE integration on
 the GPU, i.e., the data for a patch of zones is passed to the GPU, all
 righthand size and Jacobian evaluations and the timestepping itself is
-done on the GPU and once all zones are burned, we access the data as
+done on the GPU and once the burning in all zones is completed, we access the data as
 needed on the CPU.  To enable this, we ported our workhorse ODE
 integrator (VODE~\cite{vode}) to CUDA Fortran. This required extensive
 rewrites of the internals of VODE, which was originally written using
@@ -509,7 +511,7 @@ is ongoing.
 
 \section{Summary and future development}
 
-We described our suite of astrophysics codes built on the
+We have described our suite of astrophysics codes built on the
 \amrex\ block-structured adaptive mesh refinement framework.  These
 codes were developed to model problems in stellar astrophysics
 spanning from low speed convection to explosive burning.  A major
@@ -524,12 +526,14 @@ finishing the GPU port.
 
 
 \ack The work at Stony Brook was supported by DOE/Office of Nuclear
-Physics grant DE-FG02-87ER40317 and NSF award AST-1211563.  An award
-of computer time was provided by the Innovative and Novel
-Computational Impact on Theory and Experiment (INCITE) program.  This
-research used resources of the Oak Ridge Leadership Computing Facility
-at the Oak Ridge National Laboratory, which is supported by the Office
-of Science of the U.S. Department of Energy under Contract
+Physics grant DE-FG02-87ER40317 and NSF award AST-1211563.  The work
+at LBNL was supported by the DOE Office of Advanced Scientific
+Computing Research under Contract No, DE-AC02-05CH11231. An award of
+computer time was provided by the Innovative and Novel Computational
+Impact on Theory and Experiment (INCITE) program.  This research used
+resources of the Oak Ridge Leadership Computing Facility at the Oak
+Ridge National Laboratory, which is supported by the Office of Science
+of the U.S. Department of Energy under Contract
 No.\ DE-AC05-00OR22725.  We appreciate the efforts of the OLCF (and in
 particular Fernanda Foertter) in organizing the GPU hackathons.  This
 research used resources of the National Energy Research Scientific
