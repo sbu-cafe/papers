@@ -93,7 +93,7 @@ Instead, we advance our understanding of these events by piecing
 together simulations of different phases of the evolution from
 different codes.  Here we discuss our simulation codes, \maestro\ and
 \castro, designed to perform three-dimensional models of the early
-subsonic evolution leading to runaway and the subsequent expolosion.
+subsonic evolution leading to runaway and the subsequent explosion.
 Together this suite of codes allows us to address many problems in
 stellar and nuclear astrophysics.  We describe some of the design
 details, the current architecture of the code, and some applications
@@ -106,7 +106,7 @@ supernovae (SNe Ia), X-ray bursts (XRBs), and novae.  The basic
 ingredients for these events are thermonuclear energy release and a
 degenerate equation of state that allows a runaway to build without a
 pressure response.  Most of the current models for these events are
-characterized by a long timescale ``simmmering'' phase where reactions
+characterized by a long timescale ``simmering'' phase where reactions
 heat the star or layer and drive convection.  Eventually, reactions
 become vigorous enough that a runaway takes place, perhaps with an
 accompanying burning front that spreads through the star.
@@ -136,11 +136,12 @@ longstanding question with the Chandra model is, can a deflagration
 transition to a detonation during the burning front propagation
 through the star.  For the sub-Chandra double detonation model, is it
 possible to create a detonation in the thin surface He layer?  For
-double degenerates, does the burning take place promptly? and can we
-avoid an accretion-induced collapse to a neutron star.  For many of
-these, we also need to address numerical issues, such as whether it is
+double degenerates, does the burning take place promptly? Can we
+avoid an accretion-induced collapse to a neutron star?  For many of
+these investigations, we need to address numerical issues such as 
+whether it is
 possible to accurately model the ignition of a detonation with the
-spatial resolution we can attain?  These are some of the questions we
+spatial resolution we can attain.  These are some of the questions we
 seek to answer.
 
 \subsection{XRBs}
@@ -185,8 +186,8 @@ basic programming model has \amrex\ managing the grid data-structures
 and parallel communications, and it calls the computational kernels on
 a patch-by-patch basis.  The core library is written in \cpp\ with 
 computational kernels written in Fortran\footnote{Currently
-  \maestro\ is using an older pure-Fortran interface, but this will be
-  ported to the \cpp\ \amrex\ this coming year.}---this allows us to take
+  \maestro\ is written in pure-Fortran, but will be
+  ported to the updated \cpp\ \amrex\ framework this coming year.}---this allows us to take
 advantage of the strengths of both languages. \amrex\ supports subcycling
 in time, which we use in \castro.
 
@@ -195,12 +196,12 @@ Distribution of grid patches to nodes using MPI provides a natural
 coarse-grained approach to distributing the computational work, while
 subdividing patches into tiles and using threads to parallelize over
 tiles using OpenMP provides effective fine-scale parallelization and
-amortizes thread overhead over large units of work.  For \castro\,
-this tiling logically subdivides AMR patches to increase the
-parallelism for OpenMP, without incurring a large increase in metadata
-that would be associated with using smaller patches in a flat MPI
-mode~\cite{tiling}.  This strategy is especially important for many
-core architectures like the Intel Phi.  Ongoing development is being
+amortizes thread overhead over large units of work.  Additionally,
+tiling does not incur the large increase in metadata
+associated with using smaller patches in a flat MPI
+mode~\cite{tiling} since we can use fewer, larger patches.
+This strategy is especially important for
+many-core architectures like the Intel Phi.  Ongoing development is being
 done to support GPU offloading, using managed memory provided by the
 latest generations of GPUs.
 
@@ -209,17 +210,19 @@ combustion, multiphase flow, accelerator design, and microfluidics. In
 astrophysics, these include \maestro\ and \castro\ for stellar and
 nuclear astrophysics applications and \nyx~\cite{nyx} for cosmological
 applications.  Here we focus on the former two.
+\MarginPar{ajn - I want to put a grid picture in this doc somewhere}
 
 \subsection{\maestro}
 
 \maestro~\cite{MAESTRO:Multilevel} is a low Mach number stellar
 hydrodynamics code designed for efficiently modeling convection in
-stars.  \maestro\ decomposes the state into a one-dimensional
+stars.  \maestro\ decomposes the state variables into a one-dimensional
 hydrostatic base state and a three-dimensional Cartesian state that
-evolves the departures from HSE.  A constraint equation is derived by
+models the deviation from hydrostatic equilibrium.
+A constraint equation is derived by
 requiring that the pressure everywhere be close to the background
-hydrostatic state.  The constraint acts to enforce instantaneous
-acoustic equilibriation, effectively filtering soundwaves from the
+hydrostatic pressure.  The constraint acts to enforce instantaneous
+acoustic equilibration, effectively filtering soundwaves from the
 system, while retaining the compressibility effects due to the
 background stratification of the star and local heat release, as well
 as the hydrostatic adjustment of the star.  In this fashion, it is
@@ -243,8 +246,6 @@ model for Type Ia supernovae (SNe Ia)
 \cite{ZABNW:IV,wdconvect,wdturb}, the sub-Chandra model for SNe Ia
 \cite{subchandra,subchandra2} X-ray bursts~\cite{xrb,xrb2,xrb3}, and
 convection in massive stars \cite{ms_cc}.
-
-
 
 
 
@@ -312,7 +313,7 @@ month, {\tt development} is merged into {\tt master}.  Finally, {\em all source
   files, model files, input parameters, etc.\ for any published
   science results are also available in the code repos.}  When
 feasible, the git hashes for the published results are included in
-paper acknowledgements.
+paper acknowledgments.
 
 
 
@@ -321,7 +322,7 @@ paper acknowledgements.
 
 
 A key design goal of our application codes is performance portability.
-We want the same kernels to run on clusters, manycore machines (like
+We want the same kernels to run on clusters, manycore machines (e.g.
 Intel KNL), and GPU-based machines.  Our development has balanced this
 need with architecture-specific optimizations to maximize code reuse.
 
@@ -344,7 +345,7 @@ need with architecture-specific optimizations to maximize code reuse.
   OLCF titan for a pure hydro (Sedov w/ real EOS) problem.  The
   different colors represent different base resolutions.  We see
   excellent strong and weak scaling for the single level runs.  For
-  the $1024^3$ run, we also ran with one level of refinment by a
+  the $1024^3$ run, we also ran with one level of refinement by a
   factor of 2 (triangles) or a factor of 4 (squares), and see good
   strong scaling.  The variability (shown by the error bars) at high
   core counts shows we are becoming work-starved. (right)
@@ -365,7 +366,7 @@ need with architecture-specific optimizations to maximize code reuse.
   architectures.  The left figure shows the \castro\ GPU proxy app
   (\starlord) on OLCF summitdev.  We see good scaling behavior to 64
   GPUs in this test of a pure hydro problem (Sedov w/ real EOS).  On the
-right, we explore performance on NERSC Cori (and Intel KNL platform).}
+right, we explore performance on NERSC cori (and Intel KNL platform).}
 \end{figure}
 
 Figure~\ref{fig:maestro_scaling} shows strong scaling for \maestro\ on
@@ -378,12 +379,12 @@ reflect the change from 1 MPI task / 8 OpenMP threads per NUMA node to
 1 MPI task / 16 OpenMP threads per compute node (2 NUMA nodes).  The
 main limitation to the scaling at the moment is the multigrid solves
 used to enforce the projection (in particular the nodal solver).
-\maestro\ also does not yet take advantage of the tiling capabilities
-offered in \amrex.  These will be addressed in the future as we port
-\maestro\ to the \cpp\ \amrex\ codebase to take advantage of ongoing
-development.
+Also, \maestro\ currently uses a simpler fine-grained approach to parallelism
+where planes in the $z$-direction are divided among OpenMP threads.
+As we port \maestro\ to the \cpp\ \amrex\ code base we will take
+advantage of ongoing development for increased tile size control.
 
-Figure~\ref{fig:castro-scaling} shows scaling behavior for a pure
+Figure~\ref{fig:castro-scaling} shows \castro\ scaling behavior for a pure
 hydro + real EOS problem and a hydro / real EOS, + self-gravity
 problem.  All tests were run on OLCF titan.  The AMD processors in
 titan can be used in an 8 or 16 cores / node configuration.  For all
@@ -406,8 +407,8 @@ nuclear species in addition to the hydrodynamics.  To offload work on
 GPUs, GPU support was added directly into \amrex\footnote{This support
   is currently on a feature branch in the git repo, awaiting merge
   into {\tt development}.}.  In \amrex, grids consist of a number of
-boxes that enable domain decomposition for parallelism.  An iterator
-loops over all of the boxes at the same level of refinement and passes
+boxes that enable domain decomposition for parallelism.\MarginPar{unclear what the difference between a grid and box is here}
+An iterator loops over all of the boxes at the same level of refinement and passes
 a data pointer into a Fortran kernel function where the work is
 done. For the simulation state data that resides in each box, we have
 modified the memory allocator so that it can use a CUDA allocator
@@ -434,8 +435,8 @@ summitdev.  We see a nearly linear speedup with the number of GPUs,
 indicating good weak scaling on this machine.  Efforts are underway to
 complete the port of the GPU developments into \castro.  This figure
 also shows our performance on the Intel KNL manycore processors (using
-NERSC Cori).  This is for the same problem as the self-gravity test on
-titan. \MarginPar{need more info: base grid?}  The KNL chips in Cori
+NERSC cori).  This is for the same problem as the self-gravity test on
+titan. \MarginPar{need more info: base grid?}  The KNL chips in cori
 have 68 cores than can be run with 1, 2, or 4 hardware threads each.
 For all these runs, we ran with 4 threads / core (effectively 272
 threads / chip).
@@ -493,8 +494,9 @@ early stages of the double detonation SNe Ia model.  Using \maestro,
 we are able to model the convection in the He layer for many turnover
 times and saw a range of outcomes depending on the mass of the white
 dwarf and He layer, including a global He-nova-like behavior where the
-entire layer runsway together and localized
-burning~\cite{subchandra2}.  Work continues to characterize the ignition.
+entire layer runs way together and localized
+burning~\cite{subchandra2}.\MarginPar{incomplete sentence}
+We are performing further studies to characterize the ignition.
 
 The middle figure shows convection in a H/He layer on a neutron star,
 as a model of the early burning in an XRB.  This \maestro\ model was
