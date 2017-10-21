@@ -32,7 +32,7 @@
         M.~G. Barrios Sazo$^1$,
         V.~E. Beckner$^2$,
         J.~B. Bell$^2$,
-        B. Friesen$^3,2$,
+        B. Friesen$^{3,2}$,
         A.~M. Jacobs$^4$,
         M.~P. Katz$^5$,
         C.~M. Malone$^6$,
@@ -80,11 +80,11 @@ objects, and explosive ignition of burning stages in stellar
 evolution.  Accurate modeling of these events requires the coupling of
 hydrodynamics, gravity, thermonuclear reactions, and in some cases,
 radiation and magnetic fields.  Further, these environments are
-characterized by a wide range of lengthscales, from the size of the
+characterized by a wide range of length scales, from the size of the
 star or binary system down to the burning zone width and dissipation
 scales.  Temporal scales are equally impressive---stellar evolution
 occurs over 10s of millions to billions of years, the simmering phase
-leading up to explosions lasts millenia to days or hours, and the
+leading up to explosions lasts hours or days to millenia, and the
 explosion can be over in seconds to hours.  The radiation leakage,
 which leads to the observables we see lasts from hours to months.
 
@@ -113,36 +113,36 @@ accompanying burning front that spreads through the star.
 
 \subsection{Type Ia supernovae}
 
-The largest open theoretical question for SNe Ia is---what is the
-nature of the progenitor?  About 20 years ago, the community had
-mostly converged up the single-degenerate scenario---a
+Among the most significant open questions for SNe Ia is the identity of the
+progenitor.  About 20 years ago, the community had
+mostly converged upon the single-degenerate scenario---a
 Chandrasekhar-mass C/O white dwarf that accretes from its companion,
 eventually leading to runaway at the center that burns through the
 star (see~\cite{hillebrandtniemeyer2000} for the state of the field at
-that time).  Since then, the wealth of observations has show that
+that time).  Since then, the wealth of observations has indicated that
 there is a lot of diversity in SNe Ia, and searches for progenitor
 systems have strongly suggested that Chandra-mass white dwarfs cannot
 explain most SNe Ia.  Today, merging white dwarfs (the double
 degenerate scenario) have perhaps become the most popular model.
 Other progenitors, like He burning on the surface of a sub-Chandra
-white dwarf have also seen interest in explaining some of the observed
+white dwarf, have also seen interest in explaining some of the observed
 diversity.  See~\cite{araa-maoz} for a review.
 
 There are open questions in all of these scenarios that can be
 addressed through simulation.  For the Chandra and sub-Chandra models,
 what is the distribution (spatial and temporal) of the hotspots setup
 by turbulent convection that give rise to burning fronts?  A
-longstanding question with the Chandra model is, can a deflagration
-transition to a detonation during the burning front propagation
+longstanding question with the Chandra model is whether a deflagration
+can transition to a detonation during the burning front propagation
 through the star.  For the sub-Chandra double detonation model, is it
-possible to create a detonation in the thin surface He layer?  For
-double degenerates, does the burning take place promptly? Can we
-avoid an accretion-induced collapse to a neutron star?  For many of
-these investigations, we need to address numerical issues such as 
-whether it is
-possible to accurately model the ignition of a detonation with the
-spatial resolution we can attain.  These are some of the questions we
-seek to answer.
+not clear whether it is possible to create a detonation in the thin
+surface He layer.  For double degenerates, it is still unresolved
+whether the burning takes place promptly or after some delay.  However
+it proceeds, we need to avoid an accretion-induced collapse to a
+neutron star.  For many of these investigations, we need to address
+numerical issues such as whether it is possible to accurately model
+the ignition of a detonation with the spatial resolution we can
+attain.  These are some of the questions we seek to answer.
 
 \subsection{XRBs}
 
@@ -199,7 +199,8 @@ in time, which we use in \castro.
   \castro\ three-dimensional simulation of merging white dwarfs
   showing the 2-level grid structure.  The boxes making up the base
   grid are drawn in white and the boxes making up the finer grid are drawn in black.  Note
-  that the finer boxes can overlap multiple coarse boxes.\vspace{2em}}
+  that the finer boxes can overlap multiple coarse boxes, and not all
+  boxes are the same size.\vspace{2em}}
 \end{minipage}
 \end{figure}
 
@@ -213,9 +214,10 @@ tiling does not incur the large increase in metadata
 associated with using smaller patches in a flat MPI
 mode~\cite{tiling} since we can use fewer, larger patches.
 This strategy is especially important for
-many-core architectures like the Intel Phi.  Ongoing development is being
+many-core architectures like the Intel Xeon Phi.  Ongoing development is being
 done to support GPU offloading, using managed memory provided by the
-latest generations of GPUs.
+latest generations of GPUs.  Figure~\ref{fig:amr_grid} shows an
+example of a 2-level grid.
 
 There are many application codes built on \amrex, including those in
 combustion, multiphase flow, accelerator design, and microfluidics. In
@@ -334,7 +336,7 @@ paper acknowledgments.
 
 A key design goal of our application codes is performance portability.
 We want the same kernels to run on clusters, manycore machines (e.g.
-Intel KNL), and GPU-based machines.  Our development has balanced this
+Intel Xeon Phi), and GPU-based machines.  Our development has balanced this
 need with architecture-specific optimizations to maximize code reuse.
 
 \begin{figure}[t]
@@ -342,7 +344,7 @@ need with architecture-specific optimizations to maximize code reuse.
 \includegraphics[width=0.48\linewidth]{titan_edison_maestro_scaling}
 \begin{minipage}[b]{0.48\linewidth}
 \caption{\label{fig:maestro_scaling} \maestro\ strong scaling on NERSC
-  edison and OLCF titan for a 3-d XRB problem.  Two different problem
+  Edison and OLCF Titan for a 3-d XRB problem.  Two different problem
   sizes are shown.  We see excellent strong scaling to high core counts
   for this problem.\vspace{2em}}
 \end{minipage}
@@ -353,14 +355,14 @@ need with architecture-specific optimizations to maximize code reuse.
 \includegraphics[width=0.48\linewidth]{sedov_scaling}
 \includegraphics[width=0.48\linewidth]{wdmerger_scaling}
 \caption{\label{fig:castro-scaling} (left) \castro\ strong scaling on
-  OLCF titan for a pure hydro (Sedov w/ real EOS) problem.  The
+  OLCF Titan for a pure hydro (Sedov w/ real EOS) problem.  The
   different colors represent different base resolutions.  We see
   excellent strong and weak scaling for the single level runs.  For
   the $1024^3$ run, we also ran with one level of refinement by a
   factor of 2 (triangles) or a factor of 4 (squares), and see good
   strong scaling.  The variability (shown by the error bars) at high
   core counts shows we are becoming work-starved. (right)
-  \castro\ strong scaling on OLCF titan for a hydro + Poisson gravity
+  \castro\ strong scaling on OLCF Titan for a hydro + Poisson gravity
   (wdmerger) problem.  This problem uses a multipole solver to
   determine Dirichlet boundary conditions representing an isolated
   mass distribution, and then geometric multigrid to solve for the
@@ -377,15 +379,15 @@ need with architecture-specific optimizations to maximize code reuse.
   architectures.  The left figure shows the \castro\ GPU proxy app
   (\starlord) on OLCF summitdev.  We see good scaling behavior to 64
   GPUs in this test of a pure hydro problem (Sedov w/ real EOS).  On the
-right, we explore performance on NERSC cori (and Intel KNL platform).}
+right, we explore performance on NERSC Cori (and Intel Xeon Phi platform).}
 \end{figure}
 
 Figure~\ref{fig:maestro_scaling} shows strong scaling for \maestro\ on
 the 3-d XRB problem.  This is a typical
 \maestro\ application~\cite{xrb3}, where burning can be a significant
-part of the overall evolution.  We ran on both OLCF titan and NERSC
-edison.  We see that the code scales well to $\mathcal{O}(10^4)$
-processors.  The upturn at the end of the scaling curves on titan
+part of the overall evolution.  We ran on both OLCF Titan and NERSC
+Edison.  We see that the code scales well to $\mathcal{O}(10^4)$
+processors.  The upturn at the end of the scaling curves on Titan
 reflect the change from 1 MPI task / 8 OpenMP threads per NUMA node to
 1 MPI task / 16 OpenMP threads per compute node (2 NUMA nodes).  The
 main limitation to the scaling at the moment is the multigrid solves
@@ -397,8 +399,8 @@ advantage of ongoing development for increased tile size control.
 
 Figure~\ref{fig:castro-scaling} shows \castro\ scaling behavior for a pure
 hydro + real EOS problem and a hydro / real EOS, + self-gravity
-problem.  All tests were run on OLCF titan.  The AMD processors in
-titan can be used in an 8 or 16 cores / node configuration.  For all
+problem.  All tests were run on OLCF Titan.  The AMD processors in
+Titan can be used in an 8 or 16 cores / node configuration.  For all
 these runs, we ran in the 16 cores / node mode.  All runs also used
 the PGI 17.7 compilers.  We see excellent scaling behavior for the
 pure hydro problem.  For the self-gravity problem, we scale well with
@@ -445,11 +447,11 @@ Figure~\ref{fig:knl-gpu-scaling} shows the performance of
 summitdev.  We see a nearly linear speedup with the number of GPUs,
 indicating good weak scaling on this machine.  Efforts are underway to
 complete the port of the GPU developments into \castro.  This figure
-also shows our performance on the Intel KNL manycore processors (using
-NERSC cori).  This is for the same problem as the self-gravity test on
-titan. \MarginPar{need more info: base grid?}  The KNL chips in cori
+also shows our performance on the Intel Xeon Phi manycore processors (using
+NERSC Cori).  This is for the same problem as the self-gravity test on
+Titan.  The Intel Xeon Phi chips in Cori
 have 68 cores than can be run with 1, 2, or 4 hardware threads each.
-For all these runs, we ran with 4 threads / core (effectively 272
+For all these runs, we ran with 4 threads / core (272
 threads / chip).
 
 \begin{figure}[t]
@@ -466,6 +468,9 @@ threads / chip).
   workstation with a Titan X Pascal board and Intel Xeon X5650 processors.}
 \end{minipage}
 \end{figure}
+
+\MarginPar{we should update this to a more modern processor---Don can you run
+this on summitdev?}
 
 A parallel effort is porting our microphysics, in particular reaction
 networks to GPUs.  Our strategy is to do the entire ODE integration on
