@@ -361,15 +361,15 @@ need with architecture-specific optimizations to maximize code reuse.
 \caption{\label{fig:castro-scaling} (left) \castro\ strong scaling on
   OLCF Titan for a pure hydro (Sedov w/ real EOS) problem.  The
   different colors represent different base resolutions.  We see
-  excellent strong and weak scaling for the single level runs.  For
-  the $1024^3$ run, we also ran with one level of refinement by a
-  factor of 2 (triangles) or a factor of 4 (squares), and see good
-  strong scaling.  The variability (shown by the error bars) at high
-  core counts shows we are becoming work-starved. (right)
-  \castro\ strong scaling on OLCF Titan for a hydro + Poisson gravity
-  (wdmerger) problem.  This problem uses a multipole solver to
-  determine Dirichlet boundary conditions representing an isolated
-  mass distribution, and then geometric multigrid to solve for the
+  excellent strong scaling for the single level runs.  For the
+  $1024^3$ run, we also ran with one level of refinement by a factor
+  of 2 (triangles) or a factor of 4 (squares), and see good strong
+  scaling.  The variability (shown by the error bars) at high core
+  counts shows we are becoming work-starved. (right) \castro\ strong
+  scaling on OLCF Titan for a hydro + Poisson gravity (wdmerger)
+  problem.  This problem uses a multipole solver to determine
+  Dirichlet boundary conditions representing an isolated mass
+  distribution, and then geometric multigrid to solve for the
   potential in the interior.  Two coarse grid sizes are shown, and
   demonstrate great strong scaling.  We also look at a single level of
   refinement (by a factor of 4) on top of this coarse grid.}
