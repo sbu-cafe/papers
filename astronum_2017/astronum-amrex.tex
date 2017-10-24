@@ -423,25 +423,24 @@ method-of-lines formulation of the hydrodynamics and advects 13
 nuclear species in addition to the hydrodynamics.  To offload work on
 GPUs, GPU support was added directly into \amrex\footnote{This support
   is currently on a feature branch in the git repo, awaiting merge
-  into {\tt development}.}.  In \amrex, grids consist of a number of
-boxes that enable domain decomposition for parallelism.\MarginPar{unclear what the difference between a grid and box is here}
-An iterator loops over all of the boxes at the same level of refinement and passes
-a data pointer into a Fortran kernel function where the work is
-done. For the simulation state data that resides in each box, we have
-modified the memory allocator so that it can use a CUDA allocator
-(either device or managed memory).  The domain iterator is configured
-to handle data motion to and from the device, so that the compute
-kernels can operate on data that is presumed to already be there, and
-the computation is decoupled from the memory management. Computation
-on the data can then be performed with OpenACC, CUDA Fortran, or (more
-recently) OpenMP 4.5. We have also built CUDA compute support into
-\amrex\ so that a compute kernel can be transparently operated on
-using CUDA Fortran without substantially modifying the kernels (and we
-anticipate using a similar strategy to use OpenACC and/or OpenMP in
-the future). This helps ensure that we can continue to maintain
-performance portability in our simulation codes, by decoupling the
-physics algorithms from the backend support used to implement them on
-various compute architectures.\MarginPar{add CPU time for reference}
+  into {\tt development}.}.  In \amrex, an iterator loops over all of
+the boxes at the same level of refinement and passes a data pointer
+into a Fortran kernel function where the work is done. For the
+simulation state data that resides in each box, we have modified the
+memory allocator so that it can use a CUDA allocator (either device or
+managed memory).  The domain iterator is configured to handle data
+motion to and from the device, so that the compute kernels can operate
+on data that is presumed to already be there, and the computation is
+decoupled from the memory management. Computation on the data can then
+be performed with OpenACC, CUDA Fortran, or (more recently) OpenMP
+4.5. We have also built CUDA compute support into \amrex\ so that a
+compute kernel can be transparently operated on using CUDA Fortran
+without substantially modifying the kernels (and we anticipate using a
+similar strategy to use OpenACC and/or OpenMP in the future). This
+helps ensure that we can continue to maintain performance portability
+in our simulation codes, by decoupling the physics algorithms from the
+backend support used to implement them on various compute
+architectures.\MarginPar{add CPU time for reference}
 
 
 Figure~\ref{fig:knl-gpu-scaling} shows the performance of
@@ -513,9 +512,9 @@ layer on a sub-Chandra white dwarf.  This is part of a study of the
 early stages of the double detonation SNe Ia model.  Using \maestro,
 we are able to model the convection in the He layer for many turnover
 times and saw a range of outcomes depending on the mass of the white
-dwarf and He layer, including a global He-nova-like behavior where the
+dwarf and He layer, including a both nova-like behavior where the
 entire layer runs way together and localized
-burning~\cite{subchandra2}.\MarginPar{incomplete sentence}
+burning ignited in a small region~\cite{subchandra2}.
 We are performing further studies to characterize the ignition.
 
 The middle figure shows convection in a H/He layer on a neutron star,
@@ -569,8 +568,8 @@ computing system at the Institute for Advanced Computational Science
 at Stony Brook University, which was obtained through the Empire State
 Development grant NYS \#28451.  The GPU work benefited from a grant of
 an Titan X Pascal board from Nvidia Corp through the GPU Grant
-Program.  This research has made use of NASA's Astrophysics Data
-System Bibliographic Services.
+Program.  Visualization were done using \cite{yt}.  This research has
+made use of NASA's Astrophysics Data System Bibliographic Services.
 
 \section*{References}
 
