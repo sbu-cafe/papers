@@ -93,11 +93,11 @@ Instead, we advance our understanding of these events by piecing
 together simulations of different phases of the evolution from
 different codes.  Here we discuss our simulation codes, \maestro\ and
 \castro, designed to perform three-dimensional models of the early
-subsonic evolution leading to runaway and the subsequent explosion.
-Together this suite of codes allows us to address many problems in
-stellar and nuclear astrophysics.  We describe some of the design
-details, the current architecture of the code, and some applications
-below.
+subsonic evolution leading to runaway and the subsequent explosion,
+respectively.  Together this suite of codes allows us to address many
+problems in stellar and nuclear astrophysics.  We describe some of the
+design details, the current architecture of the code, and some
+applications below.
 
 \section{Science drivers and challenges}
 
@@ -130,7 +130,7 @@ diversity.  See~\cite{araa-maoz} for a review.
 
 There are open questions in all of these scenarios that can be
 addressed through simulation.  For the Chandra and sub-Chandra models,
-what is the distribution (spatial and temporal) of the hotspots setup
+what is the distribution (spatial and temporal) of the hotspots set up
 by turbulent convection that give rise to burning fronts?  A
 longstanding question with the Chandra model is whether a deflagration
 can transition to a detonation during the burning front propagation
@@ -144,26 +144,27 @@ numerical issues such as whether it is possible to accurately model
 the ignition of a detonation with the spatial resolution we can
 attain.  These are some of the questions we seek to answer.
 
-\subsection{XRBs}
+\subsection{X-ray Bursts}
 
-X-ray bursts, the burning of accreted H/He on the surface of a neutron
-star, can be important probes of neutron star structure.  Interpreting
-observations requires that we understand what we are seeing, which can
-be influenced by the products of the burning and how the burning
-spreads across the star.  Many efforts have focused on different
-aspects of these events.  One-dimensional models capture the
+X-ray bursts --- the burning of accreted H/He on the surface of a
+neutron star --- can be important probes of neutron star structure.
+Interpreting observations requires that we understand what we are
+seeing, which can be influenced by the products of the burning and how
+the burning spreads across the star.  Many efforts have focused on
+different aspects of these events.  One-dimensional models capture the
 energetics well and inform us about the nucleosynthesis
 \cite{woosley-xrb}.  Global models show the importance of rotation in
 confining the burning \cite{SPIT_ETAL02}, while models inspired from
 atmospheric science can explore the vertical structure
 \cite{cavecchi:2012}.  However, the resolution differences from the
 scale of the burning to a reasonable fraction of the neutron star
-surface has prevented detailed explorations of the burning in resolved
-calculations and how it feeds back on the flame structure and
-propagation.  Algorithms and computing architectures are starting to
+surface has prevented detailed explorations of the burning and how it
+feeds back on the flame structure and propagation in resolved
+calculations.  Algorithms and computing architectures are starting to
 reach the point where we can span the gaps in spatial scales between
 these calculations to provide a better understanding of the ignition
-and propagation of the burning front, and the nucleosynthesis produced.
+and propagation of the burning front, and the nucleosynthesis
+produced.
 
 
 \subsection{Requirements}
@@ -174,7 +175,7 @@ self-gravity, including isolated boundary conditions, and long timescale
 evolution for the convective phases.  All of these problems are inherently
 three-dimensional, as turbulence, fluid instabilities, and rotation affect
 the dynamics.  Conservation is important as well, suggesting approaches
-which implement gravitational and rotation sources conservatively, and
+that implement gravitational and rotation sources conservatively, and
 methods for improving angular momentum conservation.
 
 
@@ -249,16 +250,16 @@ Fluid quantities are advected using an unsplit Godunov method, with
 reactions incorporated via operator splitting.  The provisional
 velocities are then projected onto the space that satisfies the
 divergence constraint.  The projections require solving a variable
-coefficient elliptic equations, which is done numerically using a
-multigrid algorithm.  A number of recent advances in low Mach
-number modeling~\cite{kleinpauluis,vasil:2013} have been
-incorporated into \maestro.
+coefficient elliptic equation, which is done numerically using a
+multigrid algorithm.  A number of recent advances in low Mach number
+modeling~\cite{kleinpauluis,vasil:2013} have been incorporated into
+\maestro.
 
 \maestro\ has been applied to convection in the Chandrasekhar-mass
-model for Type Ia supernovae (SNe Ia)
-\cite{ZABNW:IV,wdconvect,wdturb}, the sub-Chandra model for SNe Ia
-\cite{subchandra,subchandra2} X-ray bursts~\cite{xrb,xrb2,xrb3}, and
-convection in massive stars \cite{ms_cc}.
+model for SNe Ia \cite{ZABNW:IV,wdconvect,wdturb}, the sub-Chandra
+model for SNe Ia \cite{subchandra,subchandra2},
+XRBs~\cite{xrb,xrb2,xrb3}, and convection in massive stars
+\cite{ms_cc}.
 
 
 
@@ -279,14 +280,15 @@ introduced by \cite{miniati-colella}.  Recent developments in
 \castro\ include a spectral-deferred correction method of coupling
 hydrodynamics and reactions, a conservative gravity and rotation
 source formulation~\cite{wdmergerI}, and retry mechanism to redo a
-step based on criteria evaluated during the integration.\MarginPar{more new stuff?}
+step based on criteria evaluated during the
+integration.\MarginPar{more new stuff?}
 
 \castro\ has been applied to core-collapse
 supernovae~\cite{castro-ccsne}, population III pair-instability
 supernovae~\cite{castro-pairinstability}, and white dwarf mergers as a
 model for SNe Ia~\cite{wdmergerI}.  Recent work has focused on
 improving energy conservation with gravitational and rotational
-sources and new integration methods that more accurately couple hydro
+sources, and new integration methods that more accurately couple hydro
 and reactions.  For \maestro\ simulations that evolve from the
 subsonic regime to the sonic regime, we have demonstrated the ability
 to restart the calculations in \castro\ to continue the evolution into
@@ -296,7 +298,7 @@ for Chandra model SNe Ia).
 \subsection{\starkiller\ Microphysics}
 
 \maestro\ and \castro\ share the same microphysics, available as the
-\starkiller\ astrophysics github
+\starkiller\ astrophysics GitHub
 project\footnote{\url{https://github.com/StarKiller-astro/microphysics/}}.
 This includes equations of state and nuclear reaction
 networks\footnote{Several of the reaction network righthand sides and
@@ -316,7 +318,7 @@ astrophysics codes, not just those discussed here.
 
 All of our simulation codes are open source and follow a fully open
 development model---the development git repos are hosted on
-github\footnote{\url{https://github.com/AMReX-Astro/}}, available for
+GitHub\footnote{\url{https://github.com/AMReX-Astro/}}, available for
 anyone to see and contribute to using issues and pull-requests.
 Additionally, we have mailing lists for discussions and asking for
 help.  Several branches are used in our workflow.  New changes are put
@@ -397,20 +399,20 @@ where planes in the $z$-direction are divided among OpenMP threads.
 As we port \maestro\ to the \cpp\ \amrex\ code base we will take
 advantage of ongoing development for increased tile size control.
 
-Figure~\ref{fig:castro-scaling} shows \castro\ scaling behavior for a pure
-hydro + real EOS problem and a hydro / real EOS, + self-gravity
-problem.  All tests were run on OLCF Titan.  The AMD processors in
-Titan can be used in an 8 or 16 cores / node configuration.  For all
-these runs, we ran in the 16 cores / node mode.  All runs also used
-the PGI 17.7 compilers.  We see excellent scaling behavior for the
-pure hydro problem.  For the self-gravity problem, we scale well with
-a uniform grid, but with a factor of 4 refinement for the AMR level on
-top of this, we observe degraded performance at higher core counts.
-This is a challenging problem, as only 3\% of the domain volume is
-refined.  For a given core count, there are a number of different
-combinations of MPI ranks and OpenMP threads we can use.  In general,
-with multilevel problems, we found the best performance with fewer MPI
-ranks and more OpenMP threads.
+Figure~\ref{fig:castro-scaling} shows \castro\ scaling behavior for a
+pure hydro problem with a real EOS and a hydro + self-gravity problem
+with a real EOS.  All tests were run on OLCF Titan.  The AMD
+processors in Titan can be used in an 8 or 16 cores / node
+configuration.  For all these runs, we ran in the 16 cores / node
+mode.  All runs also used the PGI 17.7 compilers.  We see excellent
+scaling behavior for the pure hydro problem.  For the self-gravity
+problem, we scale well with a uniform grid, but with a factor of 4
+refinement for the AMR level on top of this, we observe degraded
+performance at higher core counts.  This is a challenging problem, as
+only 3\% of the domain volume is refined.  For a given core count,
+there are a number of different combinations of MPI ranks and OpenMP
+threads we can use.  In general, with multilevel problems, we found
+the best performance with fewer MPI ranks and more OpenMP threads.
 
 Our latest focus has been on GPU ports of our application codes.  A
 small proxy app, \starlord, was created from \castro\ with just the
@@ -472,20 +474,20 @@ threads / chip).
 \MarginPar{we should update this to a more modern processor---Don can you run
 this on summitdev?}
 
-A parallel effort is porting our microphysics, in particular reaction
-networks to GPUs.  Our strategy is to do the entire ODE integration on
-the GPU, i.e., the data for a patch of zones is passed to the GPU, all
-righthand size and Jacobian evaluations and the timestepping itself is
-done on the GPU and once the burning in all zones is completed, we access the data as
-needed on the CPU.  To enable this, we ported our workhorse ODE
-integrator (VODE~\cite{vode}) to CUDA Fortran. This required extensive
-rewrites of the internals of VODE, which was originally written using
-Fortran 77 syntax unsupported by CUDA Fortran. Accelerating VODE with
-CUDA Fortran has proven successful, and we now see significant
-performance gains with the CUDA version of our reaction networks, even
-for moderate sized networks (a 13-isotope standard network).
-Figure~\ref{fig:cudaode} shows the speed-ups on a GPU vs.\ single CPU
-core.
+A parallel effort is porting our microphysics --- in particular
+reaction networks --- to GPUs.  Our strategy is to do the entire ODE
+integration on the GPU, i.e., the data for a patch of zones is passed
+to the GPU, all righthand size and Jacobian evaluations and the
+timestepping itself is done on the GPU, and once the burning in all
+zones is completed, we access the data as needed on the CPU.  To
+enable this, we ported our workhorse ODE integrator (VODE~\cite{vode})
+to CUDA Fortran. This required extensive rewrites of the internals of
+VODE, which was originally written using Fortran 77 syntax unsupported
+by CUDA Fortran. Accelerating VODE with CUDA Fortran has proven
+successful, and we now see significant performance gains with the CUDA
+version of our reaction networks, even for moderate-sized networks (a
+13-isotope standard network).  Figure~\ref{fig:cudaode} shows the
+speed-ups on a GPU vs.\ single CPU core.
 
 
 
@@ -537,7 +539,7 @@ We have described our suite of astrophysics codes built on the
 codes were developed to model problems in stellar astrophysics
 spanning from low speed convection to explosive burning.  A major
 theme of the codes is the open development model, with the code
-development done on github and all problem files needed to recreate
+development done on GitHub and all problem files needed to recreate
 any science results freely available.  Future development efforts for
 \maestro\ include higher-order hydrodynamics and time-integration and
 rotation.  For \castro, we are investigating stronger coupling between
