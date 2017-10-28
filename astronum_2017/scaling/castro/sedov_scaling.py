@@ -8,6 +8,8 @@ plt.rcParams.update({'xtick.labelsize': 14,
 plt.rc("axes", linewidth=1.5)
 plt.rc("lines", markeredgewidth=1.5)
 
+plt.style.use("seaborn-darkgrid")
+
 class ScalingRun(object):
     def __init__(self, MPI=1, OMP=1, max_grid=1, nzones=1, max_level=1, time=0.0, std=0.0):
         self.MPI = MPI
@@ -97,3 +99,4 @@ f = plt.gcf()
 f.set_size_inches(8, 6)
 
 plt.savefig("sedov_scaling.pdf", dpi=150, bbox_inches="tight")
+plt.savefig("sedov_scaling.png", dpi=150, bbox_inches="tight")

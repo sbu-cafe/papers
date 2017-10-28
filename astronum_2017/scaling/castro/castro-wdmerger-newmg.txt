@@ -1,0 +1,45 @@
+# this was run on 2017-10-28 using the wdmerger problem in 3-d on
+# titan with the Cray 8.5.7 compilers and the new MLMG solver
+
+# problem size: 256^3, max_grid_size=32
+# single level: 512 boxes at max
+
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step    stddev
+   64     1       64         4         32         256        0                29.1886       0.228026
+  128     1      128         8         32         256        0                14.7709       0.122878
+  256     1      256        16         32         256        0                 7.44747      0.056527
+  512     1      512        32         32         256        0                 3.82196      0.0290164
+  512     2     1024        64         32         256        0                 1.97008      0.0164325
+  512     4     2048       128         32         256        0                 1.08559      0.0250824
+
+
+# one AMR level (4x)
+
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step    stddev
+  128     4      512        32         32         256        1                37.9103       0.80637
+  256     4     1024        64         32         256        1                21.3394       0.597816
+  512     4     2048       128         32         256        1                14.3484       0.604396
+#  512     8     4096       256         32         256        1                 9.49471      0.357399
+ 1024     4     4096       256         32         256        1                 8.42712      0.43827
+
+
+
+# problem size: 512^3, max_grid_size = 32
+# single level: 4096 boxes at max
+
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step    stddev
+  512     1      512        32         32         512        0
+ 1024     1     1024        64         32         512        0
+ 2048     1     2048       128         32         512        0
+ 4096     1     4096       256         32         512        0
+ 4096     2     8192       512         32         512        0
+ 4096     4    16394      1024         32         512        0
+
+
+# one AMR level (4x)
+
+# MPI    OMP    cores     nodes     max_grid    nzones    max_level    avg-time-per-step    stddev
+ 2048     1     2048       128         32         512        1
+ 2048     2     4096       256         32         512        1
+ 2048     4     8192       512         32         512        1
+ 2048     8    16384      1024         32         512        1
