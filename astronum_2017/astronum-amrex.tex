@@ -52,7 +52,8 @@
 \address{$^4$Department of Physics and Astronomy, Michigan State
   University, East Lansing, Michigan 48824 USA}
 
-\address{$^5$Nvidia Corporation}
+\address{$^5$NVIDIA Corporation, 2788 San Tomas Expressway,
+  Santa Clara, CA, 95050 USA}
 
 \address{$^6$Los Alamos National Laboratory, Los Alamos, NM, 87545 USA}
 
@@ -119,7 +120,7 @@ mostly converged upon the single-degenerate scenario---a
 Chandrasekhar-mass C/O white dwarf that accretes from its companion,
 eventually leading to runaway at the center that burns through the
 star (see~\cite{hillebrandtniemeyer2000} for the state of the field at
-that time).  Since then, the wealth of observations has indicated that
+that time).  Since then, a wealth of observations has indicated that
 there is a lot of diversity in SNe Ia, and searches for progenitor
 systems have strongly suggested that Chandra-mass white dwarfs cannot
 explain most SNe Ia.  Today, merging white dwarfs (the double
@@ -279,9 +280,9 @@ synchronization for self-gravity is similar to the algorithm
 introduced by \cite{miniati-colella}.  Recent developments in
 \castro\ include a spectral-deferred correction method of coupling
 hydrodynamics and reactions, a conservative gravity and rotation
-source formulation~\cite{wdmergerI}, and retry mechanism to redo a
+source formulation~\cite{wdmergerI}, and a retry mechanism to redo a
 step based on criteria evaluated during the
-integration.\MarginPar{more new stuff?}
+integration.
 
 \castro\ has been applied to core-collapse
 supernovae~\cite{castro-ccsne}, radiative shock breakout in
@@ -427,7 +428,7 @@ GPUs, GPU support was added directly into \amrex\footnote{This support
 the boxes at the same level of refinement and passes a data pointer
 into a Fortran kernel function where the work is done. For the
 simulation state data that resides in each box, we have modified the
-memory allocator so that it can use a CUDA allocator (either device or
+memory allocator so that it can use a CUDA allocator (mainly relying on
 managed memory).  The domain iterator is configured to handle data
 motion to and from the device, so that the compute kernels can operate
 on data that is presumed to already be there, and the computation is
@@ -440,15 +441,16 @@ similar strategy to use OpenACC and/or OpenMP in the future). This
 helps ensure that we can continue to maintain performance portability
 in our simulation codes, by decoupling the physics algorithms from the
 backend support used to implement them on various compute
-architectures.\MarginPar{add CPU time for reference}
+architectures.
 
 
 Figure~\ref{fig:knl-gpu-scaling} shows the performance of
 \starlord\ on the Summitdev platform at OLCF\footnote{Summitdev
-  consists of 2 IBM Power8 processors and 4 Nvidia Pascal GPUs per
+  consists of 2 IBM Power8 processors and 4 NVIDIA Pascal GPUs per
   node.}.  The highest GPU count (128) corresponds to 32 nodes on
 Summitdev.  We see a nearly linear speedup with the number of GPUs,
-indicating good weak scaling on this machine.  Efforts are underway to
+indicating good weak scaling on this machine. A single P100 GPU achieves
+a performance approximately 2.5 times that of the 20 Power8 cores. Efforts are underway to
 complete the port of the GPU developments into \castro.  This figure
 also shows our performance on the Intel Xeon Phi manycore processors (using
 NERSC Cori).  This is for the same problem as the self-gravity test on
@@ -471,9 +473,6 @@ threads / chip).
   workstation with a Titan X Pascal board and Intel Xeon X5650 processors.}
 \end{minipage}
 \end{figure}
-
-\MarginPar{we should update this to a more modern processor---Don can you run
-this on summitdev?}
 
 A parallel effort is porting our microphysics --- in particular
 reaction networks --- to GPUs.  Our strategy is to do the entire ODE
@@ -563,12 +562,14 @@ particular Fernanda Foertter) in organizing the GPU hackathons.  This
 research used resources of the National Energy Research Scientific
 Computing Center, which is supported by the Office of Science of the
 U.S. Department of Energy under Contract No.\ DE-AC02-05CH11231.
-Results in this paper were obtained using the high-performance LIred
-computing system at the Institute for Advanced Computational Science
-at Stony Brook University, which was obtained through the Empire State
-Development grant NYS \#28451.  The GPU work benefited from a grant of
-an Titan X Pascal board from Nvidia Corp through the GPU Grant
-Program.  Visualization were done using \cite{yt}.  This research has
+The authors would like to thank Stony Brook Research Computing
+and Cyberinfrastructure, and the Institute for Advanced Computational
+Science at Stony Brook University for access to the high-performance
+LIred and SeaWulf computing systems, the latter of which was made
+possible by a \$1.4M National Science Foundation grant (\#1531492).
+The GPU work benefited from a grant of an Titan X Pascal board
+from NVIDIA Corporation through the GPU Grant Program.
+Visualizations were done using yt~\cite{yt}.  This research has
 made use of NASA's Astrophysics Data System Bibliographic Services.
 
 \section*{References}
