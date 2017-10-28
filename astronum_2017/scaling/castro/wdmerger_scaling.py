@@ -28,7 +28,7 @@ def trend_line(c, t):
 
 runs = []
 
-data = np.loadtxt("castro-wdmerger-scaling.txt")
+data = np.loadtxt("castro-wdmerger-newmg.txt")
 
 for row in data:
     runs.append(ScalingRun(MPI=row[0], OMP=row[1], max_grid=row[4], 

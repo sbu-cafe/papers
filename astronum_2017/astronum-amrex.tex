@@ -366,14 +366,16 @@ need with architecture-specific optimizations to maximize code reuse.
   $1024^3$ run, we also ran with one level of refinement by a factor
   of 2 (triangles) or a factor of 4 (squares), and see good strong
   scaling.  The variability (shown by the error bars) at high core
-  counts shows we are becoming work-starved. (right) \castro\ strong
+  counts shows we are becoming work-starved.  These runs used the PGI 17.7
+  compilers.  (right) \castro\ strong
   scaling on OLCF Titan for a hydro + Poisson gravity (wdmerger)
   problem.  This problem uses a multipole solver to determine
   Dirichlet boundary conditions representing an isolated mass
   distribution, and then geometric multigrid to solve for the
   potential in the interior.  Two coarse grid sizes are shown, and
   demonstrate great strong scaling.  We also look at a single level of
-  refinement (by a factor of 4) on top of this coarse grid.}
+  refinement (by a factor of 4) on top of this coarse grid.  These runs 
+  used the Cray 8.5.7 compilers.}
 \end{figure}
 
 \begin{figure}[t]
@@ -407,9 +409,9 @@ pure hydro problem with a real EOS and a hydro + self-gravity problem
 with a real EOS.  All tests were run on OLCF Titan.  The AMD
 processors in Titan can be used in an 8 or 16 cores / node
 configuration.  For all these runs, we ran in the 16 cores / node
-mode.  All runs also used the PGI 17.7 compilers.  We see excellent
+mode.  We see excellent
 scaling behavior for the pure hydro problem.  For the self-gravity
-problem, we scale well with a uniform grid, but with a factor of 4
+problem, we scale very well with a uniform grid, but with a factor of 4
 refinement for the AMR level on top of this, we observe degraded
 performance at higher core counts.  This is a challenging problem, as
 only 3\% of the domain volume is refined.  For a given core count,
