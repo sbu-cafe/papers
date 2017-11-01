@@ -288,20 +288,18 @@ integration.
 supernovae~\cite{castro-ccsne}, radiative shock breakout in
 supernovae~\cite{lovegrove:2017}, population III pair-instability
 supernovae~\cite{castro-pairinstability}, the Chandra model for
-SNe~Ia~\cite{ma:2013}, the sub-Chandra SNe Ia model~\cite{moll:2013}, and white dwarf mergers as a model for SNe
-Ia~\cite{moll:2014,wdmergerI}. Recent work has focused on improving energy
-conservation with gravitational and rotational sources, and new
-integration methods that more accurately couple hydro and reactions.
-For \maestro\ simulations that evolve from the subsonic regime to the
-sonic regime, we have demonstrated the ability to restart the
-calculations in \castro\ to continue the evolution into the sonic
-regime~\cite{scidac-petascale,malone:2014} (in this case, for Chandra
-model SNe Ia).
+SNe~Ia~\cite{ma:2013}, the sub-Chandra SNe Ia model~\cite{moll:2013},
+and white dwarf mergers as a model for SNe
+Ia~\cite{moll:2014,wdmergerI}.  For \maestro\ simulations that evolve
+from the subsonic regime to the sonic regime, we have demonstrated the
+ability to restart the calculations in \castro\ to continue the
+evolution into the sonic regime~\cite{scidac-petascale,malone:2014}
+(in this case, for Chandra model SNe Ia).
 
 \subsection{\starkiller\ Microphysics}
 
 \maestro\ and \castro\ share the same microphysics, available as the
-\starkiller\ astrophysics GitHub
+\starkiller\ Microphysics GitHub
 project\footnote{\url{https://github.com/StarKiller-astro/microphysics/}}.
 This includes equations of state and nuclear reaction
 networks\footnote{Several of the reaction network righthand sides and
@@ -409,15 +407,15 @@ pure hydro problem with a real EOS and a hydro + self-gravity problem
 with a real EOS.  All tests were run on OLCF Titan.  The AMD
 processors in Titan can be used in an 8 or 16 cores / node
 configuration.  For all these runs, we ran in the 16 cores / node
-mode.  We see excellent
-scaling behavior for the pure hydro problem.  For the self-gravity
-problem, we scale very well with a uniform grid, but with a factor of 4
-refinement for the AMR level on top of this, we observe degraded
-performance at higher core counts.  This is a challenging problem, as
-only 3\% of the domain volume is refined.  For a given core count,
-there are a number of different combinations of MPI ranks and OpenMP
-threads we can use.  In general, with multilevel problems, we found
-the best performance with fewer MPI ranks and more OpenMP threads.
+mode.  We see excellent scaling behavior for the pure hydro problem to
+$\mathcal{O}(10^5)$ cores.  For the self-gravity problem, we scale
+very well with a uniform grid, but with a factor of 4 refinement for
+the AMR level on top of this, we observe degraded performance at
+higher core counts.  This is a challenging problem, as only 3\% of the
+domain volume is refined.  For a given core count, there are a number
+of different combinations of MPI ranks and OpenMP threads we can use.
+In general, with multilevel problems, we found the best performance
+with fewer MPI ranks and more OpenMP threads.
 
 Our latest focus has been on GPU ports of our application codes.  A
 small proxy app, \starlord, was created from \castro\ with just the
@@ -459,20 +457,24 @@ NERSC Cori).  This is for the same problem as the self-gravity test on
 Titan.  The Intel Xeon Phi chips in Cori
 have 68 cores than can be run with 1, 2, or 4 hardware threads each.
 For all these runs, we ran with 4 threads / core (272
-threads / chip).
+threads / chip).  We have not yet focused on optimizing \castro\ for the
+Intel Xeon Phi architecture.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.48\linewidth]{CUDA-Fortran-VODE-Integrator}
+\includegraphics[width=0.48\linewidth]{cuda-vode-speedup}
 \begin{minipage}[b]{0.48\linewidth}
-\caption{\label{fig:cudaode} GPU speed up over single CPU core for two
+\caption{\label{fig:cudaode} GPU speed up over single CPU core for three
+  different reaction networks.
   reaction networks.  The 13-isotope alpha-chain is a
-  potential network for the sub-Chandra simulations.
-  The 9-isotope Urca network is used for our Urca simulations.  A
+  potential network for the sub-Chandra simulations;
+  the 9-isotope Urca network is used for our Urca simulations;
+  and the 3 isotope carbon network was used for our original \maestro\
+  white dwarf convection calculations.  A
   variety of grid sizes were used, $16^3$, $32^3$, $64^3$, and
-  $128^3$.  In all cases, we see significant speed up on the GPU
-  vs.\ a single core.  These speed-up numbers are from our testbed
-  workstation with a Titan X Pascal board and Intel Xeon X5650 processors.}
+  $128^3$.  In all cases, we see a good  speed up on the GPU
+  vs.\ a single core.  These speed-up numbers are from the
+  Summitdev machine, comparing a single Tesla P100 GPU to a single Power8 CPU core.}
 \end{minipage}
 \end{figure}
 
@@ -489,7 +491,11 @@ by CUDA Fortran. Accelerating VODE with CUDA Fortran has proven
 successful, and we now see significant performance gains with the CUDA
 version of our reaction networks, even for moderate-sized networks (a
 13-isotope standard network).  Figure~\ref{fig:cudaode} shows the
-speed-ups on a GPU vs.\ single CPU core.
+speed-ups on a GPU vs.\ single CPU core.  The main issue with scaling
+is running out of local stack memory per thread with larger networks.
+Reducing the memory footprint is a near-term goal for this work.  This
+test problem also shows a lot of thread divergence due to the widely
+differing thermodynamic conditions in the zones that are burning.
 
 
 
