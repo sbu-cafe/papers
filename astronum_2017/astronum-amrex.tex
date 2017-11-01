@@ -481,7 +481,7 @@ Intel Xeon Phi architecture.
 A parallel effort is porting our microphysics---in particular
 reaction networks---to GPUs.  Our strategy is to do the entire ODE
 integration on the GPU, i.e., the data for a patch of zones is passed
-to the GPU, all righthand size and Jacobian evaluations and the
+to the GPU, all righthand side and Jacobian evaluations and the
 timestepping itself is done on the GPU, and once the burning in all
 zones is completed, we access the data as needed on the CPU.  To
 enable this, we ported our workhorse ODE integrator (VODE~\cite{vode})
