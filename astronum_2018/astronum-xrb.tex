@@ -18,7 +18,10 @@
 \newcommand{\amrex}{{\sffamily AMReX}}
 
 \newcommand{\Uc}{{\,\bm{\mathcal{U}}}}
+\newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
+\newcommand{\Advt}[1]{{\left [\mathcal{\tilde{A}} \left(#1\right)\right]}}
 \newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
+
 
 
 \newcommand{\cpp}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
@@ -42,10 +45,11 @@
         K.~Eiden$^1$,
         Y.~Cavecchi$^2$,
         A.~Harpole$^1$,
-        M.~P. Katz$^5$,
         J.~B. Bell$^2$,
         M.~Chang$^1$,
-        C.~M. Malone$^6$, and
+        M.~P. Katz$^5$,
+        C.~M. Malone$^6$, 
+        D.~E. Willcox$^2$, and
         W. Zhang$^2$}
 
 \address{$^1$Department of Physics and Astronomy, Stony Brook
@@ -187,7 +191,7 @@ of our science problems are distributed with the codes.
 Short description of problem setup and approximations
 rotation, network, flame boosting
 
-Describe resolution needs and flame structure, Figure~\ref{fig:xrb}
+Describe resolution needs and flame structure, Figure~\ref{fig:xrb} \MarginPar{Mike will update this}
 
 
 \begin{figure}
@@ -250,7 +254,7 @@ order, we may also be able to reduce our resolution requirements
 needed for converged flames, and since computational work scales like
 $(\Delta x)^4$ in 3D, this can save a lot of computer time.
 
-As an example of the improvements in coupling between hydro and
+As an example of the improvements in coupling between hydro and \MarginPar{Don can add some comments about startup costs?}
 reactions, Figure~\ref{fig:sdc} shows the mass fraction of helium
 behind a detonation over the course of 3 timesteps.  The points
 represent individual calls to the righthand side function of our
@@ -258,13 +262,13 @@ reaction network (a 13-isotope $\alpha$-chain), and the density of
 points indicates how hard the integrator is working.  We use the same
 tolerances for both the Strang-split method and the SDC method.  For
 the SDC method, we are using a second-order accurate method.  We
-predict a time-centered advection term, $\Advs{\Uc}^{n+1/2}$ using
+predict a time-centered advection term, $\Adv{\Uc}^{n+1/2}_i$ using
 standard unsplit Godunov methods, but explicitly include a reactive
 source term in the tracing of the interface states.  We can then solve
 the reactive system, using this advective term as a
 piecewise-constant-in-time source
 \begin{equation}
-\frac{d{\Uc}}{dt} = -\Advs{\Uc}^{n+1/2} + {\bf R}(\Uc)
+\frac{d{\Uc_i}}{dt} = -\Adv{\Uc}^{n+1/2}_i + {\bf R}(\Uc_i)
 \end{equation}
 This system can be integrated with standard ODE methods.  To achieve
 second-order accuracy, we need to iterate, using the updated $\Uc$ to
@@ -291,6 +295,8 @@ even something as simple as subzone burning.\MarginPar{need the paper ref fo rth
 Finally, we can try hybrid model approaches where the fully
 compressible simulation can act as a subgrid model.  \MarginPar{this ties into Ann's stuff, and also the stuff Alice was doing}
 
+
+\section{Summary}
 
 \ack The work at Stony Brook was supported by DOE/Office of Nuclear
 Physics grant DE-FG02-87ER40317 and contract 7418390 with Lawrence
