@@ -1,0 +1,15 @@
+-- XRB properties
+
+-- challenges of modeling
+
+   - flame thickness / scale height
+
+-- approaches used
+
+-- new simulations bridge 
+
+-- Castro development
+
+  - GPUs
+
+  - SDC

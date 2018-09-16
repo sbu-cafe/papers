@@ -1,0 +1,9 @@
+These runs were done with Castro and Microphysics on the astronum_sdc_plot
+branch.  This branch has some prints in the react routines and VODE
+righthand side to output the state as a function of time.
+
+The Detonation problem was run, with inputs-det-x.SDC and probin-det-x.SDC
+
+The SDC run was done for 200 steps and then we restarted both the Strang
+and SDC from there to get the diagnostics, outputting in zone 465, which is
+just behind the detonation.
