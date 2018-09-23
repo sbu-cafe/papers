@@ -43,32 +43,38 @@
 
 \author{M. Zingale$^1$,
         K.~Eiden$^1$,
-        Y.~Cavecchi$^2$,
+        Y.~Cavecchi$^{2,3}$,
         A.~Harpole$^1$,
-        J.~B. Bell$^2$,
+        J.~B. Bell$^4$,
         M.~Chang$^1$,
-        M.~P. Katz$^5$,
-        C.~M. Malone$^6$, 
-        A.~J. Nonaka$^2$,
-        D.~E. Willcox$^2$, and
-        W. Zhang$^2$}
+        M.~P. Katz$^7$,
+        C.~M. Malone$^8$, 
+        A.~J. Nonaka$^4$,
+        D.~E. Willcox$^4$, and
+        W. Zhang$^4$}
 
 \address{$^1$Department of Physics and Astronomy, Stony Brook
   University, Stony Brook, NY 11794-3800 USA}
 
-\address{$^2$Center for Computational Sciences and Engineering,
+\address{$^2$Department of Astrophysical Sciences, Princeton University,
+  Peyton Hall, Princeton, NJ 08544, USA}
+
+\address{$^3$Mathematical Sciences and STAG Research Centre,
+  University of Southampton, SO17 1BJ, UK}
+
+\address{$^4$Center for Computational Sciences and Engineering,
   Lawrence Berkeley National Lab, Berkeley, CA 94720 USA}
 
-\address{$^3$National Energy Research Scientific Computing Center,
+\address{$^5$National Energy Research Scientific Computing Center,
   Lawrence Berkeley National Lab, Berkeley, CA 94720 USA}
 
-\address{$^4$Department of Physics and Astronomy, Michigan State
+\address{$^6$Department of Physics and Astronomy, Michigan State
   University, East Lansing, Michigan 48824 USA}
 
-\address{$^5$NVIDIA Corporation, 2788 San Tomas Expressway,
+\address{$^7$NVIDIA Corporation, 2788 San Tomas Expressway,
   Santa Clara, CA, 95050 USA}
 
-\address{$^6$Los Alamos National Laboratory, Los Alamos, NM, 87545 USA}
+\address{$^8$Los Alamos National Laboratory, Los Alamos, NM, 87545 USA}
 
 \begin{abstract}
 We discuss the challenges of modeling X-ray bursts, review the different
@@ -100,6 +106,7 @@ bring ashes up to the photosphere which alters what we
 see~\cite{kajava:2017}.  Accurate measurements of neutron star radii
 from XRBs could greatly constrain the nuclear equation of
 state~\cite{steiner:2010,ozel:2010}.  Finally, brightness oscillations
+during the rising phase of the bursts
 and other features seen in lightcurves are interpreted as arising from
 the spreading of a hotspot across the neutron star---demonstrating
 that the burst begins in a localized
@@ -110,7 +117,7 @@ Simulations of XRBs can help us to understand the observations, but
 many technical challenges remain.  The primary difficulties are simply
 the range of length and timescales involved.  At the largest scale,
 the neutron star is 10~km and the Rossby lengthscale, where rotation
-and laterial pressure gradients balance is $\sim
+and lateral pressure gradients balance is $\sim
 1$~km~\cite{SPIT_ETAL02}.  At the smallest scales, a conductive He
 flame has a thickness of 10s of centimeters~\cite{Timmes00} and the
 pressure scale height of the fuel layer is meters.  To capture the
@@ -120,11 +127,11 @@ is subsonic, so long timescale evolution is difficult.
 Present and past simulations of XRBs employ a variety of
 approximations to get past these difficulties.  The variety of
 approximations used enables a complementary picture of XRBs to be built up, 
-and has greatly advanced our understand of these systems.  
+and has greatly advanced our understanding of these systems.  
 The breadth of simulations to date has been impressive.  We summarize
 the different approaches below.
 
-One-dimensional simulations~\cite{woosley-xrb,fisker:2008} assume
+One-dimensional simulations, e.g. \cite{woosley-xrb,fisker:2008}, assume
 spherical symmetry and model the burst through the vertical column
 depth of fuel.  These simulations can capture the luminosities and
 burst recurrence times well.  The can utilize very large nuclear
@@ -137,7 +144,7 @@ learn about lateral variations across the neutron star, including
 flame spreading.
 
 Global shallow water simulations~\cite{SPIT_ETAL02} capture the
-largescale spreading of the burning front by using a very simple
+large scale spreading of the burning front by using a very simple
 vertical structure.  These simulations were instrumental in showing
 that the Coriolis force plays an important role in confining a
 spreading region and the flame spreading can explain brightness
@@ -150,7 +157,7 @@ bursts~\cite{xrb2} in 2d, and full 3d simulations of mixed
 bursts~\cite{xrb3}, and followed the development of the turbulence.
 These simulations can give an understand of the pre-burning front
 regime, including the strength and character of the turbulence, but
-cannot model largescale lateral variations because of the implicit
+cannot model large scale lateral variations because of the implicit
 assumptions built into the low Mach number model~\cite{ABRZ:I}.
 
 While detonations are computationally easier to model than flames (we
@@ -163,12 +170,40 @@ yields from spreading burning fronts in XRBs need to model a deflagration.
 Flame spreading was first modeled in a series of calculations
 employing an algorithm from atmospheric science, where vertical
 hydrostatic equilibrium is enforced and wide-aspect ratio zones give a
-horizontal CFL number that is large enough to get long timescale
-evolution~\cite{cavecchi:2012}.  These calculations... \MarginPar{Yuri can probably best summarize}
+horizontal CFL number that is large enough to obtain long timescale
+evolution~\cite{cavecchi:2012}.
+
+These calculations display key features of the propagation
+mechanism, namely a balance between hydrodynamics and the pure
+flame physics. The flame proceed mainly via conduction, thus being a
+deflagration. The flame front, however, is not vertical but inclined,
+the angle with the horizontal being very small: $\theta \sim
+H/R_{\rm{Ro}} \sim 10^{-3}$. Here $H$ is the scale height and
+$R_{\rm{Ro}}$ is the Rossby radius. It is the hydrodynamical balance
+between the Coriolis force, gravity and pressure gradients that
+determines the Rossby radius and therefore the inclination angle of the
+flame front. The extended surface of the flame front is what leads to
+propagations speed of order $10^5 $ km/s in good agreement with
+observations. Due to its dependence on the Coriolis force, the flame
+speed changes across the surface of the NS (being faster at the
+equator), leading to potentially detectable effects if the rise of the
+burst is observed with enough resolution
+\cite{art-2015-cavecchi-etal}. The NS systems exhibiting XRBs are
+expected to have magnetic fields in the range $10^7 - 10^{10}$
+G. Inclusion of a vertical magnetic field proved to have a strong
+influence on the nature and the speed of flame propagation
+\cite{art-2016-cavecchi-etal}, due to the interaction between the
+Coriolis force and the magnetic tension, which further acts towards
+determining the inclination angle of the flame front.
 
 A longstanding goal is to perform simulations where we resolve the
 flame structure, to allow us to accurately capture the
 nucleosynthesis, and watch it move across the neutron star surface.
+The results of these simulations will enable strict comparison to
+observations made with the new generation of X-ray telescopes such as
+\textit{eXTP} and \textit{STROBE--X}
+\cite{art-2017-wilhod-etal,art-2016-zhang-etal} which will offer
+high collecting area and time resolution.
 We show some in-progress calculations that are a step toward this (but
 still have approximations) and also discuss what new algorithmic
 techniques might be needed to realize this goal with the advent of
@@ -201,7 +236,12 @@ Describe resolution needs and flame structure, Figure~\ref{fig:xrb} \MarginPar{M
 \caption{\label{fig:xrb} Helium flame spreading across the surface of
   a neutron star.  Shown are temperature (top), the velocity out of the
   simulation plane (middle), and nuclear energy generation rate
-  (bottom).  }
+  (bottom).
+  The out of plane velocity contours indicate where the Coriolis force
+  has created a hurricane-like wind structure which confines the flame,
+  leading to an inclined front. It is at such interface that the
+  temperature and burning rate are highest.
+  }
 \end{figure}
 
 
@@ -236,16 +276,17 @@ If we continue to resolve the flame structure, then we need algroithms
 that can do so less expensively.  We can be smarter about our grid
 refinement strategy, putting the finest grids only at the very base of
 the burning layer, where the flame is the thinnest.  Using
-well-balanced schemes can help us retain HSE in the lower refined
-regions, reducing the number of zones needed to maintain fidelity.  We
-can also explore initialize newly created fine grids ahread of the burning
-with an understanding of hydrostatic equilibrium to allow us to only refine
-the peak burning as the flame moves across the star.
+well-balanced schemes can help us retain hydrostatic equilibrium (HSE)
+in the lower refined regions, reducing the number of zones needed to
+maintain fidelity.  We can also explore initializing newly created fine
+grids ahead of the burning with an understanding of hydrostatic
+equilibrium to allow us to only refine the peak burning as the flame
+moves across the star.
 
 Another way we can meet the resolution requirements is to use a more
 accurate hydrodynamic method.  In particular, we are developing fully
 fourth-order (in space and time) coupling of hydrodynamics and
-reactions using the method of spectral deferred corrections in
+reactions using the method of spectral deferred corrections (SDC) in
 \castro, instead of the more commonly employed Strang splitting.  This
 provides us with two benefits.  First, the improved coupling actually
 reduces the stiffness of the reactions, requiring fewer righthand side
@@ -265,10 +306,11 @@ tolerances for both the Strang-split method and the SDC method.  For
 the SDC method, we are using a second-order accurate method.  We
 predict a time-centered advection term, $\Adv{\Uc}^{n+1/2}_i$ using
 standard unsplit Godunov methods, but explicitly include a reactive
-source term in the tracing of the interface states.  We can then solve
+source term in the tracing of the interface states, ${\bf R}(\Uc_i)$.  We can then solve
 the reactive system, using this advective term as a
 piecewise-constant-in-time source
 \begin{equation}
+\label{eq:syst}
 \frac{d{\Uc_i}}{dt} = -\Adv{\Uc}^{n+1/2}_i + {\bf R}(\Uc_i)
 \end{equation}
 This system can be integrated with standard ODE methods.  To achieve
@@ -286,7 +328,10 @@ follow shortly.
 \begin{figure}
 \centering
 \includegraphics[width=0.75\linewidth]{sdc_plot}
-\caption{\label{fig:sdc} Helium mass fraction as a function of time over three timesteps.}
+\caption{\label{fig:sdc} Helium mass fraction as a function of time over three timesteps.
+  The points represent individual calls to the
+  righthand side function of our reaction network (see Eq. \ref{eq:syst}) and the density of
+  points indicates how hard the integrator is working.}
 \end{figure}
 
 
@@ -302,19 +347,22 @@ compressible simulation can act as a subgrid model.  \MarginPar{this ties into A
 \ack The work at Stony Brook was supported by DOE/Office of Nuclear
 Physics grant DE-FG02-87ER40317 and contract 7418390 with Lawrence
 Berkeley National Laboratory as part of the Exascale Compute Project
-ExaStar collaboration..  The work at LBNL was supported by the DOE
+ExaStar collaboration.  The work at LBNL was supported by the DOE
 Office of Advanced Scientific Computing Research under Contract No,
 DE-AC02-05CH11231. An award of computer time was provided by the
 Innovative and Novel Computational Impact on Theory and Experiment
-(INCITE) program.  This research used resources of the Oak Ridge
-Leadership Computing Facility at the Oak Ridge National Laboratory,
-which is supported by the Office of Science of the U.S. Department of
-Energy under Contract No.\ DE-AC05-00OR22725.  This research used
-resources of the National Energy Research Scientific Computing Center,
-which is supported by the Office of Science of the U.S. Department of
-Energy under Contract No.\ DE-AC02-05CH11231.  Visualizations were
-done using yt~\cite{yt}.  This research has made use of NASA's
-Astrophysics Data System Bibliographic Services.
+(INCITE) program. YC is supported by the European Union Horizon 2020
+research and innovation programme under the Marie Sklodowska-Curie
+Global Fellowship grant agreement No 703916. This research used
+resources of the Oak Ridge Leadership Computing Facility at the Oak
+Ridge National Laboratory, which is supported by the Office of Science
+of the U.S. Department of Energy under Contract
+No.\ DE-AC05-00OR22725.  This research used resources of the National
+Energy Research Scientific Computing Center, which is supported by the
+Office of Science of the U.S. Department of Energy under Contract
+No.\ DE-AC02-05CH11231.  Visualizations were done using yt~\cite{yt}.
+This research has made use of NASA's Astrophysics Data System
+Bibliographic Services.
 
 
 \section*{References}
