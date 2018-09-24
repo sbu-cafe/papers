@@ -48,7 +48,7 @@
         J.~B. Bell$^4$,
         M.~Chang$^1$,
         M.~P. Katz$^7$,
-        C.~M. Malone$^8$, 
+        C.~M. Malone$^8$,
         A.~J. Nonaka$^4$,
         D.~E. Willcox$^4$, and
         W. Zhang$^4$}
@@ -116,25 +116,25 @@ See~\cite{galloway:2017} for a recent review of XRBs.
 Simulations of XRBs can help us to understand the observations, but
 many technical challenges remain.  The primary difficulties are simply
 the range of length and timescales involved.  At the largest scale,
-the neutron star is 10~km and the Rossby lengthscale, where rotation
-and lateral pressure gradients balance is $\sim
+the neutron star radius is 10~km and the Rossby lengthscale, where rotation
+and lateral pressure gradients balance, is $\sim
 1$~km~\cite{SPIT_ETAL02}.  At the smallest scales, a conductive He
 flame has a thickness of 10s of centimeters~\cite{Timmes00} and the
 pressure scale height of the fuel layer is meters.  To capture the
-rise of the XRB, we would need to model seconds, but the flame itself
+rise of the XRB\MarginPar{Define rise?}, we would need to model seconds, but the flame itself
 is subsonic, so long timescale evolution is difficult.
 
 Present and past simulations of XRBs employ a variety of
 approximations to get past these difficulties.  The variety of
-approximations used enables a complementary picture of XRBs to be built up, 
-and has greatly advanced our understanding of these systems.  
+approximations used enables a complementary picture of XRBs to be built up,
+and has greatly advanced our understanding of these systems.
 The breadth of simulations to date has been impressive.  We summarize
 the different approaches below.
 
 One-dimensional simulations, e.g. \cite{woosley-xrb,fisker:2008}, assume
 spherical symmetry and model the burst through the vertical column
 depth of fuel.  These simulations can capture the luminosities and
-burst recurrence times well.  The can utilize very large nuclear
+burst recurrence times well.  They can utilize very large nuclear
 reaction networks and have been used to understand the nucleosynthesis
 and rp-process, as well as to understand how rate uncertainties can
 affect the outcomes of the bursts.  Many successive bursts can be
@@ -155,7 +155,7 @@ runaway using low Mach number hydrodynamic methods, for pure helium
 bursts~\cite{Lin:2006,xrb} and mixed hydrogen/helium
 bursts~\cite{xrb2} in 2d, and full 3d simulations of mixed
 bursts~\cite{xrb3}, and followed the development of the turbulence.
-These simulations can give an understand of the pre-burning front
+These simulations can give an understanding of the pre-burning front
 regime, including the strength and character of the turbulence, but
 cannot model large scale lateral variations because of the implicit
 assumptions built into the low Mach number model~\cite{ABRZ:I}.
@@ -175,7 +175,7 @@ evolution~\cite{cavecchi:2012}.
 
 These calculations display key features of the propagation
 mechanism, namely a balance between hydrodynamics and the pure
-flame physics. The flame proceed mainly via conduction, thus being a
+flame physics. The flame proceeds mainly via conduction, thus being a
 deflagration. The flame front, however, is not vertical but inclined,
 the angle with the horizontal being very small: $\theta \sim
 H/R_{\rm{Ro}} \sim 10^{-3}$. Here $H$ is the scale height and
@@ -183,14 +183,14 @@ $R_{\rm{Ro}}$ is the Rossby radius. It is the hydrodynamical balance
 between the Coriolis force, gravity and pressure gradients that
 determines the Rossby radius and therefore the inclination angle of the
 flame front. The extended surface of the flame front is what leads to
-propagations speed of order $10^5 $ km/s in good agreement with
+propagation speeds of order $10^5 $~km/s, in good agreement with
 observations. Due to its dependence on the Coriolis force, the flame
 speed changes across the surface of the NS (being faster at the
 equator), leading to potentially detectable effects if the rise of the
 burst is observed with enough resolution
 \cite{art-2015-cavecchi-etal}. The NS systems exhibiting XRBs are
-expected to have magnetic fields in the range $10^7 - 10^{10}$
-G. Inclusion of a vertical magnetic field proved to have a strong
+expected to have magnetic fields in the range $10^7 - 10^{10}$~G.
+Inclusion of a vertical magnetic field proved to have a strong
 influence on the nature and the speed of flame propagation
 \cite{art-2016-cavecchi-etal}, due to the interaction between the
 Coriolis force and the magnetic tension, which further acts towards
@@ -320,7 +320,7 @@ update, and then reintegrate the system.  The result of this iteration
 is that the advection sees the effects of reactions over the timestep
 and the reactions see the effects of advection.  For the zone tracked
 in Figure~\ref{fig:sdc}, each SDC iteration called the righthand side
-function of the network 5 times less than the Strang case.  
+function of the network 5 times less than the Strang case.
 We are continuing to develop this new integration strategy, with full
 fourth-order in space and time reacting hydrodynamics methods to
 follow shortly.
