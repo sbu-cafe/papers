@@ -246,12 +246,15 @@ reaction network.  To make the timescales easier, we boost the flame
 speed by a factor of 10, by boosting both the conductivity and energy
 generation rate.
 
-Figure~\ref{fig:xrb} \MarginPar{Mike will update this}
+Figure~\ref{fig:xrb} shows the flame structure.  The top panel shows
+the temperature.  The initial perturbation reached to $2\times
+10^4~\mathrm{cm}$, so at this point, the extend of the burnt region
+has nearly doubled.  The flame structure is quite wide
 
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\linewidth]{xrb}
+\includegraphics[width=0.95\linewidth]{xrb}
 \caption{\label{fig:xrb} Helium flame spreading across the surface of
   a neutron star.  Shown are temperature (top), the velocity out of the
   simulation plane (middle), and nuclear energy generation rate
@@ -353,16 +356,21 @@ follow shortly.
   points indicates how hard the integrator is working.}
 \end{figure}
 
-Within the realm of compressible hydrodynamics, there are a number of other techniques that 
-should be explored. 
-smarter refinement with AMR + hydrostatic refinement
-well-balanced method to allow ultralow resolution to slide along with the burning front
-higher-order
-This are all 
+Within the realm of compressible hydrodynamics, there are a number of
+other techniques that should be explored.  smarter refinement with AMR
++ hydrostatic refinement well-balanced method to allow ultralow
+resolution to slide along with the burning front higher-order This are
+all
 
-Other ways to make the simulation less expensive can include a subgrid model,
-even something as simple as subzone burning.\MarginPar{need the paper ref fo rthis}
-This is harder...
+Other ways to make the simulation less expensive can include a subgrid
+model, Flame models are commonly used for Type Ia supernovae.  There
+however, the flame is thin compared to the scale height, so a simple
+model can represent the unresolved flame on the grid.  For the XRB,
+the flame thickness is a non-trivial fraction of the pressure scale
+height and further, the laminar flame properties will change strongly
+over the height of the burning layer (see~\cite{Timmes00}).  This
+makes traditional flame models a poor fit.  Methods that use even
+something as simple as subzone burning.  This is harder...
 
 Finally, we can try hybrid model approaches where the fully
 compressible simulation can act as a subgrid model.  \MarginPar{this ties into Ann's stuff, and also the stuff Alice was doing}
