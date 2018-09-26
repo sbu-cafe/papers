@@ -119,8 +119,8 @@ is subsonic, so long timescale evolution is difficult.
 
 Present and past simulations of XRBs employ a variety of
 approximations to get past these difficulties.  The variety of
-approximations used enables a complementary picture of XRBs to be built up, 
-and has greatly advanced our understand of these systems.  
+approximations used enables a complementary picture of XRBs to be
+built up, and has greatly advanced our understand of these systems.
 The breadth of simulations to date has been impressive.  We summarize
 the different approaches below.
 
@@ -164,7 +164,8 @@ Flame spreading was first modeled in a series of calculations
 employing an algorithm from atmospheric science, where vertical
 hydrostatic equilibrium is enforced and wide-aspect ratio zones give a
 horizontal CFL number that is large enough to get long timescale
-evolution~\cite{cavecchi:2012}.  These calculations... \MarginPar{Yuri can probably best summarize}
+evolution~\cite{cavecchi:2012}.  These calculations... \MarginPar{Yuri
+  can probably best summarize}
 
 A longstanding goal is to perform simulations where we resolve the
 flame structure, to allow us to accurately capture the
@@ -189,10 +190,20 @@ github\footnote{\url{http://github.com/amrex-astro/}}, and all of the
 solvers, problem setup, initial models, and analysis scripts for each
 of our science problems are distributed with the codes.
 
-Short description of problem setup and approximations
-rotation, network, flame boosting
-
-Describe resolution needs and flame structure, Figure~\ref{fig:xrb} \MarginPar{Mike will update this}
+As described above, current simulations of XRBs must approximate the
+system somehow.  Our goal is resolve the flame structure and
+understand the details of the nucleosynthesis.  This sets the needed
+spatial resolution.  We use a 13-isotope alpha-chain, which should
+capture the energetics for a helium flame.  To make the range of
+lengthscales tractable, we compress the horizontal scale by
+considering a neutron star that rotates faster than normal.  This
+reduces the Rossby length.  We also artificially boost the flame speed
+by a factor of 10 to reduce the length of time needed.  We expect that
+once a steady-state burning front develops that the flame speed should
+be faster than the laminar speed.  The flame is initiated by placing a
+hot region in equilibrium on the left part of the domain.  Reactions
+then heat the fuel and thermal diffusion propagates the flame
+laterally across the neutron star surface.
 
 
 \begin{figure}
@@ -204,6 +215,7 @@ Describe resolution needs and flame structure, Figure~\ref{fig:xrb} \MarginPar{M
   (bottom).  }
 \end{figure}
 
+Figure~\ref{fig:xrb} shows a snapshot in time
 
 \section{Estimates for Full Star Simulations}
 
