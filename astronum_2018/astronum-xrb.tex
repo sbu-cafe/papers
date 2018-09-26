@@ -22,6 +22,11 @@
 \newcommand{\Advt}[1]{{\left [\mathcal{\tilde{A}} \left(#1\right)\right]}}
 \newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
 
+\newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\cms}{\mathrm{cm~s^{-1} }}
+
 
 
 \newcommand{\cpp}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
@@ -247,13 +252,33 @@ speed by a factor of 10, by boosting both the conductivity and energy
 generation rate.  This is an approximation we hope to relax in the
 near future.
 
-Figure~\ref{fig:xrb} shows the flame structure for an initial 2D run.
-The top panel shows the temperature.  The initial perturbation reached
-to $2\times 10^4~\mathrm{cm}$, so at this point, the extent of the
-burnt region has nearly doubled.  The flame structure is quite wide,
-since there are multiple burning stages beyond just helium to carbon, and
-this shows up in the composition.
-
+Figure~\ref{fig:xrb} shows the flame structure for an initial 2D run
+at 0.007~s.  The burning layer is only about 10~m high.  Underneath is
+\isot{Ni}{56}, representative of the underlying neutron star, and
+above it is very a low density ($10^{-4}~\gcc$) buffer.  Only a
+portion of the vertical extent is show.  The top panel shows the
+temperature.  The initial perturbation reached to $2\times
+10^4~\mathrm{cm}$, so at this point, the extent of the burnt region
+has nearly doubled.  The flame structure is quite wide, since there
+are multiple burning stages beyond just helium to carbon, and this
+shows up in the composition.  This is seen more clearly in the lower
+panel which shows the mean molecular weight of the nuclei ($\bar{A}$).
+We see the further behind the head of the flame we are, the heavier
+the ash nuclei.  The second panel shows the energy generation rate.
+It is strongest just above the neutron star surface, behind the flame.
+We also see that the head of the flame is ``detached'' from the base
+of the atmosphere, with the strongest burning at the head of the flame
+slightly higher up in the atmosphere.  This can also be more clearly
+seen in the last panel that shows the ash structure.  This appears
+reminiscent of the flame structure seen in the earlier simulations of
+\cite{cavecchi:2012} \MarginPar{Yuri, would you agree?}  The third
+panel shows the velocity through the plane of the simulation---this is
+induced by the Coriolis force as the burning front spreads laterally.
+A tight hurricane structure has setup as a result of the flame
+spreading.  This is the geostrophic balance discussed in
+\cite{SPIT_ETAL02}.  Finally, as already mentioned, the last panel
+shows the ash composition.  These calculations are ongoing and will be
+the subject of a detailed study in the near future.
 
 \begin{figure}
 \centering
