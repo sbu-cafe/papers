@@ -230,8 +230,8 @@ of our science problems are distributed with the codes.
 
 We setup a problem by creating a pair of 1D hydrostatic XRB models
 representing the post- and pre-flame states and apply these laterally
-across the domain to setup a hot region at the left of our domain in
-equilibrium with the cool model.  Thermal diffusion and nuclear
+across the domain to setup a hot region at the left end of our domain
+in equilibrium with the cool model.  Thermal diffusion and nuclear
 reactions quickly setup a laterally propagating flame that begins to
 move through our domain.  We resolve the diffusion scale, using a
 resolution of 10~cm, and use adaptive mesh refinement (two jumps of
@@ -244,12 +244,15 @@ zones laterally, on the finest grid.  We use the stellar
 conducitivities from \cite{Timmes00} and a 13-isotopic alpha-chain
 reaction network.  To make the timescales easier, we boost the flame
 speed by a factor of 10, by boosting both the conductivity and energy
-generation rate.
+generation rate.  This is an approximation we hope to relax in the
+near future.
 
-Figure~\ref{fig:xrb} shows the flame structure.  The top panel shows
-the temperature.  The initial perturbation reached to $2\times
-10^4~\mathrm{cm}$, so at this point, the extend of the burnt region
-has nearly doubled.  The flame structure is quite wide
+Figure~\ref{fig:xrb} shows the flame structure for an initial 2D run.
+The top panel shows the temperature.  The initial perturbation reached
+to $2\times 10^4~\mathrm{cm}$, so at this point, the extent of the
+burnt region has nearly doubled.  The flame structure is quite wide,
+since there are multiple burning stages beyond just helium to carbon, and
+this shows up in the composition.
 
 
 \begin{figure}
