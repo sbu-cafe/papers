@@ -295,17 +295,24 @@ the subject of a detailed study in the near future.
 \end{figure}
 
 
-\section{Estimates for Full Star Simulations}
+\section{Large Scale Simulations and Algorithmic Developments}
 
-A fully resolved calculation of burning over the entire neutron star
-is out of reach, and will be for some time.
-
-time estimate...
-
-\MarginPar{Alice and Mike will work on this}
-
-
-\section{Algorithmic Developments}
+The 2D calculations shown in the previous section require about 10k
+node-hours of computational time to get to about 10~ms (those
+particular simulations were run at NERSC).  The GPU version of the
+Castro hydrodynamics solver, under active development, is about
+$10\times$ faster on a comparable node, so a GPU calculation could
+bring the 2D cost down to 1k node-hours.  Most of this time is spent
+in the reactions\MarginPar{verify fraction}.  A 3D version of this
+calculation is estimated to require 5M node-hours on CPUs or 0.5M
+node-hours using GPUs---this is about the size of an
+annual \MarginPar{double check \#s} allocation.  Additionally, this is
+still with the boosted flame, but we expect that once the flame is
+developed, the boosting will not be as critical, due to hydrodynamic
+effects.  We plan to test this soon.  In any case, this is less than
+1\% of the neutron star surface, so a fully resolved calculation of
+burning over the entire neutron star is out of reach, and will be for
+some time.
 
 Algorithmic improvements are needed to push the scale of simulations
 to the point where we can model XRBs at the full star scale with
