@@ -47,7 +47,7 @@
         A.~Harpole$^1$,
         J.~B. Bell$^4$,
         M.~Chang$^1$,
-        I.Hawke$^3$,
+        I.~Hawke$^3$,
         M.~P. Katz$^7$,
         C.~M. Malone$^8$,
         A.~J. Nonaka$^4$,
@@ -78,10 +78,12 @@
 \address{$^8$Los Alamos National Laboratory, Los Alamos, NM, 87545 USA}
 
 \begin{abstract}
-We discuss the challenges of modeling X-ray bursts, review the different
-calculations done to date, and discuss our new set of simulations.  We also
-describe algorithmic improvements that may help in the future to offset some
-of the expense of these simulations.
+We discuss the challenges of modeling X-ray bursts in
+multi-dimensions, review the different calculations done to date, and
+discuss our new set of ongoing simulations.  We also describe
+algorithmic improvements that may help in the future to offset some of
+the expense of these simulations, and describe what may be possible
+with exascale computing.
 \end{abstract}
 
 
@@ -137,7 +139,7 @@ spherical symmetry and model the burst through the vertical column
 depth of fuel.  These simulations can capture the luminosities and
 burst recurrence times well.  They can utilize very large nuclear
 reaction networks and have been used to understand the nucleosynthesis
-and rp-process, as well as to understand how rate uncertainties can
+and rp-process~\cite{shatz_rp}, as well as to understand how rate uncertainties can
 affect the outcomes of the bursts.  Many successive bursts can be
 modeled and these simulations can show us the evolution of the ash
 layer with time.  The approximation of 1D however means that we cannot
@@ -173,7 +175,6 @@ employing an algorithm from atmospheric science, where vertical
 hydrostatic equilibrium is enforced and wide-aspect ratio zones give a
 horizontal CFL number that is large enough to obtain long timescale
 evolution~\cite{cavecchi:2012}.
-%
 These calculations display key features of the propagation
 mechanism, namely a balance between hydrodynamics and the pure
 flame physics. The flame proceeds mainly via conduction, thus being a
@@ -192,7 +193,7 @@ burst is observed with enough resolution
 \cite{art-2015-cavecchi-etal}.
 
 The NS systems exhibiting XRBs are
-expected to have magnetic fields in the range $10^7 - 10^{10}$~G.
+expected to have magnetic fields in the range $10^7$--$10^{10}$~G.
 Inclusion of a vertical magnetic field proved to have a strong
 influence on the nature and the speed of flame propagation
 \cite{art-2016-cavecchi-etal}, due to the interaction between the
@@ -227,10 +228,25 @@ github\footnote{\url{http://github.com/amrex-astro/}}, and all of the
 solvers, problem setup, initial models, and analysis scripts for each
 of our science problems are distributed with the codes.
 
-Short description of problem setup and approximations
-rotation, network, flame boosting
+We setup a problem by creating a pair of 1D hydrostatic XRB models
+representing the post- and pre-flame states and apply these laterally
+across the domain to setup a hot region at the left of our domain in
+equilibrium with the cool model.  Thermal diffusion and nuclear
+reactions quickly setup a laterally propagating flame that begins to
+move through our domain.  We resolve the diffusion scale, using a
+resolution of 10~cm, and use adaptive mesh refinement (two jumps of
+$4\times$) to keep a buffer of low density material at low resolution
+above the surface to allow for expansion.  To make the lengthscales
+tractable, we rotate the neutron star at 2000~Hz---much faster than
+expected.  This helps confine the spreading region to a more
+reasonable horizontal region.  Nevertheless, our simulation uses 12288
+zones laterally, on the finest grid.  We use the stellar
+conducitivities from \cite{Timmes00} and a 13-isotopic alpha-chain
+reaction network.  To make the timescales easier, we boost the flame
+speed by a factor of 10, by boosting both the conductivity and energy
+generation rate.
 
-Describe resolution needs and flame structure, Figure~\ref{fig:xrb} \MarginPar{Mike will update this}
+Figure~\ref{fig:xrb} \MarginPar{Mike will update this}
 
 
 \begin{figure}
