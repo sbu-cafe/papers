@@ -261,7 +261,7 @@ temperature structure.  The initial perturbation reached to $2\times
 10^4~\mathrm{cm}$, so at this point, the extent of the burnt region
 has nearly doubled.  The flame structure is quite wide, since there
 are multiple burning stages beyond just helium to carbon, and this
-shows up in the composition.  This is seen more clearly in the next 
+shows up in the composition.  This is seen more clearly in the next
 panel which shows the mean molecular weight of the nuclei ($\bar{A}$).
 We see the further behind the head of the flame we are, the heavier
 the ash nuclei.  We also see where that the head of the flame
@@ -420,12 +420,23 @@ This is a longer term development.
 
 
 All of the above developments still involve fully compressible
-hydrodynamics, but multiscale methods where we couple different hydrodynamics
+hydrodynamics, but multiscale methods~\cite{weinan2011principles} where we couple different hydrodynamics
 solvers together in a single simulation may ultimately be needed to model the full star while resolving the burning front. \MarginPar{Alice and Ian contribute here}
+Such techniques rely on it being possible to decompose the dynamics of the system
+into two scales, e.g.~a short and a long lengthscale, and that the processes at each
+scale do not interact with each other. In the context of X-ray bursts, one possibility for
+multiscale modelling would be to model the large scale dynamics using a shallow water model
+(like that of~\cite{SPIT_ETAL02}) to capture the effects of the Coriolis force, and use
+a fully compressible model in the vicinity of the burning front to capture
+the turbulent burning processes. Given that the computational costs of the 2d shallow water model
+would be negligible compared to those of the compressible model, the overall cost of 
+this multiscale model would be determined by the size of the compressible region only. This
+approach would therefore allow us to capture dynamics across the full star
+without sacrificing resolution of the flame.
 
 %% Finally, we can try hybrid model approaches where the fully
-%% compressible simulation can act as a subgrid model.  
-%% Multiscale methods can combine different hydro models together to allow 
+%% compressible simulation can act as a subgrid model.
+%% Multiscale methods can combine different hydro models together to allow
 %% for a full star simulation with resolved burning.  Examples include...
 
 
