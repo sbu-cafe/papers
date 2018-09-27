@@ -144,7 +144,7 @@ spherical symmetry and model the burst through the vertical column
 depth of fuel.  These simulations can capture the luminosities and
 burst recurrence times well.  They can utilize very large nuclear
 reaction networks and have been used to understand the nucleosynthesis
-and rp-process~\cite{shatz_rp}, as well as to understand how rate uncertainties can
+and rp-process~\cite{schatz:rp1999,rpprocess,schatz_rp}, as well as to understand how rate uncertainties can
 affect the outcomes of the bursts.  Many successive bursts can be
 modeled and these simulations can show us the evolution of the ash
 layer with time.  The approximation of 1D however means that we cannot
@@ -233,7 +233,7 @@ github\footnote{\url{http://github.com/amrex-astro/}}, and all of the
 solvers, problem setup, initial models, and analysis scripts for each
 of our science problems are distributed with the codes.
 
-We setup a problem by creating a pair of 1D hydrostatic XRB models
+We setup a problem by creating a pair of 1D hydrostatic XRB models (hot and cool)
 representing the post- and pre-flame states and apply these laterally
 across the domain to setup a hot region at the left end of our domain
 in equilibrium with the cool model.  Thermal diffusion and nuclear
@@ -257,37 +257,37 @@ at 0.007~s.  The burning layer is only about 10~m high.  Underneath is
 \isot{Ni}{56}, representative of the underlying neutron star, and
 above it is very a low density ($10^{-4}~\gcc$) buffer.  Only a
 portion of the vertical extent is show.  The top panel shows the
-temperature.  The initial perturbation reached to $2\times
+temperature structure.  The initial perturbation reached to $2\times
 10^4~\mathrm{cm}$, so at this point, the extent of the burnt region
 has nearly doubled.  The flame structure is quite wide, since there
 are multiple burning stages beyond just helium to carbon, and this
-shows up in the composition.  This is seen more clearly in the lower
+shows up in the composition.  This is seen more clearly in the next 
 panel which shows the mean molecular weight of the nuclei ($\bar{A}$).
 We see the further behind the head of the flame we are, the heavier
-the ash nuclei.  The second panel shows the energy generation rate.
-It is strongest just above the neutron star surface, behind the flame.
-We also see that the head of the flame is ``detached'' from the base
-of the atmosphere, with the strongest burning at the head of the flame
-slightly higher up in the atmosphere.  This can also be more clearly
-seen in the last panel that shows the ash structure.  This appears
+the ash nuclei.  We also see where that the head of the flame
+appears lifted off of the base of the burning layer---unburned
+material underlies the spreading flame.  This appears
 reminiscent of the flame structure seen in the earlier simulations of
-\cite{cavecchi:2012} \MarginPar{Yuri, would you agree?}  The third
+\cite{cavecchi:2012}. \MarginPar{Yuri, would you agree?} The third panel shows the energy generation rate.
+It is strongest just above the neutron star surface, behind the flame.
+We again see that the head of the flame is detached from the base
+of the atmosphere, with the strongest burning at the head of the flame
+slightly higher up in the atmosphere.   Finally, the bottom
 panel shows the velocity through the plane of the simulation---this is
 induced by the Coriolis force as the burning front spreads laterally.
 A tight hurricane structure has setup as a result of the flame
 spreading.  This is the geostrophic balance discussed in
-\cite{SPIT_ETAL02}.  Finally, as already mentioned, the last panel
-shows the ash composition.  These calculations are ongoing and will be
+\cite{SPIT_ETAL02}.    These calculations are ongoing and will be
 the subject of a detailed study in the near future.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.95\linewidth]{xrb}
 \caption{\label{fig:xrb} Helium flame spreading across the surface of
-  a neutron star.  Shown are temperature (top), the nuclear energy
-  generation rate (second), the velocity out of the simulation plane
-  (third) and the mean molecular weight of the ash (bottom).  The out
-  of plane velocity contours indicate where the Coriolis force has
+  a neutron star.  Shown are temperature (top), the mean molecular
+  weight of the ash (second), the nuclear energy generation rate
+  (third), and the velocity out of the simulation plane (bottom).  The
+  out of plane velocity contours indicate where the Coriolis force has
   created a hurricane-like wind structure which confines the flame,
   leading to an inclined front. It is at such an interface that the
   temperature and burning rate are highest.  }
