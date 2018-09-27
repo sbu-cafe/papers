@@ -246,7 +246,7 @@ tractable, we rotate the neutron star at 2000~Hz---much faster than
 expected.  This helps confine the spreading region to a more
 reasonable horizontal region.  Nevertheless, our simulation uses 12288
 zones laterally, on the finest grid.  We use the stellar
-conducitivities from \cite{Timmes00} and a 13-isotopic alpha-chain
+conductivities from \cite{Timmes00} and a 13-isotopic alpha-chain
 reaction network.  To make the timescales easier, we boost the flame
 speed by a factor of 10, by boosting both the conductivity and energy
 generation rate.  This is an approximation we hope to relax in the
@@ -256,15 +256,15 @@ Figure~\ref{fig:xrb} shows the flame structure for an initial 2D run
 at 0.007~s.  The burning layer is only about 10~m high.  Underneath is
 \isot{Ni}{56}, representative of the underlying neutron star, and
 above it is very a low density ($10^{-4}~\gcc$) buffer.  Only a
-portion of the vertical extent is show.  The top panel shows the
+portion of the vertical extent is shown.  The top panel shows the
 temperature structure.  The initial perturbation reached to $2\times
 10^4~\mathrm{cm}$, so at this point, the extent of the burnt region
 has nearly doubled.  The flame structure is quite wide, since there
 are multiple burning stages beyond just helium to carbon, and this
 shows up in the composition.  This is seen more clearly in the next
 panel which shows the mean molecular weight of the nuclei ($\bar{A}$).
-We see the further behind the head of the flame we are, the heavier
-the ash nuclei.  We also see where that the head of the flame
+We see that the further behind the head of the flame we are, the heavier
+the ash nuclei.  We also see where the head of the flame
 appears lifted off of the base of the burning layer---unburned
 material underlies the spreading flame.  This appears
 reminiscent of the flame structure seen in the earlier simulations of
@@ -387,7 +387,7 @@ follow shortly.  The XRB simulations are our target application.
 \end{figure}
 
 Other ways to make the simulation less expensive can include a subgrid
-model, Flame models are commonly used for Type Ia supernovae.  There
+model. Flame models are commonly used for Type Ia supernovae.  There
 however, the flame is thin compared to the scale height, so a simple
 model can represent the unresolved flame on the grid.  For the XRB,
 the flame thickness is a non-trivial fraction of the pressure scale
@@ -411,7 +411,7 @@ schemes~\cite{kappeli:2016} can help us retain hydrostatic equilibrium
 needed to maintain fidelity, but we would still need a way to regrid
 the layer ahead of the flame to higher resolution to accurately
 capture the burning dynamics.  To accomplish this, we envision
-building a refinment strategy that does interpolation of the data onto
+building a refinement strategy that does interpolation of the data onto
 the newly refined grids enforcing hydrostatic equilibrium.  This can
 allow us to keep only a narrow fully refined region that ``slides''
 along the surface of the neutron star keeping pace with the advancing
@@ -425,18 +425,17 @@ solvers together in a single simulation may ultimately be needed to model the fu
 %\MarginPar{Alice and Ian contribute here}
 Such techniques rely on it being possible to decompose the dynamics of the system
 into two scales, e.g.~a short and a long lengthscale, and that the processes at each
-scale are at most weakly coupled with each other. In the context of X-ray bursts, one possibility for
+scale are at most weakly coupled with each other. In the context of XRBs, one possibility for
 multiscale modelling would be to model the large scale dynamics using a shallow water model
 (like that of~\cite{SPIT_ETAL02}) to capture the effects of the Coriolis force, and use
-a Low Mach model or
+a low Mach number or
 a fully compressible model in the vicinity of the burning front to capture
-the turbulent burning processes. Given that the computational costs of the 2d shallow water model
-would be negligible compared to those of the compressible model, the overall cost of
-this multiscale model would be determined by the size of the compressible region only. This
+the turbulent burning processes. Given that the computational costs of the 2D shallow water model
+would be negligible compared to those of the low Mach/compressible model, the overall cost of
+this multiscale model would be determined by the size of the low Mach/compressible region only. This
 approach would therefore allow us to capture dynamics across the full star
 without sacrificing resolution around the flame.
-An example of coupling compressible and Low Mach models within the mesh
-refinement framework used by our codes, but in a terrestrial context,
+An example of coupling compressible and low Mach number models implemented using the \amrex~framework, but in a terrestrial context,
 is~\cite{Motheau2018}. An initial implemenation, \cite{Harpole2018}, in an
 astrophysical context, coupling shallow water to compressible models in both
 Newtonian and relativistic gravity, indicates that considerable computational
