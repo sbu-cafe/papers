@@ -223,7 +223,7 @@ exascale computing.
 \section{Resolved Flame Studies}
 
 We have begun a set of flame spreading calculations using the
-compressible hydrodynamics code Castro~\cite{castro}, part of the
+compressible hydrodynamics code \castro~\cite{castro}, part of the
 AMReX astrophysics suite~\cite{astronum:2017}.  \castro\ uses adaptive
 mesh refinement, supports a general equation of state and reaction
 networks, has a conservative gravity formulation~\cite{wdmergerI}, and
@@ -324,7 +324,7 @@ becoming more common.  Our recent development in \castro\ has focused
 on moving the hydrodynamics to GPUs~\cite{astronum:2017}.  The XRB
 problem is an ideal case for this, since hydrodynamics with constant
 gravity (for plane-parallel domains) ports in a straightforward manner
-to GPUs.  The current GPU version of the \castro hydrodynamics solver
+to GPUs.  The current GPU version of the \castro\ hydrodynamics solver
 is about $10\times$ faster using GPUs on a node than the entire node
 of CPU cores.  We see similar speed ups with reaction networks, with
 these GPU ports under active development.  This means a GPU
@@ -332,19 +332,8 @@ calculation could lower the above costs by a factor of 10.  GPU
 offloading of the reaction networks will also allow us to explore
 larger networks and more detailed nuclear physics.
 
-If we continue to resolve the flame structure, then we need algorithms
-that can do so less expensively.  We can be smarter about our grid
-refinement strategy, putting the finest grids only at the very base of
-the burning layer, where the flame is the thinnest.  Using
-well-balanced schemes~\cite{kappeli:2016} can help us retain
-hydrostatic equilibrium (HSE) in the lower refined regions, reducing
-the number of zones needed to maintain fidelity.  We can also explore
-initializing newly created fine grids ahead of the burning with an
-understanding of hydrostatic equilibrium to allow us to only refine
-the peak burning as the flame moves across the star.
-
 Another way we can meet the resolution requirements is to use a more
-accurate hydrodynamic method.  In particular, we are developing fully
+accurate hydrodynamic method.  We are developing fully
 fourth-order (in space and time) coupling of hydrodynamics and
 reactions using the method of spectral deferred corrections (SDC) in
 \castro, instead of the more commonly employed Strang splitting.  This
@@ -356,19 +345,21 @@ order, we may also be able to reduce our resolution requirements
 needed for converged flames, and since computational work scales like
 $(\Delta x)^4$ in 3D, this can save a lot of computer time.
 
-As an example of the improvements in coupling between hydro and \MarginPar{Don can add some comments about startup costs?}
+As an example of the improvements in coupling between hydro
+and \MarginPar{Don can add some comments about startup costs?}
 reactions, Figure~\ref{fig:sdc} shows the mass fraction of helium
 behind a detonation over the course of 3 timesteps.  The points
 represent individual calls to the righthand side function of our
 reaction network (a 13-isotope $\alpha$-chain), and the density of
 points indicates how hard the integrator is working.  We use the same
 tolerances for both the Strang-split method and the SDC method.  For
-the SDC method, we are using a second-order accurate method.  We
-predict a time-centered advection term, $\Adv{\Uc}^{n+1/2}_i$ using
-standard unsplit Godunov methods, but explicitly include a reactive
-source term in the tracing of the interface states, ${\bf R}(\Uc_i)$.  We can then solve
-the reactive system, using this advective term as a
-piecewise-constant-in-time source
+the SDC method, we are using a second-order accurate method based on
+\cite{SDC-old}.  We predict a time-centered advection term,
+$\Adv{\Uc}^{n+1/2}_i$ using standard unsplit Godunov methods, but
+explicitly include a reactive source term in the tracing of the
+interface states, ${\bf R}(\Uc_i)$.  We can then solve the reactive
+system, using this advective term as a piecewise-constant-in-time
+source
 \begin{equation}
 \label{eq:syst}
 \frac{d{\Uc_i}}{dt} = -\Adv{\Uc}^{n+1/2}_i + {\bf R}(\Uc_i)
@@ -383,22 +374,17 @@ in Figure~\ref{fig:sdc}, each SDC iteration called the righthand side
 function of the network 5 times less than the Strang case.
 We are continuing to develop this new integration strategy, with full
 fourth-order in space and time reacting hydrodynamics methods to
-follow shortly.
+follow shortly.  The XRB simulations are our target application.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.75\linewidth]{sdc_plot}
-\caption{\label{fig:sdc} Helium mass fraction as a function of time over three timesteps.
-  The points represent individual calls to the
-  righthand side function of our reaction network (see Eq. \ref{eq:syst}) and the density of
-  points indicates how hard the integrator is working.}
+\caption{\label{fig:sdc} Helium mass fraction as a function of time
+  over three timesteps.  The points represent individual calls to the
+  righthand side function of our reaction network (see
+  Eq. \ref{eq:syst}) and the density of points indicates how hard the
+  integrator is working.}
 \end{figure}
-
-Within the realm of compressible hydrodynamics, there are a number of
-other techniques that should be explored.  smarter refinement with AMR
-+ hydrostatic refinement well-balanced method to allow ultralow
-resolution to slide along with the burning front higher-order This are
-all
 
 Other ways to make the simulation less expensive can include a subgrid
 model, Flame models are commonly used for Type Ia supernovae.  There
@@ -408,12 +394,39 @@ the flame thickness is a non-trivial fraction of the pressure scale
 height and further, the laminar flame properties will change strongly
 over the height of the burning layer (see~\cite{Timmes00}).  This
 makes traditional flame models a poor fit.  Methods that use even
-something as simple as subzone burning (e.g.~\cite{Wang2012190}).  This is harder...
+something as simple as subzone burning (e.g.~\cite{Wang2012190}) may
+help capture the energetics with lower resolution.  This can be
+implemented using the AMR machinery.  This may help a little, but will
+still be insufficient for full star models.
 
-Finally, we can try hybrid model approaches where the fully
-compressible simulation can act as a subgrid model.  \MarginPar{this ties into Ann's stuff, and also the stuff Alice was doing}
-Multiscale methods can combine different hydro models together to allow 
-for a full star simulation with resolved burning.  Examples include...
+If we continue to resolve the flame structure, then we need to be
+smarter (and more aggressive) about our grid refinement strategy.
+Currently, we put the entire fuel layer on the finest grid, but for
+the material ahead of the flame, we could keep it at lower resolution
+until the flame reaches it.  The main obstacle is that we need to keep
+the fuel ahead of the flame in hydrostatic equilibrium, and keeping it
+refined accomplishes this well.  Using well-balanced
+schemes~\cite{kappeli:2016} can help us retain hydrostatic equilibrium
+(HSE) in the lower refined regions, reducing the number of zones
+needed to maintain fidelity, but we would still need a way to regrid
+the layer ahead of the flame to higher resolution to accurately
+capture the burning dynamics.  To accomplish this, we envision
+building a refinment strategy that does interpolation of the data onto
+the newly refined grids enforcing hydrostatic equilibrium.  This can
+allow us to keep only a narrow fully refined region that ``slides''
+along the surface of the neutron star keeping pace with the advancing
+flame.  Such a scheme would greatly reduce the computational costs.
+This is a longer term development.
+
+
+All of the above developments still involve fully compressible
+hydrodynamics, but multiscale methods where we couple different hydrodynamics
+solvers together in a single simulation may ultimately be needed to model the full star while resolving the burning front. \MarginPar{Alice and Ian contribute here}
+
+%% Finally, we can try hybrid model approaches where the fully
+%% compressible simulation can act as a subgrid model.  
+%% Multiscale methods can combine different hydro models together to allow 
+%% for a full star simulation with resolved burning.  Examples include...
 
 
 \section{Summary}
