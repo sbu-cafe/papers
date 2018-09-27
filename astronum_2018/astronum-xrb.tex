@@ -421,18 +421,27 @@ This is a longer term development.
 
 All of the above developments still involve fully compressible
 hydrodynamics, but multiscale methods~\cite{weinan2011principles} where we couple different hydrodynamics
-solvers together in a single simulation may ultimately be needed to model the full star while resolving the burning front. \MarginPar{Alice and Ian contribute here}
+solvers together in a single simulation may ultimately be needed to model the full star while resolving the burning front.
+%\MarginPar{Alice and Ian contribute here}
 Such techniques rely on it being possible to decompose the dynamics of the system
 into two scales, e.g.~a short and a long lengthscale, and that the processes at each
-scale do not interact with each other. In the context of X-ray bursts, one possibility for
+scale are at most weakly coupled with each other. In the context of X-ray bursts, one possibility for
 multiscale modelling would be to model the large scale dynamics using a shallow water model
 (like that of~\cite{SPIT_ETAL02}) to capture the effects of the Coriolis force, and use
+a Low Mach model or
 a fully compressible model in the vicinity of the burning front to capture
 the turbulent burning processes. Given that the computational costs of the 2d shallow water model
-would be negligible compared to those of the compressible model, the overall cost of 
+would be negligible compared to those of the compressible model, the overall cost of
 this multiscale model would be determined by the size of the compressible region only. This
 approach would therefore allow us to capture dynamics across the full star
-without sacrificing resolution of the flame.
+without sacrificing resolution around the flame.
+An example of coupling compressible and Low Mach models within the mesh
+refinement framework used by our codes, but in a terrestrial context,
+is~\cite{Motheau2018}. An initial implemenation, \cite{Harpole2018}, in an
+astrophysical context, coupling shallow water to compressible models in both
+Newtonian and relativistic gravity, indicates that considerable computational
+efficiencies are possible, but that close attention to the coupling between the
+models is needed.
 
 %% Finally, we can try hybrid model approaches where the fully
 %% compressible simulation can act as a subgrid model.
