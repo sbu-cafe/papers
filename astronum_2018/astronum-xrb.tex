@@ -211,7 +211,7 @@ nucleosynthesis, and watch it move across the neutron star surface.
 The results of these simulations will enable strict comparison to
 observations made with the new generation of X-ray telescopes such as
 \textit{eXTP}\/ and \textit{STROBE-X}\/
-\cite{art-2017-wilhod-etal,art-2016-zhang-etal} which will offer
+\cite{art-2017-wilhod-etal,art-2016-zhang-etal,intZand2018} which will offer
 high collecting area and time resolution.
 We show some in-progress calculations that are a step toward this, discuss
 their remaining approximations, and also discuss what new algorithmic
@@ -331,7 +331,7 @@ If we continue to resolve the flame structure, then we need algroithms
 that can do so less expensively.  We can be smarter about our grid
 refinement strategy, putting the finest grids only at the very base of
 the burning layer, where the flame is the thinnest.  Using
-well-balanced schemes can help us retain hydrostatic equilibrium (HSE)
+well-balanced schemes~\cite{kappeli:2016} can help us retain hydrostatic equilibrium (HSE)
 in the lower refined regions, reducing the number of zones needed to
 maintain fidelity.  We can also explore initializing newly created fine
 grids ahead of the burning with an understanding of hydrostatic
@@ -403,7 +403,7 @@ the flame thickness is a non-trivial fraction of the pressure scale
 height and further, the laminar flame properties will change strongly
 over the height of the burning layer (see~\cite{Timmes00}).  This
 makes traditional flame models a poor fit.  Methods that use even
-something as simple as subzone burning.  This is harder...
+something as simple as subzone burning (e.g.~\cite{Wang2012190}).  This is harder...
 
 Finally, we can try hybrid model approaches where the fully
 compressible simulation can act as a subgrid model.  \MarginPar{this ties into Ann's stuff, and also the stuff Alice was doing}
