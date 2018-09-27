@@ -297,17 +297,20 @@ the subject of a detailed study in the near future.
 
 The 2D calculations shown in the previous section require about 10k
 node-hours of computational time to get to about 10~ms (those
-particular simulations were run at NERSC).  The GPU version of the
-Castro hydrodynamics solver, under active development, is about
-$10\times$ faster on a comparable node, so a GPU calculation could
-bring the 2D cost down to 1k node-hours.  Most of this time is spent
-in the reactions\MarginPar{verify fraction}.  A 3D version of this
-calculation is estimated to require 5M node-hours on CPUs or 0.5M
-node-hours using GPUs---this is about the size of an
-annual \MarginPar{double check \#s} allocation.  Additionally, this is
-still with the boosted flame, but we expect that once the flame is
-developed, the boosting will not be as critical, due to hydrodynamic
-effects.  We plan to test this soon.  In any case, this is less than
+particular simulations were run at NERSC).  Most of this time is spent
+in the reactions\MarginPar{verify fraction}.  We really need to do 3D.
+There the shear from the hurricane structure acting along the flame
+front may cause instabilities that can affect the flame propagation.
+This is something we can test with our current simulation methodology.
+A 3D version of this calculation is estimated to require 5M node-hours
+on CPUs---this is about the size of an annual \MarginPar{double check
+  \#s} allocation.  Additionally, this is still with the boosted
+flame, but we expect that once the flame is developed, the boosting
+will not be as critical, due to hydrodynamic effects.  We plan to test
+this soon.  We can bootstrap the 3D calculation by mapping the 2D
+axisymmetric calculation, once the flame is firmly established, into
+3D, rotating about the symmetry axis.  This will cut down the
+computational time by about one-half.  In any case, this is less than
 1\% of the neutron star surface, so a fully resolved calculation of
 burning over the entire neutron star is out of reach, and will be for
 some time.
@@ -321,22 +324,24 @@ becoming more common.  Our recent development in \castro\ has focused
 on moving the hydrodynamics to GPUs~\cite{astronum:2017}.  The XRB
 problem is an ideal case for this, since hydrodynamics with constant
 gravity (for plane-parallel domains) ports in a straightforward manner
-to GPUs.  We can expect GPUs to perform 10--20$\times$ faster than
-CPUs on modern supercomputer nodes.  This performance increase will
-directly benefit XRB simulations.  GPU offloading of the reaction networks
-will also allow us to explore larger networks and more detailed nuclear
-physics.
+to GPUs.  The current GPU version of the \castro hydrodynamics solver
+is about $10\times$ faster using GPUs on a node than the entire node
+of CPU cores.  We see similar speed ups with reaction networks, with
+these GPU ports under active development.  This means a GPU
+calculation could lower the above costs by a factor of 10.  GPU
+offloading of the reaction networks will also allow us to explore
+larger networks and more detailed nuclear physics.
 
-If we continue to resolve the flame structure, then we need algroithms
+If we continue to resolve the flame structure, then we need algorithms
 that can do so less expensively.  We can be smarter about our grid
 refinement strategy, putting the finest grids only at the very base of
 the burning layer, where the flame is the thinnest.  Using
-well-balanced schemes~\cite{kappeli:2016} can help us retain hydrostatic equilibrium (HSE)
-in the lower refined regions, reducing the number of zones needed to
-maintain fidelity.  We can also explore initializing newly created fine
-grids ahead of the burning with an understanding of hydrostatic
-equilibrium to allow us to only refine the peak burning as the flame
-moves across the star.
+well-balanced schemes~\cite{kappeli:2016} can help us retain
+hydrostatic equilibrium (HSE) in the lower refined regions, reducing
+the number of zones needed to maintain fidelity.  We can also explore
+initializing newly created fine grids ahead of the burning with an
+understanding of hydrostatic equilibrium to allow us to only refine
+the peak burning as the flame moves across the star.
 
 Another way we can meet the resolution requirements is to use a more
 accurate hydrodynamic method.  In particular, we are developing fully
