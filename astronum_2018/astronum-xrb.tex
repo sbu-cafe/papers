@@ -297,27 +297,47 @@ the subject of a detailed study in the near future.
 
 The 2D calculations shown in the previous section require about 10k
 node-hours of computational time to get to about 10~ms (those
-particular simulations were run at NERSC).  Most of this time is spent
-in the reactions\MarginPar{verify fraction}.  We really need to do 3D.
-There the shear from the hurricane structure acting along the flame
-front may cause instabilities that can affect the flame propagation.
-This is something we can test with our current simulation methodology.
-A 3D version of this calculation is estimated to require 5M node-hours
+particular simulations were run at NERSC).  We expect qualitatively different
+results in 3D calculations: for example, the shear from the hurricane structure
+acting along the flame front may cause instabilities that can affect the flame
+propagation.
+With our current simulation methodology,
+a 3D version of this calculation is estimated to require 5M node-hours
 on CPUs---this is about the size of an annual \MarginPar{double check
-  \#s} allocation.  Additionally, this is still with the boosted
-flame, but we expect that once the flame is developed, the boosting
-will not be as critical, due to hydrodynamic effects.  We plan to test
-this soon.  We can bootstrap the 3D calculation by mapping the 2D
-axisymmetric calculation, once the flame is firmly established, into
-3D, rotating about the symmetry axis.  This will cut down the
-computational time by about one-half.  In any case, this is less than
+  \#s} allocation.
+%Additionally, this is still with the boosted flame, but we expect that once the flame is developed, the boosting will not be as critical, due to hydrodynamic effects.
+We plan to test this soon.
+This simulation covers less than
 1\% of the neutron star surface, so a fully resolved calculation of
-burning over the entire neutron star is out of reach, and will be for
-some time.
+burning over the entire neutron star is out of reach: a naive scaling
+calculation suggest that 15 years of Moore's Law improvements are required.
+%
+% The calculation above is
+% log_2 [ (4 pi 10^2) / (1.23^2) ] * 1.5
+% for a NS of 10km radius vs the computational domain of 1.23km^2
+%
 
-Algorithmic improvements are needed to push the scale of simulations
+Improvements are needed to push the scale of simulations
 to the point where we can model XRBs at the full star scale with
-resolved nuclear physics.  Here we discuss a few possibilities.
+resolved nuclear physics.
+As the computational cost is roughly a product of the number of zones, the
+number of zone updates, and the cost per zone update, we need to look for
+improvements in each of these. The number of zones depends on the physical
+model employed, the meshing strategy, and the accuracy required. The number of
+zone updates depends on the smallest zone size and the largest characteristic
+speed in the model. The computational cost per zone update is dominated by the
+time spent in the reactions\MarginPar{verify fraction}. We discuss a few
+possible improvements that can come both from implementing new algorithms and
+from exploiting new hardware.
+
+
+%For example, the number of zones can be reduced
+%by symmetry considerations. We can bootstrap the 3D calculation by mapping the
+%2D axisymmetric calculation, once the flame is firmly established, into
+%3D, rotating about the symmetry axis.  This will cut down the computational
+%time by about one-half.
+
+
 
 Machine architectures are evolving, with heterogeneous architectures
 becoming more common.  Our recent development in \castro\ has focused
@@ -332,7 +352,7 @@ calculation could lower the above costs by a factor of 10.  GPU
 offloading of the reaction networks will also allow us to explore
 larger networks and more detailed nuclear physics.
 
-Another way we can meet the resolution requirements is to use a more
+Another way we can reduce the number of zones for given accuracy is to use a more
 accurate hydrodynamic method.  We are developing fully
 fourth-order (in space and time) coupling of hydrodynamics and
 reactions using the method of spectral deferred corrections (SDC) in
@@ -342,8 +362,16 @@ reduces the stiffness of the reactions, requiring fewer righthand side
 calls and therefore reducing the expense of the
 reactions. \MarginPar{need some refs here} Second, by moving to fourth
 order, we may also be able to reduce our resolution requirements
-needed for converged flames, and since computational work scales like
-$(\Delta x)^4$ in 3D, this can save a lot of computer time.
+needed for converged flames. For smooth wave solutions we may expect to need
+around half the number of zones per dimension, and since computational work
+scales like $(\Delta x)^4$ in 3D, this could lower costs by a factor of around
+10.
+%
+% This calculation is based on the number of points per wavelength required,
+% to resolve a periodic wave, which (I believe) goes from 12 (2nd order) to
+% about 7 (4th order). However, this is very idealized, and I'm not sure that
+% it carries over to the reactions, so this may well be optimistic.
+%
 
 As an example of the improvements in coupling between hydro
 and \MarginPar{Don can add some comments about startup costs?}
@@ -415,8 +443,9 @@ building a refinement strategy that does interpolation of the data onto
 the newly refined grids enforcing hydrostatic equilibrium.  This can
 allow us to keep only a narrow fully refined region that ``slides''
 along the surface of the neutron star keeping pace with the advancing
-flame.  Such a scheme would greatly reduce the computational costs.
-This is a longer term development.
+flame.  When using mesh refinement the overall costs are dominated by the
+number of zones at the finest resolution, so such a scheme would greatly reduce
+the computational costs. This is a longer term development.
 
 
 All of the above developments still involve fully compressible
@@ -435,6 +464,10 @@ would be negligible compared to those of the low Mach/compressible model, the ov
 this multiscale model would be determined by the size of the low Mach/compressible region only. This
 approach would therefore allow us to capture dynamics across the full star
 without sacrificing resolution around the flame.
+As with the more aggressive gridding strategy above, the hybrid approach
+reduces the number of zones with the largest computational cost through mesh
+refinement, and also reduces the computational costs where possible by
+employing cheaper physical models in regions where this is possible.
 An example of coupling compressible and low Mach number models implemented using the \amrex~framework, but in a terrestrial context,
 is~\cite{Motheau2018}. An initial implemenation, \cite{Harpole2018}, in an
 astrophysical context, coupling shallow water to compressible models in both
