@@ -128,7 +128,7 @@ the neutron star radius is 10~km and the Rossby lengthscale, where rotation
 and lateral pressure gradients balance, is $\sim
 1$~km~\cite{SPIT_ETAL02}.  At the smallest scales, a conductive He
 flame has a thickness of 10s of centimeters~\cite{Timmes00} and the
-pressure scale height of the fuel layer is meters.  To capture the
+pressure scale height of the fuel layer is on the order of meters.  To capture the
 rise timescale of the XRB, we would need to model seconds, but the flame itself
 is subsonic, so long timescale evolution is difficult.
 
@@ -158,11 +158,11 @@ that the Coriolis force plays an important role in confining a
 spreading region and that the flame spreading can explain brightness
 oscillations during the rise of the burst lightcurve.
 
-Our group and others have modeled the convection preceeding the
-runaway using low Mach number hydrodynamic methods, for pure helium
+Our group and others have modeled the convection preceding the
+runaway using low Mach number hydrodynamic methods for pure helium
 bursts~\cite{Lin:2006,xrb} and mixed hydrogen/helium
-bursts~\cite{xrb2} in 2d, and full 3d simulations of mixed
-bursts~\cite{xrb3}, and followed the development of the turbulence.
+bursts~\cite{xrb2} in 2D, as well as full 3D simulations of mixed
+bursts~\cite{xrb3}, and followed the development of turbulence.
 These simulations can give an understanding of the pre-burning front
 regime, including the strength and character of the turbulence, but
 cannot model large scale lateral variations because of the implicit
@@ -229,28 +229,28 @@ mesh refinement, supports a general equation of state and reaction
 networks, has a conservative gravity formulation~\cite{wdmergerI}, and
 is optimized to run on current supercomputers.  All of our code base
 is open source and available on
-github\footnote{\url{http://github.com/amrex-astro/}}, and all of the
+GitHub\footnote{\url{http://github.com/amrex-astro/}}, and all of the
 solvers, problem setup, initial models, and analysis scripts for each
 of our science problems are distributed with the codes.
 
 We setup a problem by creating a pair of 1D hydrostatic XRB models (hot and cool)
 representing the post- and pre-flame states and apply these laterally
 across the domain to setup a hot region at the left end of our domain
-in equilibrium with the cool model.  Thermal diffusion and nuclear
-reactions quickly setup a laterally propagating flame that begins to
+in equilibrium with the cool model on the right.  Thermal diffusion and nuclear
+reactions quickly produce a laterally propagating flame that begins to
 move through our domain.  We resolve the diffusion scale, using a
 resolution of 10~cm, and use adaptive mesh refinement (two jumps of
 $4\times$) to keep a buffer of low density material at low resolution
 above the surface to allow for expansion.  To make the lengthscales
 tractable, we rotate the neutron star at 2000~Hz---much faster than
 expected.  This helps confine the spreading region to a more
-reasonable horizontal region.  Nevertheless, our simulation uses 12288
+reasonable horizontal domain.  Nevertheless, our simulation uses 12288
 zones laterally, on the finest grid.  We use the stellar
 conductivities from \cite{Timmes00} and a 13-isotopic alpha-chain
 reaction network.  To make the timescales easier, we boost the flame
-speed by a factor of 10, by boosting both the conductivity and energy
-generation rate.  This is an approximation we hope to relax in the
-near future.
+speed by a factor of 10 by scaling both the conductivity and energy
+generation rate by the same factor.  This is an approximation we hope to
+relax in the near future.
 
 Figure~\ref{fig:xrb} shows the flame structure for an initial 2D run
 at 0.007~s.  The burning layer is only about 10~m high.  Underneath is
