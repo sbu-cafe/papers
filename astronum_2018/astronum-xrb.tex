@@ -298,17 +298,15 @@ the subject of a detailed study in the near future.
 \section{Large Scale Simulations and Algorithmic Developments}
 
 The 2D calculations shown in the previous section require about 10k
-node-hours of computational time to get to about 10~ms (those
-particular simulations were run at NERSC).  We expect qualitatively different
+node-hours of computational time to get to about 10~ms (running
+on the Edison machine at NERSC).  We expect qualitatively different
 results in 3D calculations: for example, the shear from the hurricane structure
 acting along the flame front may cause instabilities that can affect the flame
 propagation.
 With our current simulation methodology,
-a 3D version of this calculation is estimated to require 5M node-hours
-on CPUs---this is about the size of an annual \MarginPar{double check
-  \#s} allocation.
+a 3D version of this calculation is estimated to require 10M node-hours
+or more---this is about the size of an annualallocation.
 %Additionally, this is still with the boosted flame, but we expect that once the flame is developed, the boosting will not be as critical, due to hydrodynamic effects.
-We plan to test this soon.
 This simulation covers less than
 1\% of the neutron star surface, so a fully resolved calculation of
 burning over the entire neutron star is out of reach: a naive scaling
@@ -328,7 +326,7 @@ improvements in each of these. The number of zones depends on the physical
 model employed, the meshing strategy, and the accuracy required. The number of
 zone updates depends on the smallest zone size and the largest characteristic
 speed in the model. The computational cost per zone update is dominated by the
-time spent in the reactions\MarginPar{verify fraction}. We discuss a few
+time spent in the reactions and equation of state. We discuss a few
 possible improvements that can come both from implementing new algorithms and
 from exploiting new hardware.
 
