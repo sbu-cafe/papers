@@ -376,9 +376,10 @@ scales like $(\Delta x)^4$ in 3D, this could lower costs by a factor of around
 As an example of the improvements in coupling between hydro
 and \MarginPar{Don can add some comments about startup costs?}
 reactions, Figure~\ref{fig:sdc} shows the mass fraction of helium
-behind a detonation over the course of 3 timesteps.  The points
+behind a detonation over the course of 2 timesteps.  For this test,
+a 19 isotope reaction network was used.  The points
 represent individual calls to the righthand side function of our
-reaction network (a 13-isotope $\alpha$-chain), and the density of
+reaction network, and the density of
 points indicates how hard the integrator is working.  We use the same
 tolerances for both the Strang-split method and the SDC method.  For
 the SDC method, we are using a second-order accurate method based on
@@ -399,19 +400,28 @@ update, and then reintegrate the system.  The result of this iteration
 is that the advection sees the effects of reactions over the timestep
 and the reactions see the effects of advection.  For the zone tracked
 in Figure~\ref{fig:sdc}, each SDC iteration called the righthand side
-function of the network 5 times less than the Strang case.
-We are continuing to develop this new integration strategy, with full
-fourth-order in space and time reacting hydrodynamics methods to
-follow shortly.  The XRB simulations are our target application.
+function of the network 2 times less than the Strang case.  This
+savings is dependent on the network and thermodynamic state, but our
+tests thus far show that the SDC methods need fewer network calls to
+integrate a timestep.  We also clearly see how the Strang system
+evolves in a discontinuous fashion.  We are continuing to develop this
+new integration strategy, with full fourth-order in space and time
+reacting hydrodynamics methods to follow shortly.  The XRB simulations
+are our target application.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.75\linewidth]{sdc_plot}
 \caption{\label{fig:sdc} Helium mass fraction as a function of time
-  over three timesteps.  The points represent individual calls to the
+  over two timesteps for a detonation test problem with a 19-isotope
+  reaction network.  The points represent individual calls to the
   righthand side function of our reaction network (see
   Eq. \ref{eq:syst}) and the density of points indicates how hard the
-  integrator is working.}
+  integrator is working.  For the Strang case, we see that the first
+  half of the reactions brings us off of the smooth solution
+  (represented by the SDC curve), then the advection overcorrects,
+  resulting in a discontinuous jump, and finally the second half of
+  the reactions works to bring the state back to the solution curve.}
 \end{figure}
 
 Other ways to make the simulation less expensive can include a subgrid
