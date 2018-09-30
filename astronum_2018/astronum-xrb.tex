@@ -356,11 +356,11 @@ Another way we can reduce the number of zones for given accuracy is to use a mor
 accurate hydrodynamic method.  We are developing fully
 fourth-order (in space and time) coupling of hydrodynamics and
 reactions using the method of spectral deferred corrections (SDC) in
-\castro, instead of the more commonly employed Strang splitting.  This
+\castro, instead of the more commonly employed Strang splitting~\cite{strang:1968}.  This
 provides us with two benefits.  First, the improved coupling actually
 reduces the stiffness of the reactions, requiring fewer righthand side
 calls and therefore reducing the expense of the
-reactions. \MarginPar{need some refs here} Second, by moving to fourth
+reactions.  Second, by moving to fourth
 order, we may also be able to reduce our resolution requirements
 needed for converged flames. For smooth wave solutions we may expect to need
 around half the number of zones per dimension, and since computational work
@@ -416,7 +416,7 @@ are our target application.
   over two timesteps for a detonation test problem with a 19-isotope
   reaction network.  The points represent individual calls to the
   righthand side function of our reaction network (see
-  Eq. \ref{eq:syst}) and the density of points indicates how hard the
+  Eq.~\ref{eq:syst}) and the density of points indicates how hard the
   integrator is working.  For the Strang case, we see that the first
   half of the reactions brings us off of the smooth solution
   (represented by the SDC curve), then the advection overcorrects,
@@ -465,11 +465,11 @@ solvers together in a single simulation may ultimately be needed to model the fu
 Such techniques rely on it being possible to decompose the dynamics of the system
 into two scales, e.g.~a short and a long lengthscale, and that the processes at each
 scale are at most weakly coupled with each other. In the context of XRBs, one possibility for
-multiscale modelling would be to model the large scale dynamics using a shallow water model
+multiscale modeling would be to model the large scale dynamics using a shallow water model
 (like that of~\cite{SPIT_ETAL02}) to capture the effects of the Coriolis force, and use
 a low Mach number or
 a fully compressible model in the vicinity of the burning front to capture
-the turbulent burning processes. Given that the computational costs of the 2D shallow water model
+the turbulent burning processes. Given that the computational costs of the shallow water model
 would be negligible compared to those of the low Mach/compressible model, the overall cost of
 this multiscale model would be determined by the size of the low Mach/compressible region only. This
 approach would therefore allow us to capture dynamics across the full star
@@ -479,7 +479,7 @@ reduces the number of zones with the largest computational cost through mesh
 refinement, and also reduces the computational costs where possible by
 employing cheaper physical models in regions where this is possible.
 An example of coupling compressible and low Mach number models implemented using the \amrex~framework, but in a terrestrial context,
-is~\cite{Motheau2018}. An initial implemenation, \cite{Harpole2018}, in an
+is~\cite{Motheau2018}. An initial implementation, \cite{Harpole2018}, in an
 astrophysical context, coupling shallow water to compressible models in both
 Newtonian and relativistic gravity, indicates that considerable computational
 efficiencies are possible, but that close attention to the coupling between the
@@ -492,6 +492,14 @@ models is needed.
 
 
 \section{Summary}
+
+XRBs are multiscale, multiphysics problems that are challenging to
+model.  Nevertheless, significant progress has been made in
+multidimensional models of these events, through a set of
+complementary algorithmic approaches.  Future advances in computer
+architectures and algorithms will allow for even more realistic models
+of these events, and help us connect to observations, ultimately telling
+us about the neutron star itself.
 
 \ack The work at Stony Brook was supported by DOE/Office of Nuclear
 Physics grant DE-FG02-87ER40317 and contract 7418390 with Lawrence
