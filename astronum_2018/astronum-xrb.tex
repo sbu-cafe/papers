@@ -18,6 +18,7 @@
 \newcommand{\starlord}{{\sffamily StarLord}}
 \newcommand{\nyx}{{\sffamily Nyx}}
 \newcommand{\amrex}{{\sffamily AMReX}}
+\newcommand{\vode}{{\sffamily VODE}}
 
 \newcommand{\Uc}{{\,\bm{\mathcal{U}}}}
 \newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
@@ -270,7 +271,7 @@ We again see that the head of the flame is detached from the base
 of the atmosphere, with the strongest burning at the head of the flame
 slightly higher up in the atmosphere.   Finally, the bottom
 panel shows the velocity through the plane of the simulation---this is
-induced by the Coriolis force as the burning fluid expands and begins to spreads laterally.
+induced by the Coriolis force as the burning fluid expands and begins to spread laterally.
 A tight hurricane structure has setup as a result of the flame
 spreading.  This is the geostrophic balance discussed in
 \cite{SPIT_ETAL02}.    These calculations are ongoing and will be
@@ -283,7 +284,7 @@ the subject of a detailed study in the near future.
   a neutron star.  Shown are temperature (top), the mean molecular
   weight of the ash (second), the nuclear energy generation rate
   (third), and the velocity out of the simulation plane (bottom).  The
-  out of plane velocity contours indicate where the Coriolis force has
+  out-of-plane velocity contours indicate where the Coriolis force has
   created a hurricane-like wind structure which confines the flame,
   leading to an inclined front. It is at such an interface that the
   temperature and burning rate are highest.  }
@@ -368,8 +369,7 @@ scales like $(\Delta x)^4$ in 3D, this could lower costs by a factor of around
 %
 
 As an example of the improvements in coupling between hydro
-and \MarginPar{Don can add some comments about startup costs?}
-reactions, Figure~\ref{fig:sdc} shows the mass fraction of helium
+and reactions, Figure~\ref{fig:sdc} shows the mass fraction of helium
 behind a detonation over the course of 2 timesteps.  For this test,
 a 19 isotope reaction network was used.  The points
 represent individual calls to the righthand side function of our
@@ -402,6 +402,37 @@ evolves in a discontinuous fashion.  We are continuing to develop this
 new integration strategy, with full fourth-order in space and time
 reacting hydrodynamics methods to follow shortly.  The XRB simulations
 are our target application.
+
+For the ODE integrations shown we use the variable-order,
+variable-step integrator \vode\ \cite{vode} with its implementation of
+the backward-differentiation formulas. The integration order
+corresponds to the order of the interpolating polynomials used to
+predict the solution in each integrator step. We note that for both
+Strang splitting and SDC, \vode\ must start the integration at first
+order and correspondingly small time steps since no higher-order
+information about the solution is available. That is, our reaction
+network right-hand sides provide the first time derivative of the
+solution but no higher derivatives. Based on testing with a 13-isotope
+approximate alpha-chain network, \vode\ takes many small timesteps
+(e.g. $\approx 200$) before it can stably increase to a high order
+representation of the solution, but after it does so, it can often
+complete the integration in only a handful of steps (e.g.
+$\approx 5-6$). Observing that during a \castro\ timestep, the first
+Strang step is a direct continuation of the integration in the second
+Strang step of the previous \castro\ timestep, we explored saving the
+\vode\ state following the second Strang step and restarting \vode\
+during the first Strang step. This approach allowed us to start the
+first Strang step with a high order representation of the solution and
+complete it in very few \vode\ timesteps (e.g. $<10$ steps), speeding
+up the \castro\ timestep advance by 50\% for our detonation test
+problem using the 13-isotope network. However, this came at the memory
+cost of storing $7 N_{eq} + 90$ scalar variables on our grid, where
+for our networks $N_{eq} = N_{spec} + 2$ (in addition to the number of
+species $N_{spec}$ we also integrate temperature and specific
+energy). For a large-scale science problem with a large network, this
+could quickly become prohibitive, so we are exploring ways to mitigate
+either the memory requirements for restarting the integration or the
+small timestep start up costs for the integration method.
 
 \begin{figure}
 \centering
