@@ -9,7 +9,7 @@
 %\usepackage{cite}
 
 \usepackage{amsmath}
-
+\usepackage{amssymb}
 \usepackage{bm}
 
 \newcommand{\maestro}{{\sffamily Maestro}}
@@ -405,34 +405,37 @@ are our target application.
 
 For the ODE integrations shown we use the variable-order,
 variable-step integrator \vode\ \cite{vode} with its implementation of
-the backward-differentiation formulas. The integration order
-corresponds to the order of the interpolating polynomials used to
-predict the solution in each integrator step. We note that for both
+the backward-differentiation formulas.
+% The integration order
+%corresponds to the order of the interpolating polynomials used to
+%predict the solution in each integrator step. 
+We note that for both
 Strang splitting and SDC, \vode\ must start the integration at first
-order and correspondingly small time steps since no higher-order
-information about the solution is available. That is, our reaction
-network right-hand sides provide the first time derivative of the
-solution but no higher derivatives. Based on testing with a 13-isotope
+order and correspondingly small timesteps since no higher-order
+information about the solution is available (our reaction
+network right-hand sides provide only the first time derivative of the
+solution). Based on testing with a 13-isotope
 approximate alpha-chain network, \vode\ takes many small timesteps
-(e.g. $\approx 200$) before it can stably increase to a high order
+(e.g.\ $\sim 200$) before it can stably increase to a high order
 representation of the solution, but after it does so, it can often
-complete the integration in only a handful of steps (e.g.
-$\approx 5-6$). Observing that during a \castro\ timestep, the first
-Strang step is a direct continuation of the integration in the second
-Strang step of the previous \castro\ timestep, we explored saving the
-\vode\ state following the second Strang step and restarting \vode\
-during the first Strang step. This approach allowed us to start the
-first Strang step with a high order representation of the solution and
-complete it in very few \vode\ timesteps (e.g. $<10$ steps), speeding
-up the \castro\ timestep advance by 50\% for our detonation test
-problem using the 13-isotope network. However, this came at the memory
-cost of storing $7 N_{eq} + 90$ scalar variables on our grid, where
-for our networks $N_{eq} = N_{spec} + 2$ (in addition to the number of
-species $N_{spec}$ we also integrate temperature and specific
-energy). For a large-scale science problem with a large network, this
-could quickly become prohibitive, so we are exploring ways to mitigate
-either the memory requirements for restarting the integration or the
-small timestep start up costs for the integration method.
+complete the integration in only a handful of steps (e.g.\ $\sim
+5$--$6$). Observing that during a \castro\ timestep, the first Strang
+step is a direct continuation of the integration in the second Strang
+step of the previous \castro\ timestep, we explored saving the
+\vode\ state following the second Strang step and restarting
+\vode\ during the first Strang step. This approach allowed us to start
+the first Strang step with a high order representation of the solution
+and complete it in very few \vode\ timesteps ($\lesssim 10$ steps),
+speeding up the \castro\ timestep advance by 50\% for our detonation
+test problem using the 13-isotope network. However, this came at the
+memory cost of storing $7 N_{eq} + 90$ scalar variables on our grid,
+where for our networks $N_{eq} = N_{spec} + 2$ (in addition to the
+number of species $N_{spec}$ we also integrate temperature and
+specific energy). For a large-scale science problem with a large
+network, this could quickly become prohibitive, so we are exploring
+ways to mitigate either the memory requirements for restarting the
+integration or the small timestep start up costs for the integration
+method.
 
 \begin{figure}
 \centering
