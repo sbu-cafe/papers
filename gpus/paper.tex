@@ -115,11 +115,20 @@ Describe MPI, MPI+OpenMP w/ tiling, MPI + CUDA
 
 \subsection{Summary of changes required}
 
+The main hydrodynamics solver in \castro\ is an unsplit corner
+transport upwind \citep{ppmunsplit} piecewise parabolic method
+\citep{ppm} scheme.  This uses full corner coupling, requiring a 
+number of transverse Riemann problem solutions.  
+
 \section{Reaction networks}
 
 \section{Scaling}
 
+Our current focus is on offloading the hydrodynamics and reactions to
+GPUs, so we will achieve the best GPU performance for problems without
+self-gravity.
 
+\software{MPICH, GCC, Castro, python, matplotlib}
 
 \acknowledgements \castro\ is freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The work at Stony Brook
