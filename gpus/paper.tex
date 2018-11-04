@@ -21,6 +21,7 @@
 
 
 \newcommand{\castro}{{\sf Castro}}
+\newcommand{\maestro}{{\sf Maestro}}
 
 \newcommand{\nablab}{{\mathbf{\nabla}}}
 \newcommand{\Ub}{\mathbf{U}}
@@ -82,7 +83,9 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-blah
+We describe a performance portable version of the \castro\ hydrodynamics
+code that is able to achieve excellent scaling on both CPU and GPU-based
+supercomputers.
 \end{abstract}
 
 \keywords{hydrodynamics---methods: numerical}
@@ -127,6 +130,20 @@ number of transverse Riemann problem solutions.
 Our current focus is on offloading the hydrodynamics and reactions to
 GPUs, so we will achieve the best GPU performance for problems without
 self-gravity.
+
+\subsection{Pure hydrodynamics}
+
+\subsection{Reaction test}
+
+\subsection{X-ray burst}
+
+This problem uses constant gravity, so all of the physics can be done on the GPUs.
+
+
+\section{Summary}
+
+Future work: gravity on GPUs (multigrid or multipole), port of \maestro\ following
+the same ideas.
 
 \software{MPICH, GCC, Castro, python, matplotlib}
 
