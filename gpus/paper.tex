@@ -1,5 +1,5 @@
 %\documentclass[12pt, preprint]{aastex}
-\documentclass[preprint2,times]{aastex6}
+\documentclass[twocolumn,times]{aastex62}
 %\documentclass[preprint,times]{aastex6}
 
 % these lines seem necessary for pdflatex to get the paper size right
@@ -95,7 +95,11 @@ supercomputers.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-\citep{castro}
+is a compressible (radiation-)hydrodynamics simulation code built on
+the AMReX adaptive mesh refinement framework \citep{castro,castro2,castro3}.  It 
+includes full self-gravity using multigrid methods with isolated boundaries
+\cite{katz:2016}, works with general equations of state \citep{zingalekatz}
+and arbitrary nuclear reaction networks.
 
 Existing GPU-enabled astrophysical hydro codes include
 \citet{gamer,cholla,fargo3d,pekkila:2017,caplan:2018}
