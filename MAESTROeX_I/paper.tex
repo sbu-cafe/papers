@@ -316,6 +316,29 @@ Sample citation \cite{MAESTRO_I,MAESTRO_II,MAESTRO_III,MAESTRO_IV,MAESTRO_V}
 %% commands to see a summary list of all changes at the end of the article.
 %\listofchanges
 
+\section{Governing Equations}
+\begin{eqnarray}
+\frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
+\frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
+\frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc + \rho\Hext,\label{eq:enthalpy}
+\end{eqnarray}
+
+\begin{equation}
+\nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right),\label{eq:U divergence}
+\end{equation}
+\MarginPar{This is different from the Jacobs 2016 paper where we switched to alt\_energy\_fix.}
+where $\beta_0$ is a density-like variable that carries background stratification, defined as
+\begin{equation}
+\beta_0(r,t) = \rho_0(0,t)\exp\left(\int_0^r\frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial r'}dr'\right).
+\end{equation}
+The expansion term, 
+$S$, incorporates local 
+compressibility effects due to heat release from reactions, compositional changes, and 
+external sources,
+\begin{equation}
+S = -\sigma\sum_k\xi_k\omegadot_k + \frac{1}{\rho p_\rho}\sum_k p_{X_k}\omegadot_k + \sigma\Hnuc + \sigma\Hext.\label{eq:S}
+\end{equation}
+
 \section{Using Exact Spherical Base States on Irregular Grid} \label{sec:exactbasestate}
 
 \subsection{Potential Problems}
