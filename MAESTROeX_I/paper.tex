@@ -392,6 +392,7 @@ Paper III.
 \item[Step 1.] {\em React the full state through the first time interval of $\dt / 2.$}
 
 Call {\bf React State}$[\rho^n, (\rho h)^n, X_k^n, T^n, (\rho\Hext)^n, p_0^n] \rightarrow [\rho^{(1)},(\rho h)^{(1)},X_k^{(1)},T^{(1)},(\rho \omegadot_k)^{(1)},(\rho \Hnuc)^{(1)}]$.
+\MarginPar{AJN: I think we can simplify the description here... this is somewhat confusing now.}
 
 %--------------------------------------------------------------------------
 % STEP 2
@@ -463,7 +464,7 @@ accounted for in {\bf React State}.  The update consists of two steps:
 \item Compute the time-centered species edge states, $(\rho X_k)^{\nph,\pred}$,
   for the conservative update of $(\rho X_k)^{(1)}$ using
   $\Ub = \uadvone$ and $\rho_0^n$.
-\MarginPar{We may not need $\rho_0$ if we predict $\rho X$ or $\rho$ and $X$.}
+\MarginPar{We may not need $\rho_0$ if we predict $\rho X$ or $\rho$ and $X$.  AJN: If we end up keeping prediction of $\rho'$ and $X$, and $(\rho h)'$ we need to summarize this, particularly since $\rho_0$ and $(\rho h)_0$ treatment differs from previous papers.}
 
 \item Evolve $(\rho X_k)^{(1)} \rightarrow (\rho X_k)^{(2),\star}$ using
 \begin{equation}
