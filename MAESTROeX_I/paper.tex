@@ -184,7 +184,7 @@
 
 \begin{document}
 
-\title{Title}
+\title{MAESTROeX}
 
 %% LaTeX will automatically break titles if they run longer than
 %% one line. However, you may use \\ to force a line break if
@@ -233,7 +233,7 @@
 %% automatically put the author and affiliation information from the manuscript
 %% and save the corresponding author the trouble of entering it by hand.
 
-\correspondingauthor{Doreen Fan}
+\correspondingauthor{MAESTROeX}
 \email{DFan@lbl.gov}
 
 \author{Doreen Fan}
@@ -279,7 +279,11 @@ Stony Brook, NY 11794-3800, USA}
 
 %% Mark off the abstract in the ``abstract'' environment.
 \begin{abstract}
-Insert abstract here.
+We present MAESTROeX, a next-generation solver for low Mach number astrophysical flows.
+Here we summarize implementation details as well new spatiotemporal integration schemes
+developed for increased accuracy and a simpler base state treatment.  The code is written
+in the AMReX software framework for massively parallel block-structured adaptive mesh
+refinement applications.
 
 \end{abstract}
 
@@ -305,16 +309,17 @@ Insert abstract here.
 
 \section{Introduction} \label{sec:intro}
 
+Many astrophysical flows are highly subsonic; sound waves carry sufficiently little energy that they do not significantly affect the convective dynamics of the system.
+In many of these flows, long-time convective dynamics are of interest.
+Thus, using a traditional compressible astrophysical solver is highly inefficient.
+One approach to this problem is to use low Mach number hydrodynamic models.
+
+
 The key numerical developments of the MAESTRO algorithm are presented in a series of papers which we refer to as papers I-V (\cite{MAESTRO_I,MAESTRO_II,MAESTRO_III,MAESTRO_IV,MAESTRO_V}, respectively).
-
-%% This command is needed to show the entire author+affilation list when
-%% the collaboration and author truncation commands are used.  It has to
-%% go at the end of the manuscript.
-%\allauthors
-
-%% Include this line if you are using the \added, \replaced, \deleted
-%% commands to see a summary list of all changes at the end of the article.
-%\listofchanges
+Applications include the convective phase preceding Chandrasekhar mass models for type Ia supernovae \cite{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}, 
+convection in massivve stars \cite{Gilet:2013},
+sub-Chandrasekhar white dwarfs \cite{subChandra_I,subChandra_II}, and
+Type I X-ray bursts \cite{XRB_I,XRB_II,XRB_III}.
 
 \subsection{Motivation}
 We would like to revamp our previous MAESTRO code by moving to the AMReX framework
