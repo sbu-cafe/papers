@@ -316,6 +316,15 @@ The key numerical developments of the MAESTRO algorithm are presented in a serie
 %% commands to see a summary list of all changes at the end of the article.
 %\listofchanges
 
+\subsection{Motivation}
+We would like to revamp our previous MAESTRO code by moving to the AMReX framework
+so that we can take advantage of all of the latest features of the AMReX libraries. 
+In addition, we want to modify and simplify the existing numerical scheme 
+to both encourage new users and to develop a method that will lend itself more 
+easily to incorporating SDC and other high-order methods. 
+Irregular base state spacing is considered in order to improve spatial resolution 
+that have been seen in the previous MAESTRO code in some test cases.
+
 \section{Governing Equations}
 The derivation of the low Mach number hydrodynamics equations is given in Papers I-III.
 The resulting equations are
@@ -413,9 +422,9 @@ achieve second-order accuracy in time.
 
 \item[Step 0.] {\em Initialization}
 The initialization step only occurs at the beginning of the simulation.
-The initialization step computes initial values for $\pi^{-\myhalf}$, $S^0$, and
-$S^1$ for use in time stepping routine.  We pass through {\bf Step 1} -- {\bf Step 12},
-but only keep these values.
+The initialization step computes initial values for $\pi^{-\myhalf}$, , $\eta_{\rho}^{-\myhalf}$, 
+$\psi^{-\myhalf}$, $S^0$, and $S^1$ for use in time stepping routine.  
+We pass through {\bf Step 1} -- {\bf Step 12}, but only keep these values.
 The initial values for $\Ub^0, \rho^0, (\rho h)^0, X_k^0, T^0,
 \rho_0^0, p_0^0$, and $\overline{\Gamma}_1^0$ are specified from the problem-dependent
 initial conditions.  The initial time step, $\dt^0$, is computed as in
@@ -465,7 +474,7 @@ constraint.  We then construct $\uadvone$ from $\uadvonedag$
 using a MAC projection.
 We note that $\uadvone$ satisfies the divergence constraint
 \begin{equation}
-\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left(S^{\nph,\star} - \frac{1}{\overline{\Gamma}_1^np_0^n}\frac{p_0^n-p_0^{n-1}}{\Delta t^{n-1}} + \chi^n\right),
+\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left(S^{\nph,\star} - \frac{1}{\overline{\Gamma}_1^np_0^n}\psi^{n-\myhalf} + \chi^n \right),
 \end{equation}
 \begin{equation}
  \beta_0^n = \beta_0 \left(\rho_0^n, p_0^n, \overline{\Gamma}_1^n\right),
@@ -474,7 +483,14 @@ We note that $\uadvone$ satisfies the divergence constraint
 \chi^n = \frac{f}{\overline{\Gamma}_1^n p_0^n}\frac{p_{\rm eos}^n(\rho,h,X_k) - p_0^n}{\Delta t^n}
 \end{equation}
 where $\beta_0$ is computed as described in Appendix C of Paper III.
-\MarginPar{add volume discrepancy stuff}
+
+It should also be noted that we have found it better to approximate 
+the temporal changes in base pressure as 
+\begin{equation}
+\frac{\partial p_0}{\partial t} \approx \psi = \eta_{\rho} g
+\end{equation}
+instead of using the lagged pressure changes from previous time $t^{n-1}$ 
+in the predictor step.
 
 %--------------------------------------------------------------------------
 % STEP 4
@@ -553,7 +569,7 @@ The update consists of two steps:
 &=& (\rho h)^{(1)} \nonumber \\
 &&- \dt^n \left\{ \nabla \cdot \left[ \uadvone (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
 && + \dt^n \left(\uadvone \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n} \nonumber \\
-&& + \dt^n \left( \frac{p_0^n - p_0^{n-1}}{\dt^{n-1}} \right),
+&& + \dt^n \psi^{n-\myhalf},
 \end{eqnarray}
 
 \item For spherical geometry,
@@ -562,13 +578,12 @@ The update consists of two steps:
 &=& (\rho h)^{(1)} \nonumber \\
 &&- \dt^n \left\{ \nabla \cdot \left[ \uadvone (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
 && + \dt^n \left \{ \nabla \cdot \left (\uadvone p_0^{n} \right ) - p_0^{n} \nabla \cdot \uadvone \right \} \nonumber \\
-&& + \dt^n \left( \frac{p_0^n - p_0^{n-1}}{\dt^{n-1}} \right),
+&& + \dt^n \psi^{n-\myhalf},
 \end{eqnarray}
 \end{description}
 
 \end{enumerate}
 
-Note that during the first time step we use $\dt^n$ instead of $\dt^{n-1}$.
 Then, for each Cartesian cell where $\rho^{(2),\star} < \rho_\mathrm{cutoff}$,
 we recompute enthalpy using
 \begin{equation}
@@ -616,10 +631,12 @@ S^{n+1,\star} =  -\sigma  \sum_k  \xi_k  (\omegadot_k)^{(2),\star}  + \frac{1}{\
 The procedure to construct $\uadvtwodag$ is identical to the procedure
 for computing $\uadvonedag$ in {\bf Step 3}, but uses
 the updated value $S^{\nph}$ rather than $S^{\nph,\star}$.
+Also, the temporal changes of $p_0$ are now computed directly instead of 
+approximated using $\psi$.
 We note that $\uadvtwo$ satisfies the divergence constraint
 \begin{equation}
 \nabla \cdot \left(\beta_0^{\nph} \uadvtwo\right) =
-\beta_0^{\nph} \left(S^{\nph} - \frac{1}{\overline{\Gamma}_1^{n+\myhalf}p_0^n}\frac{p_0^{n+1,\star}-p_0^n}{\Delta t^n} + \chi^{n+\myhalf}\right),
+\beta_0^{\nph} \left(S^{\nph} - \frac{1}{\overline{\Gamma}_1^{n+\myhalf}p_0^{n+1,\star}}\frac{p_0^{n+1,\star}-p_0^n}{\Delta t^n} + \chi^{n+\myhalf}\right),
 \end{equation}
 \begin{equation}
 \beta_0^{\nph} = \frac{ \beta_0^n +  \beta_0^{n+1,\star} }{2};
@@ -632,7 +649,6 @@ We note that $\uadvtwo$ satisfies the divergence constraint
 \begin{equation}
 \chi^{n+\myhalf} = \chi^n + \frac{f}{\overline{\Gamma}_1^{n+1,\star} p_0^{n+1,\star}}\frac{p_{\rm eos}^{n+1,\star}(\rho,h,X_k) - p_0^{n+1,\star}}{\Delta t^n}
 \end{equation}
-\MarginPar{add volume discrepancy stuff}
 
 %--------------------------------------------------------------------------
 % STEP 8
@@ -675,6 +691,8 @@ X_k^{(2)} = (\rho X_k)^{(2)} / \rho^{(2)}.
   the updated values $\uadvtwo, \rho_0^{n+1}, (\rho h)_0^{n+1}$, and $p_0^{n+\myhalf}$
   rather than
   $\uadvone, \rho_0^{n+1,\star}, (\rho h)_0^{n+1,\star}$, and $p_0^n$.
+  Also, the temporal changes of $p_0$ are now computed directly instead of 
+  approximated using $\psi$.
   In particular:
 \MarginPar{Again, we may not need $\rho_0$ and $(\rho h)_0$.}
 
@@ -716,6 +734,31 @@ $T^{(2)} =
    T(\rho^{(2)}, h^{(2)}, X_k^{(2)})$ (planar geometry) or
 $T^{(2)} =
    T(\rho^{(2)}, p_0^{n+1}, X_k^{(2)})$ (spherical geometry).
+
+\item Define a radial cell-centered $\etarho^{\nph}$.
+
+\begin{description}
+\item For planar geometry, $\etarho = \overline{\rho'(\Ub\cdot\eb_r)}$,
+\begin{equation}
+ \etarho^{\nph} =  {\rm {\bf Avg}} \sum_k \left[ \left(\uadvtwo \cdot \eb_r \right) (\rho X_k)^{\nph,\pred} \right]
+\end{equation}
+\item For spherical geometry, first construct 
+$\etarho^{{\rm cart},\nph} = [\rho'(\Ub\cdot\eb_r)]^{\nph}$ on Cartesian cell centers using:
+\begin{equation}
+\etarho^{{\rm cart},\nph} = \left[\left(\frac{\rho^{(1)}+\rho^{(2)}}{2}\right)-\left(\frac{\rho_0^n+\rho_0^{n+1}}{2}\right)\right] \cdot \left( \uadvtwo \cdot \eb_r \right).
+\end{equation}
+Then,
+\begin{equation}
+\etarho^{\nph,\star} = {\rm {\bf Avg}}\left(\etarho^{{\rm cart},\nph}\right).
+\end{equation}
+\end{description}
+
+
+\item Compute $\psi^{\nph}$: 
+\begin{equation}
+\psi_j^{\nph} = \eta_{\rho,j}^{\nph} g.
+\end{equation}
+
 \end{enumerate}
 
 %--------------------------------------------------------------------------
@@ -766,9 +809,8 @@ equation (\ref{eq:u_update}) as
 \begin{eqnarray}
 \Ub^{n+1,\dagger}
 &=& \Ub^n - \dt \left[\uadvtwo \cdot \nabla \Ub^{\nph,\pred} \right] \nonumber \\
-&& - \dt \left[ - \frac{1}{\rho^\nph} \mathbf{G} \pi^\nmh + \frac{\left(\rho^\nph-\rho_0^\nph\right)}{\rho^\nph} g^{\nph} \eb_r \right],\nonumber \\
+&& - \dt \left[ \frac{1}{\rho^\nph} \mathbf{G} \pi^\nmh + \frac{\left(\rho^\nph-\rho_0^\nph\right)}{\rho^\nph} g^{\nph} \eb_r \right],\nonumber \\
 \end{eqnarray}
-\MarginPar{I don't think there should be a minus sign in front of the $-\frac{1}{\rho}\mathbf{G} \pi$ term as this has been moved outside the brackets.}
 where $\mathbf{G}$ approximates a cell-centered gradient from nodal
 data.  Again, the $\dagger$ superscript refers
 to the fact that the updated velocity does not satisfy the divergence
@@ -781,7 +823,6 @@ satisfies
 \nabla \cdot \left(\beta_0^{n+1} \Ub^{n+1} \right)
 = \beta_0^{n+1} S^{n+1},
 \end{equation}
-\MarginPar{I think we need the 1/gamma1bar part too}
 where
 \begin{equation}
 \beta_0^{n+1} = \beta \left(\rho_0^{n+1}, p_0^{n+1}, \overline{\Gamma}_1^{n+1}, g^{n+1}\right).
