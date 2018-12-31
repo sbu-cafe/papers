@@ -177,23 +177,29 @@ Flame spreading was first modeled in a series of calculations
 employing an algorithm from atmospheric science, where vertical
 hydrostatic equilibrium is enforced and wide-aspect ratio zones give a
 horizontal CFL number that is large enough to obtain long timescale
-evolution~\cite{cavecchi:2012}.
-These calculations display key features of the propagation
-mechanism, namely a balance between hydrodynamics and the pure
-flame physics. The flame proceeds mainly via conduction, thus being a
-deflagration. The flame front, however, is not vertical but inclined,
-the angle with the horizontal being very small: $\theta \sim
-H/R_{\rm{Ro}} \sim 10^{-3}$. Here $H$ is the scale height and
-$R_{\rm{Ro}}$ is the Rossby radius. It is the hydrodynamical balance
-between the Coriolis force, gravity and pressure gradients that
-determines the Rossby radius and therefore the inclination angle of the
-flame front. The extended surface of the flame front is what leads to
-propagation speeds of order $10^5 $~km/s, in good agreement with
-observations. Due to its dependence on the Coriolis force, the flame
-speed changes across the surface of the NS (being faster at the
-equator), leading to potentially detectable effects if the rise of the
-burst is observed with enough resolution
-\cite{art-2015-cavecchi-etal}.
+evolution~\cite{cavecchi:2012}.  These calculations display key
+features of the propagation mechanism, namely a balance between
+hydrodynamics and the pure flame physics. The flame proceeds mainly
+via conduction, thus being a deflagration. The flame front, however,
+is not vertical but inclined, the angle with the horizontal being very
+small: $\theta \sim H/R_{\rm{Ro}} \sim 10^{-3}$. Here $H$ is the scale
+height and $R_{\rm{Ro}}$ is the Rossby radius. It is the
+hydrodynamical balance between the Coriolis force, gravity and
+pressure gradients that determines the Rossby radius and therefore the
+inclination angle of the flame front. The extended surface of the
+flame front is what leads to propagation speeds of order $10^5 $~km/s,
+in good agreement with observations. Due to its dependence on the
+Coriolis force, the flame speed changes across the surface of the NS
+(being faster at the equator), leading to potentially detectable
+effects if the rise of the burst is observed with enough resolution
+\cite{art-2015-cavecchi-etal}.  We note that no calculations have
+considered the effects of the flame interacting with preexisting
+turbulence ahead of the flame from simmering that may be occurring
+there, as we characterized in \cite{xrb3}.  Flame-turbulence
+interactions have long been seen as a means to accelerate a flame in
+Type Ia supernovae, so future studies should look at turbulence in the
+layer.  Capturing turbulence, of course, requires high resolution, so
+the ideas described here will be needed.
 
 The NS systems exhibiting XRBs are
 expected to have magnetic fields in the range $10^7$--$10^{10}$~G.
@@ -251,32 +257,34 @@ generation rate by the same factor.  This is an approximation we hope to
 relax in the near future.
 
 Figure~\ref{fig:xrb} shows the flame structure for an initial 2D run
-at 0.007~s.  The burning layer is only about 10~m high.  Underneath is
-\isot{Ni}{56}, representative of the underlying neutron star, and
-above it is a very low density ($10^{-4}~\gcc$) buffer.  Only a
-portion of the vertical extent is shown.  The top panel shows the
-temperature structure.  The initial perturbation reached to $2\times
-10^4~\mathrm{cm}$, so at this point, the extent of the burnt region
-has nearly doubled.  The flame structure is quite wide, since there
-are multiple burning stages beyond just helium to carbon, and this
-shows up in the composition.  This is seen more clearly in the next
-panel which shows the mean molecular weight of the nuclei ($\bar{A}$).
-We see that the further behind the head of the flame we are, the heavier
-the ash nuclei.  We also see the head of the flame
-appears lifted off of the base of the burning layer---unburned
-material underlies the spreading flame.  This is
-reminiscent of the flame structure seen in the earlier simulations of
-\cite{cavecchi:2012}.  The third panel shows the energy generation rate.
-It is strongest just above the neutron star surface, behind the flame.
-We again see that the head of the flame is detached from the base
-of the atmosphere, with the strongest burning at the head of the flame
-slightly higher up in the atmosphere.   Finally, the bottom
-panel shows the velocity through the plane of the simulation---this is
-induced by the Coriolis force as the burning fluid expands and begins to spread laterally.
-A tight hurricane structure has setup as a result of the flame
-spreading.  This is the geostrophic balance discussed in
-\cite{SPIT_ETAL02}.    These calculations are ongoing and will be
-the subject of a detailed study in the near future.
+at 0.007~s.  Vertical profiles at a few radial distances from the
+origin are shown for the same quantities in
+Figure~\ref{fig:xrb-profiles}.  The burning layer is only about 10~m
+high.  Underneath is \isot{Ni}{56}, representative of the underlying
+neutron star, and above it is a very low density ($10^{-4}~\gcc$)
+buffer.  Only a portion of the vertical extent is shown.  The top
+panel shows the temperature structure.  The initial perturbation
+reached to $2\times 10^4~\mathrm{cm}$, so at this point, the extent of
+the burnt region has nearly doubled.  The flame structure is quite
+wide, since there are multiple burning stages beyond just helium to
+carbon, and this shows up in the composition.  This is seen more
+clearly in the next panel which shows the mean molecular weight of the
+nuclei ($\bar{A}$).  We see that the further behind the head of the
+flame we are, the heavier the ash nuclei.  We also see the head of the
+flame appears lifted off of the base of the burning layer---unburned
+material underlies the spreading flame.  This is reminiscent of the
+flame structure seen in the earlier simulations of
+\cite{cavecchi:2012}.  The third panel shows the energy generation
+rate.  It is strongest just above the neutron star surface, behind the
+flame.  We again see that the head of the flame is detached from the
+base of the atmosphere, with the strongest burning at the head of the
+flame slightly higher up in the atmosphere.  Finally, the bottom panel
+shows the velocity through the plane of the simulation---this is
+induced by the Coriolis force as the burning fluid expands and begins
+to spread laterally.  A tight hurricane structure has setup as a
+result of the flame spreading.  This is the geostrophic balance
+discussed in \cite{SPIT_ETAL02}.  These calculations are ongoing and
+will be the subject of a detailed study in the near future.
 
 \begin{figure}[t]
 \centering
@@ -295,7 +303,8 @@ the subject of a detailed study in the near future.
 \centering
 \includegraphics[width=0.9\linewidth]{xrb_profiles}
 \caption{\label{fig:xrb_profiles} Vertical profiles at several laterial distances
-  from the vertical axis through the plots shown in Figure~\ref{fig:xrb}.}
+  from the vertical axis through the plots shown in Figure~\ref{fig:xrb}.  These
+  profiles sample the region behind and ahead of the flame.}
 \end{figure}
 
 \section{Large Scale Simulations and Algorithmic Developments}
