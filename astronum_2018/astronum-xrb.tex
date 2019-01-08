@@ -192,14 +192,14 @@ in good agreement with observations. Due to its dependence on the
 Coriolis force, the flame speed changes across the surface of the NS
 (being faster at the equator), leading to potentially detectable
 effects if the rise of the burst is observed with enough resolution
-\cite{art-2015-cavecchi-etal}.  We note that no calculations have
-considered the effects of the flame interacting with preexisting
-turbulence ahead of the flame from simmering that may be occurring
-there, as we characterized in \cite{xrb3}.  Flame-turbulence
-interactions have long been seen as a means to accelerate a flame in
-Type Ia supernovae, so future studies should look at turbulence in the
-layer.  Capturing turbulence, of course, requires high resolution, so
-the ideas described here will be needed.
+\cite{art-2015-cavecchi-etal}.  We note that there may be preexisting
+turbulence ahead of the flame from simmering occurring
+there, and no calculations have considered the effects of the flame
+interacting with this turbulence, as we characterized in \cite{xrb3}.
+Flame-turbulence interactions have long been seen as a means to
+accelerate a flame in Type Ia supernovae, so future studies should
+look at turbulence in the layer.  Capturing turbulence, of course,
+requires high resolution, so the ideas described here will be needed.
 
 The NS systems exhibiting XRBs are
 expected to have magnetic fields in the range $10^7$--$10^{10}$~G.
@@ -358,7 +358,7 @@ problem is an ideal case for this, since hydrodynamics with constant
 gravity (for plane-parallel domains) ports in a straightforward manner
 to GPUs.  The current GPU version of the \castro\ hydrodynamics solver
 is about $10\times$ faster using GPUs on a node than the entire node
-of CPU cores (comparing 4 NVIDIA Volta GPUs to 20 IBM Power9 cores).
+of CPU cores (comparing 4 NVIDIA Volta GPUs to a dual-socket IBM Power9 CPU using 40 cores).
 We see similar speed ups with reaction networks, with these GPU ports
 under active development.  This means a GPU calculation could lower
 the above costs by a factor of 10.  GPU offloading of the reaction
