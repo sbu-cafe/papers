@@ -192,14 +192,14 @@ in good agreement with observations. Due to its dependence on the
 Coriolis force, the flame speed changes across the surface of the NS
 (being faster at the equator), leading to potentially detectable
 effects if the rise of the burst is observed with enough resolution
-\cite{art-2015-cavecchi-etal}.  We note that no calculations have
-considered the effects of the flame interacting with preexisting
-turbulence ahead of the flame from simmering that may be occurring
-there, as we characterized in \cite{xrb3}.  Flame-turbulence
-interactions have long been seen as a means to accelerate a flame in
-Type Ia supernovae, so future studies should look at turbulence in the
-layer.  Capturing turbulence, of course, requires high resolution, so
-the ideas described here will be needed.
+\cite{art-2015-cavecchi-etal}.  We note that there may be preexisting
+turbulence ahead of the flame from simmering occurring
+there, and no calculations have considered the effects of the flame
+interacting with this turbulence, as we characterized in \cite{xrb3}.
+Flame-turbulence interactions have long been seen as a means to
+accelerate a flame in Type Ia supernovae, so future studies should
+look at turbulence in the layer.  Capturing turbulence, of course,
+requires high resolution, so the ideas described here will be needed.
 
 The NS systems exhibiting XRBs are
 expected to have magnetic fields in the range $10^7$--$10^{10}$~G.
@@ -301,8 +301,8 @@ will be the subject of a detailed study in the near future.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.8\linewidth]{xrb_profiles}
-\caption{\label{fig:xrb_profiles} Vertical profiles at several laterial distances
+\includegraphics[width=0.9\linewidth]{xrb_profiles}
+\caption{\label{fig:xrb_profiles} Vertical profiles at several radial distances
   from the vertical axis through the plots shown in Figure~\ref{fig:xrb}.  These
   profiles sample the region behind and ahead of the flame.}
 \end{figure}
@@ -358,11 +358,12 @@ problem is an ideal case for this, since hydrodynamics with constant
 gravity (for plane-parallel domains) ports in a straightforward manner
 to GPUs.  The current GPU version of the \castro\ hydrodynamics solver
 is about $10\times$ faster using GPUs on a node than the entire node
-of CPU cores.  We see similar speed ups with reaction networks, with
-these GPU ports under active development.  This means a GPU
-calculation could lower the above costs by a factor of 10.  GPU
-offloading of the reaction networks will also allow us to explore
-larger networks and more detailed nuclear physics.
+of CPU cores (comparing 4 NVIDIA Volta GPUs to a dual-socket IBM Power9 CPU using 40 cores).
+We see similar speed ups with reaction networks, with these GPU ports
+under active development.  This means a GPU calculation could lower
+the above costs by a factor of 10.  GPU offloading of the reaction
+networks will also allow us to explore larger networks and more
+detailed nuclear physics.
 
 Another way we can reduce the number of zones for given accuracy is to use a more
 accurate hydrodynamic method.  We are developing fully
@@ -418,7 +419,12 @@ integrate a timestep.  We also clearly see how the Strang system
 evolves in a discontinuous fashion.  We are continuing to develop this
 new integration strategy, with full fourth-order in space and time
 reacting hydrodynamics methods to follow shortly.  The XRB simulations
-are our target application.
+are our target application.  We note that there has been some
+development in the community on implicit time-integration methods for
+compressible flow, but for the XRB problem, the wide range of Mach
+number seen in the domain (exceeding unity near the top of the
+atmosphere, ahead of the flame) removes much of the advantages of
+implicit timestepping, so we focus on explicit methods.
 
 For the ODE integrations shown we use the variable-order,
 variable-step integrator \vode\ \cite{vode} with its implementation of
@@ -504,31 +510,37 @@ the computational costs. This is a longer term development.
 
 
 All of the above developments still involve fully compressible
-hydrodynamics, but multiscale methods~\cite{weinan2011principles} where we couple different hydrodynamics
-solvers together in a single simulation may ultimately be needed to model the full star while resolving the burning front.
+hydrodynamics, but multiscale methods~\cite{weinan2011principles}
+where we couple different hydrodynamics solvers together in a single
+simulation may ultimately be needed to model the full star while
+resolving the burning front.
 %\MarginPar{Alice and Ian contribute here}
-Such techniques rely on it being possible to decompose the dynamics of the system
-into two scales, e.g.~a short and a long lengthscale, and that the processes at each
-scale are at most weakly coupled with each other. In the context of XRBs, one possibility for
-multiscale modeling would be to model the large scale dynamics using a shallow water model
-(like that of~\cite{SPIT_ETAL02}) to capture the effects of the Coriolis force, and use
-a low Mach number or
-a fully compressible model in the vicinity of the burning front to capture
-the turbulent burning processes. Given that the computational costs of the shallow water model
-would be negligible compared to those of the low Mach/compressible model, the overall cost of
-this multiscale model would be determined by the size of the low Mach/compressible region only. This
-approach would therefore allow us to capture dynamics across the full star
-without sacrificing resolution around the flame.
-As with the more aggressive gridding strategy above, the hybrid approach
-reduces the number of zones with the largest computational cost through mesh
-refinement, and also reduces the computational costs where possible by
-employing cheaper physical models in regions where this is possible.
-An example of coupling compressible and low Mach number models implemented using the \amrex~framework, but in a terrestrial context,
-is~\cite{Motheau2018}. An initial implementation, \cite{Harpole2018}, in an
-astrophysical context, coupling shallow water to compressible models in both
-Newtonian and relativistic gravity, indicates that considerable computational
-efficiencies are possible, but that close attention to the coupling between the
-models is needed.
+Such techniques rely on it being possible to decompose the dynamics of
+the system into two scales, e.g.~a short and a long lengthscale, and
+that the processes at each scale are at most weakly coupled with each
+other. In the context of XRBs, one possibility for multiscale modeling
+would be to model the large scale dynamics using a shallow water model
+(like that of~\cite{SPIT_ETAL02}) to capture the effects of the
+Coriolis force, and use a low Mach number or a fully compressible
+model in the vicinity of the burning front to capture the turbulent
+burning processes. Given that the computational costs of the shallow
+water model would be negligible compared to those of the low
+Mach/compressible model, the overall cost of this multiscale model
+would be determined by the size of the low Mach/compressible region
+only. This approach would therefore allow us to capture dynamics
+across the full star without sacrificing resolution around the flame.
+As with the more aggressive gridding strategy above, the hybrid
+approach reduces the number of zones with the largest computational
+cost through mesh refinement, and also reduces the computational costs
+where possible by employing cheaper physical models in regions where
+this is possible.  An example of coupling compressible and low Mach
+number models implemented using the \amrex~framework, but in a
+terrestrial context, is~\cite{Motheau2018}. An initial implementation,
+\cite{Harpole2018}, in an astrophysical context, coupling shallow
+water to compressible models in both Newtonian and relativistic
+gravity, indicates that considerable computational efficiencies are
+possible, but that close attention to the coupling between the models
+is needed.  
 
 %% Finally, we can try hybrid model approaches where the fully
 %% compressible simulation can act as a subgrid model.
