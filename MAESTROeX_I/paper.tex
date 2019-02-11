@@ -103,7 +103,6 @@
 
 \newcommand{\etarho}{\eta_\rho}
 \newcommand{\gammaonebar}{\overline{\Gamma_1}}
-\newcommand{\Hext}{H_{\rm ext}}
 \newcommand{\Hnuc}{H_{\rm nuc}}
 \newcommand{\omegadot}{\dot\omega}
 \newcommand{\pred}{{\rm pred}}
@@ -351,7 +350,7 @@ The resulting equations are
 \begin{eqnarray}
 \frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
 \frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
-\frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc + \rho\Hext,\label{eq:enthalpy}
+\frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc,\label{eq:enthalpy}
 \end{eqnarray}
 \begin{equation}
 \nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).\label{eq:U divergence}
@@ -364,8 +363,8 @@ such that $\sum_k X_k = 1$ giving $\rho = \sum_k (\rho X_k)$ and
 \begin{equation}
 \frac{\partial\rho}{\partial t} = -\nabla\cdot(\rho\Ub).
 \end{equation}
-The source terms $\Hext$ and $\Hnuc$ are the external heating rate and nuclear energy 
-generation rate per unit mass.  The pressure is decomposed into a hydrostatic base state
+Here $\Hnuc$ is the nuclear energy generation rate per unit mass.
+The pressure is decomposed into a hydrostatic base state
  pressure, $p_0 = p_0(r,t)$, and a dynamic pressure, $\pi = \pi(\xb,t)$, such that 
 $|\pi|/p_0 = \mathcal{O}(M^2)$ (we use $\xb$ to represent the Cartesian coordinate 
 directions of the full state and $r$ to represent the radial coordinate direction for 
@@ -385,7 +384,7 @@ where $\beta_0$ is a density-like variable that carries background stratificatio
 where $\gammaonebar$ is the lateral average of $\Gamma_1 = d(\log p)/d(\log\rho)$ at constant entropy.
 The expansion term, $S$, incorporates local compressibility effects due to heat release from reactions, compositional changes, and external sources,
 \begin{equation}
-S = -\sigma\sum_k\xi_k\omegadot_k + \frac{1}{\rho p_\rho}\sum_k p_{X_k}\omegadot_k + \sigma\Hnuc + \sigma\Hext,\label{eq:S}
+S = -\sigma\sum_k\xi_k\omegadot_k + \frac{1}{\rho p_\rho}\sum_k p_{X_k}\omegadot_k + \sigma\Hnuc,\label{eq:S}
 \end{equation}
 where $p_{X_k} \equiv \left. \partial p / \partial X_k
 \right|_{\rho,T,X_{j,j\ne k}}$, $\xi_k \equiv \left. \partial h /
@@ -440,7 +439,7 @@ achieve second-order accuracy in time.
 % STEP 0
 %--------------------------------------------------------------------------
 
-\item[Step 0.] {\em Initialization}
+\item[Step 0] {\em Initialization}
 The initialization step only occurs at the beginning of the simulation.
 The initialization step computes initial values for $\pi^{-\myhalf}$, , $\eta_{\rho}^{-\myhalf}$, 
 $\psi^{-\myhalf}$, $S^0$, and $S^1$ for use in time stepping routine.  
@@ -453,16 +452,16 @@ Paper III.
 %--------------------------------------------------------------------------
 % STEP 1
 %--------------------------------------------------------------------------
-\item[Step 1.] {\em React the full state through the first time interval of $\dt / 2.$}
+\item[Step 1] {\em React the full state through the first time interval of $\dt / 2.$}
 
-Call {\bf React State}$[\rho^n, (\rho h)^n, X_k^n, T^n, (\rho\Hext)^n, p_0^n] \rightarrow [\rho^{(1)},(\rho h)^{(1)},X_k^{(1)},T^{(1)},(\rho \omegadot_k)^{(1)},(\rho \Hnuc)^{(1)}]$.
+Call {\bf React State}$[\rho^n, (\rho h)^n, X_k^n, T^n, p_0^n] \rightarrow [\rho^{(1)},(\rho h)^{(1)},X_k^{(1)},T^{(1)},(\rho \omegadot_k)^{(1)},(\rho \Hnuc)^{(1)}]$.
 \MarginPar{AJN: I think we can simplify the description here... this is somewhat confusing now.}
 
 %--------------------------------------------------------------------------
 % STEP 2
 %--------------------------------------------------------------------------
 
-\item[Step 2.] {\em Compute the provisional time-centered expansion,
+\item[Step 2] {\em Compute the provisional time-centered expansion,
     $S^{\nph,\star}$.}
 
 We compute an estimate for the time-centered expansion term in the velocity
@@ -478,7 +477,7 @@ initialization step.
 %--------------------------------------------------------------------------
 % STEP 3
 %--------------------------------------------------------------------------
-\item[Step 3.] {\em Construct the provisional time-centered advective velocity on
+\item[Step 3] {\em Construct the provisional time-centered advective velocity on
 edges, $\uadvone$.}
 
 Using the equation below,
@@ -515,7 +514,7 @@ in the predictor step.
 %--------------------------------------------------------------------------
 % STEP 4
 %--------------------------------------------------------------------------
-\item[Step 4.] {\em Advect the full state through a time interval of $\dt.$}
+\item[Step 4] {\em Advect the full state through a time interval of $\dt.$}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -558,7 +557,7 @@ X_k^{(2),\star} = (\rho X_k)^{(2),\star} / \rho^{(2),\star}.
 \item Update the enthalpy using a discretized version of equation
 %
 \begin{equation}
-\frac{\partial(\rho h)}{\partial t} = -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc + \rho\Hext,
+\frac{\partial(\rho h)}{\partial t} = -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc,
 \end{equation}
 %
 again omitting the reaction and heating terms
@@ -620,20 +619,19 @@ $T^{(2),\star} =
 %--------------------------------------------------------------------------
 % STEP 5
 %--------------------------------------------------------------------------
-\item[Step 5.] {\em React the full state through a second time interval of $\dt / 2.$}
+\item[Step 5] {\em React the full state through a second time interval of $\dt / 2.$}
 
-Call {\bf React State}$[ \rho^{(2),\star},(\rho h)^{(2),\star}, X_k^{(2),\star}, T^{(2),\star},
-(\rho\Hext)^{(2),\star}, p_0^{n+1,\star}]$\\
+Call {\bf React State}$[ \rho^{(2),\star},(\rho h)^{(2),\star}, X_k^{(2),\star}, T^{(2),\star}, p_0^{n+1,\star}]$\\
 \phantom{ }\hfill $\rightarrow [ \rho^{n+1,\star},(\rho h)^{n+1,\star}, X_k^{n+1,\star}, T^{n+1,\star}, (\rho \omegadot_k)^{(2),\star}, (\rho \Hnuc)^{(2),\star} ].$
 
 %--------------------------------------------------------------------------
 % STEP 6
 %--------------------------------------------------------------------------
-\item[Step 6.] {\em Compute the time-centered expansion, $S^{\nph,\star}$.}
+\item[Step 6] {\em Compute the time-centered expansion, $S^{\nph,\star}$.}
 
 \item First, compute $S^{n+1,\star}$ with
 \begin{equation}
-S^{n+1,\star} =  -\sigma  \sum_k  \xi_k  (\omegadot_k)^{(2),\star}  + \frac{1}{\rho^{n+1,\star} p_\rho} \sum_k p_{X_k}  ({\omegadot}_k)^{(2),\star} + \sigma \Hnuc^{(2),\star} + \sigma \Hext^{(2),\star},
+S^{n+1,\star} =  -\sigma  \sum_k  \xi_k  (\omegadot_k)^{(2),\star}  + \frac{1}{\rho^{n+1,\star} p_\rho} \sum_k p_{X_k}  ({\omegadot}_k)^{(2),\star} + \sigma \Hnuc^{(2),\star},
 \end{equation}
   where $(\omegadot_k)^{(2),\star} = (\rho \omegadot_k)^{(2),\star} /
   \rho^{(2),\star}$ and the thermodynamic quantities are defined using
@@ -646,7 +644,7 @@ S^{n+1,\star} =  -\sigma  \sum_k  \xi_k  (\omegadot_k)^{(2),\star}  + \frac{1}{\
 %--------------------------------------------------------------------------
 % STEP 7
 %--------------------------------------------------------------------------
-\item[Step 7.] {\em Construct the time-centered advective velocity on edges, $\uadvtwo$.}
+\item[Step 7] {\em Construct the time-centered advective velocity on edges, $\uadvtwo$.}
 
 The procedure to construct $\uadvtwodag$ is identical to the procedure
 for computing $\uadvonedag$ in {\bf Step 3}, but uses
@@ -673,7 +671,7 @@ We note that $\uadvtwo$ satisfies the divergence constraint
 %--------------------------------------------------------------------------
 % STEP 8
 %--------------------------------------------------------------------------
-\item[Step 8.] {\em Advect the base state and full state through a time interval of $\dt.$}
+\item[Step 8] {\em Advect the base state and full state through a time interval of $\dt.$}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -784,22 +782,21 @@ Then,
 %--------------------------------------------------------------------------
 % STEP 9
 %--------------------------------------------------------------------------
-\item[Step 9.] {\em React the full state through a second time interval of $\dt / 2.$}
+\item[Step 9] {\em React the full state through a second time interval of $\dt / 2.$}
 
-Call {\bf React State}$[\rho^{(2)},(\rho h)^{(2)}, X_k^{(2)},T^{(2)}, (\rho\Hext)^{(2)}, p_0^{n+1}] \rightarrow [\rho^{n+1}, (\rho h)^{n+1}, X_k^{n+1}, T^{n+1}, (\rho \omegadot_k)^{(2)}, (\rho \Hnuc)^{(2)} ].$
+Call {\bf React State}$[\rho^{(2)},(\rho h)^{(2)}, X_k^{(2)},T^{(2)}, p_0^{n+1}] \rightarrow [\rho^{n+1}, (\rho h)^{n+1}, X_k^{n+1}, T^{n+1}, (\rho \omegadot_k)^{(2)}, (\rho \Hnuc)^{(2)} ].$
 
 %--------------------------------------------------------------------------
 % STEP 10
 %--------------------------------------------------------------------------
-\item[Step 10.] {\em Define the new time expansion, $S^{n+1}$, and $\overline{\Gamma}_1^{n+1}$.}
+\item[Step 10] {\em Define the new time expansion, $S^{n+1}$, and $\overline{\Gamma}_1^{n+1}$.}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
 \item Define
 \begin{equation}
   S^{n+1} =  -\sigma  \sum_k  \xi_k (\omegadot_k)^{(2)}  + \sigma \Hnuc^{(2)} +
-  \frac{1}{\rho^{n+1} p_\rho} \sum_k p_{X_k}  ({\omegadot}_k)^{(2)}
-   + \sigma \Hext^{(2)},
+  \frac{1}{\rho^{n+1} p_\rho} \sum_k p_{X_k}  ({\omegadot}_k)^{(2)},
 \end{equation}
 where $(\omegadot_k)^{(2)} = (\rho \omegadot_k)^{(2)} / \rho^{(2)}$
 and the thermodynamic quantities are defined using $\rho^{n+1}$,
@@ -817,7 +814,7 @@ X_k^{n+1}\right) \right].
 %--------------------------------------------------------------------------
 % STEP 11
 %--------------------------------------------------------------------------
-\item[Step 11.] {\em Update the velocity}.
+\item[Step 11] {\em Update the velocity}.
 
 First, we compute the time-centered edge velocities, $\Ub^{\nph,\pred}$.
 Then, we define
@@ -856,7 +853,7 @@ and gradient operators.  Details of the approximate projection are given in Pape
 %--------------------------------------------------------------------------
 % STEP 12
 %--------------------------------------------------------------------------
-\item[Step 12.] {\em Compute a new $\dt.$}
+\item[Step 12] {\em Compute a new $\dt.$}
 
 Compute $\dt$ for the next time step with a similar procedure described in
 \S 3.4 of Paper III. However, we are using $\Ub^{n+1}$
