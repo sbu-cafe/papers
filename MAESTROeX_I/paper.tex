@@ -432,6 +432,7 @@ expansion term, and compute the final solution at the new time level,
 denoted with an ``$n+1$'' superscript.  We use Strang-splitting to
 achieve second-order accuracy in time.
 
+\MarginPar{AJN: eliminated references to volume discrepancy for now; we'd only use it for planar at the moment, don't want to open up that can of worms here}
 
 \begin{description}
 
@@ -454,7 +455,7 @@ Paper III.
 %--------------------------------------------------------------------------
 \item[Step 1] {\em React the full state through the first time interval of $\dt / 2.$}
 
-Call {\bf React State}$[\rho^n, (\rho h)^n, X_k^n, T^n, p_0^n] \rightarrow [\rho^{(1)},(\rho h)^{(1)},X_k^{(1)},T^{(1)},(\rho \omegadot_k)^{(1)},(\rho \Hnuc)^{(1)}]$.
+Call {\bf React State}$[(\rho X_k)^n, (\rho h)^n, p_0^n] \rightarrow [(\rho X_k)^{(1)}, (\rho h)^{(1)}, (\rho \omegadot_k)^{(1)}, (\rho \Hnuc)^{(1)}]$.
 \MarginPar{AJN: I think we can simplify the description here... this is somewhat confusing now.}
 
 %--------------------------------------------------------------------------
@@ -480,12 +481,7 @@ initialization step.
 \item[Step 3] {\em Construct the provisional time-centered advective velocity on
 edges, $\uadvone$.}
 
-Using the equation below,
-%
-\begin{equation}
-\frac{\partial\Ub}{\partial t} = -\Ub\cdot\nabla\Ub - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho}g\eb_r, \label{eq:u_update}
-\end{equation}
-%
+Using equation (\ref{eq:momentum}), 
 we compute time-centered edge velocities, $\uadvonedag$, using
 $\Ub^n$.  The $\dagger$ superscript refers to the
 fact that the predicted velocity field does not satisfy the divergence
@@ -493,13 +489,10 @@ constraint.  We then construct $\uadvone$ from $\uadvonedag$
 using a MAC projection.
 We note that $\uadvone$ satisfies the divergence constraint
 \begin{equation}
-\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left(S^{\nph,\star} - \frac{1}{\overline{\Gamma}_1^np_0^n}\psi^{n-\myhalf} + \chi^n \right),
+\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left(S^{\nph,\star} - \frac{1}{\overline{\Gamma}_1^np_0^n}\psi^{n-\myhalf} \right),
 \end{equation}
 \begin{equation}
  \beta_0^n = \beta_0 \left(\rho_0^n, p_0^n, \overline{\Gamma}_1^n\right),
-\end{equation}
-\begin{equation}
-\chi^n = \frac{f}{\overline{\Gamma}_1^n p_0^n}\frac{p_{\rm eos}^n(\rho,h,X_k) - p_0^n}{\Delta t^n}
 \end{equation}
 where $\beta_0$ is computed as described in Appendix C of Paper III.
 
@@ -621,8 +614,8 @@ $T^{(2),\star} =
 %--------------------------------------------------------------------------
 \item[Step 5] {\em React the full state through a second time interval of $\dt / 2.$}
 
-Call {\bf React State}$[ \rho^{(2),\star},(\rho h)^{(2),\star}, X_k^{(2),\star}, T^{(2),\star}, p_0^{n+1,\star}]$\\
-\phantom{ }\hfill $\rightarrow [ \rho^{n+1,\star},(\rho h)^{n+1,\star}, X_k^{n+1,\star}, T^{n+1,\star}, (\rho \omegadot_k)^{(2),\star}, (\rho \Hnuc)^{(2),\star} ].$
+Call {\bf React State}$[ (\rho X_k)^{(2),\star}, (\rho h)^{(2),\star}, p_0^{n+1,\star}]$\\
+\phantom{ }\hfill $\rightarrow [ (\rho X_k)^{n+1,\star}, (\rho h)^{n+1,\star}, (\rho \omegadot_k)^{(2),\star}, (\rho \Hnuc)^{(2),\star} ].$
 
 %--------------------------------------------------------------------------
 % STEP 6
@@ -654,7 +647,7 @@ approximated using $\psi$.
 We note that $\uadvtwo$ satisfies the divergence constraint
 \begin{equation}
 \nabla \cdot \left(\beta_0^{\nph} \uadvtwo\right) =
-\beta_0^{\nph} \left(S^{\nph} - \frac{1}{\overline{\Gamma}_1^{n+\myhalf}p_0^{n+1,\star}}\frac{p_0^{n+1,\star}-p_0^n}{\Delta t^n} + \chi^{n+\myhalf}\right),
+\beta_0^{\nph} \left(S^{\nph} - \frac{1}{\overline{\Gamma}_1^{n+\myhalf}p_0^{n+1,\star}}\frac{p_0^{n+1,\star}-p_0^n}{\Delta t^n}\right),
 \end{equation}
 \begin{equation}
 \beta_0^{\nph} = \frac{ \beta_0^n +  \beta_0^{n+1,\star} }{2};
@@ -663,9 +656,6 @@ We note that $\uadvtwo$ satisfies the divergence constraint
 \end{equation}
 \begin{equation}
 \overline{\Gamma}_1^{\nph} = \frac{ \overline{\Gamma}_1^n +  \overline{\Gamma}_1^{n+1,\star} }{2}.
-\end{equation}
-\begin{equation}
-\chi^{n+\myhalf} = \chi^n + \frac{f}{\overline{\Gamma}_1^{n+1,\star} p_0^{n+1,\star}}\frac{p_{\rm eos}^{n+1,\star}(\rho,h,X_k) - p_0^{n+1,\star}}{\Delta t^n}
 \end{equation}
 
 %--------------------------------------------------------------------------
@@ -784,7 +774,7 @@ Then,
 %--------------------------------------------------------------------------
 \item[Step 9] {\em React the full state through a second time interval of $\dt / 2.$}
 
-Call {\bf React State}$[\rho^{(2)},(\rho h)^{(2)}, X_k^{(2)},T^{(2)}, p_0^{n+1}] \rightarrow [\rho^{n+1}, (\rho h)^{n+1}, X_k^{n+1}, T^{n+1}, (\rho \omegadot_k)^{(2)}, (\rho \Hnuc)^{(2)} ].$
+Call {\bf React State}$[(\rho X_k)^{(2)},(\rho h)^{(2)}, p_0^{n+1}] \rightarrow [(\rho X_k)^{n+1}, (\rho h)^{n+1}, (\rho \omegadot_k)^{(2)}, (\rho \Hnuc)^{(2)}].$
 
 %--------------------------------------------------------------------------
 % STEP 10
@@ -822,7 +812,7 @@ Then, we define
 \rho^\nph = \frac{\rho^n + \rho^{n+1}}{2}, \qquad \rho_0^\nph = \frac{\rho_0^n + \rho_0^{n+1}}{2}.
 \end{equation}
 We update the velocity field $\Ub^n$ to $\Ub^{n+1,\dagger}$ by discretizing
-equation (\ref{eq:u_update}) as
+equation (\ref{eq:momentum}) as
 \begin{eqnarray}
 \Ub^{n+1,\dagger}
 &=& \Ub^n - \dt \left[\uadvtwo \cdot \nabla \Ub^{\nph,\pred} \right] \nonumber \\
