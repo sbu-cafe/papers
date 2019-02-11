@@ -184,7 +184,7 @@
 
 \begin{document}
 
-\title{MAESTROeX}
+\title{MAESTROeX: A Massively Parallel Low Mach Number Astrophysical Solver}
 
 %% LaTeX will automatically break titles if they run longer than
 %% one line. However, you may use \\ to force a line break if
@@ -236,19 +236,19 @@
 \correspondingauthor{MAESTROeX}
 \email{DFan@lbl.gov}
 
-\author{Doreen Fan}
+\author[0000-0002-3246-4315]{Duoming Fan}
 \affil{Lawrence Berkelely National Laboratory \\
 Center for Computational Sciences and Engineering \\
 One Cyclotron Road, MS 50A-3111 \\
 Berkeley, CA 94720, USA}
 
-\author{Andrew Nonaka}
+\author[0000-0003-1791-0265]{Andrew Nonaka}
 \affil{Lawrence Berkelely National Laboratory \\
 Center for Computational Sciences and Engineering \\
 One Cyclotron Road, MS 50A-3111 \\
 Berkeley, CA 94720, USA}
 
-\author{Ann Almgren}
+\author[0000-0003-2103-312X]{Ann S. Almgren}
 \affil{Lawrence Berkelely National Laboratory \\
 Center for Computational Sciences and Engineering \\
 One Cyclotron Road, MS 50A-3111 \\
@@ -279,12 +279,17 @@ Stony Brook, NY 11794-3800, USA}
 
 %% Mark off the abstract in the ``abstract'' environment.
 \begin{abstract}
-We present MAESTROeX, a next-generation solver for low Mach number astrophysical flows.
-Here we summarize implementation details as well new spatiotemporal integration schemes
-developed for increased accuracy and a simpler base state treatment.  The code is written
-in the AMReX software framework for massively parallel block-structured adaptive mesh
-refinement applications.
-
+We present MAESTROeX, a massively parallel solver for low Mach number astrophysical flows.
+This new solver leverages the algorithmic capabilities of the previous MAESTRO code
+while taking advantage of the next-generation AMReX software framework block-structured
+adaptive mesh refinement applications.
+Using our previous studies on white dwarf convection as a benchmark, we characterize
+the performance of our new code.
+We have also developed new temporal integration schemes that have a much simpler treatment
+of the base state, while allowing for more straightforward extensions to state-of-the
+art, high-order multiphysics coupling schemes.
+Also, we present an improved spatial coupling scheme between the hydrostatic base
+state and the Cartesian grid full-state.
 \end{abstract}
 
 %% Keywords should appear after the \end{abstract} command.
@@ -309,11 +314,15 @@ refinement applications.
 
 \section{Introduction} \label{sec:intro}
 
-Many astrophysical flows are highly subsonic; sound waves carry sufficiently little energy that they do not significantly affect the convective dynamics of the system.
+Many astrophysical flows are highly subsonic; 
+sound waves carry sufficiently little energy that they do not significantly affect the convective dynamics of the system.
 In many of these flows, long-time convective dynamics are of interest.
 Thus, using a traditional compressible astrophysical solver is highly inefficient.
 One approach to this problem is to use low Mach number hydrodynamic models.
-
+In a low Mach number approach, sound waves are eliminated from the governing equations by requiring that the
+thermodynamic variables evolve subject to a specified ambient pressure that varies only as a function of altitude and time.
+In the low Mach equations, the equation of state is recast as a divergence constraint on velocity, requiring an
+elliptic solve for pressure in the spirit of projection methods for incompressible flow.
 
 The key numerical developments of the MAESTRO algorithm are presented in a series of papers which we refer to as papers I-V (\cite{MAESTRO_I,MAESTRO_II,MAESTRO_III,MAESTRO_IV,MAESTRO_V}, respectively).
 Applications include the convective phase preceding Chandrasekhar mass models for type Ia supernovae \cite{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}, 
@@ -888,22 +897,28 @@ $i^\mathrm{th}$ coordinate direction.
 
 \noindent This completes one step of the algorithm.
 
-\section{Implementation and Performance}
-show strong and/or weak scaling performance (with OpenMP threads/tiling), comparisons with old MAESTRO?
+\section{Test Problems}
+
+\subsection{Scaling}
+Scaling with OpenMP
+
+\subsection{Performance Compared to Original MAESTRO}
+Compare to original MAESTRO
 
 \section{Test Problems}
-white dwarf convection runs at varying resolution
+white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregular base state)
 
 \section{Conclusions and Future Work}
 
-future stuff
 science: rotation, solar physics, MHD
 algorithm: SDC, high-order
 implementation: GPUs
 
 \acknowledgements
 
-This work was supported by 
+This work was supported by SciDAC... (contract number)
+
+This research used resources of the National Energy Research Scientific Computing Center (NERSC), a U.S. Department of Energy Office of Science User Facility operated under Contract No. DE-AC02-05CH11231.
 
 \bibliographystyle{aasjournal.bst}
 \bibliography{references}
