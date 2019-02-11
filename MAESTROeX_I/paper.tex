@@ -341,13 +341,22 @@ that have been seen in the previous MAESTRO code in some test cases.
 
 \section{Governing Equations}
 The derivation of the low Mach number hydrodynamics equations is given in Papers I-III.
+We take the standard equations of reacting, compressible flow, and recast the equation
+of state as a divergence constraint on the velocity field.  This is done by taking
+the Langrangian derivative of the equation of state for pressure as a function of the
+density, composition, and enthalpy, enforcing the constraint that the pressure is
+a prescribed function of altitutde and time based on the hydrostatic equilibrium condition,
+and substituting the equations for species and enthalpy in the resulting Lagrangian derivative.
 The resulting equations are
 \begin{eqnarray}
-\frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
 \frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
+\frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
 \frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc + \rho\Hext,\label{eq:enthalpy}
 \end{eqnarray}
-where $\rho$, $\Ub$, and $h$ are the mass density,
+\begin{equation}
+\nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).\label{eq:U divergence}
+\end{equation}
+Here $\rho$, $\Ub$, and $h$ are the mass density,
 velocity and specific enthalpy, respectively, and
 $X_k$ are the mass fractions of species $k$ with associated
 production rate $\omegadot_k$.  The species are constrained
@@ -366,11 +375,8 @@ $\nabla p_0 = -\rho_0 g\eb_r$, where $g=g(r,t)$ is
 the magnitude of the gravitational acceleration and $\eb_r$ is the unit vector in the
 outward radial direction. 
 
-Mathematically, this system must still be closed by the equation of state which we
-express as a divergence constraint on the velocity field (see Paper III),
-\begin{equation}
-\nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right),\label{eq:U divergence}
-\end{equation}
+Mathematically, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) must still be closed by the equation of state which we
+express as a divergence constraint on the velocity field (\ref{eq:U divergence}),
 \MarginPar{This is different from the Jacobs 2016 paper where we switched to alt\_energy\_fix.}
 where $\beta_0$ is a density-like variable that carries background stratification, defined as
 \begin{equation}
@@ -916,8 +922,7 @@ implementation: GPUs
 
 \acknowledgements
 
-This work was supported by SciDAC... (contract number)
-
+The work at LBNL was supported by the U.S. Department of Energy's Scientific Discovery Through Advanced Computing (SciDAC) program under contract No. DE-AC02-05CH11231.
 This research used resources of the National Energy Research Scientific Computing Center (NERSC), a U.S. Department of Energy Office of Science User Facility operated under Contract No. DE-AC02-05CH11231.
 
 \bibliographystyle{aasjournal.bst}
