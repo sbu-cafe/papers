@@ -279,16 +279,11 @@ Stony Brook, NY 11794-3800, USA}
 %% Mark off the abstract in the ``abstract'' environment.
 \begin{abstract}
 We present MAESTROeX, a massively parallel solver for low Mach number astrophysical flows.
-This new solver leverages the algorithmic capabilities of the previous MAESTRO code
-while taking advantage of the next-generation AMReX software framework block-structured
-adaptive mesh refinement applications.
-Using our previous studies on white dwarf convection as a benchmark, we characterize
-the performance of our new code.
-We have also developed new temporal integration schemes that have a much simpler treatment
-of the base state, while allowing for more straightforward extensions to state-of-the
-art, high-order multiphysics coupling schemes.
-Also, we present an improved spatial coupling scheme between the hydrostatic base
-state and the Cartesian grid full-state.
+Our model equations allow for long-time integration for highly subsonic flows compared to compressible approaches.
+The code leverages the new AMReX framework for block-structured adaptive mesh refinement calculations, and also provides additional algorithmic features from the original MAESTRO code.
+We present a new temporal integration option that is much simpler than our previous approach while retaining the same order order of accuracy.
+We also provide a more accurate spatial discretization for mapping the base state onto the full state Cartesian grid.
+Using our previous studies on the convective phase of single-degenerate progenitor models of Type Ia supernovae, we characterize the performance of the code and validate the new algorithmic features.
 \end{abstract}
 
 %% Keywords should appear after the \end{abstract} command.
@@ -316,15 +311,14 @@ state and the Cartesian grid full-state.
 Many astrophysical flows are highly subsonic; sound waves carry sufficiently little energy that they do not significantly affect the convective dynamics of the system.
 In many of these flows, modeling long-time convective dynamics are of interest, and numerical approaches based on compressible hydrodynamics are intractable, even on modern supercomputers.
 One approach to this problem is to use low Mach number models.
-In a low Mach number approach, sound waves are eliminated from the governing equations, and the resulting model can be numerically integrated with much larger time steps than a compressible model.
+In a low Mach number approach, sound waves are eliminated from the governing equations while retaining compressibilitiy effects due to, e.g., nuclear energy release, compositional changes, and thermal diffusion.
+The resulting model can be numerically integrated with much larger time steps than a compressible model.
 
-Previously, we have developed the low Mach number astrophysical solver, MAESTRO.  MAESTRO is unique in two ways.  First, the low Mach number model is specifically derived for astrophysical settings.  Second, MAESTRO incorporates the use of a stratified background (or base) state density and pressure held in hydrostatic equilibrium, and also vary as a function of altitude and time.  MAESTRO is suitable for for spherical stars, as well as planar simulations of local dynamics.
-
-by requiring that the thermodynamic variables evolve subject to a specified ambient pressure that varies only as a function of altitude and time.
-In the low Mach equations, the equation of state is recast as a divergence constraint on velocity, requiring an
-elliptic solve for pressure in the spirit of projection methods for incompressible flow.
-
-(overview of MAESTRO numerics) finite volume, AMR. include definition of planar and spherical.
+Previously, we have developed the low Mach number astrophysical solver, MAESTRO.
+Low Mach number models have been developed for a variety of contexts including combustion \citep{day2000numerical}, atmospherics \citep{duarte2015low}, and elastic solids \citep{abbate2017all}.
+The low Mach number model in MAESTRO is unique in that it is specifically designed for astrophysical settings with significant atmospheric stratification.
+Central to the algorithm is a stratified background (or base) state density and pressure held in hydrostatic equilibrium, and also vary as a function of altitude and time.
+MAESTRO is suitable for for spherical stars, as well as planar simulations of local dynamics.
 
 The key numerical developments of the original MAESTRO algorithm are presented in a series of papers which we refer to as Papers I-V:
 \begin{itemize}
@@ -343,13 +337,9 @@ Since then, there have been many scientific investigations using MAESTRO, which 
 \item Type I X-ray bursts \citep{XRB_I,XRB_II,XRB_III}.  In \cite{XRB_I} we discuss the modifications required for implicit thermal conduction, as well as an additional ``volume discrepancy'' modification to the velocity constraint to force the species and enthalpy to evolve in a manner consistent with the background pressure.
 \end{itemize}
 
-We would like to revamp our previous MAESTRO code by moving to the AMReX \cite{AMReX} framework
-so that we can take advantage of all of the latest features of the AMReX libraries. 
-In addition, we want to modify and simplify the existing numerical scheme 
-to both encourage new users and to develop a method that will lend itself more 
-easily to incorporating SDC and other high-order methods. 
-Irregular base state spacing is considered in order to improve spatial resolution 
-that have been seen in the previous MAESTRO code in some test cases.
+In this paper, we characterize the performance of the MAESTROeX algorithm compared to the previous implementation.
+We also develop simpler, alternative temporal integrators, with a longer term goal of developing high-order coupling schemes.
+We also present a new treatment of the base state mapping to Cartesian grids for spherical problsm.
 
 \section{Governing Equations}
 The derivation of the low Mach number hydrodynamics equations is given in Papers I-III.
@@ -906,13 +896,16 @@ $i^\mathrm{th}$ coordinate direction.
 
 \section{Test Problems}
 
+\subsection{Convergence Test}
+3D reacting bubble rise; to demonstrate 2nd-order convergence of the new temporal algorithm.
+
 \subsection{Scaling}
 Scaling with OpenMP
 
 \subsection{Performance Compared to Original MAESTRO}
 Compare to original MAESTRO
 
-\section{Test Problems}
+\subsection{White Dwarf Convection}
 white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregular base state)
 
 \section{Conclusions and Future Work}
