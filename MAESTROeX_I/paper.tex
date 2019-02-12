@@ -294,7 +294,7 @@ state and the Cartesian grid full-state.
 %% Keywords should appear after the \end{abstract} command.
 %% See the online documentation for the full list of available subject
 %% keywords and the rules for their use.
-\keywords{insert keywords here}
+\keywords{convection, hydrodynamics, methods: numerical, nuclear reactions, nucleosynthesis, abundances, supernovae: general}
 
 %% From the front matter, we move on to the body of the paper.
 %% Sections are demarcated by \section and \subsection, respectively.
@@ -313,23 +313,36 @@ state and the Cartesian grid full-state.
 
 \section{Introduction} \label{sec:intro}
 
-Many astrophysical flows are highly subsonic; 
-sound waves carry sufficiently little energy that they do not significantly affect the convective dynamics of the system.
-In many of these flows, long-time convective dynamics are of interest.
-Thus, using a traditional compressible astrophysical solver is highly inefficient.
-One approach to this problem is to use low Mach number hydrodynamic models.
-In a low Mach number approach, sound waves are eliminated from the governing equations by requiring that the
-thermodynamic variables evolve subject to a specified ambient pressure that varies only as a function of altitude and time.
+Many astrophysical flows are highly subsonic; sound waves carry sufficiently little energy that they do not significantly affect the convective dynamics of the system.
+In many of these flows, modeling long-time convective dynamics are of interest, and numerical approaches based on compressible hydrodynamics are intractable, even on modern supercomputers.
+One approach to this problem is to use low Mach number models.
+In a low Mach number approach, sound waves are eliminated from the governing equations, and the resulting model can be numerically integrated with much larger time steps than a compressible model.
+
+Previously, we have developed the low Mach number astrophysical solver, MAESTRO.  MAESTRO is unique in two ways.  First, the low Mach number model is specifically derived for astrophysical settings.  Second, MAESTRO incorporates the use of a stratified background (or base) state density and pressure held in hydrostatic equilibrium, and also vary as a function of altitude and time.  MAESTRO is suitable for for spherical stars, as well as planar simulations of local dynamics.
+
+by requiring that the thermodynamic variables evolve subject to a specified ambient pressure that varies only as a function of altitude and time.
 In the low Mach equations, the equation of state is recast as a divergence constraint on velocity, requiring an
 elliptic solve for pressure in the spirit of projection methods for incompressible flow.
 
-The key numerical developments of the MAESTRO algorithm are presented in a series of papers which we refer to as papers I-V (\cite{MAESTRO_I,MAESTRO_II,MAESTRO_III,MAESTRO_IV,MAESTRO_V}, respectively).
-Applications include the convective phase preceding Chandrasekhar mass models for type Ia supernovae \cite{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}, 
-convection in massivve stars \cite{Gilet:2013},
-sub-Chandrasekhar white dwarfs \cite{subChandra_I,subChandra_II}, and
-Type I X-ray bursts \cite{XRB_I,XRB_II,XRB_III}.
+(overview of MAESTRO numerics) finite volume, AMR. include definition of planar and spherical.
 
-\subsection{Motivation}
+The key numerical developments of the original MAESTRO algorithm are presented in a series of papers which we refer to as Papers I-V:
+\begin{itemize}
+\item In Paper I \citep{MAESTRO_I}, we derive the low Mach number equation set from the fully compressible equations.
+\item In Paper II \citep{MAESTRO_II}, we incorporate the effects atmospheric expansion through the use of a time-dependent background state.
+\item In Paper III \citep{MAESTRO_III}, we incorporate reactions and the associated coupling to the hydrodynamics.
+\item In Paper IV \citep{MAESTRO_IV}, we describe our treatment of spherical stars in a three-dimensional Cartesian geometry.
+\item In Paper V \citep{MAESTRO_V}, we describe the use of block-structured adaptive mesh refinement to focus spatial resolution in regions of interest.
+\end{itemize} 
+
+Since then, there have been many scientific investigations using MAESTRO, which include additional algorithmic enhancements.  Topics include:
+\begin{itemize}
+\item The convective phase preceding Chandrasekhar mass models for type Ia supernovae \citep{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}.
+\item Convection in massive stars \citep{Gilet:2013}.
+\item Sub-Chandrasekhar white dwarfs \citep{subChandra_I,subChandra_II}.  In the latter paper we introduced an optional modification to the momentum equation of velocity constraint that conserves total energy, can give results closer to compressible codes of convective dynamics, including low density regions at the surface of a star.
+\item Type I X-ray bursts \citep{XRB_I,XRB_II,XRB_III}.  In \cite{XRB_I} we discuss the modifications required for implicit thermal conduction, as well as an additional ``volume discrepancy'' modification to the velocity constraint to force the species and enthalpy to evolve in a manner consistent with the background pressure.
+\end{itemize}
+
 We would like to revamp our previous MAESTRO code by moving to the AMReX framework
 so that we can take advantage of all of the latest features of the AMReX libraries. 
 In addition, we want to modify and simplify the existing numerical scheme 
@@ -422,6 +435,7 @@ We could choose to no longer advect the base states for both predictor and corre
 %
 
 \subsection{Main Algorithm Description}\label{Sec:Main Algorithm Description}
+\MarginPar{talk about cutoff densities}
 We now describe the proposed algorithm, making frequent use of the
 shorthand notations mentioned in Paper V, Appendix A3.  In summary, in the predictor step ({\bf
   Steps 2-5}) we use an estimate of the expansion term, $S$, to
