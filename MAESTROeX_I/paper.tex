@@ -425,7 +425,48 @@ We could choose to no longer advect the base states for both predictor and corre
 %
 
 \subsection{Main Algorithm Description}\label{Sec:Main Algorithm Description}
+New algorithm... overframework is similar but now more splitting $w_0$ dynamics... eliminates the need to explicitly evolve the base state and compute the average expansion... instead we can just use a predictor-corrector treatment of the base state while retaining the same formal order of accuracy...
+
+We now describe the new temporal integration scheme, which has been greatly simplified
+from Paper V without formal loss of order of accuracy.
+Note that this temporal integration scheme is valid for the original base state mapping (with constant base state grid spacing), or the new irregularly spaced base state mapping.
+
+At the beginning of each time step we have the state,
+$(\Ub,\rho X_k,\rho h,\rho_0,p_0)^n$, and $\pi^{n-\myhalf}$.
+At any time, the associated density, composition, and enthalpy can be trivially computed using, e.g.,
+\begin{equation}
+\rho^n = \sum_k(\rho X_k)^n, \quad
+X_k^n = (\rho X_k)^n / \rho^n, \quad
+h^n = (\rho h)^n / \rho^n.
+\end{equation}
+Temperature is computed using the equation of state, e.g.,
+\footnote{As described in Paper V, for planar problems we compute temperature using $h$ instead of $p_0$, since we have successfully developed planar volume discrepancy schemes to effectively couple the enthalpy to the rest of the solution.  We are still exploring this option for spherical stars.}
+\begin{equation}
+T^n = T(\rho,p_0,X_k)^n.
+\end{equation}
+Similarly, $\gammaonebar$ and $\beta_0$ are computed using $\rho,p_0$, and $X_k$ (see Appendix A of Paper I and Appendix C of Paper III for details).
+
+The overal flow of the algorithm is a second-order Strang Splitting approach for the splitting of the reaction and advection steps.  Furthermore, we use a predictor-corrector approach within this splitting scheme to achieve second-order accurate treatment of the constraing equation.  To summarize:
+\begin{itemize}
+\item In {\bf Step 1} we react the thermodynamic variables over $\Delta t/2$.
+\item In {\bf Steps 2-4} we advect the thermodynamic variables over $\Delta t$.
+\item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$.
+\item In {\bf Steps 6-8} we redo the advection in {\bf Steps 2-4} but are able to use the trapezoidal rule to time-center certain quantities such as $S$, $\rho_0$, etc.
+\item In {\bf Step 9} we redo the reactions from {\bf Step 5} using the improved results for the corrector advection step.
+\item In {\bf Steps 10-11} we update the velocity.
+\end{itemize}
+
+Each time step satisfies the standard advective CFL condition,
+\begin{equation}
+\Delta t = \sigma^{\rm CFL} \min_i(\Delta x / U_i),
+\end{equation}
+where for our simulations we typically use $\sigma^{\rm CFL}\sim 0.5$.
+There are additional constraints on the time involving the buoyancy force (commonly used when the velocity is approximately zero at the start of some simulations) and the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
+
+
 \MarginPar{talk about cutoff densities}
+
+\sout{
 We now describe the proposed algorithm, making frequent use of the
 shorthand notations mentioned in Paper V, Appendix A3.  In summary, in the predictor step ({\bf
   Steps 2-5}) we use an estimate of the expansion term, $S$, to
@@ -434,7 +475,7 @@ compute a preliminary solution at the new time level, denoted with an
 we use the results from the predictor step to compute a more accurate
 expansion term, and compute the final solution at the new time level,
 denoted with an ``$n+1$'' superscript.  We use Strang-splitting to
-achieve second-order accuracy in time.
+achieve second-order accuracy in time.}
 
 \MarginPar{AJN: eliminated references to volume discrepancy for now; we'd only use it for planar at the moment, don't want to open up that can of worms here}
 
@@ -445,14 +486,22 @@ achieve second-order accuracy in time.
 %--------------------------------------------------------------------------
 
 \item[Step 0] {\em Initialization}
+\sout{
 The initialization step only occurs at the beginning of the simulation.
 The initialization step computes initial values for $\pi^{-\myhalf}$, , $\eta_{\rho}^{-\myhalf}$, 
 $\psi^{-\myhalf}$, $S^0$, and $S^1$ for use in time stepping routine.  
-We pass through {\bf Step 1} -- {\bf Step 12}, but only keep these values.
+We pass through {\bf Step 1} -- {\bf Step 11}, but only keep these values.
 The initial values for $\Ub^0, \rho^0, (\rho h)^0, X_k^0, T^0,
-\rho_0^0, p_0^0$, and $\overline{\Gamma}_1^0$ are specified from the problem-dependent
+\rho_0^0, p_0^0$, and $\gammaonebar^0$ are specified from the problem-dependent
 initial conditions.  The initial time step, $\dt^0$, is computed as in
 Paper III.
+}
+
+
+
+
+
+
 
 %--------------------------------------------------------------------------
 % STEP 1
@@ -493,12 +542,8 @@ constraint.  We then construct $\uadvone$ from $\uadvonedag$
 using a MAC projection.
 We note that $\uadvone$ satisfies the divergence constraint
 \begin{equation}
-\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left(S^{\nph,\star} - \frac{1}{\overline{\Gamma}_1^np_0^n}\psi^{n-\myhalf} \right),
+\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left(S^{\nph,\star} - \frac{1}{\gammaonebar^np_0^n}\psi^{n-\myhalf} \right).
 \end{equation}
-\begin{equation}
- \beta_0^n = \beta_0 \left(\rho_0^n, p_0^n, \overline{\Gamma}_1^n\right),
-\end{equation}
-where $\beta_0$ is computed as described in Appendix C of Paper III.
 
 It should also be noted that we have found it better to approximate 
 the temporal changes in base pressure as 
@@ -537,11 +582,6 @@ accounted for in {\bf React State}.  The update consists of two steps:
 \begin{equation}
 (\rho X_k)^{(2),\star} = (\rho X_k)^{(1)}
   - \dt \left\{ \nabla \cdot \left[ \uadvone (\rho X_k)^{\nph,\pred} \right] \right\},
-\end{equation}
-\begin{equation}
-\rho^{(2),\star} = \sum_k (\rho X_k)^{(2),\star},
-\qquad
-X_k^{(2),\star} = (\rho X_k)^{(2),\star} / \rho^{(2),\star}.
 \end{equation}
 
 \end{enumerate}
@@ -606,11 +646,6 @@ we recompute enthalpy using
 (\rho h)^{(2),\star} = \rho^{(2),\star}h\left(\rho^{(2),\star},p_0^{n+1,\star},X_k^{(2),\star}\right).
 \end{equation}
 
-\item Update the temperature using the equation of state:
-$T^{(2),\star} =
-  T(\rho^{(2),\star}, h^{(2),\star}, X_k^{(2),\star})$ (planar geometry) or
-$T^{(2),\star} =
-  T(\rho^{(2),\star}, p_0^{n+1,\star}, X_k^{(2),\star})$ (spherical geometry).
 \end{enumerate}
 
 %--------------------------------------------------------------------------
@@ -649,15 +684,13 @@ approximated using $\psi$.
 We note that $\uadvtwo$ satisfies the divergence constraint
 \begin{equation}
 \nabla \cdot \left(\beta_0^{\nph} \uadvtwo\right) =
-\beta_0^{\nph} \left(S^{\nph} - \frac{1}{\overline{\Gamma}_1^{n+\myhalf}p_0^{n+1,\star}}\frac{p_0^{n+1,\star}-p_0^n}{\Delta t^n}\right),
+\beta_0^{\nph} \left(S^{\nph} - \frac{1}{\gammaonebar^{n+\myhalf}p_0^{n+1,\star}}\frac{p_0^{n+1,\star}-p_0^n}{\Delta t^n}\right),
 \end{equation}
+where
 \begin{equation}
-\beta_0^{\nph} = \frac{ \beta_0^n +  \beta_0^{n+1,\star} }{2};
+\beta_0^{\nph} = \frac{ \beta_0^n +  \beta_0^{n+1,\star} }{2},
 \qquad
- \beta_0^{n+1,\star} = \beta_0 \left(\rho_0^{n+1,\star}, p_0^{n+1,\star}, \overline{\Gamma}_1^{n+1,\star}\right),
-\end{equation}
-\begin{equation}
-\overline{\Gamma}_1^{\nph} = \frac{ \overline{\Gamma}_1^n +  \overline{\Gamma}_1^{n+1,\star} }{2}.
+\gammaonebar^{\nph} = \frac{ \gammaonebar^n +  \gammaonebar^{n+1,\star} }{2}.
 \end{equation}
 
 %--------------------------------------------------------------------------
@@ -669,8 +702,8 @@ We note that $\uadvtwo$ satisfies the divergence constraint
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
 
 \item Update $(\rho X_k)$.  This step is identical to {\bf Step 4A} except we use
-  the updated values $\uadvtwo$ and $\rho_0^{(2a)}$ rather than
-  $\uadvone$ and $\rho_0^{(2a),\star}$.  In particular:
+  the updated values $\uadvtwo$ and $\rho_0^{n+1,\star}$ rather than
+  $\uadvone$ and $\rho_0^{n+1,\star}$.  In particular:
 
 \begin{enumerate}
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
@@ -739,12 +772,6 @@ Then, for each Cartesian cell where $\rho^{(2)} < \rho_\mathrm{cutoff}$, we reco
 (\rho h)^{(2)} = \rho^{(2)}h\left(\rho^{(2)},p_0^{n+1},X_k^{(2)}\right).
 \end{equation}
 
-\item Update the temperature using the equation of state:
-$T^{(2)} =
-   T(\rho^{(2)}, h^{(2)}, X_k^{(2)})$ (planar geometry) or
-$T^{(2)} =
-   T(\rho^{(2)}, p_0^{n+1}, X_k^{(2)})$ (spherical geometry).
-
 \item Define a radial cell-centered $\etarho^{\nph}$.
 
 \begin{description}
@@ -781,7 +808,7 @@ Call {\bf React State}$[(\rho X_k)^{(2)},(\rho h)^{(2)}, p_0^{n+1}] \rightarrow 
 %--------------------------------------------------------------------------
 % STEP 10
 %--------------------------------------------------------------------------
-\item[Step 10] {\em Define the new time expansion, $S^{n+1}$, and $\overline{\Gamma}_1^{n+1}$.}
+\item[Step 10] {\em Define the new time expansion, $S^{n+1}$.}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -789,12 +816,6 @@ Call {\bf React State}$[(\rho X_k)^{(2)},(\rho h)^{(2)}, p_0^{n+1}] \rightarrow 
 \begin{equation}
   S^{n+1} =  \left(-\sigma  \sum_k  \xi_k \omegadot_k  + \sigma \Hnuc +
   \frac{1}{\rho p_\rho} \sum_k p_{X_k}  \omegadot_k\right)^{n+1}.
-\end{equation}
-
-\item Define
-\begin{equation}
-\overline{\Gamma}_1^{n+1} = {\rm{\bf Avg}}\left[\Gamma_1\left(\rho^{n+1}, p_0^{n+1},
-X_k^{n+1}\right) \right].
 \end{equation}
 
 \end{enumerate}
@@ -827,63 +848,13 @@ from $\Ub^{n+1,\dagger},$  such that $\Ub^{n+1}$ approximately
 satisfies
 \begin{equation}
 \nabla \cdot \left(\beta_0^{n+1} \Ub^{n+1} \right)
-= \beta_0^{n+1} S^{n+1},
-\end{equation}
-where
-\begin{equation}
-\beta_0^{n+1} = \beta \left(\rho_0^{n+1}, p_0^{n+1}, \overline{\Gamma}_1^{n+1}, g^{n+1}\right).
+= \beta_0^{n+1} S^{n+1}.
 \end{equation}
 As part of the projection we also define the new-time perturbational pressure,
 $\pi^\nph.$  This projection necessarily differs from the MAC projection used in
 {\bf Step 3} and {\bf Step 7} because the velocities in those steps are defined
 on edges and $\Ub^{n+1}$ is defined at cell centers, requiring different divergence
 and gradient operators.  Details of the approximate projection are given in Paper III.
-
-%--------------------------------------------------------------------------
-% STEP 12
-%--------------------------------------------------------------------------
-\item[Step 12] {\em Compute a new $\dt.$}
-
-Compute $\dt$ for the next time step with a similar procedure described in
-\S 3.4 of Paper III. However, we are using $\Ub^{n+1}$
-as computed in {\bf Step 11} instead of $w_0$ and $\Ubt^{n+1}$ as in Paper V.
-The following constraints need to be satisfied.
-
-\begin{enumerate}
-\renewcommand{\theenumi}{{\bf \Alph{enumi}}}
-\item Use standard CFL condition for explicit methods using CFL factor $\sigma^{\mathrm{CFL}}$.
-  For a calculation in $n_{\mathrm{dim}}$ dimensions ($n_{\mathrm{dim}}=2$ or 3),
-  the first constraint is
-\begin{equation}
-\dt_{\Ub} = \sigma^\mathrm{CFL}  \min_{i=1\ldots n_\mathrm{dim}} \left \{ \dt_i \right \}\enskip,
-\end{equation}
-  where
-\begin{equation}
-\dt_i = \min_{\bf x}  \left \{ \frac{\Delta x_i}{\left | \Ub \right |}  \right \}\enskip.
-\end{equation}
-
-\item Use the forcing terms rather than the velocities.
-  This constraint is necessary when a calculation is started from rest,
-  since in that case the velocity-based time step would be infinite. Define
-\begin{equation}
-\dt_{\rm F} = \min_{i=1\ldots n_\mathrm{dim}} \left \{ \dt_{\rm F_i} \right \}\enskip,
-\end{equation}
-where
-\begin{equation}
-\dt_{\rm F_i} = \sqrt{2 \Delta x_i / {F_i}_\mathrm{max}}\enskip,
-\end{equation}
-where ${F_i}_\mathrm{max}$ is the maximum buoyancy force in the
-$i^\mathrm{th}$ coordinate direction.
-
-\item To prevent local expansion from numerically emptying a cell,
-  we require that the density be reduced by no more than 40\% in a single time step.
-  This constraint is expressed as $\dt \leq \dt_S$ where
-\begin{equation}
- \Delta t_S \; (\nabla \cdot \Ub)  \leq 0.40 \enskip ,
-\end{equation}
-  in every cell.
-
-\end{enumerate}
 
 \end{description}
 
