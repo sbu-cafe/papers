@@ -102,8 +102,7 @@
 \newcommand{\dt}{\Delta t}
 
 \newcommand{\etarho}{\eta_\rho}
-\newcommand{\gammaonebar}{\overline{\Gamma_1}}
-\newcommand{\Hext}{H_{\rm ext}}
+\newcommand{\gammaonebar}{\overline{\Gamma}_1}
 \newcommand{\Hnuc}{H_{\rm nuc}}
 \newcommand{\omegadot}{\dot\omega}
 \newcommand{\pred}{{\rm pred}}
@@ -184,7 +183,7 @@
 
 \begin{document}
 
-\title{MAESTROeX}
+\title{MAESTROeX: A Massively Parallel Low Mach Number Astrophysical Solver}
 
 %% LaTeX will automatically break titles if they run longer than
 %% one line. However, you may use \\ to force a line break if
@@ -236,19 +235,19 @@
 \correspondingauthor{MAESTROeX}
 \email{DFan@lbl.gov}
 
-\author{Doreen Fan}
+\author[0000-0002-3246-4315]{Duoming Fan}
 \affil{Lawrence Berkelely National Laboratory \\
 Center for Computational Sciences and Engineering \\
 One Cyclotron Road, MS 50A-3111 \\
 Berkeley, CA 94720, USA}
 
-\author{Andrew Nonaka}
+\author[0000-0003-1791-0265]{Andrew Nonaka}
 \affil{Lawrence Berkelely National Laboratory \\
 Center for Computational Sciences and Engineering \\
 One Cyclotron Road, MS 50A-3111 \\
 Berkeley, CA 94720, USA}
 
-\author{Ann Almgren}
+\author[0000-0003-2103-312X]{Ann S. Almgren}
 \affil{Lawrence Berkelely National Laboratory \\
 Center for Computational Sciences and Engineering \\
 One Cyclotron Road, MS 50A-3111 \\
@@ -279,18 +278,18 @@ Stony Brook, NY 11794-3800, USA}
 
 %% Mark off the abstract in the ``abstract'' environment.
 \begin{abstract}
-We present MAESTROeX, a next-generation solver for low Mach number astrophysical flows.
-Here we summarize implementation details as well new spatiotemporal integration schemes
-developed for increased accuracy and a simpler base state treatment.  The code is written
-in the AMReX software framework for massively parallel block-structured adaptive mesh
-refinement applications.
-
+We present MAESTROeX, a massively parallel solver for low Mach number astrophysical flows.
+Our model equations allow for long-time integration for highly subsonic flows compared to compressible approaches.
+The code leverages the new AMReX framework for block-structured adaptive mesh refinement calculations, and also provides additional algorithmic features from the original MAESTRO code.
+We present a new temporal integration option that is much simpler than our previous approach while retaining the same order order of accuracy.
+We also provide a more accurate spatial discretization for mapping the base state onto the full state Cartesian grid.
+Using our previous studies on the convective phase of single-degenerate progenitor models of Type Ia supernovae, we characterize the performance of the code and validate the new algorithmic features.
 \end{abstract}
 
 %% Keywords should appear after the \end{abstract} command.
 %% See the online documentation for the full list of available subject
 %% keywords and the rules for their use.
-\keywords{insert keywords here}
+\keywords{convection, hydrodynamics, methods: numerical, nuclear reactions, nucleosynthesis, abundances, supernovae: general}
 
 %% From the front matter, we move on to the body of the paper.
 %% Sections are demarcated by \section and \subsection, respectively.
@@ -310,35 +309,56 @@ refinement applications.
 \section{Introduction} \label{sec:intro}
 
 Many astrophysical flows are highly subsonic; sound waves carry sufficiently little energy that they do not significantly affect the convective dynamics of the system.
-In many of these flows, long-time convective dynamics are of interest.
-Thus, using a traditional compressible astrophysical solver is highly inefficient.
-One approach to this problem is to use low Mach number hydrodynamic models.
+In many of these flows, modeling long-time convective dynamics are of interest, and numerical approaches based on compressible hydrodynamics are intractable, even on modern supercomputers.
+One approach to this problem is to use low Mach number models.
+In a low Mach number approach, sound waves are eliminated from the governing equations while retaining compressibilitiy effects due to, e.g., nuclear energy release, compositional changes, and thermal diffusion.
+The resulting model can be numerically integrated with much larger time steps than a compressible model.
 
+Previously, we have developed the low Mach number astrophysical solver, MAESTRO.
+Low Mach number models have been developed for a variety of contexts including combustion \citep{day2000numerical}, atmospherics \citep{duarte2015low}, and elastic solids \citep{abbate2017all}.
+The low Mach number model in MAESTRO is unique in that it is specifically designed for astrophysical settings with significant atmospheric stratification.
+Central to the algorithm is a stratified background (or base) state density and pressure held in hydrostatic equilibrium, and also vary as a function of altitude and time.
+MAESTRO is suitable for for spherical stars, as well as planar simulations of local dynamics.
 
-The key numerical developments of the MAESTRO algorithm are presented in a series of papers which we refer to as papers I-V (\cite{MAESTRO_I,MAESTRO_II,MAESTRO_III,MAESTRO_IV,MAESTRO_V}, respectively).
-Applications include the convective phase preceding Chandrasekhar mass models for type Ia supernovae \cite{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}, 
-convection in massivve stars \cite{Gilet:2013},
-sub-Chandrasekhar white dwarfs \cite{subChandra_I,subChandra_II}, and
-Type I X-ray bursts \cite{XRB_I,XRB_II,XRB_III}.
+The key numerical developments of the original MAESTRO algorithm are presented in a series of papers which we refer to as Papers I-V:
+\begin{itemize}
+\item In Paper I \citep{MAESTRO_I}, we derive the low Mach number equation set from the fully compressible equations.
+\item In Paper II \citep{MAESTRO_II}, we incorporate the effects atmospheric expansion through the use of a time-dependent background state.
+\item In Paper III \citep{MAESTRO_III}, we incorporate reactions and the associated coupling to the hydrodynamics.
+\item In Paper IV \citep{MAESTRO_IV}, we describe our treatment of spherical stars in a three-dimensional Cartesian geometry.
+\item In Paper V \citep{MAESTRO_V}, we describe the use of block-structured adaptive mesh refinement to focus spatial resolution in regions of interest.
+\end{itemize} 
 
-\subsection{Motivation}
-We would like to revamp our previous MAESTRO code by moving to the AMReX framework
-so that we can take advantage of all of the latest features of the AMReX libraries. 
-In addition, we want to modify and simplify the existing numerical scheme 
-to both encourage new users and to develop a method that will lend itself more 
-easily to incorporating SDC and other high-order methods. 
-Irregular base state spacing is considered in order to improve spatial resolution 
-that have been seen in the previous MAESTRO code in some test cases.
+Since then, there have been many scientific investigations using MAESTRO, which include additional algorithmic enhancements.  Topics include:
+\begin{itemize}
+\item The convective phase preceding Chandrasekhar mass models for type Ia supernovae \citep{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}.
+\item Convection in massive stars \citep{Gilet:2013}.
+\item Sub-Chandrasekhar white dwarfs \citep{subChandra_I,subChandra_II}.  In the latter paper we introduced an optional modification to the momentum equation of velocity constraint that conserves total energy, can give results closer to compressible codes of convective dynamics, including low density regions at the surface of a star.
+\item Type I X-ray bursts \citep{XRB_I,XRB_II,XRB_III}.  In \cite{XRB_I} we discuss the modifications required for implicit thermal conduction, as well as an additional ``volume discrepancy'' modification to the velocity constraint to force the species and enthalpy to evolve in a manner consistent with the background pressure.
+\end{itemize}
+
+In this paper, we characterize the performance of the MAESTROeX algorithm compared to the previous implementation.
+We also develop simpler, alternative temporal integrators, with a longer term goal of developing high-order coupling schemes.
+We also present a new treatment of the base state mapping to Cartesian grids for spherical problsm.
 
 \section{Governing Equations}
 The derivation of the low Mach number hydrodynamics equations is given in Papers I-III.
+We take the standard equations of reacting, compressible flow, and recast the equation
+of state as a divergence constraint on the velocity field.  This is done by taking
+the Langrangian derivative of the equation of state for pressure as a function of the
+density, composition, and enthalpy, enforcing the constraint that the pressure is
+a prescribed function of altitutde and time based on the hydrostatic equilibrium condition,
+and substituting the equations for species and enthalpy in the resulting Lagrangian derivative.
 The resulting equations are
 \begin{eqnarray}
-\frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
 \frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
-\frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc + \rho\Hext,\label{eq:enthalpy}
+\frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
+\frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc,\label{eq:enthalpy}
 \end{eqnarray}
-where $\rho$, $\Ub$, and $h$ are the mass density,
+\begin{equation}
+\nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).\label{eq:U divergence}
+\end{equation}
+Here $\rho$, $\Ub$, and $h$ are the mass density,
 velocity and specific enthalpy, respectively, and
 $X_k$ are the mass fractions of species $k$ with associated
 production rate $\omegadot_k$.  The species are constrained
@@ -346,8 +366,8 @@ such that $\sum_k X_k = 1$ giving $\rho = \sum_k (\rho X_k)$ and
 \begin{equation}
 \frac{\partial\rho}{\partial t} = -\nabla\cdot(\rho\Ub).
 \end{equation}
-The source terms $\Hext$ and $\Hnuc$ are the external heating rate and nuclear energy 
-generation rate per unit mass.  The pressure is decomposed into a hydrostatic base state
+Here $\Hnuc$ is the nuclear energy generation rate per unit mass.
+The pressure is decomposed into a hydrostatic base state
  pressure, $p_0 = p_0(r,t)$, and a dynamic pressure, $\pi = \pi(\xb,t)$, such that 
 $|\pi|/p_0 = \mathcal{O}(M^2)$ (we use $\xb$ to represent the Cartesian coordinate 
 directions of the full state and $r$ to represent the radial coordinate direction for 
@@ -357,11 +377,8 @@ $\nabla p_0 = -\rho_0 g\eb_r$, where $g=g(r,t)$ is
 the magnitude of the gravitational acceleration and $\eb_r$ is the unit vector in the
 outward radial direction. 
 
-Mathematically, this system must still be closed by the equation of state which we
-express as a divergence constraint on the velocity field (see Paper III),
-\begin{equation}
-\nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right),\label{eq:U divergence}
-\end{equation}
+Mathematically, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) must still be closed by the equation of state which we
+express as a divergence constraint on the velocity field (\ref{eq:U divergence}),
 \MarginPar{This is different from the Jacobs 2016 paper where we switched to alt\_energy\_fix.}
 where $\beta_0$ is a density-like variable that carries background stratification, defined as
 \begin{equation}
@@ -370,7 +387,7 @@ where $\beta_0$ is a density-like variable that carries background stratificatio
 where $\gammaonebar$ is the lateral average of $\Gamma_1 = d(\log p)/d(\log\rho)$ at constant entropy.
 The expansion term, $S$, incorporates local compressibility effects due to heat release from reactions, compositional changes, and external sources,
 \begin{equation}
-S = -\sigma\sum_k\xi_k\omegadot_k + \frac{1}{\rho p_\rho}\sum_k p_{X_k}\omegadot_k + \sigma\Hnuc + \sigma\Hext,\label{eq:S}
+S = -\sigma\sum_k\xi_k\omegadot_k + \frac{1}{\rho p_\rho}\sum_k p_{X_k}\omegadot_k + \sigma\Hnuc,\label{eq:S}
 \end{equation}
 where $p_{X_k} \equiv \left. \partial p / \partial X_k
 \right|_{\rho,T,X_{j,j\ne k}}$, $\xi_k \equiv \left. \partial h /
@@ -408,6 +425,7 @@ We could choose to no longer advect the base states for both predictor and corre
 %
 
 \subsection{Main Algorithm Description}\label{Sec:Main Algorithm Description}
+\MarginPar{talk about cutoff densities}
 We now describe the proposed algorithm, making frequent use of the
 shorthand notations mentioned in Paper V, Appendix A3.  In summary, in the predictor step ({\bf
   Steps 2-5}) we use an estimate of the expansion term, $S$, to
@@ -418,6 +436,7 @@ expansion term, and compute the final solution at the new time level,
 denoted with an ``$n+1$'' superscript.  We use Strang-splitting to
 achieve second-order accuracy in time.
 
+\MarginPar{AJN: eliminated references to volume discrepancy for now; we'd only use it for planar at the moment, don't want to open up that can of worms here}
 
 \begin{description}
 
@@ -425,7 +444,7 @@ achieve second-order accuracy in time.
 % STEP 0
 %--------------------------------------------------------------------------
 
-\item[Step 0.] {\em Initialization}
+\item[Step 0] {\em Initialization}
 The initialization step only occurs at the beginning of the simulation.
 The initialization step computes initial values for $\pi^{-\myhalf}$, , $\eta_{\rho}^{-\myhalf}$, 
 $\psi^{-\myhalf}$, $S^0$, and $S^1$ for use in time stepping routine.  
@@ -438,16 +457,16 @@ Paper III.
 %--------------------------------------------------------------------------
 % STEP 1
 %--------------------------------------------------------------------------
-\item[Step 1.] {\em React the full state through the first time interval of $\dt / 2.$}
+\item[Step 1] {\em React the full state through the first time interval of $\dt / 2.$}
 
-Call {\bf React State}$[\rho^n, (\rho h)^n, X_k^n, T^n, (\rho\Hext)^n, p_0^n] \rightarrow [\rho^{(1)},(\rho h)^{(1)},X_k^{(1)},T^{(1)},(\rho \omegadot_k)^{(1)},(\rho \Hnuc)^{(1)}]$.
+Call {\bf React State}$[(\rho X_k)^n, (\rho h)^n, p_0^n] \rightarrow [(\rho X_k)^{(1)}, (\rho h)^{(1)}, (\rho \omegadot_k)^{(1)}, (\rho \Hnuc)^{(1)}]$.
 \MarginPar{AJN: I think we can simplify the description here... this is somewhat confusing now.}
 
 %--------------------------------------------------------------------------
 % STEP 2
 %--------------------------------------------------------------------------
 
-\item[Step 2.] {\em Compute the provisional time-centered expansion,
+\item[Step 2] {\em Compute the provisional time-centered expansion,
     $S^{\nph,\star}$.}
 
 We compute an estimate for the time-centered expansion term in the velocity
@@ -463,15 +482,10 @@ initialization step.
 %--------------------------------------------------------------------------
 % STEP 3
 %--------------------------------------------------------------------------
-\item[Step 3.] {\em Construct the provisional time-centered advective velocity on
+\item[Step 3] {\em Construct the provisional time-centered advective velocity on
 edges, $\uadvone$.}
 
-Using the equation below,
-%
-\begin{equation}
-\frac{\partial\Ub}{\partial t} = -\Ub\cdot\nabla\Ub - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho}g\eb_r, \label{eq:u_update}
-\end{equation}
-%
+Using equation (\ref{eq:momentum}), 
 we compute time-centered edge velocities, $\uadvonedag$, using
 $\Ub^n$.  The $\dagger$ superscript refers to the
 fact that the predicted velocity field does not satisfy the divergence
@@ -479,13 +493,10 @@ constraint.  We then construct $\uadvone$ from $\uadvonedag$
 using a MAC projection.
 We note that $\uadvone$ satisfies the divergence constraint
 \begin{equation}
-\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left(S^{\nph,\star} - \frac{1}{\overline{\Gamma}_1^np_0^n}\psi^{n-\myhalf} + \chi^n \right),
+\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left(S^{\nph,\star} - \frac{1}{\overline{\Gamma}_1^np_0^n}\psi^{n-\myhalf} \right),
 \end{equation}
 \begin{equation}
  \beta_0^n = \beta_0 \left(\rho_0^n, p_0^n, \overline{\Gamma}_1^n\right),
-\end{equation}
-\begin{equation}
-\chi^n = \frac{f}{\overline{\Gamma}_1^n p_0^n}\frac{p_{\rm eos}^n(\rho,h,X_k) - p_0^n}{\Delta t^n}
 \end{equation}
 where $\beta_0$ is computed as described in Appendix C of Paper III.
 
@@ -500,7 +511,7 @@ in the predictor step.
 %--------------------------------------------------------------------------
 % STEP 4
 %--------------------------------------------------------------------------
-\item[Step 4.] {\em Advect the full state through a time interval of $\dt.$}
+\item[Step 4] {\em Advect the full state through a time interval of $\dt.$}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -543,7 +554,7 @@ X_k^{(2),\star} = (\rho X_k)^{(2),\star} / \rho^{(2),\star}.
 \item Update the enthalpy using a discretized version of equation
 %
 \begin{equation}
-\frac{\partial(\rho h)}{\partial t} = -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc + \rho\Hext,
+\frac{\partial(\rho h)}{\partial t} = -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc,
 \end{equation}
 %
 again omitting the reaction and heating terms
@@ -605,20 +616,19 @@ $T^{(2),\star} =
 %--------------------------------------------------------------------------
 % STEP 5
 %--------------------------------------------------------------------------
-\item[Step 5.] {\em React the full state through a second time interval of $\dt / 2.$}
+\item[Step 5] {\em React the full state through a second time interval of $\dt / 2.$}
 
-Call {\bf React State}$[ \rho^{(2),\star},(\rho h)^{(2),\star}, X_k^{(2),\star}, T^{(2),\star},
-(\rho\Hext)^{(2),\star}, p_0^{n+1,\star}]$\\
-\phantom{ }\hfill $\rightarrow [ \rho^{n+1,\star},(\rho h)^{n+1,\star}, X_k^{n+1,\star}, T^{n+1,\star}, (\rho \omegadot_k)^{(2),\star}, (\rho \Hnuc)^{(2),\star} ].$
+Call {\bf React State}$[ (\rho X_k)^{(2),\star}, (\rho h)^{(2),\star}, p_0^{n+1,\star}]$\\
+\phantom{ }\hfill $\rightarrow [ (\rho X_k)^{n+1,\star}, (\rho h)^{n+1,\star}, (\rho \omegadot_k)^{(2),\star}, (\rho \Hnuc)^{(2),\star} ].$
 
 %--------------------------------------------------------------------------
 % STEP 6
 %--------------------------------------------------------------------------
-\item[Step 6.] {\em Compute the time-centered expansion, $S^{\nph,\star}$.}
+\item[Step 6] {\em Compute the time-centered expansion, $S^{\nph,\star}$.}
 
 \item First, compute $S^{n+1,\star}$ with
 \begin{equation}
-S^{n+1,\star} =  -\sigma  \sum_k  \xi_k  (\omegadot_k)^{(2),\star}  + \frac{1}{\rho^{n+1,\star} p_\rho} \sum_k p_{X_k}  ({\omegadot}_k)^{(2),\star} + \sigma \Hnuc^{(2),\star} + \sigma \Hext^{(2),\star},
+S^{n+1,\star} =  -\sigma  \sum_k  \xi_k  (\omegadot_k)^{(2),\star}  + \frac{1}{\rho^{n+1,\star} p_\rho} \sum_k p_{X_k}  ({\omegadot}_k)^{(2),\star} + \sigma \Hnuc^{(2),\star},
 \end{equation}
   where $(\omegadot_k)^{(2),\star} = (\rho \omegadot_k)^{(2),\star} /
   \rho^{(2),\star}$ and the thermodynamic quantities are defined using
@@ -631,7 +641,7 @@ S^{n+1,\star} =  -\sigma  \sum_k  \xi_k  (\omegadot_k)^{(2),\star}  + \frac{1}{\
 %--------------------------------------------------------------------------
 % STEP 7
 %--------------------------------------------------------------------------
-\item[Step 7.] {\em Construct the time-centered advective velocity on edges, $\uadvtwo$.}
+\item[Step 7] {\em Construct the time-centered advective velocity on edges, $\uadvtwo$.}
 
 The procedure to construct $\uadvtwodag$ is identical to the procedure
 for computing $\uadvonedag$ in {\bf Step 3}, but uses
@@ -641,7 +651,7 @@ approximated using $\psi$.
 We note that $\uadvtwo$ satisfies the divergence constraint
 \begin{equation}
 \nabla \cdot \left(\beta_0^{\nph} \uadvtwo\right) =
-\beta_0^{\nph} \left(S^{\nph} - \frac{1}{\overline{\Gamma}_1^{n+\myhalf}p_0^{n+1,\star}}\frac{p_0^{n+1,\star}-p_0^n}{\Delta t^n} + \chi^{n+\myhalf}\right),
+\beta_0^{\nph} \left(S^{\nph} - \frac{1}{\overline{\Gamma}_1^{n+\myhalf}p_0^{n+1,\star}}\frac{p_0^{n+1,\star}-p_0^n}{\Delta t^n}\right),
 \end{equation}
 \begin{equation}
 \beta_0^{\nph} = \frac{ \beta_0^n +  \beta_0^{n+1,\star} }{2};
@@ -651,14 +661,11 @@ We note that $\uadvtwo$ satisfies the divergence constraint
 \begin{equation}
 \overline{\Gamma}_1^{\nph} = \frac{ \overline{\Gamma}_1^n +  \overline{\Gamma}_1^{n+1,\star} }{2}.
 \end{equation}
-\begin{equation}
-\chi^{n+\myhalf} = \chi^n + \frac{f}{\overline{\Gamma}_1^{n+1,\star} p_0^{n+1,\star}}\frac{p_{\rm eos}^{n+1,\star}(\rho,h,X_k) - p_0^{n+1,\star}}{\Delta t^n}
-\end{equation}
 
 %--------------------------------------------------------------------------
 % STEP 8
 %--------------------------------------------------------------------------
-\item[Step 8.] {\em Advect the base state and full state through a time interval of $\dt.$}
+\item[Step 8] {\em Advect the base state and full state through a time interval of $\dt.$}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -769,22 +776,21 @@ Then,
 %--------------------------------------------------------------------------
 % STEP 9
 %--------------------------------------------------------------------------
-\item[Step 9.] {\em React the full state through a second time interval of $\dt / 2.$}
+\item[Step 9] {\em React the full state through a second time interval of $\dt / 2.$}
 
-Call {\bf React State}$[\rho^{(2)},(\rho h)^{(2)}, X_k^{(2)},T^{(2)}, (\rho\Hext)^{(2)}, p_0^{n+1}] \rightarrow [\rho^{n+1}, (\rho h)^{n+1}, X_k^{n+1}, T^{n+1}, (\rho \omegadot_k)^{(2)}, (\rho \Hnuc)^{(2)} ].$
+Call {\bf React State}$[(\rho X_k)^{(2)},(\rho h)^{(2)}, p_0^{n+1}] \rightarrow [(\rho X_k)^{n+1}, (\rho h)^{n+1}, (\rho \omegadot_k)^{(2)}, (\rho \Hnuc)^{(2)}].$
 
 %--------------------------------------------------------------------------
 % STEP 10
 %--------------------------------------------------------------------------
-\item[Step 10.] {\em Define the new time expansion, $S^{n+1}$, and $\overline{\Gamma}_1^{n+1}$.}
+\item[Step 10] {\em Define the new time expansion, $S^{n+1}$, and $\overline{\Gamma}_1^{n+1}$.}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
 \item Define
 \begin{equation}
   S^{n+1} =  -\sigma  \sum_k  \xi_k (\omegadot_k)^{(2)}  + \sigma \Hnuc^{(2)} +
-  \frac{1}{\rho^{n+1} p_\rho} \sum_k p_{X_k}  ({\omegadot}_k)^{(2)}
-   + \sigma \Hext^{(2)},
+  \frac{1}{\rho^{n+1} p_\rho} \sum_k p_{X_k}  ({\omegadot}_k)^{(2)},
 \end{equation}
 where $(\omegadot_k)^{(2)} = (\rho \omegadot_k)^{(2)} / \rho^{(2)}$
 and the thermodynamic quantities are defined using $\rho^{n+1}$,
@@ -802,7 +808,7 @@ X_k^{n+1}\right) \right].
 %--------------------------------------------------------------------------
 % STEP 11
 %--------------------------------------------------------------------------
-\item[Step 11.] {\em Update the velocity}.
+\item[Step 11] {\em Update the velocity}.
 
 First, we compute the time-centered edge velocities, $\Ub^{\nph,\pred}$.
 Then, we define
@@ -810,7 +816,7 @@ Then, we define
 \rho^\nph = \frac{\rho^n + \rho^{n+1}}{2}, \qquad \rho_0^\nph = \frac{\rho_0^n + \rho_0^{n+1}}{2}.
 \end{equation}
 We update the velocity field $\Ub^n$ to $\Ub^{n+1,\dagger}$ by discretizing
-equation (\ref{eq:u_update}) as
+equation (\ref{eq:momentum}) as
 \begin{eqnarray}
 \Ub^{n+1,\dagger}
 &=& \Ub^n - \dt \left[\uadvtwo \cdot \nabla \Ub^{\nph,\pred} \right] \nonumber \\
@@ -841,7 +847,7 @@ and gradient operators.  Details of the approximate projection are given in Pape
 %--------------------------------------------------------------------------
 % STEP 12
 %--------------------------------------------------------------------------
-\item[Step 12.] {\em Compute a new $\dt.$}
+\item[Step 12] {\em Compute a new $\dt.$}
 
 Compute $\dt$ for the next time step with a similar procedure described in
 \S 3.4 of Paper III. However, we are using $\Ub^{n+1}$
@@ -888,22 +894,33 @@ $i^\mathrm{th}$ coordinate direction.
 
 \noindent This completes one step of the algorithm.
 
-\section{Implementation and Performance}
-show strong and/or weak scaling performance (with OpenMP threads/tiling), comparisons with old MAESTRO?
-
 \section{Test Problems}
-white dwarf convection runs at varying resolution
+
+\subsection{Convergence Test}
+3D reacting bubble rise; to demonstrate 2nd-order convergence of the new temporal algorithm.
+
+\subsection{Scaling}
+Scaling with OpenMP
+
+\subsection{Performance Compared to Original MAESTRO}
+Compare to original MAESTRO
+
+\subsection{White Dwarf Convection}
+white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregular base state)
 
 \section{Conclusions and Future Work}
 
-future stuff
 science: rotation, solar physics, MHD
-algorithm: SDC, high-order
-implementation: GPUs
+
+algorithm: SDC \cite{dutt2000spectral}, high-order, multi-implicit \cite{bourlioux2003high}.
+Consider SDC ideas used for terrestrial combustion \cite{pazner2016high,nonaka2018conservative}
+
+implementation: GPUs.  Forward cite next CASTRO paper with GPU strategy.
 
 \acknowledgements
 
-This work was supported by 
+The work at LBNL was supported by the U.S. Department of Energy's Scientific Discovery Through Advanced Computing (SciDAC) program under contract No. DE-AC02-05CH11231.
+This research used resources of the National Energy Research Scientific Computing Center (NERSC), a U.S. Department of Energy Office of Science User Facility operated under Contract No. DE-AC02-05CH11231.
 
 \bibliographystyle{aasjournal.bst}
 \bibliography{references}
