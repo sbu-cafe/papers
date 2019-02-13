@@ -101,11 +101,12 @@ def clean_and_save(outfile):
     plt.axis("off")
 
     f = plt.gcf()
-    f.set_size_inches(7.0, 5.25)
+    f.set_size_inches(6.5, 5.25)
 
-    ax.set_xlim(-0.25, 2.75)
-    ax.set_ylim(-0.25, 1.75)
-
+    #ax.set_xlim(-0.25, 2.75)
+    #ax.set_ylim(-0.25, 1.75)
+    ax.set_aspect("equal")
+    plt.margins(0)
     plt.savefig(outfile, bbox_inches="tight")
 
 
@@ -121,7 +122,7 @@ for lo, hi, ncell in box_info:
     boxes[-1].draw()
 
 boxes[-1].label(0, 0, 3, -2, r"$\mathtt{lo(:)}$")
-boxes[-1].label(boxes[-1].nx-1, boxes[-1].ny-1, 1, 2, r"$\mathtt{hi(:)}$")
+boxes[-1].label(boxes[-1].nx-1, boxes[-1].ny-1, -1, 2, r"$\mathtt{hi(:)}$")
 
 #plt.xlim(-0.25,3.25)
 #plt.ylim(-0.25,2.25)
@@ -153,7 +154,7 @@ for bx in boxes:
 
 boxes[-1].gpu_color()
 
-boxes[-1].label(0, 0, 3, -2, r"$\mathtt{lo}_\mathrm{gpu}\mathtt{(:)} = \mathtt{hi}_\mathrm{gpu}\mathtt{(:)}$")
+boxes[-1].label(0, 0, 2., -2, r"$\mathtt{lo}_\mathrm{gpu}\mathtt{(:)} = \mathtt{hi}_\mathrm{gpu}\mathtt{(:)}$")
 
 clean_and_save("gpu_3.pdf")
 
