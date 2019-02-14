@@ -425,7 +425,10 @@ We could choose to no longer advect the base states for both predictor and corre
 %
 
 \subsection{Main Algorithm Description}\label{Sec:Main Algorithm Description}
-New algorithm... overframework is similar but now more splitting $w_0$ dynamics... eliminates the need to explicitly evolve the base state and compute the average expansion... instead we can just use a predictor-corrector treatment of the base state while retaining the same formal order of accuracy...
+Our new temporal integration scheme is much simpler than the scheme from Paper V.
+The primary reason is that we no longer split the velocity field into a perturbational and base state components.  
+Previously, we used the base state velocity to predict the expansion of the base state.  
+In this new scheme we use a simpler, predictor-corrector approach to the base state density and pressure that no longer requires the complex algorithm from Paper V, yet still retains the same overall second-order accuracy.
 
 We now describe the new temporal integration scheme, which has been greatly simplified
 from Paper V without formal loss of order of accuracy.
@@ -449,8 +452,8 @@ Similarly, $\gammaonebar$ and $\beta_0$ are computed using $\rho,p_0$, and $X_k$
 The overal flow of the algorithm is a second-order Strang Splitting approach for the splitting of the reaction and advection steps.  Furthermore, we use a predictor-corrector approach within this splitting scheme to achieve second-order accurate treatment of the constraing equation.  To summarize:
 \begin{itemize}
 \item In {\bf Step 1} we react the thermodynamic variables over $\Delta t/2$.
-\item In {\bf Steps 2-4} we advect the thermodynamic variables over $\Delta t$.
-\item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$.
+\item In {\bf Steps 2-4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, project the velocities so they satisfy the divergence constraint, and then advect the thermodynamic variables.
+\item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$.\footnote{Note that we could skip to the velocity advance in {\bf Steps 10-11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}
 \item In {\bf Steps 6-8} we redo the advection in {\bf Steps 2-4} but are able to use the trapezoidal rule to time-center certain quantities such as $S$, $\rho_0$, etc.
 \item In {\bf Step 9} we redo the reactions from {\bf Step 5} using the improved results for the corrector advection step.
 \item In {\bf Steps 10-11} we update the velocity.
@@ -463,45 +466,13 @@ Each time step satisfies the standard advective CFL condition,
 where for our simulations we typically use $\sigma^{\rm CFL}\sim 0.5$.
 There are additional constraints on the time involving the buoyancy force (commonly used when the velocity is approximately zero at the start of some simulations) and the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
 
+At the beginning of each simulation, we define $(\Ub,\rho X_k,\rho h)$...
 
-\MarginPar{talk about cutoff densities}
-
-\sout{
-We now describe the proposed algorithm, making frequent use of the
-shorthand notations mentioned in Paper V, Appendix A3.  In summary, in the predictor step ({\bf
-  Steps 2-5}) we use an estimate of the expansion term, $S$, to
-compute a preliminary solution at the new time level, denoted with an
-``$n+1,\star$'' superscript.  In the corrector step ({\bf Steps 6-9}),
-we use the results from the predictor step to compute a more accurate
-expansion term, and compute the final solution at the new time level,
-denoted with an ``$n+1$'' superscript.  We use Strang-splitting to
-achieve second-order accuracy in time.}
+\MarginPar{mention cutoff densities}
 
 \MarginPar{AJN: eliminated references to volume discrepancy for now; we'd only use it for planar at the moment, don't want to open up that can of worms here}
 
 \begin{description}
-
-%--------------------------------------------------------------------------
-% STEP 0
-%--------------------------------------------------------------------------
-
-\item[Step 0] {\em Initialization}
-\sout{
-The initialization step only occurs at the beginning of the simulation.
-The initialization step computes initial values for $\pi^{-\myhalf}$, , $\eta_{\rho}^{-\myhalf}$, 
-$\psi^{-\myhalf}$, $S^0$, and $S^1$ for use in time stepping routine.  
-We pass through {\bf Step 1} -- {\bf Step 11}, but only keep these values.
-The initial values for $\Ub^0, \rho^0, (\rho h)^0, X_k^0, T^0,
-\rho_0^0, p_0^0$, and $\gammaonebar^0$ are specified from the problem-dependent
-initial conditions.  The initial time step, $\dt^0$, is computed as in
-Paper III.
-}
-
-
-
-
-
-
 
 %--------------------------------------------------------------------------
 % STEP 1
@@ -858,7 +829,26 @@ and gradient operators.  Details of the approximate projection are given in Pape
 
 \end{description}
 
-\noindent This completes one step of the algorithm.
+This completes one step of the algorithm.
+
+To initialize the simulation
+
+
+
+%--------------------------------------------------------------------------
+% STEP 0
+%--------------------------------------------------------------------------
+{\em Initialization}
+\sout{
+The initialization step only occurs at the beginning of the simulation.
+The initialization step computes initial values for $\pi^{-\myhalf}$, , $\eta_{\rho}^{-\myhalf}$, 
+$\psi^{-\myhalf}$, $S^0$, and $S^1$ for use in time stepping routine.  
+We pass through {\bf Step 1} -- {\bf Step 11}, but only keep these values.
+The initial values for $\Ub^0, \rho^0, (\rho h)^0, X_k^0, T^0,
+\rho_0^0, p_0^0$, and $\gammaonebar^0$ are specified from the problem-dependent
+initial conditions.  The initial time step, $\dt^0$, is computed as in
+Paper III.
+}
 
 \section{Test Problems}
 
