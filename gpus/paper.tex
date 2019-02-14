@@ -74,9 +74,37 @@
 \shorttitle{}
 \shortauthors{}
 
-\author{Castro developers / M.~P.~Katz et al.}
-\affil{}
-\email{}
+
+\correspondingauthor{Michael Zingale}
+
+\collaboration{the Castro Development Team}
+
+\author[0000-0003-2103-312X]{Ann S. Almgren}
+\affil{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory}
+
+\author[0000-0002-3185-9809]{Maria Barrios Sazo}
+\affil{Department of Physics and Astronomy, Stony Brook University}
+
+\author{Kevin Gott}
+\affil{National Energy Research Scientific Computing Center}
+
+\author[0000-0002-1530-781X]{Alice Harpole}
+\affil{Department of Physics and Astronomy, Stony Brook University}
+
+\author[0000-0003-0439-4556]{Max P.~Katz}
+\affil{NVIDIA Corporation}
+
+\author[0000-0003-2300-5165]{Donald Willcox}
+\affil{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory}
+
+\author[0000-0001-8092-1974]{Weiqun Zhang}
+\affil{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory}
+
+\author[0000-0001-8401-030X]{Michael Zingale}
+\affil{Department of Physics and Astronomy, Stony Brook University}
+\email{michael.zingale@stonybrook.edu}
+
+
 
 
 %======================================================================
@@ -95,13 +123,17 @@ supercomputers.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-is a compressible (radiation-)hydrodynamics simulation code built on
+\castro\ is a compressible (radiation-)hydrodynamics simulation code built on
 the AMReX adaptive mesh refinement framework \citep{castro,castro2,castro3}.  It 
 includes full self-gravity using multigrid methods with isolated boundaries
-\cite{katz:2016}, works with general equations of state \citep{zingalekatz}
-and arbitrary nuclear reaction networks.
+\citep{katz:2016}, works with general equations of state \citep{zingalekatz}
+and arbitrary nuclear reaction networks.  Castro has been used for science investigations of
+...
 
-Existing GPU-enabled astrophysical hydro codes include
+The original computing architectures targeted were
+
+With GPU accelerators becoming increasingly dominant, algorithms need to be ported.
+There are a number of descriptions of GPU-enabled astrophysical hydro codes, including
 \citet{gamer,cholla,fargo3d,pekkila:2017,caplan:2018,racz:2018,liska:2018,goz:2018}
 
 GPU-enabled integration has been explored by \citep{brock:2015}.
@@ -110,19 +142,40 @@ Discuss frameworks vs.\ doing it outselves
 
 Discuss OpenMP, OpenACC, and CUDA.
 
+In this paper, we describe our approach to performance portability.
+Our goal is to have the same computational kernels run efficiently on
+CPUs (including manycore processors) and GPUs.  We describe the work
+we needed to do to enable this portability and show performance
+metrics for a reacting flow problem in astrophysics.
+
+
+\section{The Castro hydrodynamics code}
+
+Disucss changes since last paper
+
+\castro\ is developed using a fully open-development model, with the
+code managed in git and hosted on
+github\footnote{\url{https://github.com/amrex-astro/Castro/}}.
+Contributions from the community are welcomed via github issues and
+pull requests.  For the science projects that the core development
+team are working on, all problem setup, input files, auxillary data,
+and anything else needed for the science is stored in the main github
+repo, allowing for the community to contribute to the science and
+reproduce results as they are published.
+
 \section{Performance portable compute kernels}
 
 Describe mfiter structure
 
 Describe MPI, MPI+OpenMP w/ tiling, MPI + CUDA
 
-\begin{figure}
+\begin{figure*}
 \centering
-\includegraphics[height=0.25\textheight]{gpu_1} \\
-\includegraphics[height=0.25\textheight]{gpu_2} \\
-\includegraphics[height=0.25\textheight]{gpu_3}
+\includegraphics[width=0.3\textwidth]{gpu_1} 
+\includegraphics[width=0.3\textwidth]{gpu_2} 
+\includegraphics[width=0.3\textwidth]{gpu_3}
 \caption{\label{fig:loops} caption}
-\end{figure}
+\end{figure*}
 
 \subsection{Summary of changes required}
 
