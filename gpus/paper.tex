@@ -138,9 +138,6 @@ There are a number of descriptions of GPU-enabled astrophysical hydro codes, inc
 
 GPU-enabled integration has been explored by \citep{brock:2015}.
 
-Discuss frameworks vs.\ doing it outselves
-
-Discuss OpenMP, OpenACC, and CUDA.
 
 In this paper, we describe our approach to performance portability.
 Our goal is to have the same computational kernels run efficiently on
@@ -164,6 +161,30 @@ repo, allowing for the community to contribute to the science and
 reproduce results as they are published.
 
 \section{Performance portable compute kernels}
+
+
+\subsection{Offloading to GPUs}
+
+CUDA Fortran is not as well supported as CUDA C/C++.  In particular,
+CUDA Fortran does not automatically create both the host and device
+kernel, necessitating one to do this themselves.  Usually this means
+having two copies of a source routine, one marked up with device
+attributes.  Keeping them in sync essentially requires that this
+action be scripted, but in our experience, this scripting is fragile
+because of the need to deal with Fortran syntax, preprocessor
+directives, ...  Thus the pure CUDA route for the compute kernels makes the most sense
+with C/C++ kernels, and not Fortran kernels.
+
+OpenACC
+
+
+OpenMP
+
+Discuss frameworks vs.\ doing it outselves
+
+
+
+\subsection{Example of advancing a grid}
 
 Describe mfiter structure
 
@@ -206,7 +227,9 @@ This problem uses constant gravity, so all of the physics can be done on the GPU
 Future work: gravity on GPUs (multigrid or multipole), port of \maestro\ following
 the same ideas.
 
-\software{MPICH, GCC, Castro, python, matplotlib}
+\software{MPICH, GCC, Castro, AMReX, python, matplotlib}
+
+\facilities{OLCF, NERSC}
 
 \acknowledgements \castro\ is freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The work at Stony Brook
@@ -217,7 +240,7 @@ the Innovative and Novel Computational Impact on Theory and Experiment
 Leadership Computing Facility at the Oak Ridge National Laboratory,
 which is supported by the Office of Science of the U.S. Department of
 Energy under Contract No. DE-AC05-00OR22725.  We thank NVIDIA Corporation
-for the donation of a Titan X Pascal used in this research.
+for the donation of a Titan X Pascal and Titan V used in this research.
 
 
 
