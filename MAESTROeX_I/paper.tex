@@ -449,7 +449,10 @@ T = T(\rho,p_0,X_k),
 \end{equation}
 and ($\gammaonebar,\beta_0)$ are computed from $(\rho,p_0,X_k)$ (see Appendix A of Paper I and Appendix C of Paper III for details).
 
-The overal flow of the algorithm is a second-order Strang Splitting approach for the splitting of the reaction and advection steps.  Furthermore, we use a predictor-corrector approach within this splitting scheme to achieve second-order accurate treatment of the constraing equation.  To summarize:
+The overall flow of the algorithm is a second-order Strang splitting approach for the coupling of the reactions and advection of the thermodynamic variables.  
+We use a predictor-corrector approach within the Strang splitting scheme to achieve second-order accuracy in time.
+We integrate the velocity using a standard second-order projection method to enforce the divergence constraint.
+To summarize:
 \begin{itemize}
 \item In {\bf Step 1} we react the thermodynamic variables over $\Delta t/2$.
 \item In {\bf Steps 2-4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, project the velocities so they satisfy the divergence constraint, and then advect the thermodynamic variables.
@@ -494,7 +497,7 @@ divergence constraint.  Following \citet{Bell:2004}, we extrapolate
 to the half-time using $S$ at the previous and current
 time steps,
 \begin{equation}
-S^{\nph,\star} = S^n + \frac{\dt^n}{2} \frac{S^n - S^{n-1}}{\dt^{n-1}}.
+S^{\nph,\star} = S^n + \frac{\dt^n}{2} \left(\frac{S^n - S^{n-1}}{\dt^{n-1}}\right).
 \end{equation}
 Note that in the first time step we average $S^0$ and $S^1$ from the
 initialization step.
