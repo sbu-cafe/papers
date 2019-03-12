@@ -517,10 +517,13 @@ edges, $\uadvone$.}
 
 The construction of face-centered time-centered states used to discretize the
 advection terms for velocity, species, and enthalpy, are performed using
-standard multidimensional corner transport upwind 
-\cite{colella1990multidimensional,saltzman1994unsplit} with piecewise-parabolic
-one-dimensional tracing \cite{colella1984piecewise}.  In this step,
-using equation (\ref{eq:momentum}), 
+a standard multidimensional corner transport upwind approach
+\citep{colella1990multidimensional,saltzman1994unsplit} with piecewise-parabolic
+one-dimensional tracing \citep{colella1984piecewise}.  The full details of this
+Godunov advection approach for all steps in this algorithm are described 
+in Appendix A of \cite{XRB_III}.
+
+In this step, using equation (\ref{eq:momentum}), 
 we compute time-centered edge velocities, $\uadvonedag$, using
 $\Ub^n$.  The $\dagger$ superscript refers to the
 fact that the predicted velocity field does not satisfy the divergence
@@ -553,8 +556,7 @@ accounted for in {\bf React State}.  The update consists of two steps:
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
 
 \item Compute the time-centered species edge states, $(\rho X_k)^{\nph,\pred}$,
-  for the conservative update of $(\rho X_k)^{(1)}$ using
-  $\Ub = \uadvone$ and $\rho_0^n$.
+  for the conservative update of $(\rho X_k)^{(1)}$ using a Godunov approach \citep{XRB_III}.
 \MarginPar{We may not need $\rho_0$ if we predict $\rho X$ or $\rho$ and $X$.  AJN: If we end up keeping prediction of $\rho'$ and $X$, and $(\rho h)'$ we need to summarize this, particularly since $\rho_0$ and $(\rho h)_0$ treatment differs from previous papers.}
 
 \item Evolve $(\rho X_k)^{(1)} \rightarrow (\rho X_k)^{(2),\star}$ using
@@ -594,7 +596,7 @@ The update consists of two steps:
 
 \item Compute the time-centered enthalpy edge state, $(\rho h)^{\nph,\pred},$
   for the conservative update of $(\rho h)^{(1)}$
-  using $\Ub = \uadvone$ and $(\rho h)^n$,
+  using using a Godunov approach \citep{XRB_III}.
 
 \item Evolve $(\rho h)^{(1)} \rightarrow (\rho h)^{(2),\star}$.
 \begin{description}
@@ -655,7 +657,7 @@ S^{n+1,\star} =  \left(-\sigma  \sum_k  \xi_k  \omegadot_k  + \frac{1}{\rho p_\r
 %--------------------------------------------------------------------------
 \item[Step 7] {\em Construct the time-centered advective velocity on edges, $\uadvtwo$.}
 
-The procedure to construct $\uadvtwodag$ is identical to the procedure
+The procedure to construct $\uadvtwodag$ is identical to the Godunov procedure
 for computing $\uadvonedag$ in {\bf Step 3}, but uses
 the updated value $S^{\nph}$ rather than $S^{\nph,\star}$.
 We note that $\uadvtwo$ satisfies the divergence constraint
@@ -688,8 +690,7 @@ p_0^{\nph} = \frac{ p_0^n + p_0^{n+1,\star} }{2},
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
 
 \item Compute the time-centered species edge states, $(\rho X_k)^{\nph,\pred}$,
-  for the conservative update of $(\rho X_k)^{(1)}$ using $\Ub = \uadvtwo$ and
-  $\rho_0^n$.
+  for the conservative update of $(\rho X_k)^{(1)}$ usingusing a Godunov approach \citep{XRB_III}.
 
 \item Evolve $(\rho X_k)^{(1)} \rightarrow (\rho X_k)^{(2)}$ using
 \begin{equation}
@@ -715,7 +716,7 @@ p_0^{\nph} = \frac{ p_0^n + p_0^{n+1,\star} }{2},
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
 
 \item Compute the time-centered enthalpy edge state, $(\rho h)^{\nph,\pred},$
-  for the conservative update of $(\rho h)^{(1)}$.
+  for the conservative update of $(\rho h)^{(1)}$ using a Godunov approach \citep{XRB_III}..
 
 \item Evolve $(\rho h)^{(1)} \rightarrow (\rho h)^{(2)}$.
 \begin{description}
@@ -774,8 +775,8 @@ Call {\bf React State}$[(\rho X_k)^{(2)},(\rho h)^{(2)}, p_0^{n+1}] \rightarrow 
 %--------------------------------------------------------------------------
 \item[Step 11] {\em Update the velocity}.
 
-First, we compute the time-centered edge velocities, $\Ub^{\nph,\pred}$.
-Then, we define
+First, we compute the time-centered edge velocities, $\Ub^{\nph,\pred}$
+using a Godunov approach \citep{XRB_III}. Then, we define
 \begin{equation}
 \rho^\nph = \frac{\rho^n + \rho^{n+1}}{2}, \qquad \rho_0^\nph = \frac{\rho_0^n + \rho_0^{n+1}}{2}.
 \end{equation}
