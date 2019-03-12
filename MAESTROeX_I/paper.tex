@@ -515,7 +515,12 @@ initialization step.
 \item[Step 3] {\em Construct the provisional time-centered advective velocity on
 edges, $\uadvone$.}
 
-Using equation (\ref{eq:momentum}), 
+The construction of face-centered time-centered states used to discretize the
+advection terms for velocity, species, and enthalpy, are performed using
+standard multidimensional corner transport upwind 
+\cite{colella1990multidimensional,saltzman1994unsplit} with piecewise-parabolic
+one-dimensional tracing \cite{colella1984piecewise}.  In this step,
+using equation (\ref{eq:momentum}), 
 we compute time-centered edge velocities, $\uadvonedag$, using
 $\Ub^n$.  The $\dagger$ superscript refers to the
 fact that the predicted velocity field does not satisfy the divergence
@@ -739,24 +744,6 @@ Then, for each Cartesian cell where $\rho^{(2)} < \rho_\mathrm{cutoff}$, we reco
 (\rho h)^{(2)} = \rho^{(2)}h\left(\rho^{(2)},p_0^{n+1},X_k^{(2)}\right).
 \end{equation}
 
-\item Define a radial cell-centered $\etarho^{\nph}$.
-
-\begin{description}
-\item For planar geometry, $\etarho = \overline{\rho'(\Ub\cdot\eb_r)}$,
-\begin{equation}
- \etarho^{\nph} =  {\rm {\bf Avg}} \sum_k \left[ \left(\uadvtwo \cdot \eb_r \right) (\rho X_k)^{\nph,\pred} \right]
-\end{equation}
-\item For spherical geometry, first construct 
-$\etarho^{{\rm cart},\nph} = [\rho'(\Ub\cdot\eb_r)]^{\nph}$ on Cartesian cell centers using:
-\begin{equation}
-\etarho^{{\rm cart},\nph} = \left[\left(\frac{\rho^{(1)}+\rho^{(2)}}{2}\right)-\left(\frac{\rho_0^n+\rho_0^{n+1}}{2}\right)\right] \cdot \left( \uadvtwo \cdot \eb_r \right).
-\end{equation}
-Then,
-\begin{equation}
-\etarho^{\nph,\star} = {\rm {\bf Avg}}\left(\etarho^{{\rm cart},\nph}\right).
-\end{equation}
-\end{description}
-
 \end{enumerate}
 
 %--------------------------------------------------------------------------
@@ -838,28 +825,6 @@ initial conditions.  The initial time step, $\dt^0$, is computed as in
 Paper III.
 }
 
-\subsection{Computing $w_0$ For Spherical Problems}
-Recall that we want to solve
-\begin{equation}
-\frac{1}{r^2}\frac{\partial}{\partial r}(r^2 w_0) = \Sbar - \frac{1}{\gammaonebar p_0}\left(\frac{\partial p_0}{\partial t} + w_0\frac{\partial p_0}{\partial r}\right)
-\end{equation}
-First, note that $\partial p_0/\partial r = -\rho_0 g$.
-The key observation here is that we can compute $\partial p_0/\partial t$ directly instead of making complicated substitutions involving $\eta_\rho$ to eliminate it.
-Let's discretize this as follows:
-\begin{equation}
-\frac{1}{r_j^2}\left[\left(r^2 w_0\right)_{j+\myhalf} - \left(r^2 w_0\right)_{j-\myhalf}\right] = 
-\Sbar_j - \frac{1}{\left(\gammaonebar p_0\right)_j}\left[\left(\frac{\partial p_0}{\partial t}\right)_j - \left(\frac{w_{0,j-\myhalf}+w_{0,j+\myhalf}}{2}\right)(\rho_0 g)_j\right]
-\end{equation}
-Rearranging this to solve for $w_{0,j+\myhalf}$ gives us an explicit update:
-\begin{equation}
-\left[\frac{r_{j+\myhalf}^2}{r_j^2} - \frac{(\rho_0 g)_j}{2\left(\gammaonebar p_0\right)_j}\right] w_{0,j+\myhalf} =
-\left[\frac{r_{j-\myhalf}^2}{r_j^2} + \frac{(\rho_0 g)_j}{2\left(\gammaonebar p_0\right)_j}\right] w_{0,j-\myhalf}
-+ \Sbar_j - \frac{1}{\left(\gammaonebar p_0\right)_j}\left(\frac{\partial p_0}{\partial t}\right)_j
-\end{equation}
-As before, once $\rho_0$ falls below $\rho_{\rm cutoff}$, we hold $r^2 w_0$ constant.\\ \\
-The interface to the routine in the algorithm description is
-{\bf Make $\mathbf{w_0}$}$[\rho_0,p_0,\partial p_0/\partial t,\gammaonebar,\Sbar] \rightarrow [w_0]$
-
 \section{Test Problems}
 
 \subsection{Convergence Test}
@@ -882,6 +847,52 @@ algorithm: SDC \cite{dutt2000spectral}, high-order, multi-implicit \cite{bourlio
 Consider SDC ideas used for terrestrial combustion \cite{pazner2016high,nonaka2018conservative}
 
 implementation: GPUs.  Forward cite next CASTRO paper with GPU strategy.
+
+\appendix
+\section{Projection Details}
+
+
+After {\bf Step 8D}, we define a radial cell-centered $\etarho^{\nph}$.
+
+\begin{description}
+\item For planar geometry, $\etarho = \overline{\rho'(\Ub\cdot\eb_r)}$,
+\begin{equation}
+ \etarho^{\nph} =  {\rm {\bf Avg}} \sum_k \left[ \left(\uadvtwo \cdot \eb_r \right) (\rho X_k)^{\nph,\pred} \right]
+\end{equation}
+\item For spherical geometry, first construct 
+$\etarho^{{\rm cart},\nph} = [\rho'(\Ub\cdot\eb_r)]^{\nph}$ on Cartesian cell centers using:
+\begin{equation}
+\etarho^{{\rm cart},\nph} = \left[\left(\frac{\rho^{(1)}+\rho^{(2)}}{2}\right)-\left(\frac{\rho_0^n+\rho_0^{n+1}}{2}\right)\right] \cdot \left( \uadvtwo \cdot \eb_r \right).
+\end{equation}
+Then,
+\begin{equation}
+\etarho^{\nph,\star} = {\rm {\bf Avg}}\left(\etarho^{{\rm cart},\nph}\right).
+\end{equation}
+\end{description}
+
+\section{Old Notes}
+
+\section{Computing $w_0$ For Spherical Problems}
+Recall that we want to solve
+\begin{equation}
+\frac{1}{r^2}\frac{\partial}{\partial r}(r^2 w_0) = \Sbar - \frac{1}{\gammaonebar p_0}\left(\frac{\partial p_0}{\partial t} + w_0\frac{\partial p_0}{\partial r}\right)
+\end{equation}
+First, note that $\partial p_0/\partial r = -\rho_0 g$.
+The key observation here is that we can compute $\partial p_0/\partial t$ directly instead of making complicated substitutions involving $\eta_\rho$ to eliminate it.
+Let's discretize this as follows:
+\begin{equation}
+\frac{1}{r_j^2}\left[\left(r^2 w_0\right)_{j+\myhalf} - \left(r^2 w_0\right)_{j-\myhalf}\right] = 
+\Sbar_j - \frac{1}{\left(\gammaonebar p_0\right)_j}\left[\left(\frac{\partial p_0}{\partial t}\right)_j - \left(\frac{w_{0,j-\myhalf}+w_{0,j+\myhalf}}{2}\right)(\rho_0 g)_j\right]
+\end{equation}
+Rearranging this to solve for $w_{0,j+\myhalf}$ gives us an explicit update:
+\begin{equation}
+\left[\frac{r_{j+\myhalf}^2}{r_j^2} - \frac{(\rho_0 g)_j}{2\left(\gammaonebar p_0\right)_j}\right] w_{0,j+\myhalf} =
+\left[\frac{r_{j-\myhalf}^2}{r_j^2} + \frac{(\rho_0 g)_j}{2\left(\gammaonebar p_0\right)_j}\right] w_{0,j-\myhalf}
++ \Sbar_j - \frac{1}{\left(\gammaonebar p_0\right)_j}\left(\frac{\partial p_0}{\partial t}\right)_j
+\end{equation}
+As before, once $\rho_0$ falls below $\rho_{\rm cutoff}$, we hold $r^2 w_0$ constant.\\ \\
+The interface to the routine in the algorithm description is
+{\bf Make $\mathbf{w_0}$}$[\rho_0,p_0,\partial p_0/\partial t,\gammaonebar,\Sbar] \rightarrow [w_0]$
 
 \acknowledgements
 
