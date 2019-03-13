@@ -542,7 +542,7 @@ constraint.  We then construct $\uadvone$ from $\uadvonedag$
 using a MAC projection.
 We note that $\uadvone$ satisfies the divergence constraint
 \begin{equation}
-\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left(S^{\nph,\star} - \frac{1}{\gammaonebar^np_0^n}\frac{\partial p_0}{\partial t} \right).
+\nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left[S^{\nph,\star} - \frac{1}{\gammaonebar^np_0^n}\left(\frac{\partial p_0}{\partial t}\right)^{n-\myhalf} \right].\label{eq:div1}
 \end{equation}
 In practice we solve for.
 
@@ -674,7 +674,7 @@ the updated value $S^{\nph}$ rather than $S^{\nph,\star}$.
 We note that $\uadvtwo$ satisfies the divergence constraint
 \begin{equation}
 \nabla \cdot \left(\beta_0^{\nph} \uadvtwo\right) =
-\beta_0^{\nph} \left(S^{\nph} - \frac{1}{\gammaonebar^{n+\myhalf}p_0^{n+\myhalf}}\frac{\partial p_0}{\partial t}\right),
+\beta_0^{\nph} \left[S^{\nph} - \frac{1}{\gammaonebar^{n+\myhalf}p_0^{n+\myhalf}}\left(\frac{\partial p_0}{\partial t}\right)^{n+\myhalf}\right],\label{eq:div2}
 \end{equation}
 where
 \begin{equation}
@@ -803,9 +803,9 @@ constraint.
 
 Finally, we use an approximate nodal projection to define $\Ub^{n+1}$
 from $\Ub^{n+1,\dagger},$  such that $\Ub^{n+1}$ approximately
-satisfies
+satisfies the divergence constraint,
 \begin{equation}
-\nabla \cdot \left(\beta_0^{n+1} \Ub^{n+1} \right) = \beta_0^{n+1} \left( S^{n+1} - \frac{1}{\gammaonebar^{n+1}p_0^{n+1}}\frac{\partial p_0}{\partial t} \right).
+\nabla \cdot \left(\beta_0^{n+1} \Ub^{n+1} \right) = \beta_0^{n+1} \left[ S^{n+1} - \frac{1}{\gammaonebar^{n+1}p_0^{n+1}}\left(\frac{\partial p_0}{\partial t}\right)^{n+\myhalf}\right].\label{eq:div3}
 \end{equation}
 As part of the projection we also define the new-time perturbational pressure,
 $\pi^\nph.$  This projection necessarily differs from the MAC projection used in
@@ -861,25 +861,23 @@ implementation: GPUs.  Forward cite next CASTRO paper with GPU strategy.
 
 \appendix
 \section{Projection Details}
+To enforce the divergence constraint in {\bf Step 3, 7}, and {\bf 11}, we use a projection method analgous to the methods originally developed for incompressible flow.
 
+Based on our past experience in the MAESTRO project, we have found it useful to split the velocity dynamics into a perturbational and base state velocity,
+\begin{equation}
+\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
+\end{equation}
+solve for each term separately, and immediately combine them to find a full velocity that satisfies the constraint.  We take that approach here, primarily because it allows us to enforce a boundary condition on $w_0$ at the edge of the star (i.e., the cutoff density location where we hold density constant).  Namely, to enforce that $r^2 w_0$ remain constant is difficult to do when solving for the full velocity.  So in practice, we solve the constraint over the lateral average,
+\begin{equation}
+\nabla\cdot\left(\beta_0\Ubt\right) = \beta_0(S-\overline{S})
+\end{equation}
+and sepratately solve for $w_0$ using 
+\begin{equation}
+\nabla\cdot(\beta_0w_0\eb_r) = \beta_0\left(\overline{S} - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).
+\end{equation}
+To find $w_0$ we integrate in 1D using the procedure in Appendix B of \cite{MAESTRO_V}.
 
-After {\bf Step 8D}, we define a radial cell-centered $\etarho^{\nph}$.
-
-\begin{description}
-\item For planar geometry, $\etarho = \overline{\rho'(\Ub\cdot\eb_r)}$,
-\begin{equation}
- \etarho^{\nph} =  {\rm {\bf Avg}} \sum_k \left[ \left(\uadvtwo \cdot \eb_r \right) (\rho X_k)^{\nph,\pred} \right]
-\end{equation}
-\item For spherical geometry, first construct 
-$\etarho^{{\rm cart},\nph} = [\rho'(\Ub\cdot\eb_r)]^{\nph}$ on Cartesian cell centers using:
-\begin{equation}
-\etarho^{{\rm cart},\nph} = \left[\left(\frac{\rho^{(1)}+\rho^{(2)}}{2}\right)-\left(\frac{\rho_0^n+\rho_0^{n+1}}{2}\right)\right] \cdot \left( \uadvtwo \cdot \eb_r \right).
-\end{equation}
-Then,
-\begin{equation}
-\etarho^{\nph,\star} = {\rm {\bf Avg}}\left(\etarho^{{\rm cart},\nph}\right).
-\end{equation}
-\end{description}
+Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$.  After evolving the species, we compute this term in the same way as reported in \cite{MAESTRO_V} for use in computing $w_0$.
 
 \section{Old Notes}
 
@@ -904,6 +902,24 @@ Rearranging this to solve for $w_{0,j+\myhalf}$ gives us an explicit update:
 As before, once $\rho_0$ falls below $\rho_{\rm cutoff}$, we hold $r^2 w_0$ constant.\\ \\
 The interface to the routine in the algorithm description is
 {\bf Make $\mathbf{w_0}$}$[\rho_0,p_0,\partial p_0/\partial t,\gammaonebar,\Sbar] \rightarrow [w_0]$
+
+After {\bf Step 8D}, we define a radial cell-centered $\etarho^{\nph}$.
+
+\begin{description}
+\item For planar geometry, $\etarho = \overline{\rho'(\Ub\cdot\eb_r)}$,
+\begin{equation}
+ \etarho^{\nph} =  {\rm {\bf Avg}} \sum_k \left[ \left(\uadvtwo \cdot \eb_r \right) (\rho X_k)^{\nph,\pred} \right]
+\end{equation}
+\item For spherical geometry, first construct 
+$\etarho^{{\rm cart},\nph} = [\rho'(\Ub\cdot\eb_r)]^{\nph}$ on Cartesian cell centers using:
+\begin{equation}
+\etarho^{{\rm cart},\nph} = \left[\left(\frac{\rho^{(1)}+\rho^{(2)}}{2}\right)-\left(\frac{\rho_0^n+\rho_0^{n+1}}{2}\right)\right] \cdot \left( \uadvtwo \cdot \eb_r \right).
+\end{equation}
+Then,
+\begin{equation}
+\etarho^{\nph,\star} = {\rm {\bf Avg}}\left(\etarho^{{\rm cart},\nph}\right).
+\end{equation}
+\end{description}
 
 \acknowledgements
 
