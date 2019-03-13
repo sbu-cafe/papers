@@ -404,14 +404,6 @@ p_T/(\rho c_p p_\rho)$, with $p_T \equiv \left. \partial p / \partial
 T \right|_{\rho, X_k}$ and $c_p \equiv \left.  \partial h / \partial T
 \right|_{p,X_k}$ is the specific heat at constant pressure.
 
-Previously we adopted an approach where we split the velocity into a base state component, $w_0(r,t)$, 
-and a local velocity $\Ubt(\xb,t)$, so that
-\begin{equation}
-\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
-\end{equation}
-We used $w_0$ to provide an estimate of the base state density evolution over a time step.
-In our new simplified approach, we instead use a predictor-corrector approach for evolving the base state.
-
 \section{Numerical Algorithm}
 
 \subsection{Spatial Discretization}
@@ -422,10 +414,16 @@ In our new simplified approach, we instead use a predictor-corrector approach fo
 \subsection{Exact Base State Mapping} \label{sec:exactbasestate}
 
 \subsection{Temporal Integration Scheme}\label{Sec:Temporal Integration Scheme}
-Our new temporal integration scheme is much simpler than the scheme from Paper V.
-The primary reason is that we no longer split the velocity field into a perturbational and base state components.  
-Previously, we used the base state velocity to predict the expansion of the base state.  
+Previously we adopted an approach where we split the velocity into a base state component, $w_0(r,t)$, 
+and a local velocity $\Ubt(\xb,t)$, so that
+\begin{equation}
+\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
+\end{equation}
+We used $w_0$ to provide an estimate of the base state density evolution over a time step.
+
+Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V.
 In this new scheme we use a simpler, predictor-corrector approach to the base state density and pressure that no longer requires the complex algorithm from Paper V, yet still retains the same overall second-order accuracy.
+Also, we now evolve the full-state velocity directly rather than the perturbational velocity, eliminating the need to compute additional forcing terms that arise due to the splitting.
 
 We now describe the new temporal integration scheme, which has been greatly simplified
 from Paper V without formal loss of order of accuracy.
@@ -477,7 +475,9 @@ Each time step satisfies the standard advective CFL condition,
 \Delta t = \sigma^{\rm CFL} \min_i(\Delta x / U_i),
 \end{equation}
 where for our simulations we typically use $\sigma^{\rm CFL}\sim 0.5$.
-There are additional constraints on the time involving the buoyancy force (commonly used when the velocity is approximately zero at the start of some simulations) and the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
+There are additional constraints on the timestep that are typically much less restrictive than the advective CFL including
+the acceleration due to the buoyancy force (commonly used when the velocity is approximately zero at the start of some simulations) 
+and the local magnitude of the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
 
 At the beginning of each simulation, we define $(\Ub,\rho X_k,\rho h)$...
 
