@@ -615,20 +615,21 @@ The update consists of two steps:
 \begin{eqnarray}
 (\rho h)^{(2),\star}
 &=& (\rho h)^{(1)} \nonumber \\
-&&- \dt^n \left\{ \nabla \cdot \left[ \uadvone (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
-&& + \dt^n \left(\frac{p_0^n - p_0^{n-1}}{\dt^{n-1}}\right) \nonumber \\
-&& + \dt^n \left(\uadvone \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n}
+&&- \dt \left\{ \nabla \cdot \left[ \uadvone (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
+&& + \left(p_0^{n+1,*} - p_0^n\right) \nonumber \\
+&& + \dt \left(\uadvone \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n}
 \end{eqnarray}
 
 \item For spherical geometry,
 \begin{eqnarray}
 (\rho h)^{(2),\star}
 &=& (\rho h)^{(1)} \nonumber \\
-&&- \dt^n \left\{ \nabla \cdot \left[ \uadvone (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
-&& + \dt^n \left(\frac{p_0^n - p_0^{n-1}}{\dt^{n-1}}\right) \nonumber \\
-&& + \dt^n \left \{ \nabla \cdot \left (\uadvone p_0^{n} \right ) - p_0^{n} \nabla \cdot \uadvone \right \}
+&&- \dt \left\{ \nabla \cdot \left[ \uadvone (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
+&& + \left(p_0^{n+1,*} - p_0^n\right) \nonumber \\
+&& + \dt \left \{ \nabla \cdot \left (\uadvone p_0^{n+\myhalf} \right ) - p_0^{n+\myhalf} \nabla \cdot \uadvone \right \}
 \end{eqnarray}
 \end{description}
+where we define $p_0^\nph$ as $p_0^\nph = (p_0^n+p_0^{n+1,*})/2$.
 
 \end{enumerate}
 
@@ -681,8 +682,6 @@ where
 \beta_0^{\nph} = \frac{ \beta_0^n +  \beta_0^{n+1,\star} }{2},
 \qquad
 \gammaonebar^{\nph} = \frac{ \gammaonebar^n +  \gammaonebar^{n+1,\star} }{2}.
-\qquad
-p_0^{\nph} = \frac{ p_0^n + p_0^{n+1,\star} }{2},
 \end{equation}
 
 %--------------------------------------------------------------------------
@@ -734,7 +733,7 @@ p_0^{\nph} = \frac{ p_0^n + p_0^{n+1,\star} }{2},
 \begin{eqnarray}
 (\rho h)^{(2)}
 &=& (\rho h)^{(1)} - \dt \left\{ \nabla \cdot \left[ \uadvtwo (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
-&& + \dt \left( \frac{p_0^{n+1} - p_0^n}{\dt} \right)\nonumber \\
+&& + \left( p_0^{n+1} - p_0^n \right)\nonumber \\
 && + \dt \left(\uadvtwo \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^\nph,
 \end{eqnarray}
 
@@ -742,11 +741,11 @@ p_0^{\nph} = \frac{ p_0^n + p_0^{n+1,\star} }{2},
 \begin{eqnarray}
 (\rho h)^{(2)}
 &=& (\rho h)^{(1)} - \dt \left\{ \nabla \cdot \left[ \uadvtwo (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
-&& + \dt \left( \frac{p_0^{n+1} - p_0^n}{\dt} \right)\nonumber \\
+&& + \left(p_0^{n+1} - p_0^n\right)\nonumber \\
 && + \dt \left[ \nabla \cdot \left (\uadvtwo p_0^{\nph} \right ) - p_0^{\nph} \nabla \cdot \uadvtwo \right],
 \end{eqnarray}
 \end{description}
-where $p_0^\nph$ is defined as $p_0^\nph = (p_0^n+p_0^{n+1})/2$.
+where we now define $p_0^\nph$ as $p_0^\nph = (p_0^n+p_0^{n+1})/2$.
 
 \end{enumerate}
 
@@ -879,9 +878,28 @@ To find $w_0$ we integrate in 1D using the procedure in Appendix B of \cite{MAES
 
 Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$.  After evolving the species, we compute this term in the same way as reported in \cite{MAESTRO_V} for use in computing $w_0$.
 
-\section{Old Notes}
+\section{Old Notes (not for inclusion in paper)}
 
-\section{Computing $w_0$ For Spherical Problems}
+\subsection{$\eta_\rho$ Notes}
+After {\bf Step 8D}, we define a radial cell-centered $\etarho^{\nph}$.
+
+\begin{description}
+\item For planar geometry, $\etarho = \overline{\rho'(\Ub\cdot\eb_r)}$,
+\begin{equation}
+ \etarho^{\nph} =  {\rm {\bf Avg}} \sum_k \left[ \left(\uadvtwo \cdot \eb_r \right) (\rho X_k)^{\nph,\pred} \right]
+\end{equation}
+\item For spherical geometry, first construct 
+$\etarho^{{\rm cart},\nph} = [\rho'(\Ub\cdot\eb_r)]^{\nph}$ on Cartesian cell centers using:
+\begin{equation}
+\etarho^{{\rm cart},\nph} = \left[\left(\frac{\rho^{(1)}+\rho^{(2)}}{2}\right)-\left(\frac{\rho_0^n+\rho_0^{n+1}}{2}\right)\right] \cdot \left( \uadvtwo \cdot \eb_r \right).
+\end{equation}
+Then,
+\begin{equation}
+\etarho^{\nph,\star} = {\rm {\bf Avg}}\left(\etarho^{{\rm cart},\nph}\right).
+\end{equation}
+\end{description}
+
+\subsection{Computing $w_0$ For Spherical Problems}
 Recall that we want to solve
 \begin{equation}
 \frac{1}{r^2}\frac{\partial}{\partial r}(r^2 w_0) = \Sbar - \frac{1}{\gammaonebar p_0}\left(\frac{\partial p_0}{\partial t} + w_0\frac{\partial p_0}{\partial r}\right)
@@ -902,24 +920,6 @@ Rearranging this to solve for $w_{0,j+\myhalf}$ gives us an explicit update:
 As before, once $\rho_0$ falls below $\rho_{\rm cutoff}$, we hold $r^2 w_0$ constant.\\ \\
 The interface to the routine in the algorithm description is
 {\bf Make $\mathbf{w_0}$}$[\rho_0,p_0,\partial p_0/\partial t,\gammaonebar,\Sbar] \rightarrow [w_0]$
-
-After {\bf Step 8D}, we define a radial cell-centered $\etarho^{\nph}$.
-
-\begin{description}
-\item For planar geometry, $\etarho = \overline{\rho'(\Ub\cdot\eb_r)}$,
-\begin{equation}
- \etarho^{\nph} =  {\rm {\bf Avg}} \sum_k \left[ \left(\uadvtwo \cdot \eb_r \right) (\rho X_k)^{\nph,\pred} \right]
-\end{equation}
-\item For spherical geometry, first construct 
-$\etarho^{{\rm cart},\nph} = [\rho'(\Ub\cdot\eb_r)]^{\nph}$ on Cartesian cell centers using:
-\begin{equation}
-\etarho^{{\rm cart},\nph} = \left[\left(\frac{\rho^{(1)}+\rho^{(2)}}{2}\right)-\left(\frac{\rho_0^n+\rho_0^{n+1}}{2}\right)\right] \cdot \left( \uadvtwo \cdot \eb_r \right).
-\end{equation}
-Then,
-\begin{equation}
-\etarho^{\nph,\star} = {\rm {\bf Avg}}\left(\etarho^{{\rm cart},\nph}\right).
-\end{equation}
-\end{description}
 
 \acknowledgements
 
