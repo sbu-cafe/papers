@@ -469,6 +469,12 @@ To summarize:
 \item In {\bf Steps 10-11} we update the velocity.
 \end{itemize}
 
+There are a few key numerical modules we use in each time step.
+\begin{itemize}
+\item {\bf Enforce HSE} computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in 1D (see equation (A10) in \cite{MAESTRO_V}).  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
+\item {\bf React State}
+\end{itemize}
+
 Each time step satisfies the standard advective CFL condition,
 \begin{equation}
 \Delta t = \sigma^{\rm CFL} \min_i(\Delta x / U_i),
@@ -570,7 +576,7 @@ accounted for in {\bf React State}.  The update consists of two steps:
 \item Update $\rho_0$ by setting $\rho_0^{n+1,\star} =$ {\bf Avg}$(\rho^{(2),\star})$.
 
 \item Update $p_0$ by calling
-{\bf Enforce HSE}$[p_0^n,\rho_0^{n+1,\star}] \rightarrow [p_0^{n+1,\star}]$.
+{\bf Enforce HSE}$[\rho_0^{n+1,\star}] \rightarrow [p_0^{n+1,\star}]$.
 
 \item Update the enthalpy using a discretized version of equation
 %
@@ -703,7 +709,7 @@ p_0^{\nph} = \frac{ p_0^n + p_0^{n+1,\star} }{2},
 \item Update $\rho_0$ by setting $\rho_0^{n+1} =$ {\bf Avg}$(\rho^{(2)})$.
 
 \item Update $p_0$ by calling
-{\bf Enforce HSE}$[p_0^n,\rho_0^{n+1}] \rightarrow [p_0^{n+1}]$.
+{\bf Enforce HSE}$[\rho_0^{n+1}] \rightarrow [p_0^{n+1}]$.
 
 \item Update the enthalpy.  This step is identical to {\bf Step 4D} except we use
   the updated values $\uadvtwo, \rho_0^{n+1}, (\rho h)_0^{n+1}$, and $p_0^{n+\myhalf}$
