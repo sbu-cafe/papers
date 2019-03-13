@@ -12,12 +12,14 @@ In many of these flows, modeling long-time convective dynamics are of interest, 
 One approach to this problem is to use low Mach number models.
 In a low Mach number approach, sound waves are eliminated from the governing equations while retaining compressibilitiy effects due to, e.g., nuclear energy release, compositional changes, and thermal diffusion.
 The resulting model can be numerically integrated with much larger time steps than a compressible model.
+Low Mach number models have been developed for a variety of contexts including combustion \citep{day2000numerical}, terrestrial atmospheric modeling \citep{duarte2015low}, 
+and elastic solids \citep{abbate2017all}.
 
-Previously, we have developed the low Mach number astrophysical solver, MAESTRO.
-Low Mach number models have been developed for a variety of contexts including combustion \citep{day2000numerical}, atmospherics \citep{duarte2015low}, and elastic solids \citep{abbate2017all}.
+Previously, we developed the low Mach number astrophysical solver, MAESTRO.
 The low Mach number model in MAESTRO is unique in that it is specifically designed for astrophysical settings with significant atmospheric stratification.
 Central to the algorithm is a stratified background (or base) state density and pressure held in hydrostatic equilibrium, and also vary as a function of altitude and time.
-MAESTRO is suitable for for spherical stars, as well as planar simulations of local dynamics.
+MAESTRO is a structured-grid, finite-volume code that utlizes adaptive mesh refinement (AMR) to refine grids locally in space.
+MAESTRO is suitable for for full spherical stars, as well as planar simulations of dynamics within localized regions of a star.
 
 The key numerical developments of the original MAESTRO algorithm are presented in a series of papers which we refer to as Papers I-V:
 \begin{itemize}
@@ -32,10 +34,16 @@ Since then, there have been many scientific investigations using MAESTRO, which 
 \begin{itemize}
 \item The convective phase preceding Chandrasekhar mass models for type Ia supernovae \citep{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}.
 \item Convection in massive stars \citep{Gilet:2013}.
-\item Sub-Chandrasekhar white dwarfs \citep{subChandra_I,subChandra_II}.  In the latter paper we introduced an optional modification to the momentum equation of velocity constraint that conserves total energy, can give results closer to compressible codes of convective dynamics, including low density regions at the surface of a star.
-\item Type I X-ray bursts \citep{XRB_I,XRB_II,XRB_III}.  In \cite{XRB_I} we discuss the modifications required for implicit thermal conduction, as well as an additional ``volume discrepancy'' modification to the velocity constraint to force the species and enthalpy to evolve in a manner consistent with the background pressure.
+\item Sub-Chandrasekhar white dwarfs \citep{subChandra_I,subChandra_II}.
+%  In the latter paper we introduced an optional modification to the momentum equation of velocity constraint that conserves total energy, can give results closer to compressible codes of convective dynamics, including low density regions at the surface of a star.
+\item Type I X-ray bursts \citep{XRB_I,XRB_II,XRB_III}.
+%  In \cite{XRB_I} we discuss the modifications required for implicit thermal conduction, as well as an additional ``volume discrepancy'' modification to the velocity constraint to force the species and enthalpy to evolve in a manner consistent with the background pressure.
 \end{itemize}
 
 In this paper, we characterize the performance of the MAESTROeX algorithm compared to the previous implementation.
 We also develop simpler, alternative temporal integrators, with a longer term goal of developing high-order coupling schemes.
-We also present a new treatment of the base state mapping to Cartesian grids for spherical problsm.
+We also present a new treatment of the base state mapping to Cartesian grids for spherical problems.
+
+The resulting code is publicly available on GitHub at {\url https://github.com/AMReX-Astro/MAESTROeX} and uses the microphysics 
+libraries at {\url https://github.com/starkiller-astro/Microphysics} and the AMReX software library for block-structured adaptive mesh refinement
+{\url https://github.com/AMReX-Codes/amrex}.

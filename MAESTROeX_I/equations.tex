@@ -1,12 +1,13 @@
 \section{Governing Equations}
-The derivation of the low Mach number hydrodynamics equations is given in Papers I-III.
-We take the standard equations of reacting, compressible flow, and recast the equation
-of state (EOS) as a divergence constraint on the velocity field.  This is done by taking
-the Langrangian derivative of the equation of state for pressure as a function of the
-density, composition, and enthalpy, enforcing the constraint that the pressure is
-a prescribed function of altitutde and time based on the hydrostatic equilibrium condition,
-and substituting the equations for species and enthalpy in the resulting Lagrangian derivative.
-The resulting equations are
+Low Mach number models for reacting flow were originally derived using asymptotic analysis
+\citep{rehm1978equations,majda1985derivation} and used in terrestrial combustion applications
+\citep{knio1999semi,day2000numerical}.  These models have been extended to nuclear flames
+in astrophysical environments using adaptive algorithms in space and time \citep{Bell:2004}.
+In Papers I-III, we derived a model and algorithm suitable for stratified astrophysical flow.
+In our model, we take the standard equations of reacting, compressible flow, and recast the equation
+of state (EOS) as a divergence constraint on the velocity field.
+The resulting model is a series of evolution equations for mass, momentum, and energy, subject
+to this constraint:
 \begin{eqnarray}
 \frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
 \frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
@@ -34,9 +35,11 @@ $\nabla p_0 = -\rho_0 g\eb_r$, where $g=g(r,t)$ is
 the magnitude of the gravitational acceleration and $\eb_r$ is the unit vector in the
 outward radial direction. 
 
-Mathematically, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) must still be closed by the equation of state which we
-express as a divergence constraint on the velocity field (\ref{eq:U divergence}),
-\MarginPar{This is different from the Jacobs 2016 paper where we switched to alt\_energy\_fix.}
+Mathematically, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) must still be closed by an equation of state.  
+This is done by taking the Langrangian derivative of the equation of state for pressure as a function of the density, composition, and enthalpy, requiring that the pressure is a prescribed function of altitutde and time based on the hydrostatic equilibrium condition.
+Details are given in Papers I and II.
+After substuting the equations for mass and energy into the Lagrangian derivative, the result
+is a divergence constraint on the velocity field (\ref{eq:U divergence}),
 where $\beta_0$ is a density-like variable that carries background stratification, defined as
 \begin{equation}
 \beta_0(r,t) = \rho_0(0,t)\exp\left(\int_0^r\frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial r'}dr'\right),
