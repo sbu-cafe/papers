@@ -472,7 +472,13 @@ To summarize:
 There are a few key numerical modules we use in each time step.
 \begin{itemize}
 \item {\bf Enforce HSE} computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in 1D (see equation (A10) in \cite{MAESTRO_V}).  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
-\item {\bf React State}
+\item {\bf React State} advances the species and enthalpy due to reactions over $\Delta t/2$ by integrating
+\begin{equation}
+\frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
+\frac{dT}{dt} = \frac{1}{c_p}\left(-\sum_k\xi_k\dot\omega_k + H_{\rm nuc}\right)
+\end{equation}
+The inputs are the species, enthalpy, and base state pressure, and the outpus are the species, enthalpy, reaction rates, and nuclear energy generation rate.
+See \cite{MAESTRO_III,MAESTRO_V} for details.
 \end{itemize}
 
 Each time step satisfies the standard advective CFL condition,
@@ -496,7 +502,6 @@ At the beginning of each simulation, we define $(\Ub,\rho X_k,\rho h)$...
 \item[Step 1] {\em React the full state through the first time interval of $\dt / 2.$}
 
 Call {\bf React State}$[(\rho X_k)^n, (\rho h)^n, p_0^n] \rightarrow [(\rho X_k)^{(1)}, (\rho h)^{(1)}, (\rho \omegadot_k)^{(1)}, (\rho \Hnuc)^{(1)}]$.
-\MarginPar{AJN: I think we can simplify the description here... this is somewhat confusing now.}
 
 %--------------------------------------------------------------------------
 % STEP 2
@@ -563,7 +568,7 @@ accounted for in {\bf React State}.  The update consists of two steps:
 
 \item Compute the time-centered species edge states, $(\rho X_k)^{\nph,\pred}$,
   for the conservative update of $(\rho X_k)^{(1)}$ using a Godunov approach \citep{XRB_III}.
-\MarginPar{We may not need $\rho_0$ if we predict $\rho X$ or $\rho$ and $X$.  AJN: If we end up keeping prediction of $\rho'$ and $X$, and $(\rho h)'$ we need to summarize this, particularly since $\rho_0$ and $(\rho h)_0$ treatment differs from previous papers.}
+\MarginPar{mention $\rho'$ and $X$ advection; $(\rho h)'$ advection}
 
 \item Evolve $(\rho X_k)^{(1)} \rightarrow (\rho X_k)^{(2),\star}$ using
 \begin{equation}
@@ -696,7 +701,7 @@ p_0^{\nph} = \frac{ p_0^n + p_0^{n+1,\star} }{2},
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
 
 \item Compute the time-centered species edge states, $(\rho X_k)^{\nph,\pred}$,
-  for the conservative update of $(\rho X_k)^{(1)}$ usingusing a Godunov approach \citep{XRB_III}.
+  for the conservative update of $(\rho X_k)^{(1)}$ using a Godunov approach \citep{XRB_III}.
 
 \item Evolve $(\rho X_k)^{(1)} \rightarrow (\rho X_k)^{(2)}$ using
 \begin{equation}
@@ -716,7 +721,6 @@ p_0^{\nph} = \frac{ p_0^n + p_0^{n+1,\star} }{2},
   rather than
   $\uadvone, \rho_0^{n+1,\star}, (\rho h)_0^{n+1,\star}$, and $p_0^n$.
   In particular:
-\MarginPar{Again, we may not need $\rho_0$ and $(\rho h)_0$.}
 
 \begin{enumerate}
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
