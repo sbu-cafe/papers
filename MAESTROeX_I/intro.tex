@@ -1,0 +1,41 @@
+\section{Introduction} \label{sec:intro}
+
+TODO list:
+\begin{itemize}
+\item Weak scaling tests of original algorithm, comparing MAESTRO to MAESTROeX.  Use cori knl, 4 MPI per node, 16 threads per MPI
+\item Run at effective $512^3$ resolution (maybe to ignition?... need to see how max T trends go) (1) classic MAESTRO, (2) MAESTROeX with original algorithm, (3) MAESTROeX with new temporal integrator, (4) MAESTROeX with new temporal integrator and irregular dr, (5) MAESTROeX with original algorithm and 3-levels of AMR, (6) MAESTROeX with new temporal integrator and 3 levels of AMR.
+\item (perhaps) a demonstration of what goes wrong when you don't split the velocity dynamics in the projection
+\end{itemize}
+
+Many astrophysical flows are highly subsonic; sound waves carry sufficiently little energy that they do not significantly affect the convective dynamics of the system.
+In many of these flows, modeling long-time convective dynamics are of interest, and numerical approaches based on compressible hydrodynamics are intractable, even on modern supercomputers.
+One approach to this problem is to use low Mach number models.
+In a low Mach number approach, sound waves are eliminated from the governing equations while retaining compressibilitiy effects due to, e.g., nuclear energy release, compositional changes, and thermal diffusion.
+The resulting model can be numerically integrated with much larger time steps than a compressible model.
+
+Previously, we have developed the low Mach number astrophysical solver, MAESTRO.
+Low Mach number models have been developed for a variety of contexts including combustion \citep{day2000numerical}, atmospherics \citep{duarte2015low}, and elastic solids \citep{abbate2017all}.
+The low Mach number model in MAESTRO is unique in that it is specifically designed for astrophysical settings with significant atmospheric stratification.
+Central to the algorithm is a stratified background (or base) state density and pressure held in hydrostatic equilibrium, and also vary as a function of altitude and time.
+MAESTRO is suitable for for spherical stars, as well as planar simulations of local dynamics.
+
+The key numerical developments of the original MAESTRO algorithm are presented in a series of papers which we refer to as Papers I-V:
+\begin{itemize}
+\item In Paper I \citep{MAESTRO_I}, we derive the low Mach number equation set from the fully compressible equations.
+\item In Paper II \citep{MAESTRO_II}, we incorporate the effects atmospheric expansion through the use of a time-dependent background state.
+\item In Paper III \citep{MAESTRO_III}, we incorporate reactions and the associated coupling to the hydrodynamics.
+\item In Paper IV \citep{MAESTRO_IV}, we describe our treatment of spherical stars in a three-dimensional Cartesian geometry.
+\item In Paper V \citep{MAESTRO_V}, we describe the use of block-structured adaptive mesh refinement to focus spatial resolution in regions of interest.
+\end{itemize} 
+
+Since then, there have been many scientific investigations using MAESTRO, which include additional algorithmic enhancements.  Topics include:
+\begin{itemize}
+\item The convective phase preceding Chandrasekhar mass models for type Ia supernovae \citep{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}.
+\item Convection in massive stars \citep{Gilet:2013}.
+\item Sub-Chandrasekhar white dwarfs \citep{subChandra_I,subChandra_II}.  In the latter paper we introduced an optional modification to the momentum equation of velocity constraint that conserves total energy, can give results closer to compressible codes of convective dynamics, including low density regions at the surface of a star.
+\item Type I X-ray bursts \citep{XRB_I,XRB_II,XRB_III}.  In \cite{XRB_I} we discuss the modifications required for implicit thermal conduction, as well as an additional ``volume discrepancy'' modification to the velocity constraint to force the species and enthalpy to evolve in a manner consistent with the background pressure.
+\end{itemize}
+
+In this paper, we characterize the performance of the MAESTROeX algorithm compared to the previous implementation.
+We also develop simpler, alternative temporal integrators, with a longer term goal of developing high-order coupling schemes.
+We also present a new treatment of the base state mapping to Cartesian grids for spherical problsm.
