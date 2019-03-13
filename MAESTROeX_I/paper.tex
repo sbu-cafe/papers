@@ -350,7 +350,7 @@ We also present a new treatment of the base state mapping to Cartesian grids for
 \section{Governing Equations}
 The derivation of the low Mach number hydrodynamics equations is given in Papers I-III.
 We take the standard equations of reacting, compressible flow, and recast the equation
-of state as a divergence constraint on the velocity field.  This is done by taking
+of state (EOS) as a divergence constraint on the velocity field.  This is done by taking
 the Langrangian derivative of the equation of state for pressure as a function of the
 density, composition, and enthalpy, enforcing the constraint that the pressure is
 a prescribed function of altitutde and time based on the hydrostatic equilibrium condition,
@@ -412,26 +412,16 @@ and a local velocity $\Ubt(\xb,t)$, so that
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
 In our new simplified approach, we instead use a predictor-corrector approach for evolving the base state.
 
-\section{Using Exact Spherical Base States on Irregular Grid} \label{sec:exactbasestate}
+\section{Numerical Algorithm}
 
-\subsection{Potential Problems}
-\begin{enumerate}
-\item How do we define \verb|r_edge_loc| for irregularly-spaced base states whose cell-centered values are defined at $r_m=\Delta x\sqrt{\frac{3}{4} + 2m}$?
-\item We would stil need to approximate the values at edges when advecting the base states (i.e. $\rho_0^{\nph,\pred}$). This may affect the nice properties we would get with exact cell-centered base state values.
-\item Excessive memory storage may be required (\verb|nr_irreg >> nr_fine|).
-\end{enumerate}
+\subsection{Spatial Discretization}
 
-\subsection{A Possible Solution}
-We could choose to no longer advect the base states for both predictor and corrector steps. This would solve the problems with computing state values at cell edges. Instead, we propose to only update the base states $\rho_0$ and $p_0$ by computing the average of the full state values after advecting the full states. This would result in the following changes in the algorithm from Paper V:
-%
-\begin{enumerate}
-\item Steps 4 and 8 will be greatly simplified, leading to a more efficient algorithm.
-\item \sout{There is no longer a need for $w_0$, so we can use the full velocity $\Ub$ instead of $\Ubt$. As a consequence, $\eta$ does not need to be computed. This has the added advantage of saving some memory storage by removing many of the terms needed when we decided to split terms into its base state and perturbation state in our previous implementation.} We split the velocity for the projection to handle the cutoff.
-\item By placing the base states exactly at cell-centers, we eliminate interpolation errors and simplify the existing code.
-\end{enumerate}
-%
+(description of base state mapping in planar, and origianl spherical)
 
-\subsection{Main Algorithm Description}\label{Sec:Main Algorithm Description}
+
+\subsection{Exact Base State Mapping} \label{sec:exactbasestate}
+
+\subsection{Temporal Integration Scheme}\label{Sec:Temporal Integration Scheme}
 Our new temporal integration scheme is much simpler than the scheme from Paper V.
 The primary reason is that we no longer split the velocity field into a perturbational and base state components.  
 Previously, we used the base state velocity to predict the expansion of the base state.  
@@ -471,14 +461,15 @@ To summarize:
 
 There are a few key numerical modules we use in each time step.
 \begin{itemize}
-\item {\bf Enforce HSE} computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in 1D (see equation (A10) in \cite{MAESTRO_V}).  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
+\item {\bf Average} computes...
+\item {\bf Enforce HSE} computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in 1D (see equation (A10) in Paper V).  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
 \item {\bf React State} advances the species and enthalpy due to reactions over $\Delta t/2$ by integrating
 \begin{equation}
 \frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
 \frac{dT}{dt} = \frac{1}{c_p}\left(-\sum_k\xi_k\dot\omega_k + H_{\rm nuc}\right)
 \end{equation}
 The inputs are the species, enthalpy, and base state pressure, and the outpus are the species, enthalpy, reaction rates, and nuclear energy generation rate.
-See \cite{MAESTRO_III,MAESTRO_V} for details.
+See Papers III and V for details.
 \end{itemize}
 
 Each time step satisfies the standard advective CFL condition,
@@ -578,7 +569,7 @@ accounted for in {\bf React State}.  The update consists of two steps:
 
 \end{enumerate}
 
-\item Update $\rho_0$ by setting $\rho_0^{n+1,\star} =$ {\bf Avg}$(\rho^{(2),\star})$.
+\item Update $\rho_0$ by setting $\rho_0^{n+1,\star} =$ {\bf Average}$(\rho^{(2),\star})$.
 
 \item Update $p_0$ by calling
 {\bf Enforce HSE}$[\rho_0^{n+1,\star}] \rightarrow [p_0^{n+1,\star}]$.
@@ -632,12 +623,7 @@ The update consists of two steps:
 where we define $p_0^\nph$ as $p_0^\nph = (p_0^n+p_0^{n+1,*})/2$.
 
 \end{enumerate}
-
-Then, for each Cartesian cell where $\rho^{(2),\star} < \rho_\mathrm{cutoff}$,
-we recompute enthalpy using
-\begin{equation}
-(\rho h)^{(2),\star} = \rho^{(2),\star}h\left(\rho^{(2),\star},p_0^{n+1,\star},X_k^{(2),\star}\right).
-\end{equation}
+Note that outside the cutoff density region, we compute enthalpy using the EOS.
 
 \end{enumerate}
 
@@ -710,7 +696,7 @@ where
 
 \end{enumerate}
 
-\item Update $\rho_0$ by setting $\rho_0^{n+1} =$ {\bf Avg}$(\rho^{(2)})$.
+\item Update $\rho_0$ by setting $\rho_0^{n+1} =$ {\bf Average}$(\rho^{(2)})$.
 
 \item Update $p_0$ by calling
 {\bf Enforce HSE}$[\rho_0^{n+1}] \rightarrow [p_0^{n+1}]$.
@@ -725,7 +711,7 @@ where
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
 
 \item Compute the time-centered enthalpy edge state, $(\rho h)^{\nph,\pred},$
-  for the conservative update of $(\rho h)^{(1)}$ using a Godunov approach \citep{XRB_III}..
+  for the conservative update of $(\rho h)^{(1)}$ using a Godunov approach \citep{XRB_III}.
 
 \item Evolve $(\rho h)^{(1)} \rightarrow (\rho h)^{(2)}$.
 \begin{description}
@@ -748,11 +734,7 @@ where
 where we now define $p_0^\nph$ as $p_0^\nph = (p_0^n+p_0^{n+1})/2$.
 
 \end{enumerate}
-
-Then, for each Cartesian cell where $\rho^{(2)} < \rho_\mathrm{cutoff}$, we recompute enthalpy using
-\begin{equation}
-(\rho h)^{(2)} = \rho^{(2)}h\left(\rho^{(2)},p_0^{n+1},X_k^{(2)}\right).
-\end{equation}
+Note that outside the cutoff density region, we compute enthalpy using the EOS.
 
 \end{enumerate}
 
@@ -874,11 +856,30 @@ and sepratately solve for $w_0$ using
 \begin{equation}
 \nabla\cdot(\beta_0w_0\eb_r) = \beta_0\left(\overline{S} - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).
 \end{equation}
-To find $w_0$ we integrate in 1D using the procedure in Appendix B of \cite{MAESTRO_V}.
+To find $w_0$ we integrate in 1D using the procedure in Appendix B of Paper V.
 
-Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$.  After evolving the species, we compute this term in the same way as reported in \cite{MAESTRO_V} for use in computing $w_0$.
+Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$.  After evolving the species, we compute this term in the same way as reported in Paper V for use in computing $w_0$.
 
 \section{Old Notes (not for inclusion in paper)}
+
+\subsection{Exact Base State Notes}
+
+\subsubsection{Potential Problems}
+\begin{enumerate}
+\item How do we define \verb|r_edge_loc| for irregularly-spaced base states whose cell-centered values are defined at $r_m=\Delta x\sqrt{\frac{3}{4} + 2m}$?
+\item We would stil need to approximate the values at edges when advecting the base states (i.e. $\rho_0^{\nph,\pred}$). This may affect the nice properties we would get with exact cell-centered base state values.
+\item Excessive memory storage may be required (\verb|nr_irreg >> nr_fine|).
+\end{enumerate}
+
+\subsubsection{A Possible Solution}
+We could choose to no longer advect the base states for both predictor and corrector steps. This would solve the problems with computing state values at cell edges. Instead, we propose to only update the base states $\rho_0$ and $p_0$ by computing the average of the full state values after advecting the full states. This would result in the following changes in the algorithm from Paper V:
+%
+\begin{enumerate}
+\item Steps 4 and 8 will be greatly simplified, leading to a more efficient algorithm.
+\item \sout{There is no longer a need for $w_0$, so we can use the full velocity $\Ub$ instead of $\Ubt$. As a consequence, $\eta$ does not need to be computed. This has the added advantage of saving some memory storage by removing many of the terms needed when we decided to split terms into its base state and perturbation state in our previous implementation.} We split the velocity for the projection to handle the cutoff.
+\item By placing the base states exactly at cell-centers, we eliminate interpolation errors and simplify the existing code.
+\end{enumerate}
+%
 
 \subsection{$\eta_\rho$ Notes}
 After {\bf Step 8D}, we define a radial cell-centered $\etarho^{\nph}$.
@@ -886,7 +887,7 @@ After {\bf Step 8D}, we define a radial cell-centered $\etarho^{\nph}$.
 \begin{description}
 \item For planar geometry, $\etarho = \overline{\rho'(\Ub\cdot\eb_r)}$,
 \begin{equation}
- \etarho^{\nph} =  {\rm {\bf Avg}} \sum_k \left[ \left(\uadvtwo \cdot \eb_r \right) (\rho X_k)^{\nph,\pred} \right]
+ \etarho^{\nph} =  {\rm {\bf Average}} \sum_k \left[ \left(\uadvtwo \cdot \eb_r \right) (\rho X_k)^{\nph,\pred} \right]
 \end{equation}
 \item For spherical geometry, first construct 
 $\etarho^{{\rm cart},\nph} = [\rho'(\Ub\cdot\eb_r)]^{\nph}$ on Cartesian cell centers using:
@@ -895,7 +896,7 @@ $\etarho^{{\rm cart},\nph} = [\rho'(\Ub\cdot\eb_r)]^{\nph}$ on Cartesian cell ce
 \end{equation}
 Then,
 \begin{equation}
-\etarho^{\nph,\star} = {\rm {\bf Avg}}\left(\etarho^{{\rm cart},\nph}\right).
+\etarho^{\nph,\star} = {\rm {\bf Average}}\left(\etarho^{{\rm cart},\nph}\right).
 \end{equation}
 \end{description}
 
