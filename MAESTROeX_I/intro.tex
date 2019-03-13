@@ -40,9 +40,18 @@ Since then, there have been many scientific investigations using MAESTRO, which 
 %  In \cite{XRB_I} we discuss the modifications required for implicit thermal conduction, as well as an additional ``volume discrepancy'' modification to the velocity constraint to force the species and enthalpy to evolve in a manner consistent with the background pressure.
 \end{itemize}
 
-In this paper, we characterize the performance of the MAESTROeX algorithm compared to the previous implementation.
-We also develop simpler, alternative temporal integrators, with a longer term goal of developing high-order coupling schemes.
-We also present a new treatment of the base state mapping to Cartesian grids for spherical problems.
+We also present new algorithmic methodology that improves upon Paper V in a number of ways.
+First, the overall temporal algorithm has been greatly simplified without compromising accuracy.
+The key design decision was to replace the predicted evolution of the base state with 
+a predictor-corrector approach.  Not only does this greatly simplify the dynamics of the base
+state, but this treatment is more amenable to higher-order multiphysics coupling strategies
+based on method-of-lines integration.  Second, we now provide additional spatial mapping
+procedures that reduces, and in some cases eliminates, mapping error from the one-dimensional
+base state to the Cartesian grid state for spherical problems.
+Finally, the code has been completely ported to a new software framework suitable for modern manycore supercomputers.
+The resulting MAESTROeX is implemented in the C++/F90 AMReX software library.  MAESTROeX uses MPI+OpenMP parallelism
+and scales to XXX MPI processes, each capable of spawning tens of threads.
+\MarginPar{quantify XXX.  I think it's 5,000-10,000 MPIs with potentially hundreds of threads}
 
 The resulting code is publicly available on GitHub at {\url https://github.com/AMReX-Astro/MAESTROeX} and uses the microphysics 
 libraries at {\url https://github.com/starkiller-astro/Microphysics} and the AMReX software library for block-structured adaptive mesh refinement
