@@ -66,18 +66,18 @@ We integrate the velocity using a standard second-order projection method to enf
 To summarize:
 \begin{itemize}
 \item In {\bf Step 1} we react the thermodynamic variables over $\Delta t/2$.
-\item In {\bf Steps 2-4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, project the velocities so they satisfy the divergence constraint, and then advect the thermodynamic variables.
-\item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$.\footnote{Note that we could skip to the velocity advance in {\bf Steps 10-11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}
+\item In {\bf Steps 2-4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, project the face-centered, time-centered velocities so they satisfy the divergence constraint, and then advect the thermodynamic variables.
+\item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$.\footnote{After this step we could skip to the velocity advance in {\bf Steps 10-11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}
 \item In {\bf Steps 6-8} we redo the advection in {\bf Steps 2-4} but are able to use the trapezoidal rule to time-center certain quantities such as $S$, $\rho_0$, etc.
 \item In {\bf Step 9} we redo the reactions from {\bf Step 5} using the improved results for the corrector advection step.
-\item In {\bf Steps 10-11} we update the velocity.
+\item In {\bf Steps 10-11} we and update the velocity, compute the expansion term, $S$, and project the cell-centered velocities.
 \end{itemize}
 
 There are a few key numerical modules we use in each time step.
 \begin{itemize}
 \item {\bf Average}$[\phi]\rightarrow[\overline\phi]$ computes the lateral average of a quantity over a layer at constant radius $r$, as described above in Section \ref{Sec:Spatial}.
 \item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in 1D (see equation (A10) in Paper V).  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
-\item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc]$ integrates the species and enthalpy due to reactions over $\Delta t/2$ by solving
+\item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ integrates the species and enthalpy due to reactions over $\Delta t/2$ by solving
 \begin{equation}
 \frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
 \frac{dT}{dt} = \frac{1}{c_p}\left(-\sum_k\xi_k\dot\omega_k + H_{\rm nuc})\right)
@@ -408,26 +408,13 @@ and gradient operators.  Details of the approximate projection are given in Pape
 
 \end{description}
 
-This completes one step of the algorithm.
-
-To initialize the simulation
-
-
-
-%--------------------------------------------------------------------------
-% STEP 0
-%--------------------------------------------------------------------------
+This completes one step of the algorithm.\\ \\
 {\em Initialization}
-\sout{
-The initialization step only occurs at the beginning of the simulation.
-The initialization step computes initial values for 
-$\pi^{-\myhalf}, \eta_{\rho}^{-\myhalf}, S^0$, and $S^1$ for use in time stepping routine.  
-We pass through {\bf Step 1} -- {\bf Step 11}, but only keep these values.
-The initial values for $\Ub^0, \rho^0, (\rho h)^0, X_k^0, T^0,
-\rho_0^0, p_0^0$, and $\gammaonebar^0$ are specified from the problem-dependent
-initial conditions.  The initial time step, $\dt^0$, is computed as in
-Paper III.
-}
+To initialize the simulation we use the same procedure described in Paper III.
+We set initial values for $\Ub, \rho X_k$, and $\rho h$ and perform a sequence of projections 
+(to ensure the velocity field satisfies the divergence constraint) 
+followed by a small number of steps of the temporal advancement scheme to iteratively 
+find initial values for $\pi^{n-\myhalf}$ and $S^0$ and $S^1$ for use in the first time step.
 
 \subsection{Adaptive Mesh Refinement}
 Talk about AMR algorithm and AMReX computational framework.
