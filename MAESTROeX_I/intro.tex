@@ -1,12 +1,4 @@
 \section{Introduction} \label{sec:intro}
-
-TODO list:
-\begin{itemize}
-\item Weak scaling tests of original algorithm, comparing MAESTRO to MAESTROeX.  Use cori knl, 4 MPI per node, 16 threads per MPI
-\item Run at effective $512^3$ resolution (maybe to ignition?... need to see how max T trends go) (1) classic MAESTRO, (2) MAESTROeX with original algorithm, (3) MAESTROeX with new temporal integrator, (4) MAESTROeX with new temporal integrator and irregular dr, (5) MAESTROeX with original algorithm and 3-levels of AMR, (6) MAESTROeX with new temporal integrator and 3 levels of AMR.
-\item (perhaps) a demonstration of what goes wrong when you don't split the velocity dynamics in the projection
-\end{itemize}
-
 Many astrophysical flows are highly subsonic; sound waves carry sufficiently little energy that they do not significantly affect the convective dynamics of the system.
 In many of these flows, modeling long-time convective dynamics are of interest, and numerical approaches based on compressible hydrodynamics are intractable, even on modern supercomputers.
 One approach to this problem is to use low Mach number models.
