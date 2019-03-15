@@ -1,6 +1,6 @@
 \appendix
-\section{Projection Details}
-To enforce the divergence constraint in {\bf Step 3, 7}, and {\bf 11}, we use a projection method analgous to the methods originally developed for incompressible flow.
+\section{Projection Details}\label{Sec:Projection}
+To enforce the divergence constraint in {\bf Step 3, 7}, and {\bf 11}, we use a projection method analgous to the methods originally developed for incompressible flow \citep{almgren1998conservative,bell1989second}.
 
 Based on our past experience in the MAESTRO project, we have found it useful to split the velocity dynamics into a perturbational and base state velocity,
 \begin{equation}
@@ -18,7 +18,7 @@ To find $w_0$ we integrate in 1D using the procedure in Appendix B of Paper V.
 
 Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$.  After evolving the species, we compute this term in the same way as reported in Paper V for use in computing $w_0$.
 
-\MarginPar{mention alt energy fix for projection}
+\MarginPar{mention alt energy fix for projection?  also mention changes in $w_0$ computation for irregular base state}
 
 \section{Old Notes (not for inclusion in paper)}
 
