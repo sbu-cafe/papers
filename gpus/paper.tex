@@ -184,6 +184,7 @@ Discuss frameworks vs.\ doing it outselves
 
 
 
+
 \subsection{Example of advancing a grid}
 
 Describe mfiter structure
@@ -204,6 +205,10 @@ The main hydrodynamics solver in \castro\ is an unsplit corner
 transport upwind \citep{ppmunsplit} piecewise parabolic method
 \citep{ppm} scheme.  This uses full corner coupling, requiring a 
 number of transverse Riemann problem solutions.  
+
+
+Boundary conditions require special attention---threadblock must include
+all zones that participate in the boundary.
 
 \section{Reaction networks}
 
