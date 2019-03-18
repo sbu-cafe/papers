@@ -42,8 +42,7 @@ procedures that reduces, and in some cases eliminates, mapping error from the on
 base state to the Cartesian grid state for spherical problems.
 Finally, the code has been completely ported to a new software framework suitable for modern manycore supercomputers.
 The resulting MAESTROeX is implemented in the C++/F90 AMReX software library.  MAESTROeX uses MPI+OpenMP parallelism
-and scales to XXX MPI processes, each capable of spawning tens of threads.
-\MarginPar{quantify XXX.  I think it's 5,000-10,000 MPIs with potentially hundreds of threads}
+and scales well to over 10,000 MPI processes, with each MPI process supporting tens of threads
 
 The resulting code is publicly available on GitHub at {\url https://github.com/AMReX-Astro/MAESTROeX} and uses the microphysics 
 libraries at {\url https://github.com/starkiller-astro/Microphysics} and the AMReX software library for block-structured adaptive mesh refinement
