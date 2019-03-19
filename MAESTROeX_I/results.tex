@@ -5,7 +5,15 @@ Show 3D reacting bubble rise performance.
 Show 3-level spherical performance (stats won't be as good but explain why: refining a larger percentage of grid)
 
 \subsection{Scaling}
-Scaling with OpenMP
+In Figure XXX we show weak scaling results for a spherical, full-star sub-chandrasekhar mass white dwarf calculation.
+The x-axis represents total core count (in this case, the total number of OpenMP threads), and the y-axis is the wallclock time per time step.
+These simulations were performed using the NERSC cori system on the Intel Xeon Phi (KNL) partition.
+We split each KNL node to contain 4 MPI processes with 16 threads each.
+The computational domain for each simulation is divided into $64^3$ grid cells, and we assign 1 MPI process to each grid.
+We used simulations ranging from $256^3$ grid cells (64 MPI processes, corresponding to 1024 total threads) up to $1536^3$ grid cells (13,824 MPI processes, corresponding to 221,184 total threads).
+Note that the largest simulation used roughly 36\% of the entire computational system.
+We see that the total increas in wallclock time from the smallest to largest simulation is roughly 41\%, which is quite remarkable given that there are 3 linear solves per time step.
+\MarginPar{Making new plots splitting out projections vs. everything else.}
 
 \subsection{White Dwarf Convection}
 white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregular base state)
