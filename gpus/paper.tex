@@ -123,6 +123,42 @@ supercomputers.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
+Supercomputer architectures have evolved a lot over the past
+decades~\citep{bell:2015}.  Shared memory vector machines with custom
+processors dominated early, displaced in the early 1990s by
+distributed memory, massively parallel architectures built upon
+commodity CPUs where the message passing interface (MPI) became the
+dominant library for achieving parallelism.  As core counts increased,
+threading because increasingly important, and OpenMP became the
+standard for threading in high-performance computing, with hybrid
+MPI+OpenMP approaches to parallelism.  In the race to increase
+performance while keeping electrical power consumption reasonable,
+accelerators were increasingly turned to, include GPUs and many-core
+chips like the Intel Phi series.  The simulation codes we use in
+astrophysics need to keep pace with these developments, or they will
+not be able to run on the next generation of supercomputers.  In
+particular, GPUs are dominant now, so existing algorithms need to be
+ported to run on GPUs, or new codes need to be written from scratch
+targeting the new architecture.
+
+There are a number of descriptions of GPU-enabled astrophysical hydro
+codes, including
+\citet{gamer,cholla,fargo3d,pekkila:2017,caplan:2018,racz:2018,liska:2018,goz:2018,wang:2010,Padioleau2019,Bryan2014,Kulikov2014} \MarginPar{todo:
+  group by AMR/no-AMR, GPU exclusive, Kokkos, ...}
+
+GPU-enabled integration has been explored by \citep{brock:2015}.
+
+
+In this paper, we describe our approach to performance portability
+with the \castro\ multiphysics simulation code..  Our goal is to have
+the same computational kernels run efficiently on CPUs (including
+manycore processors) and GPUs.  We describe the work we needed to do
+to enable this portability and show performance metrics for a reacting
+flow problem in astrophysics.
+
+
+\subsection{The Castro hydrodynamics code}
+
 \castro\ is a compressible (radiation-)hydrodynamics simulation code built on
 the AMReX adaptive mesh refinement framework \citep{castro,castro2,castro3}.  It
 includes full self-gravity using multigrid methods with isolated boundaries
@@ -132,23 +168,24 @@ and arbitrary nuclear reaction networks.  Castro has been used for science inves
 
 The original computing architectures targeted were
 
-With GPU accelerators becoming increasingly dominant, algorithms need to be ported.
-There are a number of descriptions of GPU-enabled astrophysical hydro codes, including
-\citet{gamer,cholla,fargo3d,pekkila:2017,caplan:2018,racz:2018,liska:2018,goz:2018,Padioleau2019,Bryan2014,Kulikov2014}
+\castro\ development began with \cite{castro}, with the goal of
+creating an astrophysical hydrodynamics code using a modern adaptive
+mesh refinement library (BoxLib at the time) and unsplit hydrodynamics
+techniques.  The initial application area was nuclear astrophysics,
+including core-collapse supernovae, so it was designed to work with a
+general equation of state~\cite{zingalekatz} and reaction network, and
+with radiation transport (through flux limited diffusion,
+\citealt{castro2,castro3}).  \castro\ also acted as the compressible
+counterpart to our low Mach number hydrodynamics code \maestro,
+sharing much of the same infrastructure, and allowing for simulations
+to be restarted from the low Mach regime into the compressible
+regime~\cite{malone:2014}.  \castro\ has been applied to various
+progenitor models of Type Ia
+supernova~\cite{malone:2014,katz:2016,polin:2019}, exoplanet
+dynamics~\cite{ryu:2018}, core-collapse and population III
+supernovae~\cite{chen:2014,dolence:2015,chen:2017}, and X-ray bursts~\cite{astronum:2018}.
 
-GPU-enabled integration has been explored by \citep{brock:2015}.
 
-
-In this paper, we describe our approach to performance portability.
-Our goal is to have the same computational kernels run efficiently on
-CPUs (including manycore processors) and GPUs.  We describe the work
-we needed to do to enable this portability and show performance
-metrics for a reacting flow problem in astrophysics.
-
-
-\section{The Castro hydrodynamics code}
-
-Disucss changes since last paper
 
 \castro\ is developed using a fully open-development model, with the
 code managed in git and hosted on
