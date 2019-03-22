@@ -124,7 +124,7 @@ supercomputers.
 \section{Introduction}\label{Sec:Introduction}
 
 \castro\ is a compressible (radiation-)hydrodynamics simulation code built on
-the AMReX adaptive mesh refinement framework \citep{castro,castro2,castro3}.  It 
+the AMReX adaptive mesh refinement framework \citep{castro,castro2,castro3}.  It
 includes full self-gravity using multigrid methods with isolated boundaries
 \citep{katz:2016}, works with general equations of state \citep{zingalekatz}
 and arbitrary nuclear reaction networks.  Castro has been used for science investigations of
@@ -134,7 +134,7 @@ The original computing architectures targeted were
 
 With GPU accelerators becoming increasingly dominant, algorithms need to be ported.
 There are a number of descriptions of GPU-enabled astrophysical hydro codes, including
-\citet{gamer,cholla,fargo3d,pekkila:2017,caplan:2018,racz:2018,liska:2018,goz:2018}
+\citet{gamer,cholla,fargo3d,pekkila:2017,caplan:2018,racz:2018,liska:2018,goz:2018,Padioleau2019,Bryan2014,Kulikov2014}
 
 GPU-enabled integration has been explored by \citep{brock:2015}.
 
@@ -193,8 +193,8 @@ Describe MPI, MPI+OpenMP w/ tiling, MPI + CUDA
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.3\textwidth]{gpu_1} 
-\includegraphics[width=0.3\textwidth]{gpu_2} 
+\includegraphics[width=0.3\textwidth]{gpu_1}
+\includegraphics[width=0.3\textwidth]{gpu_2}
 \includegraphics[width=0.3\textwidth]{gpu_3}
 \caption{\label{fig:loops} caption}
 \end{figure*}
@@ -203,8 +203,8 @@ Describe MPI, MPI+OpenMP w/ tiling, MPI + CUDA
 
 The main hydrodynamics solver in \castro\ is an unsplit corner
 transport upwind \citep{ppmunsplit} piecewise parabolic method
-\citep{ppm} scheme.  This uses full corner coupling, requiring a 
-number of transverse Riemann problem solutions.  
+\citep{ppm} scheme.  This uses full corner coupling, requiring a
+number of transverse Riemann problem solutions.
 
 
 Boundary conditions require special attention---threadblock must include
