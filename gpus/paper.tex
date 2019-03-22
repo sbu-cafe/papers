@@ -22,6 +22,7 @@
 
 \newcommand{\castro}{{\sf Castro}}
 \newcommand{\maestro}{{\sf Maestro}}
+\newcommand{\maestroex}{{\sf MAESTROeX}}
 
 \newcommand{\nablab}{{\mathbf{\nabla}}}
 \newcommand{\Ub}{\mathbf{U}}
@@ -65,13 +66,16 @@
 \setlength{\marginparwidth}{0.75in}
 \newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
 
+\newcommand{\fab}{{\sf Fab}}
+\newcommand{\multifab}{{\sf MultiFab}}
+
 \begin{document}
 %======================================================================
 % Title
 %======================================================================
-\title{CASTRO: A New Compressible Astrophysical Solver. IV. Performance Portability}
+\title{CASTRO: A New Compressible Astrophysical Solver. IV. Performance Portability and GPUs}
 
-\shorttitle{}
+\shorttitle{CASTRO Performance Portability and GPUs}
 \shortauthors{}
 
 
@@ -146,11 +150,11 @@ codes, including
 \citet{gamer,cholla,fargo3d,pekkila:2017,caplan:2018,racz:2018,liska:2018,goz:2018,wang:2010} \MarginPar{todo:
   group by AMR/no-AMR, GPU exclusive, Kokkos, ...}
 
-GPU-enabled integration has been explored by \citep{brock:2015}.
+GPU-enabled integration has been explored by \citep{brock:2015}.\MarginPar{XNet paper?}
 
 
 In this paper, we describe our approach to performance portability
-with the \castro\ multiphysics simulation code..  Our goal is to have
+with the \castro\ multiphysics simulation code.  Our goal is to have
 the same computational kernels run efficiently on CPUs (including
 manycore processors) and GPUs.  We describe the work we needed to do
 to enable this portability and show performance metrics for a reacting
@@ -159,32 +163,30 @@ flow problem in astrophysics.
 
 \subsection{The Castro hydrodynamics code}
 
-\castro\ is a compressible (radiation-)hydrodynamics simulation code built on
-the AMReX adaptive mesh refinement framework \citep{castro,castro2,castro3}.  It 
-includes full self-gravity using multigrid methods with isolated boundaries
-\citep{katz:2016}, works with general equations of state \citep{zingalekatz}
-and arbitrary nuclear reaction networks.  Castro has been used for science investigations of
-...
-
-The original computing architectures targeted were
-
 \castro\ development began with \cite{castro}, with the goal of
 creating an astrophysical hydrodynamics code using a modern adaptive
-mesh refinement library (BoxLib at the time) and unsplit hydrodynamics
-techniques.  The initial application area was nuclear astrophysics,
-including core-collapse supernovae, so it was designed to work with a
-general equation of state~\cite{zingalekatz} and reaction network, and
-with radiation transport (through flux limited diffusion,
-\citealt{castro2,castro3}).  \castro\ also acted as the compressible
-counterpart to our low Mach number hydrodynamics code \maestro,
-sharing much of the same infrastructure, and allowing for simulations
-to be restarted from the low Mach regime into the compressible
-regime~\cite{malone:2014}.  \castro\ has been applied to various
+mesh refinement library with space- and time-refinement (BoxLib at the
+time) and unsplit hydrodynamics techniques.  \castro\ now uses the
+AMReX adaptive mesh refinement library to handle the computational
+grid, memory management, and parallelism, and the \castro\ and AMReX
+developers work closely together to The initial application area was
+nuclear astrophysics, including core-collapse supernovae, so it was
+designed to work with a general equation of state~\cite{zingalekatz}
+and arbitrary nuclear reaction networks, and with radiation transport
+(through flux limited diffusion, \citealt{castro2,castro3}).  It
+includes full self-gravity using multigrid methods with isolated
+boundaries \citep{katz:2016}.  Finally, \castro\ also acted as the
+compressible counterpart to our low Mach number hydrodynamics code
+\maestro, sharing much of the same infrastructure, and allowing for
+simulations to be restarted from the low Mach regime into the
+compressible regime~\cite{malone:2014}.
+
+\castro\ has been used for science investigations of various different
 progenitor models of Type Ia
 supernova~\cite{malone:2014,katz:2016,polin:2019}, exoplanet
 dynamics~\cite{ryu:2018}, core-collapse and population III
-supernovae~\cite{chen:2014,dolence:2015,chen:2017}, and X-ray bursts~\cite{astronum:2018}..
-
+supernovae~\cite{chen:2014,dolence:2015,chen:2017}, and X-ray
+bursts~\cite{astronum:2018}..
 
 \castro\ is developed using a fully open-development model, with the
 code managed in git and hosted on
@@ -198,8 +200,55 @@ reproduce results as they are published.
 
 \section{Performance portable compute kernels}
 
+In \castro\ the domain is decomposed into a number of grids at various
+levels of refinement.  A single grid and its associated data is called
+a \fab, and its location in space is specified uniquely by the index
+of its lower left cell, typically called {\tt lo}, and its upper right
+cell, {\tt hi}, in a global index space for that level of refinement.
+The collection of all the \fab s at a given level of refinement is
+called a \multifab.  Time advancement proceeds by advancing all of the
+grids at the coarsest level through a timestep $\Delta t$, and then
+the grids at the next refinement level through {\tt rr} timesteps of
+$\Delta t/\mathtt{rr}$, where {\tt rr} is the refinement ratio between
+the levels, typically 2 or 4.  At that point, the two levels are at
+the same time and a synchronization is done, as discussed in \cite{castro}.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.33\textwidth]{gpu_1} 
+\includegraphics[width=0.33\textwidth]{gpu_2} 
+\includegraphics[width=0.33\textwidth]{gpu_3}
+\caption{\label{fig:loops} caption}
+\end{figure*}
+
+The main drivers in Castro, including the memory management and
+parallelism are written in C++.  The vast majority of the compute
+kernels are written in modern Fortran, although with time we are
+converting these to C++ as well.
 
 \subsection{Offloading to GPUs}
+
+GPUs achieve their performance by having a large number of threads
+(1000s) that can execute the same instructions on multiple pieces of
+data (a SIMD approach). \MarginPar{Max will not like this desciption.}
+In modern supercomputers, like Summit at OLCF, more than 95\% of the
+theoretical floating point performance is from the
+GPUs \MarginPar{cite?}.  The main bottleneck with these hybrid systems
+is copying the data back and forth between the main memory accessible
+to the CPU and the memory on the GPU.  Therefore, to get the best
+perfomance, we want to copy the data once onto the GPUs, operate as
+much as possible on it while it is on the GPUs, and then copy back to
+CPUs only when needed.  To simplify this data transfer, we use CUDA
+managed memory.\MarginPar{more here}.  This approach will require us
+to write all of our code in a manner that can be run on the GPUs.  We
+discuss some of the issues here in this section.
+
+There are several approaches to offloading a compute kernel to GPUs,
+including the directive-based OpenACC and OpenMP, and the
+NVIDIA-specific CUDA library.  For the present work, we use CUDA,
+although our approach can mix the use of the directive-based
+offloading instead of using pure CUDA.  This is something we will
+explore in the future.  
 
 CUDA Fortran is not as well supported as CUDA C/C++.  In particular,
 CUDA Fortran does not automatically create both the host and device
@@ -227,13 +276,6 @@ Describe mfiter structure
 
 Describe MPI, MPI+OpenMP w/ tiling, MPI + CUDA
 
-\begin{figure*}
-\centering
-\includegraphics[width=0.3\textwidth]{gpu_1} 
-\includegraphics[width=0.3\textwidth]{gpu_2} 
-\includegraphics[width=0.3\textwidth]{gpu_3}
-\caption{\label{fig:loops} caption}
-\end{figure*}
 
 \subsection{Summary of changes required}
 
@@ -265,14 +307,26 @@ This problem uses constant gravity, so all of the physics can be done on the GPU
 
 \section{Summary}
 
-Future work: gravity on GPUs (multigrid or multipole), port of \maestro\ following
-the same ideas.
+Self-gravity is the next important physics module that needs to be
+developed for GPUs.  \castro\ uses either geometric multigrid,
+implemented via AMReX, or a multipole expansion to solve for the
+gravitational potential.  With Strang splitting of the reactions, it
+is possible to asynchronously solve for the gravitational potential on
+CPUs while solving the second-half of the reaction system on GPUs,
+since the operator split approach does not change density via
+reactions.  This is the approach we will explore in the near future
+for self-gravitating reacting flows.
+
+We will also begin using the same ideas described here to port the
+hydrodynamics and reactions in \maestroex\ to GPUs.  The projection of
+the velocity field will remain on CPUs in the near future.
+
 
 \software{MPICH, GCC, Castro, AMReX, python, matplotlib}
 
 \facilities{OLCF, NERSC}
 
-\acknowledgements \castro\ is freely available at
+\acknowledgements \castro\ is available at
 \url{http://github.com/AMReX-Astro/Castro}.  The work at Stony Brook
 was supported by DOE/Office of Nuclear Physics grant DE-FG02-87ER40317
 and NSF award AST-1211563.  An award of computer time was provided by
@@ -280,9 +334,12 @@ the Innovative and Novel Computational Impact on Theory and Experiment
 (INCITE) program.  This research used resources of the Oak Ridge
 Leadership Computing Facility at the Oak Ridge National Laboratory,
 which is supported by the Office of Science of the U.S. Department of
-Energy under Contract No. DE-AC05-00OR22725.  We thank NVIDIA Corporation
-for the donation of a Titan X Pascal and Titan V used in this research.
-
+Energy under Contract No. DE-AC05-00OR22725.  In particular, we thank
+OLCF for early access to the Summitdev platform, where we could
+develop and debug our GPU approach.  We also thank NVIDIA Corporation
+for the donation of a Titan X Pascal and Titan V used in this
+research.  The GPU development of \castro\ benefited greatly from
+numerous GPU hackathons arranged by OLCF.
 
 
 
