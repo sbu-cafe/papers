@@ -11,7 +11,7 @@ pdf_source = $(filter-out paper.pdf, $(tpdf_source))
 epdf_source = $(eps_source:.eps=.pdf)
 pdf_source += $(epdf_source)
 
-paper.pdf: paper.tex  $(png_source) $(pdf_source)
+paper.pdf: paper.tex  $(png_source) $(pdf_source) ws.bib
 	pdflatex paper.tex < /dev/null
 	bibtex paper < /dev/null
 	pdflatex paper.tex < /dev/null

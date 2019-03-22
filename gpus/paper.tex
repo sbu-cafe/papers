@@ -138,8 +138,8 @@ standard for threading in high-performance computing, with hybrid
 MPI+OpenMP approaches to parallelism.  In the race to increase
 performance while keeping electrical power consumption reasonable,
 accelerators were increasingly turned to, include GPUs and many-core
-chips like the Intel Phi series.  The simulation codes we use in
-astrophysics need to keep pace with these developments, or they will
+chips like the Intel Phi series.  Throughout this evolution, the simulation codes we use in
+astrophysics had to continue adapt to keep pace with the new computing paradigms, or they will
 not be able to run on the next generation of supercomputers.  In
 particular, GPUs are dominant now, so existing algorithms need to be
 ported to run on GPUs, or new codes need to be written from scratch
@@ -154,10 +154,14 @@ GPU-enabled integration has been explored by \citep{brock:2015}.\MarginPar{XNet 
 
 
 In this paper, we describe our approach to performance portability
-with the \castro\ multiphysics simulation code.  Our goal is to have
-the same computational kernels run efficiently on CPUs (including
-manycore processors) and GPUs.  We describe the work we needed to do
-to enable this portability and show performance metrics for a reacting
+with the \castro\ multiphysics simulation code.  We choose not to use
+a framework like Kokkos but instead we implement the mechanism for
+offloading compute kernels to GPUs inside of the AMReX adaptive mesh
+refinement library itself.  Our goal is to have the same computational
+kernels run efficiently on CPUs (including manycore processors) and
+GPUs.  Early GPU results with a version of \castro\ were desribed in
+\citet{astronum:2017}.  Here, we describe the work we needed to do to
+enable this portability and show performance metrics for a reacting
 flow problem in astrophysics.
 
 
@@ -183,10 +187,10 @@ compressible regime~\cite{malone:2014}.
 
 \castro\ has been used for science investigations of various different
 progenitor models of Type Ia
-supernova~\cite{malone:2014,katz:2016,polin:2019}, exoplanet
-dynamics~\cite{ryu:2018}, core-collapse and population III
-supernovae~\cite{chen:2014,dolence:2015,chen:2017}, and X-ray
-bursts~\cite{astronum:2018}..
+supernova~\citep{malone:2014,katz:2016,polin:2019}, exoplanet
+dynamics~\citep{ryu:2018}, core-collapse and population III
+supernovae~\citep{chen:2014,dolence:2015,chen:2017}, and X-ray
+bursts~\citep{astronum:2018}.
 
 \castro\ is developed using a fully open-development model, with the
 code managed in git and hosted on
@@ -218,7 +222,19 @@ the same time and a synchronization is done, as discussed in \cite{castro}.
 \includegraphics[width=0.33\textwidth]{gpu_1} 
 \includegraphics[width=0.33\textwidth]{gpu_2} 
 \includegraphics[width=0.33\textwidth]{gpu_3}
-\caption{\label{fig:loops} caption}
+\caption{\label{fig:loops} Examples of distributing the work inside a
+  grid patch.  On the left is the pure MPI approach.  An entire patch
+  is assigned to a MPI task and the work loop runs over all of the
+  cells in the grid, $\mathtt{lo:hi}$.  At the center is the
+  tile-based MPI+OpenMP approach.  Again the grid is owned by an MPI
+  task, but now it is logically subdivided into files (two shown
+  here), and each tile is assigned to an OpenMP thread.  Each thread
+  loops only over its tile, where the bounds are now given as
+  $\mathtt{lo_{tile}:hi_{tile}}$.  Finally on the right is a GPU
+  approach.  As with the others, the grid is owned by an MPI task but
+  now each zone is assigned to a different GPU thread on the
+  accelerator.  This is achieved by calling the same compute kernels,
+  with $\mathtt{lo_{gpu}:hi_{gpu}}$ now corresponding to a single cell.}
 \end{figure*}
 
 The main drivers in Castro, including the memory management and
@@ -257,15 +273,10 @@ having two copies of a source routine, one marked up with device
 attributes.  Keeping them in sync essentially requires that this
 action be scripted, but in our experience, this scripting is fragile
 because of the need to deal with Fortran syntax, preprocessor
-directives, ...  Thus the pure CUDA route for the compute kernels makes the most sense
-with C/C++ kernels, and not Fortran kernels.
-
-OpenACC
+directives, ...  Thus the pure CUDA route for the compute kernels
+makes the most sense with C/C++ kernels, and not Fortran kernels.
 
 
-OpenMP
-
-Discuss frameworks vs.\ doing it outselves
 
 
 
@@ -290,7 +301,30 @@ all zones that participate in the boundary.
 
 \section{Reaction networks}
 
-\section{Scaling}
+The reaction update requires solving a system of ordinary differential
+equations (ODEs).  Astrophysical reaction networks are notoriously
+stiff, so implicit integrators are used (see,
+e.g.\ \citealt{timmes:1999}).  \castro\ uses the VODE integrator
+\citep{vode} which implements a variable order backward difference
+implicit method to advance the system.  This requires the network to
+provide a Jacobian as well as a routine to evaluate the righthand side
+of the reaction ODE system.  It is these evaluations that dominate the
+floating point work.  For integrating the system on GPUs, our approach
+is to put the entire ODE integration on GPUs: the evaluation of the
+righthand side and Jacobian as well as the driver which subcycles in
+time to integrate the system to the desired tolerance.  VODE is
+written in old Fortran, with numerous deprecated features that are not
+supported in CUDA Fortran (like {\tt go to} statements and {\tt
+  common} blocks).  We updated the code to eliminate these unsupported
+statements, using more modern Fortran constructs.  The resulting
+codebase is called VODE90 and serves as our GPU integrator.  \MarginPar{more here from Don}
+
+\section{Performance}
+
+On summit, we create a resource set with 1 MPI, 1 GPU, and 7 threads,
+and there are 6 resource sets per node.
+
+Do we also want to run on Cori?
 
 Our current focus is on offloading the hydrodynamics and reactions to
 GPUs, so we will achieve the best GPU performance for problems without
@@ -302,7 +336,24 @@ self-gravity.
 
 \subsection{X-ray burst}
 
-This problem uses constant gravity, so all of the physics can be done on the GPUs.
+The {\tt flame\_wave} problem in \castro\ was described in
+\cite{astronum:2018}.  This problem explores the lateral propagation
+of a helium deflagration across a neutron star in a plane-parallel
+atmosphere.  The Castro PPM CTU hydrodynamics solver is used, with a
+constant gravitational acceleration, and the problem is solved in the
+corotating frame, where the Coriolis forces acts to balance the
+lateral spreading in the atmosphere via geostrophic balance.  For the
+microphysics, we use the general stellar equation of state of
+\cite{timmes_swesty:2000} and the stellar conductivity described in
+\cite{Timmes00}.  The science goal of the problem is to understand the
+dynamics of a resolved burning front in X-ray bursts.  For this work,
+this problem serves as an ideal reacting flow problem to benchmark
+GPUs with.  All of the necessary physics: hydrodynamics, equation of
+state, thermal conductivities, reactions, hydrodynamic source terms,
+and thermal diffusion are run on the GPU.  We look at two different
+reaction networks, a 7-isotope alpha network and a 13-isotope alpha
+network~\cite{iso7}.
+
 
 
 \section{Summary}
