@@ -332,9 +332,11 @@ self-gravity.
 
 \subsection{Reaction test}
 
+To understand the GPU performance of the reactions, we run a simple pure reaction test.  \MarginPar{is this {\tt test\_react}?}
+
 \subsection{X-ray burst}
 
-The {\tt flame\_wave} problem in \castro\ was described in
+The {\tt flame\_wave} problem\footnote{Found in {\tt Castro/Exec/science/flame\_wave/}} in \castro\ was described in
 \cite{astronum:2018}.  This problem explores the lateral propagation
 of a helium deflagration across a neutron star in a plane-parallel
 atmosphere.  The Castro PPM CTU hydrodynamics solver is used, with a
@@ -350,7 +352,7 @@ GPUs with.  All of the necessary physics: hydrodynamics, equation of
 state, thermal conductivities, reactions, hydrodynamic source terms,
 and thermal diffusion are run on the GPU.  We look at two different
 reaction networks, a 7-isotope alpha network and a 13-isotope alpha
-network~\cite{iso7}.
+network~\citep{iso7}.
 
 
 
@@ -383,7 +385,7 @@ the Innovative and Novel Computational Impact on Theory and Experiment
 (INCITE) program.  This research used resources of the Oak Ridge
 Leadership Computing Facility at the Oak Ridge National Laboratory,
 which is supported by the Office of Science of the U.S. Department of
-Energy under Contract No. DE-AC05-00OR22725.  In particular, we thank
+Energy under Contract No.\ DE-AC05-00OR22725.  In particular, we thank
 OLCF for early access to the Summitdev platform, where we could
 develop and debug our GPU approach.  We also thank NVIDIA Corporation
 for the donation of a Titan X Pascal and Titan V used in this
