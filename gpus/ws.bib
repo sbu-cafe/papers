@@ -1905,3 +1905,72 @@ abstract = {
 The “ideal supercomputer” has an infinitely fast clock, executes a single instruction stream program operating on data stored in an infinitely large, and fast single-memory. Backus established the von Neumann programming model with FORTRAN. Supercomputers have evolved in steps: increasing processor speed, processing vectors, adding processors for a program held in a single memory monocomputer; and interconnecting multiple computers over which a distributed program runs in parallel. Thus, supercomputing has evolved from a hardware engineering design challenge of the Cray Era(1960-1995) of the monocomputer to the challenging of creating programs that operate on distributed (mono)computers of the Multicomputer Era (1985- present).},
 url = {https://www.microsoft.com/en-us/research/publication/supercomputers-the-amazing-race/},
 }
+
+@article{CarterEdwards2014,
+abstract = {The manycore revolution can be characterized by increasing thread counts, decreasing memory per thread, and diversity of continually evolving manycore architectures. High performance computing (HPC) applications and libraries must exploit increasingly finer levels of parallelism within their codes to sustain scalability on these devices. A major obstacle to performance portability is the diverse and conflicting set of constraints on memory access patterns across devices. Contemporary portable programming models address manycore parallelism (e.g., OpenMP, OpenACC, OpenCL) but fail to address memory access patterns. The Kokkos C++ library enables applications and domain libraries to achieve performance portability on diverse manycore architectures by unifying abstractions for both fine-grain data parallelism and memory access patterns. In this paper we describe Kokkos' abstractions, summarize its application programmer interface (API), present performance results for unit-test kernels and mini-applications, and outline an incremental strategy for migrating legacy C++ codes to Kokkos. The Kokkos library is under active research and development to incorporate capabilities from new generations of manycore architectures, and to address a growing list of applications and domain libraries.},
+author = {{Carter Edwards}, H. and Trott, Christian R. and Sunderland, Daniel},
+doi = {10.1016/j.jpdc.2014.07.003},
+issn = {07437315},
+journal = {Journal of Parallel and Distributed Computing},
+keywords = {GPU,Manycore,Mini-application,Multidimensional array,Parallel computing,Performance portability,Thread parallelism},
+number = {12},
+pages = {3202--3216},
+publisher = {Elsevier Inc.},
+title = {{Kokkos: Enabling manycore performance portability through polymorphic memory access patterns}},
+url = {http://dx.doi.org/10.1016/j.jpdc.2014.07.003},
+volume = {74},
+year = {2014}
+}
+
+@article{Bedorf2012,
+abstract = {We present the implementation and performance of a new gravitational N-body tree-code that is specifically designed for the graphics processing unit (GPU).1The code is publicly available at: http://castle.strw.leidenuniv.nl/software.html.1All parts of the tree-code algorithm are executed on the GPU. We present algorithms for parallel construction and traversing of sparse octrees. These algorithms are implemented in CUDA and tested on NVIDIA GPUs, but they are portable to OpenCL and can easily be used on many-core devices from other manufacturers. This portability is achieved by using general parallel-scan and sort methods. The gravitational tree-code outperforms tuned CPU code during the tree-construction and shows a performance improvement of more than a factor 20 overall, resulting in a processing rate of more than 2.8 million particles per second. {\textcopyright} 2011 Elsevier Inc.},
+author = {B{\'{e}}dorf, Jeroen and Gaburov, Evghenii and {Portegies Zwart}, Simon},
+doi = {10.1016/j.jcp.2011.12.024},
+issn = {00219991},
+journal = {Journal of Computational Physics},
+keywords = {GPU,Gravity,Hierarchical,N-body,Parallel,Tree-code},
+month = {apr},
+number = {7},
+pages = {2825--2839},
+title = {{A sparse octree gravitational N-body code that runs entirely on the GPU processor}},
+url = {https://linkinghub.elsevier.com/retrieve/pii/S0021999111007364},
+volume = {231},
+year = {2012}
+}
+
+@article{Schive2018,
+abstract = {We present GAMER-2, a GPU-accelerated adaptive mesh refinement (AMR) code for astrophysics. It provides a rich set of features, including adaptive time-stepping, several hydrodynamic schemes, magnetohydrodynamics, self-gravity, particles, star formation, chemistry and radiative processes with GRACKLE, data analysis with yt, and memory pool for efficient object allocation. GAMER-2 is fully bitwise reproducible. For the performance optimization, it adopts hybrid OpenMP/MPI/GPU parallelization and utilizes overlapping CPU computation, GPU computation, and CPU-GPU communication. Load balancing is achieved using a Hilbert space-filling curve on a level-by-level basis without the need to duplicate the entire AMR hierarchy on each MPI process. To provide convincing demonstrations of the accuracy and performance of GAMER-2, we directly compare with Enzo on isolated disk galaxy simulations and with FLASH on galaxy cluster merger simulations. We show that the physical results obtained by different codes are in very good agreement, and GAMER-2 outperforms Enzo and FLASH by nearly one and two orders of magnitude, respectively, on the Blue Waters supercomputers using {\$}1-256{\$} nodes. More importantly, GAMER-2 exhibits similar or even better parallel scalability compared to the other two codes. We also demonstrate good weak and strong scaling using up to 4096 GPUs and 65,536 CPU cores, and achieve a uniform resolution as high as {\$}10{\{},{\}}240{\^{}}3{\$} cells. Furthermore, GAMER-2 can be adopted as an AMR+GPUs framework and has been extensively used for the wave dark matter ({\$}\backslashpsi{\$}DM) simulations. GAMER-2 is open source (available at https://github.com/gamer-project/gamer) and new contributions are welcome.},
+author = {Schive, Hsi-Yu and ZuHone, John A. and Goldbaum, Nathan J. and Turk, Matthew J. and Gaspari, Massimo and Cheng, Chin-Yu},
+doi = {10.1093/mnras/sty2586},
+issn = {0035-8711},
+journal = {Monthly Notices of the Royal Astronomical Society},
+keywords = {Methods: numerical},
+month = {dec},
+number = {4},
+pages = {4815--4840},
+publisher = {Oxford University Press},
+title = {{gamer-2: a GPU-accelerated adaptive mesh refinement code – accuracy, performance, and scalability}},
+url = {https://academic.oup.com/mnras/article/481/4/4815/5106358},
+volume = {481},
+year = {2018}
+}
+
+@article{Potter2016,
+abstract = {We report on the successful completion of a 2 trillion particle cosmological simulation to z=0 run on the Piz Daint supercomputer (CSCS, Switzerland), using 4000+ GPU nodes for a little less than 80h of wall-clock time or 350,000 node hours. Using multiple benchmarks and performance measurements on the US Oak Ridge National Laboratory Titan supercomputer, we demonstrate that our code PKDGRAV3, delivers, to our knowledge, the fastest time-to-solution for large-scale cosmological N-body simulations. This was made possible by using the Fast Multipole Method in conjunction with individual and adaptive particle time steps, both deployed efficiently (and for the first time) on supercomputers with GPU-accelerated nodes. The very low memory footprint of PKDGRAV3 allowed us to run the first ever benchmark with 8 trillion particles on Titan, and to achieve perfect scaling up to 18000 nodes and a peak performance of 10 Pflops.},
+archivePrefix = {arXiv},
+arxivId = {1609.08621},
+author = {Potter, Douglas and Stadel, Joachim and Teyssier, Romain},
+doi = {10.1186/s40668-017-0021-1},
+eprint = {1609.08621},
+issn = {2197-7909},
+journal = {Computational Astrophysics and Cosmology},
+keywords = {1 overview of the,astrophysics,cosmology,high precision,mostly because of the,problem,seen the advent of,simulations,the last decade has,very accurate cos-},
+month = {dec},
+number = {1},
+pages = {2},
+publisher = {The Author(s)},
+title = {{PKDGRAV3: beyond trillion particle cosmological simulations for the next era of galaxy surveys}},
+url = {http://arxiv.org/abs/1609.08621 http://comp-astrophys-cosmol.springeropen.com/articles/10.1186/s40668-017-0021-1},
+volume = {4},
+year = {2017}
+}
