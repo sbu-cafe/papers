@@ -157,7 +157,7 @@ a framework like Kokkos but instead we implement the mechanism for
 offloading compute kernels to GPUs inside of the AMReX adaptive mesh
 refinement library itself.  Our goal is to have the same computational
 kernels run efficiently on CPUs (including manycore processors) and
-GPUs.  Early GPU results with a version of \castro\ were desribed in
+GPUs.  Early GPU results with a version of \castro\ were described in
 \citet{astronum:2017}.  Here, we describe the work we needed to do to
 enable this portability and show performance metrics for a reacting
 flow problem in astrophysics.
@@ -367,6 +367,11 @@ CPUs while solving the second-half of the reaction system on GPUs,
 since the operator split approach does not change density via
 reactions.  This is the approach we will explore in the near future
 for self-gravitating reacting flows.
+
+The Nyx cosmological code branched from \castro\ some time ago, but
+they share a lot of the same compute kernels, so it should porting the
+GPU-based hydro solver to Nyx is straightforward (and already in
+progress).
 
 We will also begin using the same ideas described here to port the
 hydrodynamics and reactions in \maestroex\ to GPUs.  The projection of
