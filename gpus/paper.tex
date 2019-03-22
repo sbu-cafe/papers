@@ -1,12 +1,10 @@
-%\documentclass[12pt, preprint]{aastex}
 \documentclass[twocolumn,times]{aastex62}
-%\documentclass[preprint,times]{aastex6}
 
 % these lines seem necessary for pdflatex to get the paper size right
 \pdfpagewidth 8.5in
 \pdfpageheight 11.0in
 
-
+\usepackage[T1]{fontenc}
 \usepackage{epsf,color,amsmath}
 
 \usepackage{cancel}
@@ -344,8 +342,8 @@ constant gravitational acceleration, and the problem is solved in the
 corotating frame, where the Coriolis forces acts to balance the
 lateral spreading in the atmosphere via geostrophic balance.  For the
 microphysics, we use the general stellar equation of state of
-\cite{timmes_swesty:2000} and the stellar conductivity described in
-\cite{Timmes00}.  The science goal of the problem is to understand the
+\citep{timmes_swesty:2000} and the stellar conductivity described in
+\citep{Timmes00}.  The science goal of the problem is to understand the
 dynamics of a resolved burning front in X-ray bursts.  For this work,
 this problem serves as an ideal reacting flow problem to benchmark
 GPUs with.  All of the necessary physics: hydrodynamics, equation of
@@ -399,7 +397,7 @@ numerous GPU hackathons arranged by OLCF.
 % References
 %======================================================================
 
-\bibliographystyle{apj}
+\bibliographystyle{aasjournal}
 \bibliography{ws}
 
 \end{document}
