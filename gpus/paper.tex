@@ -147,7 +147,7 @@ targeting the new architecture.
 
 There are a number of descriptions of GPU-enabled astrophysical hydro
 codes, including
-\citet{gamer,cholla,fargo3d,pekkila:2017,caplan:2018,racz:2018,liska:2018,goz:2018,wang:2010} \MarginPar{todo:
+\citet{gamer,cholla,fargo3d,pekkila:2017,caplan:2018,racz:2018,liska:2018,goz:2018,wang:2010,Padioleau2019,Bryan2014,Kulikov2014} \MarginPar{todo:
   group by AMR/no-AMR, GPU exclusive, Kokkos, ...}
 
 GPU-enabled integration has been explored by \citep{brock:2015}.\MarginPar{XNet paper?}
@@ -276,13 +276,21 @@ Describe mfiter structure
 
 Describe MPI, MPI+OpenMP w/ tiling, MPI + CUDA
 
+\begin{figure*}
+\centering
+\includegraphics[width=0.3\textwidth]{gpu_1}
+\includegraphics[width=0.3\textwidth]{gpu_2}
+\includegraphics[width=0.3\textwidth]{gpu_3}
+\caption{\label{fig:loops} caption}
+\end{figure*}
+
 
 \subsection{Summary of changes required}
 
 The main hydrodynamics solver in \castro\ is an unsplit corner
 transport upwind \citep{ppmunsplit} piecewise parabolic method
-\citep{ppm} scheme.  This uses full corner coupling, requiring a 
-number of transverse Riemann problem solutions.  
+\citep{ppm} scheme.  This uses full corner coupling, requiring a
+number of transverse Riemann problem solutions.
 
 
 Boundary conditions require special attention---threadblock must include
