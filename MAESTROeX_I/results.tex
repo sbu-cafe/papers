@@ -24,7 +24,7 @@ Note that the largest simulation used roughly 36\% of the entire computational s
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In the left panel of Figure \ref{fig:scaling} we compare the wallclock time per time step as a function of total core count (in this case, the total number of OpenMP threads) for the original FBoxLib-based MAESTRO implementation to the AMReX MAESTROeX implementation.
-These tests were performed using the original temporal integration strategy in \cite{MAESTRO_V}, noting that the new temporal integration scheme gives very similar performance results.\MarginPar{quantify this?... and also irregular dr case?}
+These tests were performed using the original temporal integration strategy in \cite{MAESTRO_V}, noting that the new temporal integration with and without the irregular base state gives essentially the same results.
 We also include a plot of MAESTROeX without base state evolution.
 Comparing the original and new implementations, we see similar scaling results except for the largest simulation, where MAESTROeX performs better.
 We see that the increase in wallclock time from the smallest to largest simulation is roughly 42\%.
@@ -35,7 +35,7 @@ Contrary to our prior assumptions, the linear solves are not the primary scaling
 In the right panel of Figure \ref{fig:scaling}, we isolate the wallclock time required for these linear solves and see that (i) the linear solves only use 20-23\% of the total computational time, and (ii) the increase in the solver wallclock time from the smallest to largest simulation is only 28\%.
 Further profiling reveals that the primary scaling bottleneck is the average operator.
 The averaging operator requires binning the sum of Cartesian data onto one-dimensional arrays holding every possible mapping radius.
-This amounts to at least 24,384 points (for the $256^3$ simulation) up to 883,584 point (for the $1536^3$ simulation).
+This amounts to at least 24,384 double precision values (for the $256^3$ simulation) up to 883,584 values (for the $1536^3$ simulation).
 The averaging operator requires a global sum reduction over all processors, and the communication of this data is the primary scaling bottleneck.
 For the simulation with base state evolution, this averaging operator is only called once per time step (as opposed to 14 times per time step when base state evolution is included).
 The difference in total wallclock times with and without base state evolution is almost entirely due to the averaging.
