@@ -1,20 +1,19 @@
 \section{Performance and Validation}
 
-\subsection{AMR Performance}
-Show 3D reacting bubble rise performance.
-Show 3-level spherical performance (stats won't be as good but explain why: refining a larger percentage of grid)
-
-\subsection{Scaling}
-In Figure XXX we show weak scaling results for convection preceding ignition in a spherical, full-star sub-Chandrasekhar mass white dwarf.
-These results are representative of simulations used in actual scientific studies; see \cite{MAESTRO_convection,MAESTRO_AMR}.
+\subsection{Performance and Scaling}
+In Figure \ref{fig:scaling} we show weak scaling results for simulations of convection preceding ignition in a spherical, full-star sub-Chandrasekhar mass white dwarf.
+We emphasize that these results are obtained using simulations used in actual scientific studies; see \cite{MAESTRO_convection,MAESTRO_AMR}.
 For this scaling study we use a spatially uniform grid (no AMR).
 
 
 These simulations were performed using the NERSC cori system on the Intel Xeon Phi (KNL) partition.
 
-We compare the original BoxLib-based MAESTRO implementation to the AMReX MAESTROeX implementation with the classic algorithm (original temporal integrator).
-
+We compare the original BoxLib-based MAESTRO implementation to the AMReX MAESTReX implementation with the same algorithm.
 We also include a plot of MAESTROeX without base state evolution.
+
+For the new temporal algorithm, and the option for irregular base state mapping, <COMMENT HERE ABOUT RUNTIME>
+
+
 
 The y-axis is the wallclock time per time step, and the x-axis represents total core count (in this case, the total number of OpenMP threads).
 
@@ -31,8 +30,6 @@ We see that the total increas in wallclock time from the smallest to largest sim
 Include a plot showing the linear solver scaling, and a discussion about how the bottleneck for typical MAESTRO simulations is the averaging operator.
 
 
-\MarginPar{Making new plots splitting out projections vs. everything else.}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htb]
 \begin{center}
@@ -43,6 +40,12 @@ Include a plot showing the linear solver scaling, and a discussion about how the
 \end{center}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{AMR Performance}
+Show 3D reacting bubble rise performance.
+Show 3-level spherical performance (stats won't be as good but explain why: refining a larger percentage of grid)
+Images of grid configuration.
 
 \subsection{White Dwarf Convection}
 white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregular base state)
