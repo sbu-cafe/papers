@@ -1,17 +1,20 @@
 \section{Performance and Validation}
 
 \subsection{Performance and Scaling}
-In Figure \ref{fig:scaling} we show weak scaling results for simulations of convection preceding ignition in a spherical, full-star sub-Chandrasekhar mass white dwarf.
-We emphasize that these results are obtained using simulations used in actual scientific studies; see \cite{MAESTRO_convection,MAESTRO_AMR}.
-For this scaling study we use a spatially uniform grid (no AMR).
-
-
+We perform weak scaling tests for simulations of convection preceding ignition in a spherical, full-star sub-Chandrasekhar mass white dwarf.
+The simulation setup remains the same as reported in Section 3 of \cite{MAESTRO_AMR} and originally used in \cite{MAESTRO_convection}, and thus we emphasize that these scaling tests are performed using meaningful, scientific calculations.
+Here, we perform simulations using $256^3, 512^3, 768^3, 1024^3, 1280^3$, and $1536^3$ grid cells on a spatially uniform grid (no AMR).
+We divide each simulation into $64^3$ grids, so this simulations contain between 64 grids ($256^3$) and 13,824 grids ($1536^3$).
 These simulations were performed using the NERSC cori system on the Intel Xeon Phi (KNL) partition.
+Each node contains 68 cores, each capable of supporting up to 4 hardware threads (i.e., a maximum of 272 hardware threads per node).
+For these tests, we assign 4 MPI tasks to each node, and 16 OpenMP threads per MPI process.
+For $64^3$ grids we discovered that using more than 16 OpenMP threads did not decrease the wallclock time due to a lack of work available per grid; in principle one could use larger grids, fewer MPI processes, and more threads per MPI process, however the overall wallclock time would increase except for extremely large numbers of MPI processes (beyond the range we tested here).
 
-We compare the original BoxLib-based MAESTRO implementation to the AMReX MAESTReX implementation with the same algorithm.
+
+In Figure \ref{fig:scaling} we compare the wallclock time per time step for the original BoxLib-based MAESTRO implementation to the AMReX MAESTReX implementation with the same algorithm.
 We also include a plot of MAESTROeX without base state evolution.
 
-For the new temporal algorithm, and the option for irregular base state mapping, <COMMENT HERE ABOUT RUNTIME>
+
 
 
 
@@ -29,6 +32,8 @@ We see that the total increas in wallclock time from the smallest to largest sim
 
 Include a plot showing the linear solver scaling, and a discussion about how the bottleneck for typical MAESTRO simulations is the averaging operator.
 
+\MarginPar{Include commentary about new temporal algorithm, and new temporal algorithm with irregular base state}
+For the new temporal algorithm, and the option for irregular base state mapping, <COMMENT HERE ABOUT RUNTIME>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htb]

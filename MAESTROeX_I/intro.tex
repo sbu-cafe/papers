@@ -11,6 +11,7 @@ Previously, we developed the low Mach number astrophysical solver, MAESTRO.
 The low Mach number model in MAESTRO is unique in that it is specifically designed for astrophysical settings with significant atmospheric stratification.
 Central to the algorithm is a stratified background (or base) state density and pressure held in hydrostatic equilibrium, and also vary as a function of altitude and time.
 MAESTRO is a structured-grid, finite-volume code that utlizes adaptive mesh refinement (AMR) to refine grids locally in space.
+This code was developed in the pure-Fortran90 FBoxLib framework (see the FBoxLib repository in \cite{AMReX}) for block-structured AMR applications.
 MAESTRO is suitable for for full spherical stars, as well as planar simulations of dynamics within localized regions of a star.
 
 The key numerical developments of the original MAESTRO algorithm are presented in a series of papers which we refer to as Papers I-V:
