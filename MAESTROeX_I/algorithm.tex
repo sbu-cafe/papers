@@ -1,6 +1,7 @@
 \section{Numerical Algorithm}
 
 \subsection{Spatial Discretization}\label{Sec:Spatial}
+\MarginPar{needs work}
 MAESTRO contains variables defined on Cartesian grids 
 one-dimensional base state stored on radial arrays.
 
@@ -10,7 +11,6 @@ one-dimensional base state stored on radial arrays.
 (description of base state mapping in planar, and origianl spherical, and new spherical)
 
 Mapping from the base state to the full state
-
 
 Mapping a Cartesian variable to a one-dimensional radial array uses the lateral averating operator.
 
@@ -36,13 +36,10 @@ and a local velocity $\Ubt(\xb,t)$, so that
 \Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
 \end{equation}
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
+Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than the perturbational and base state velocity separately.  This eliminates
+Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no longer requires the complex algorithm from Paper V, yet still retains the same overall second-order accuracy.
 
-Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V.
-In this new scheme we use a simpler, predictor-corrector approach to the base state density and pressure that no longer requires the complex algorithm from Paper V, yet still retains the same overall second-order accuracy.
-Also, we now evolve the full-state velocity directly rather than the perturbational velocity, eliminating the need to compute additional forcing terms that arise due to the splitting.
-
-We now describe the new temporal integration scheme, which has been greatly simplified
-from Paper V without formal loss of order of accuracy.
+We now describe the new temporal integration scheme, which has been greatly simplified from Paper V without formal loss of order of accuracy.
 Note that this temporal integration scheme is valid for the original base state mapping (with constant base state grid spacing), or the new irregularly spaced base state mapping.
 
 At the beginning of each time step we have the cell-centered state,
