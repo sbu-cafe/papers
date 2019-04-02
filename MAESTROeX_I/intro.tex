@@ -4,8 +4,15 @@ In many of these flows, modeling long-time convective dynamics are of interest, 
 One approach to this problem is to use low Mach number models.
 In a low Mach number approach, sound waves are eliminated from the governing equations while retaining compressibilitiy effects due to, e.g., nuclear energy release, compositional changes, and thermal diffusion.
 The resulting model can be numerically integrated with much larger time steps than a compressible model.
-Low Mach number models have been developed for a variety of contexts including combustion \citep{day2000numerical}, terrestrial atmospheric modeling \citep{duarte2015low}, 
+Low Mach number models have been developed for a variety of contexts including combustion \citep{day2000numerical}, terrestrial atmospheric modeling \citep{duarte2015low},
 and elastic solids \citep{abbate2017all}.
+
+In recent years, a number of alternative approaches to modelling low Mach number flows have been developed. These include semi-implicit all-Mach number solvers, where the Euler equations
+are split into an acoustic part and an advective part \citep{Degond2009,Cordier2012,Haack2012,Chalons2016,Kwatra2009,Happenhofer2013,Padioleau2019}. The fast acoustic waves are then
+solved using implicit time integration, while the slow material waves are solved explicitly. Another approach is to use preconditioned all-Mach number solvers
+\citep{Miczek2014,Barsukow2016}, where the numerical flux is multiplied by a preconditioning matrix. This reduces the stiffness of the system at low Mach numbers, while retaining the
+correct scaling behavior. In the reduced speed of sound technique (RSST) and related methods, the speed of sound is artificially reduced by including a suitable scaling factor in the
+continuity equation, reducing the restriction on the size of the timestep \citep{Rempel2005,Hotta2012,Wang2015,Takeyama2017,Iijima2018}. The MUSIC code uses fully implicit time integration for the compressible Euler equations, which therefore allows for arbitrarily large timesteps \citep{Viallet2011,Viallet2015,Goffrey2016}.
 
 Previously, we developed the low Mach number astrophysical solver, MAESTRO.
 The low Mach number model in MAESTRO is unique in that it is specifically designed for astrophysical settings with significant atmospheric stratification.
@@ -21,7 +28,7 @@ The key numerical developments of the original MAESTRO algorithm are presented i
 \item In Paper III \citep{MAESTRO_III}, we incorporate reactions and the associated coupling to the hydrodynamics.
 \item In Paper IV \citep{MAESTRO_IV}, we describe our treatment of spherical stars in a three-dimensional Cartesian geometry.
 \item In Paper V \citep{MAESTRO_V}, we describe the use of block-structured adaptive mesh refinement to focus spatial resolution in regions of interest.
-\end{itemize} 
+\end{itemize}
 
 Since then, there have been many scientific investigations using MAESTRO, which include additional algorithmic enhancements.  Topics include:
 \begin{itemize}
@@ -35,15 +42,15 @@ Since then, there have been many scientific investigations using MAESTRO, which 
 
 We also present new algorithmic methodology that improves upon Paper V in a number of ways.
 First, the overall temporal algorithm has been greatly simplified without compromising accuracy.
-The key design decision was to replace the predicted evolution of the base state with 
+The key design decision was to replace the predicted evolution of the base state with
 a predictor-corrector approach.  Not only does this greatly simplify the dynamics of the base
 state, but this treatment is more amenable to higher-order multiphysics coupling strategies
 based on method-of-lines integration.  Second, we now provide additional spatial mapping
 procedures that reduces, and in some cases eliminates, mapping error from the one-dimensional
 base state to the Cartesian grid state for spherical problems.
 Finally, the code has been completely ported to a new software framework suitable for modern manycore supercomputers.
-The resulting MAESTROeX is implemented in the C++/F90 AMReX public software library \cite{AMReX}.  
+The resulting MAESTROeX is implemented in the C++/F90 AMReX public software library \cite{AMReX}.
 MAESTROeX uses MPI+OpenMP parallelism and scales well to over 10,000 MPI processes, with each MPI process supporting tens of threads
-The resulting code is publicly available on GitHub at {\url https://github.com/AMReX-Astro/MAESTROeX} and uses the microphysics 
+The resulting code is publicly available on GitHub at {\url https://github.com/AMReX-Astro/MAESTROeX} and uses the microphysics
 libraries at {\url https://github.com/starkiller-astro/Microphysics} and the AMReX software library for block-structured adaptive mesh refinement
 {\url https://github.com/AMReX-Codes/amrex}.
