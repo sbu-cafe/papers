@@ -8,7 +8,7 @@ Low Mach number models have been developed for a variety of contexts including c
 and elastic solids \citep{abbate2017all}.
 
 In recent years, a number of alternative approaches to modelling low Mach number flows have been developed. These include semi-implicit all-Mach number solvers, where the Euler equations
-are split into an acoustic part and an advective part \citep{Degond2009,Cordier2012,Haack2012,Chalons2016,Kwatra2009,Happenhofer2013,Padioleau2019}. The fast acoustic waves are then
+are split into an acoustic part and an advective part \citep{Kwatra2009,Degond2009,Cordier2012,Haack2012,Happenhofer2013,Chalons2016,Padioleau2019}. The fast acoustic waves are then
 solved using implicit time integration, while the slow material waves are solved explicitly. Another approach is to use preconditioned all-Mach number solvers
 \citep{Miczek2014,Barsukow2016}, where the numerical flux is multiplied by a preconditioning matrix. This reduces the stiffness of the system at low Mach numbers, while retaining the
 correct scaling behavior. In the reduced speed of sound technique (RSST) and related methods, the speed of sound is artificially reduced by including a suitable scaling factor in the
