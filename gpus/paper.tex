@@ -325,6 +325,16 @@ supported in CUDA Fortran (like {\tt go to} statements and {\tt
 statements, using more modern Fortran constructs.  The resulting
 codebase is called VODE90 and serves as our GPU integrator.  \MarginPar{more here from Don}
 
+
+\section{Runtime Considerations}
+
+Volta can have as many as 160k threads in flight at any one time,
+whereas a $32^3$ box of cells is 30k.  This means that we haven't
+exposed enough parallelism to keep the device busy.  Generally we
+launch each box in a separate stream so it's often OK to do this, but
+other times this is a bottleneck, and we need bigger boxes for best
+performance.
+
 \section{Performance}
 
 On summit, we create a resource set with 1 MPI, 1 GPU, and 7 threads,

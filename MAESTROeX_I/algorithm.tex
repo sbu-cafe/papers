@@ -1,6 +1,7 @@
 \section{Numerical Algorithm}
 
 \subsection{Spatial Discretization}\label{Sec:Spatial}
+\MarginPar{needs work}
 MAESTRO contains variables defined on Cartesian grids 
 one-dimensional base state stored on radial arrays.
 
@@ -10,7 +11,6 @@ one-dimensional base state stored on radial arrays.
 (description of base state mapping in planar, and origianl spherical, and new spherical)
 
 Mapping from the base state to the full state
-
 
 Mapping a Cartesian variable to a one-dimensional radial array uses the lateral averating operator.
 
@@ -36,13 +36,10 @@ and a local velocity $\Ubt(\xb,t)$, so that
 \Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
 \end{equation}
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
+Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than the perturbational and base state velocity separately.  This eliminates
+Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no longer requires the complex algorithm from Paper V, yet still retains the same overall second-order accuracy.
 
-Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V.
-In this new scheme we use a simpler, predictor-corrector approach to the base state density and pressure that no longer requires the complex algorithm from Paper V, yet still retains the same overall second-order accuracy.
-Also, we now evolve the full-state velocity directly rather than the perturbational velocity, eliminating the need to compute additional forcing terms that arise due to the splitting.
-
-We now describe the new temporal integration scheme, which has been greatly simplified
-from Paper V without formal loss of order of accuracy.
+We now describe the new temporal integration scheme, which has been greatly simplified from Paper V without formal loss of order of accuracy.
 Note that this temporal integration scheme is valid for the original base state mapping (with constant base state grid spacing), or the new irregularly spaced base state mapping.
 
 At the beginning of each time step we have the cell-centered state,
@@ -95,6 +92,12 @@ There are additional constraints on the timestep that are typically much less re
 the acceleration due to the buoyancy force (sometimes in effect when the velocity is approximately zero at the start of some simulations) 
 and the local magnitude of the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
 
+In stratified low Mach number models, due to the extreme variation in density, the velocity can become very large in low density regions at the edge of the star.
+Throughout Papers II-V, we have employed two techniques to help control these dynamics without significantly affecting the dynamics in the convective region.
+First, we use a cutoff density technique, where we hold the density constant outside a specified radius (typically near where the density is $\sim$4 orders of magnitude smaller than the largest densities in the simulation.
+Second, we employ a sponge technique where we artificially damp the velocities near and beyond the cutoff region.
+For more details, refer to Paper V and the previous references cited within.
+
 To initialize the simulation we use the same procedure described in Paper III.
 At the beginning of each simulation, we define $(\Ub,\rho X_k,\rho h)$.
 We set initial values for $\Ub, \rho X_k$, and $\rho h$ and perform a sequence of projections 
@@ -102,8 +105,6 @@ We set initial values for $\Ub, \rho X_k$, and $\rho h$ and perform a sequence o
 followed by a small number of steps of the temporal advancement scheme to iteratively 
 find initial values for $\pi^{n-\myhalf}$ and $S^0$ and $S^1$ for use in the first time step.
 The new temporal integration strategy in MAESTROeX contains the following steps:
-\MarginPar{mention cutoff densities}
-
 \begin{description}
 
 %--------------------------------------------------------------------------
@@ -202,8 +203,7 @@ accounted for in {\bf React State}.  The update consists of two steps:
 \frac{\partial(\rho h)}{\partial t} = -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc,
 \end{equation}
 %
-again omitting the reaction and heating terms
-since we already accounted for
+again omitting the reaction terms since we already accounted for
 them in {\bf React State}.  This equation takes the form:
 \begin{equation}
 \frac{\partial (\rho h)}{\partial t}  = - \nabla \cdot (\Ub \rho h) + \frac{\partial p_0}{\partial t} + (\Ub \cdot \eb_r) \frac{\partial p_0}{\partial r}.
@@ -223,31 +223,22 @@ The update consists of two steps:
   where $(\rho h)_0^n$ is obtained by calling {\bf Average}$[(\rho h)^n]\rightarrow[(\rho h)_0]$,
   and here we spatially interpolate $(\rho h)_0^n$ to edges to assemble the fluxes.
 
-\item Evolve $(\rho h)^{(1)} \rightarrow (\rho h)^{(2),\star}$.
-\begin{description}
-\item For planar geometry,
-\begin{eqnarray}
+\item Evolve $(\rho h)^{(1)} \rightarrow (\rho h)^{(2),\star}$ using
+\begin{equation}
 (\rho h)^{(2),\star}
-&=& (\rho h)^{(1)} \nonumber \\
-&&- \dt \left\{ \nabla \cdot \left[ \uadvone (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
-&& + \left(p_0^{n+1,*} - p_0^n\right) \nonumber \\
-&& + \dt \left(\uadvone \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n}
-\end{eqnarray}
-
-\item For spherical geometry,
-\begin{eqnarray}
-(\rho h)^{(2),\star}
-&=& (\rho h)^{(1)} \nonumber \\
-&&- \dt \left\{ \nabla \cdot \left[ \uadvone (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
-&& + \left(p_0^{n+1,*} - p_0^n\right) \nonumber \\
-&& + \dt \left \{ \nabla \cdot \left (\uadvone p_0^{n+\myhalf} \right ) - p_0^{n+\myhalf} \nabla \cdot \uadvone \right \}
-\end{eqnarray}
-\end{description}
-where we define $p_0^\nph$ as $p_0^\nph = (p_0^n+p_0^{n+1,*})/2$.
-
+= (\rho h)^{(1)} - \dt \left\{ \nabla \cdot \left[ \uadvone (\rho h)^{\nph,\pred} \right] \right\} + \Delta t\frac{Dp_0}{Dt}
+\end{equation}
+where here
+\begin{equation}
+\frac{Dp_0}{Dt} =
+\begin{cases}
+\frac{p_0^{n+1,*} - p_0^n}{\Delta t} + \left(\uadvone \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n}& {\rm (planar)} \\
+\frac{p_0^{n+1,*} - p_0^n}{\Delta t} + \left[ \nabla \cdot \left (\uadvone p_0^{\nph} \right ) - p_0^{\nph} \nabla \cdot \uadvone \right]& {\rm (spherical)}
+\end{cases}
+,
+\end{equation}
+and $p_0^\nph = (p_0^n+p_0^{n+1,*})/2$.
 \end{enumerate}
-Note that outside the cutoff density region, we compute enthalpy using the EOS.
-
 \end{enumerate}
 
 %--------------------------------------------------------------------------
@@ -284,7 +275,7 @@ the updated value $S^{\nph}$ rather than $S^{\nph,\star}$.
 We note that $\uadvtwo$ satisfies the divergence constraint
 \begin{equation}
 \nabla \cdot \left(\beta_0^{\nph} \uadvtwo\right) =
-\beta_0^{\nph} \left[S^{\nph} - \frac{1}{\gammaonebar^{n+\myhalf}p_0^{n+\myhalf}}\left(\frac{\partial p_0}{\partial t}\right)^{n+\myhalf}\right],\label{eq:div2}
+\beta_0^{\nph} \left[S^{\nph} - \frac{1}{\gammaonebar^{\nph}p_0^{\nph}}\left(\frac{\partial p_0}{\partial t}\right)^{\nph}\right],\label{eq:div2}
 \end{equation}
 where
 \begin{equation}
@@ -327,7 +318,7 @@ where
 \item Update $p_0$ by calling {\bf Enforce HSE}$[\rho_0^{n+1}] \rightarrow [p_0^{n+1}]$.
 
 \item Update the enthalpy.  This step is identical to {\bf Step 4D} except we use
-  the updated values $\uadvtwo, \rho_0^{n+1}, (\rho h)_0^{n+1}$, and $p_0^{n+\myhalf}$
+  the updated values $\uadvtwo, \rho_0^{n+1}, (\rho h)_0^{n+1}$, and $p_0^{\nph}$
   rather than
   $\uadvone, \rho_0^{n+1,\star}, (\rho h)_0^{n+1,\star}$, and $p_0^n$.
   In particular:
@@ -341,28 +332,21 @@ where
   and here we spatially interpolate $[(\rho h)_0^n)+(\rho h)_0^{n+1,*}]/2$ to edges to assemble the fluxes.
 
 \item Evolve $(\rho h)^{(1)} \rightarrow (\rho h)^{(2)}$.
-\begin{description}
-\item For planar geometry,
-\begin{eqnarray}
+\begin{equation}
 (\rho h)^{(2)}
-&=& (\rho h)^{(1)} - \dt \left\{ \nabla \cdot \left[ \uadvtwo (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
-&& + \left( p_0^{n+1} - p_0^n \right)\nonumber \\
-&& + \dt \left(\uadvtwo \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^\nph,
-\end{eqnarray}
-
-\item For spherical geometry,
-\begin{eqnarray}
-(\rho h)^{(2)}
-&=& (\rho h)^{(1)} - \dt \left\{ \nabla \cdot \left[ \uadvtwo (\rho h)^{\nph,\pred} \right] \right\} \nonumber \\
-&& + \left(p_0^{n+1} - p_0^n\right)\nonumber \\
-&& + \dt \left[ \nabla \cdot \left (\uadvtwo p_0^{\nph} \right ) - p_0^{\nph} \nabla \cdot \uadvtwo \right],
-\end{eqnarray}
-\end{description}
-where we now define $p_0^\nph$ as $p_0^\nph = (p_0^n+p_0^{n+1})/2$.
-
+= (\rho h)^{(1)} - \dt \left\{ \nabla \cdot \left[ \uadvtwo (\rho h)^{\nph,\pred} \right] \right\} + \Delta t\frac{Dp_0}{Dt}
+\end{equation}
+where here
+\begin{equation}
+\frac{Dp_0}{Dt} =
+\begin{cases}
+\frac{p_0^{n+1} - p_0^n}{\Delta t} + \left(\uadvtwo \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n}& {\rm (planar)} \\
+\frac{p_0^{n+1} - p_0^n}{\Delta t} + \left[ \nabla \cdot \left (\uadvtwo p_0^{\nph} \right ) - p_0^{\nph} \nabla \cdot \uadvtwo \right]& {\rm (spherical)}
+\end{cases}
+,
+\end{equation}
+and $p_0^\nph = (p_0^n+p_0^{n+1})/2$.
 \end{enumerate}
-Note that outside the cutoff density region, we compute enthalpy using the EOS.
-
 \end{enumerate}
 
 %--------------------------------------------------------------------------
@@ -413,7 +397,7 @@ Finally, we use an approximate nodal projection to define $\Ub^{n+1}$
 from $\Ub^{n+1,\dagger},$  such that $\Ub^{n+1}$ approximately
 satisfies the divergence constraint,
 \begin{equation}
-\nabla \cdot \left(\beta_0^{n+1} \Ub^{n+1} \right) = \beta_0^{n+1} \left[ S^{n+1} - \frac{1}{\gammaonebar^{n+1}p_0^{n+1}}\left(\frac{\partial p_0}{\partial t}\right)^{n+\myhalf}\right].\label{eq:div3}
+\nabla \cdot \left(\beta_0^{n+1} \Ub^{n+1} \right) = \beta_0^{n+1} \left[ S^{n+1} - \frac{1}{\gammaonebar^{n+1}p_0^{n+1}}\left(\frac{\partial p_0}{\partial t}\right)^{\nph}\right].\label{eq:div3}
 \end{equation}
 As part of the projection we also define the new-time perturbational pressure,
 $\pi^\nph.$  This projection necessarily differs from the MAC projection used in
