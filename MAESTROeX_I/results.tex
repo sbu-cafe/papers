@@ -41,10 +41,37 @@ For the simulation with base state evolution, this averaging operator is only ca
 The difference in total wallclock times with and without base state evolution is almost entirely due to the averaging.
 Note that as expected, advection, reactions, and calls to the equation of state scale almost perfectly, since there is only a single parallel communication call to fill ghost cells.
 
+
 \subsection{AMR Performance}
-Show 3D reacting bubble rise performance.
-Show 3-level spherical performance (stats won't be as good but explain why: refining a larger percentage of grid)
-Images of grid configuration.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=2.75in]{./figs/reacting_bubble_amr} 
+$\qquad$
+\includegraphics[width=2.75in]{./figs/wdconvect_amr_3grid}
+\caption{\label{fig:amr_grids} Initial grid structures with two levels of refinement. 
+         The red, green, and black lines represent grids of increasing refinement. 
+         (Left) Profile of $T - \bar{T}$ for a hot bubble in a white dwarf environment.
+         (Right) Region of star where $\rho\ge 10^5 \text{ g cm}^{-3}$ in a full white dwarf star simulation. }
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=2.75in]{./figs/reacting_bubble_result} 
+$\qquad$
+\includegraphics[width=2.75in]{./figs/reacting_bubble_amr_result}
+\caption{\label{fig:bubble_results} Time-lapse cross-section of a hot bubble in a white dwarf environment at 
+         $t = 0$, 1.25, and 2.5 s for (left) single-level simulation, and 
+         (right) adaptive simulation at the same effective resolution.}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 \subsection{White Dwarf Convection}
 white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregular base state)
