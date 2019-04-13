@@ -71,9 +71,23 @@ $\qquad$
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Reacting bubble simulation at effective resolution of $128^2 \times 1024$ run on Cori Haswell with 48 processors took 33.54 s per time step (averaged over 10 time steps) to run on single-level grid and only 3.70 s on adaptive grid with two levels of refinement. This 89\% decrease in runtime is mostly due to the fact that only 6.25\% of the cells (1,048,576 out of $128^2 \times 1024$ cells) are refined at the the finest level for the AMR run. 
+
+
 
 
 \subsection{White Dwarf Convection}
 white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregular base state)
 
-Show 3-level wdconvect
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=3.5in]{./figs/wdconvect_amr_Tmax} 
+\caption{\label{fig:wdconvect_amr_Tmax} Peak temperature, $T_{\text{peak}}$, in a white dwarf from $t=0$ to $350$ s  
+for grids with effective resolution of $256^3$. We can see that the adaptive grids with two levels of refinement 
+give very similar solution trends compared to the single-level grid.}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Full white dwarf star simulation at effective resolution of $512^3$ on Cori KNL with 512 processors and 16 threads took 26.01 s per time step (averaged over 10 time steps) using the original temporal scheme, and 22.66 s using the new scheme. On an adaptive grid with two levels of refinement, the simulation took 34.69 s because the refinement region was set all the way to the edge of the star.  
