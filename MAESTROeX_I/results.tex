@@ -71,21 +71,35 @@ $\qquad$
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Reacting bubble simulation at effective resolution of $128^2 \times 1024$ run on Cori Haswell with 48 processors took 33.54 s per time step (averaged over 10 time steps) to run on single-level grid and only 3.70 s on adaptive grid with two levels of refinement. This 89\% decrease in runtime is mostly due to the fact that only 6.25\% of the cells (1,048,576 out of $128^2 \times 1024$ cells) are refined at the the finest level for the AMR run. 
+Reacting bubble simulation at effective resolution of $128^2 \times 1024$ run on Cori Haswell with 48 processors took approximately 33.5 s per time step (averaged over 10 time steps) to run on single-level grid using either the original or new temporal algorithm, and only 3.7 s on adaptive grid with two levels of refinement. This 89\% decrease in runtime is mostly due to the fact that only 6.25\% of the cells (1,048,576 out of $128^2 \times 1024$ cells) are refined at the the finest level for the AMR run. 
 
 
 
 
 \subsection{White Dwarf Convection}
+
 white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregular base state)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htb]
 \begin{center}
+\includegraphics[width=2.75in]{./figs/wdconvect_128_maxT} 
+\includegraphics[width=2.75in]{./figs/wdconvect_128_maxMach}
+\caption{\label{fig:wdconvect_128_maxval} (left) Peak temperature, $T_{\text{peak}}$, and (right) peak Mach number 
+         in a white dwarf until time of ignition at resolution of $128^3$ for three different MAESTROeX algorithms.}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
 \includegraphics[width=3.5in]{./figs/wdconvect_amr_Tmax} 
-\caption{\label{fig:wdconvect_amr_Tmax} Peak temperature, $T_{\text{peak}}$, in a white dwarf from $t=0$ to $350$ s  
-for grids with effective resolution of $256^3$. We can see that the adaptive grids with two levels of refinement 
-give very similar solution trends compared to the single-level grid.}
+\caption{\label{fig:wdconvect_amr_Tmax} Peak temperature, $T_{\text{peak}}$, in a white dwarf from $t=0$ to $350$ s 
+         for grids with effective resolution of $512^3$. We can see that the adaptive grids with two levels of 
+         refinement give very similar solution trends compared to the single-level grid.}
 \end{center}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
