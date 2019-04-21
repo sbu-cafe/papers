@@ -41,12 +41,67 @@ For the simulation with base state evolution, this averaging operator is only ca
 The difference in total wallclock times with and without base state evolution is almost entirely due to the averaging.
 Note that as expected, advection, reactions, and calls to the equation of state scale almost perfectly, since there is only a single parallel communication call to fill ghost cells.
 
+
 \subsection{AMR Performance}
-Show 3D reacting bubble rise performance.
-Show 3-level spherical performance (stats won't be as good but explain why: refining a larger percentage of grid)
-Images of grid configuration.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=2.75in]{./figs/reacting_bubble_amr} 
+$\qquad$
+\includegraphics[width=2.75in]{./figs/wdconvect_amr_3grid}
+\caption{\label{fig:amr_grids} Initial grid structures with two levels of refinement. 
+         The red, green, and black lines represent grids of increasing refinement. 
+         (Left) Profile of $T - \bar{T}$ for a hot bubble in a white dwarf environment.
+         (Right) Region of star where $\rho\ge 10^5 \text{ g cm}^{-3}$ in a full white dwarf star simulation. }
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=2.75in]{./figs/reacting_bubble_result} 
+$\qquad$
+\includegraphics[width=2.75in]{./figs/reacting_bubble_amr_result}
+\caption{\label{fig:bubble_results} Time-lapse cross-section of a hot bubble in a white dwarf environment at 
+         $t = 0$, 1.25, and 2.5 s for (left) single-level simulation, and 
+         (right) adaptive simulation at the same effective resolution.}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Reacting bubble simulation at effective resolution of $128^2 \times 1024$ run on Cori Haswell with 48 processors took approximately 33.5 s per time step (averaged over 10 time steps) to run on single-level grid using either the original or new temporal algorithm, and only 3.7 s on adaptive grid with two levels of refinement. This 89\% decrease in runtime is mostly due to the fact that only 6.25\% of the cells (1,048,576 out of $128^2 \times 1024$ cells) are refined at the the finest level for the AMR run. 
+
+
+
 
 \subsection{White Dwarf Convection}
+
 white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregular base state)
 
-Show 3-level wdconvect
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=2.75in]{./figs/wdconvect_128_maxT} 
+\includegraphics[width=2.75in]{./figs/wdconvect_128_maxMach}
+\caption{\label{fig:wdconvect_128_maxval} (left) Peak temperature, $T_{\text{peak}}$, and (right) peak Mach number 
+         in a white dwarf until time of ignition at resolution of $128^3$ for three different MAESTROeX algorithms.}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=3.5in]{./figs/wdconvect_amr_Tmax} 
+\caption{\label{fig:wdconvect_amr_Tmax} Peak temperature, $T_{\text{peak}}$, in a white dwarf from $t=0$ to $350$ s 
+         for grids with effective resolution of $512^3$. We can see that the adaptive grids with two levels of 
+         refinement give very similar solution trends compared to the single-level grid.}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Full white dwarf star simulation at effective resolution of $512^3$ on Cori KNL with 512 processors and 16 threads took 26.01 s per time step (averaged over 10 time steps) using the original temporal scheme, and 22.66 s using the new scheme. On an adaptive grid with two levels of refinement, the simulation took 34.69 s because the refinement region was set all the way to the edge of the star.  

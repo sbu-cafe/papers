@@ -8,11 +8,11 @@ one-dimensional base state stored on radial arrays.
  associated with square (in 2D) or cubic (in 3D)
 
 
-(description of base state mapping in planar, and origianl spherical, and new spherical)
+(description of base state mapping in planar, and original spherical, and new spherical)
 
 Mapping from the base state to the full state
 
-Mapping a Cartesian variable to a one-dimensional radial array uses the lateral averating operator.
+Mapping a Cartesian variable to a one-dimensional radial array uses the lateral averaging operator.
 
 One of the key numerical modules is the ``lateral average'', which computes the average over a 
 layer of a Cartesian grid variable onto a one-dimensional radial array.
@@ -23,10 +23,10 @@ However for spherical problems, the procedure is much more complicated.
 In Section 4 of Paper V, we describe how there is a finite, easily computable set of radii that any Cartesian cell-center can map to.  
 Specifically, for every Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by $\hat{r}_m=\Delta x\sqrt{0.75+2m}$.
 We average by binning all the cells associated with each radii and taking the average.
-Then we interpolate this data onto a one-dimensional radial array.  Previously, MAESTRO only allowed for radial arrays with a constant $\Delta r$ (typically equal to $\Delta x/5$.
+Then we interpolate this data onto a one-dimensional radial array.  Previously, MAESTRO only allowed for radial arrays with a constant $\Delta r$ (typically equal to $\Delta x/5$).
 Here we present a new option to retain an irregularly-spaced radial array to eliminate mapping errors back onto the Cartesian grid state.
 Consider a spherical star in hydrostatic equlibrium at rest.  In the absense of reactions, the star should remain at rest.
-The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors in computing $\rho_0$ by averaging would cause artifical acceleration in the velocity field due to the interpolation error from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced array, the effects due to interpolation error are completely eliminated.
+The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced array, the effects due to interpolation error are completely eliminated.
 
 
 \subsection{Temporal Integration Scheme}\label{Sec:Temporal Integration Scheme}
@@ -36,7 +36,7 @@ and a local velocity $\Ubt(\xb,t)$, so that
 \Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
 \end{equation}
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
-Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than the perturbational and base state velocity separately.  This eliminates
+Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than the perturbational and base state velocity separately.  This eliminates 
 Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no longer requires the complex algorithm from Paper V, yet still retains the same overall second-order accuracy.
 
 We now describe the new temporal integration scheme, which has been greatly simplified from Paper V without formal loss of order of accuracy.

@@ -1,0 +1,194 @@
+==============================================================================
+ Castro Job Information
+==============================================================================
+job name: 
+
+inputs file: inputs.1d.flame_wave.boost
+
+number of MPI processes: 4
+
+CPU time used since start of simulation (CPU-hours): 0.00195822
+
+==============================================================================
+ Plotfile Information
+==============================================================================
+output data / time: Tue May  1 15:46:16 2018
+output dir:         /raid/zingale/development/Castro/Exec/science/flame/flame_wave_tests
+
+
+==============================================================================
+ Build Information
+==============================================================================
+build date:    2018-05-01 15:25:52.798831
+build machine: Linux groot.astro.sunysb.edu 4.15.17-300.fc27.x86_64 #1 SMP Thu Apr 12 18:19:17 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+build dir:     /raid/zingale/development/Castro/Exec/science/flame
+AMReX dir:     /home/zingale/development/AMReX/
+
+COMP:          gnu
+COMP version:  7.3.1
+
+C++ compiler:  mpicxx
+C++ flags:      -g -O3  -DNDEBUG -DBL_USE_MPI -DAMREX_USE_MPI -DAMREX_GIT_VERSION="18.04-240-ge5734db5d003" -DBL_GCC_VERSION=7.3.1 -DBL_GCC_MAJOR_VERSION=7 -DBL_GCC_MINOR_VERSION=3 -DAMREX_LAUNCH= -DAMREX_DEVICE= -DBL_SPACEDIM=1 -DAMREX_SPACEDIM=1 -DBL_FORT_USE_UNDERSCORE -DAMREX_FORT_USE_UNDERSCORE -DBL_Linux -DAMREX_Linux -DCRSEGRNDOMP -DSPONGE -DREACTIONS -DDIFFUSION -DCASTRO_MLMG -DAMREX_USE_FBOXLIB_MG -DINTEGRATOR=0 -DBL_USE_F_BASELIB -DBL_USE_FORTRAN_MPI -I. -I/home/zingale/development/AMReX//Src/LinearSolvers/C_to_F_MG -I/home/zingale/development/AMReX//Src/LinearSolvers/F_MG -I/home/zingale/development/AMReX//Src/Base -I/home/zingale/development/AMReX//Src/AmrCore -I/home/zingale/development/AMReX//Src/Amr -I/home/zingale/development/AMReX//Src/Boundary -I/home/zingale/development/AMReX//Src/LinearSolvers/C_CellMG -I/home/zingale/development/AMReX//Src/LinearSolvers/MLMG -I/home/zingale/development/Microphysics/util -I/home/zingale/development/Microphysics/util/LINPACK -I/home/zingale/development/Microphysics/util/BLAS -I/home/zingale/development/Microphysics/integration/VODE -I/home/zingale/development/Microphysics/integration/VODE/vode_source/ -I/home/zingale/development/Microphysics/integration/BS -I/home/zingale/development/Microphysics/integration -I/home/zingale/development/Microphysics/screening -I. -I../../../Source/driver -I../../../Source/driver/param_includes -I../../../Source/hydro -I../../../Source/problems -I../../../Source/sources -I../../../constants -I../../../Util/model_parser -I../../../Source/reactions -I../../../Source/diffusion -I../../../Microphysics/EOS -I/home/zingale/development/Microphysics/EOS/helmholtz -I../../../Microphysics/networks -I/home/zingale/development/Microphysics/networks/triple_alpha_plus_cago -I/home/zingale/development/Microphysics/EOS -I/home/zingale/development/Microphysics/networks -I../../../Microphysics/conductivity -I../../../Microphysics/conductivity -I/home/zingale/development/Microphysics/conductivity/stellar -I../../../Microphysics/viscosity/constant -I/home/zingale/development/AMReX//Src/F_BaseLib -I/home/zingale/development/AMReX//Tools/C_scripts
+
+Fortran comp:  mpif90
+Fortran flags:  -g -O3 -ffree-line-length-none -fno-range-check -fno-second-underscore -Jtmp_build_dir/o/1d.gnu.MPI.EXE -I tmp_build_dir/o/1d.gnu.MPI.EXE -fimplicit-none 
+
+Link flags:    -L. -L/usr/lib/gcc/x86_64-redhat-linux/7/
+Libraries:     -m64 -O2 -fPIC -Wl,-z,noexecstack -I/usr/include/mpich-x86_64 -I/usr/lib64/gfortran/modules/mpich -L/usr/lib64/mpich/lib -lmpifort -Wl,-rpath -Wl,/usr/lib64/mpich/lib -Wl,--enable-new-dtags -lmpi -lgfortran -lquadmath
+
+EOS: /home/zingale/development/Microphysics/EOS/helmholtz
+VISCOSITY: ../../../Microphysics/viscosity/constant
+NETWORK: /home/zingale/development/Microphysics/networks/triple_alpha_plus_cago
+CONDUCTIVITY: /home/zingale/development/Microphysics/conductivity/stellar
+
+Castro       git describe: 18.05-2-g8f540147
+AMReX        git describe: 18.04-240-ge5734db5d
+Microphysics git describe: 18.04-25-g57f38e9
+
+
+==============================================================================
+ Grid Information
+==============================================================================
+ level: 0
+   number of boxes = 4
+   maximum zones   = 256 
+
+ level: 1
+   number of boxes = 4
+   maximum zones   = 1024 
+
+ level: 2
+   number of boxes = 16
+   maximum zones   = 4096 
+
+ Boundary conditions
+   -x: symmetry
+   +x: outflow
+
+
+==============================================================================
+ Species Information
+==============================================================================
+ index                         name              A              Z
+------------------------------------------------------------------------------
+     0                          He4              4              2
+     1                          C12             12              6
+     2                          O16             16              8
+     3                         Fe56             56             26
+
+
+==============================================================================
+ Inputs File Parameters
+==============================================================================
+[*] castro.diffuse_temp = 1
+    castro.diffuse_enth = 0
+    castro.diffuse_spec = 0
+    castro.diffuse_vel = 0
+[*] castro.diffuse_cutoff_density = 0.01
+[*] castro.diffuse_cond_scale_fac = 10
+    castro.state_interp_order = 1
+    castro.lin_limit_state_interp = 0
+    castro.state_nghost = 0
+    castro.do_reflux = 1
+    castro.update_sources_after_reflux = 1
+    castro.use_custom_knapsack_weights = 0
+    castro.difmag = 0.1
+[*] castro.small_dens = 1e-05
+[*] castro.small_temp = 1e+06
+    castro.small_pres = -1e+200
+    castro.small_ener = -1e+200
+[*] castro.do_hydro = 1
+    castro.do_ctu = 1
+    castro.fourth_order = 0
+    castro.add_ext_src = 0
+    castro.hybrid_hydro = 0
+    castro.ppm_type = 1
+    castro.ppm_temp_fix = 0
+    castro.ppm_predict_gammae = 0
+[*] castro.ppm_reference_eigenvectors = 1
+    castro.plm_iorder = 2
+    castro.hybrid_riemann = 0
+    castro.riemann_solver = 0
+    castro.cg_maxiter = 12
+    castro.cg_tol = 1e-05
+    castro.cg_blend = 2
+    castro.use_eos_in_riemann = 0
+    castro.use_flattening = 1
+    castro.transverse_use_eos = 0
+    castro.transverse_reset_density = 1
+    castro.transverse_reset_rhoe = 0
+    castro.dual_energy_update_E_from_e = 1
+    castro.dual_energy_eta1 = 1
+    castro.dual_energy_eta2 = 0.0001
+    castro.dual_energy_eta3 = 1
+    castro.use_pslope = 1
+    castro.fix_mass_flux = 0
+    castro.limit_fluxes_on_small_dens = 0
+    castro.density_reset_method = 1
+    castro.allow_negative_energy = 0
+    castro.allow_small_energy = 1
+    castro.do_sponge = 0
+    castro.sponge_implicit = 1
+    castro.source_term_predictor = 0
+    castro.first_order_hydro = 0
+    castro.xl_ext_bc_type = 
+    castro.xr_ext_bc_type = 
+    castro.yl_ext_bc_type = 
+    castro.yr_ext_bc_type = 
+    castro.zl_ext_bc_type = 
+    castro.zr_ext_bc_type = 
+    castro.hse_zero_vels = 0
+    castro.hse_interp_temp = 0
+    castro.hse_reflect_vels = 0
+    castro.mol_order = 2
+    castro.fixed_dt = -1
+    castro.initial_dt = -1
+[*] castro.dt_cutoff = 1e-15
+    castro.max_dt = 1e+200
+    castro.cfl = 0.8
+[*] castro.init_shrink = 0.1
+    castro.change_max = 1.1
+    castro.plot_per_is_exact = 0
+    castro.small_plot_per_is_exact = 0
+[*] castro.use_retry = 1
+    castro.retry_tolerance = 0.02
+    castro.retry_neg_dens_factor = 0.1
+    castro.use_post_step_regrid = 0
+    castro.max_subcycles = 10
+    castro.clamp_subcycles = 1
+    castro.sdc_iters = 2
+    castro.dtnuc_e = 1e+200
+    castro.dtnuc_X = 1e+200
+    castro.dtnuc_X_threshold = 0.001
+    castro.dxnuc = 1e+200
+    castro.dxnuc_max = 1e+200
+[*] castro.do_react = 1
+    castro.react_T_min = 0
+    castro.react_T_max = 1e+200
+    castro.react_rho_min = 0
+    castro.react_rho_max = 1e+200
+    castro.disable_shock_burning = 0
+    castro.do_grav = -1
+    castro.moving_center = 0
+    castro.grav_source_type = 4
+    castro.do_rotation = -1
+    castro.do_acc = -1
+    castro.bndry_func_thread_safe = 1
+    castro.grown_factor = 1
+    castro.star_at_center = -1
+    castro.do_special_tagging = 0
+    castro.spherical_star = 0
+    castro.print_fortran_warnings = 0
+    castro.print_update_diagnostics = 0
+    castro.track_grid_losses = 0
+[*] castro.sum_interval = 1
+    castro.sum_per = -1
+    castro.show_center_of_mass = 0
+[*] castro.hard_cfl_limit = 0
+    castro.job_name = 
+    castro.output_at_completion = 1
+    castro.reset_checkpoint_time = -1e+200
+    castro.reset_checkpoint_step = -1
+    diffusion.verbose = 0
+[*] diffusion.use_mlmg_solver = 1
+    diffusion.mlmg_maxorder = 4

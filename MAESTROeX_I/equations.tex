@@ -7,7 +7,7 @@ In Papers I-III, we derived a model and algorithm suitable for stratified astrop
 In our model, we take the standard equations of reacting, compressible flow, and recast the equation
 of state (EOS) as a divergence constraint on the velocity field.
 The resulting model is a series of evolution equations for mass, momentum, and energy, subject
-to this constraint:
+to these constraints:
 \begin{eqnarray}
 \frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
 \frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
@@ -36,9 +36,9 @@ the magnitude of the gravitational acceleration and $\eb_r$ is the unit vector i
 outward radial direction. 
 
 Mathematically, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) must still be closed by an equation of state.  
-This is done by taking the Langrangian derivative of the equation of state for pressure as a function of the density, composition, and enthalpy, requiring that the pressure is a prescribed function of altitutde and time based on the hydrostatic equilibrium condition.
+This is done by taking the Langrangian derivative of the equation of state for pressure as a function of the density, composition, and enthalpy, requiring that the pressure is a prescribed function of altitude and time based on the hydrostatic equilibrium condition.
 Details are given in Papers I and II.
-After substuting the equations for mass and energy into the Lagrangian derivative, the result
+After substituting the equations for mass and energy into the Lagrangian derivative, the result
 is a divergence constraint on the velocity field (\ref{eq:U divergence}),
 where $\beta_0$ is a density-like variable that carries background stratification, defined as
 \begin{equation}
