@@ -3,11 +3,15 @@ Many astrophysical flows are highly subsonic; sound waves carry sufficiently lit
 In many of these flows, modeling long-time convective dynamics are of interest, and numerical approaches based on compressible hydrodynamics are intractable, even on modern supercomputers.
 One approach to this problem is to use low Mach number models.
 In a low Mach number approach, sound waves are eliminated from the governing equations while retaining compressibilitiy effects due to, e.g., nuclear energy release, compositional changes, and thermal diffusion.
-The resulting model can be numerically integrated with much larger time steps than a compressible model.
+When the Mach number (the ratio of the characteristic fluid velocity over the characteristic sound speed; Ma $= U/c$) is small,
+the resulting system can be numerically integrated with much larger time steps than a compressible model.
+Specifically, the time step increase is at least a factor of $\sim 1/{\rm Ma}$ larger.
+Each time step is more computationally expensive due to the presence of additional linear solves,
+but for many problems of interest the overall gains in efficiency can easily be an order of magnitude or more.
 
 Low Mach number models have been developed for a variety of contexts including combustion \citep{day2000numerical}, terrestrial atmospheric modeling \citep{duarte2015low},
 and elastic solids \citep{abbate2017all}.
-In recent years, a number of alternative approaches to modeling low Mach number astrophysical flows have been developed.
+For astrophysical applications, a number of approaches to modeling low Mach number flows have been developed in recent years.
 These include semi-implicit all-Mach number solvers, where the Euler equations are split into an acoustic part and an advective part \citep{Kwatra2009,Degond2009,Cordier2012,Haack2012,Happenhofer2013,Chalons2016,Padioleau2019}.
 The fast acoustic waves are then solved using implicit time integration, while the slow material waves are solved explicitly.
 Another approach is to use preconditioned all-Mach number solvers \citep{Miczek2014,Barsukow2016}, where the numerical flux is multiplied by a preconditioning matrix.
@@ -15,24 +19,25 @@ This reduces the stiffness of the system at low Mach numbers, while retaining th
 The MUSIC code uses fully implicit time integration for the compressible Euler equations, which therefore allows for arbitrarily large timesteps \citep{Viallet2011,Viallet2015,Goffrey2016}.
 
 Previously, we developed the low Mach number astrophysical solver, MAESTRO.
+MAESTRO is a block-structured, Cartesian grid finite-volume, adaptive mesh refinement (AMR) code that has been successfully used for many years for a number of applications, detailed below.
 Unlike several of the references above, MAESTRO is not an all-Mach solver, but is suitable for flows where the Mach number is small ($\sim 0.1$ or smaller).  
 Furthermore, the low Mach number model in MAESTRO is specifically designed for, but not limited to, astrophysical settings with significant atmospheric stratification.
 This includes full spherical stars, as well as planar simulations of dynamics within localized regions of a star.
-MAESTRO uses an explicit Godunov approach for advection, the stiff ODE VODE package \citep{vode} for reactions, and multigrid-based linear solvers for the pressure-projection steps, and is thus time-step limited by an advective CFL constraint based on the fluid velocity, not the sound speed.
-Central to the algorithm is a stratified background (or base) state density and pressure held in hydrostatic equilibrium, and also vary as a function of altitude and time.
-MAESTRO is a structured-grid, finite-volume code that utilizes adaptive mesh refinement (AMR) to refine grids locally in space.
-This code was developed in the pure-Fortran90 FBoxLib framework (see the FBoxLib repository in \cite{AMReX}) for block-structured AMR applications.
+MAESTRO uses an explicit Godunov approach for advection, a stiff ODE package (VODE) \citep{vode} for reactions, and multigrid-based linear solvers for the pressure-projection steps, and is thus time-step limited by an advective CFL constraint based on the fluid velocity, not the sound speed.
+The time-advancement strategy uses Strang splitting to couple the thermodynamic variables, and a second-order projection method to integrate the velocity equations subject to a divergence constraint.
+Central to the algorithm is a time-varying, one-dimensional stratified background (or base) state density and pressure held in hydrostatic equilibrium that couple to the full Cartesian grid solution.
+The original MAESTRO code was developed in the pure-Fortran90 FBoxLib software framework (see the FBoxLib repository in \cite{AMReX}) for block-structured AMR applications.
 
 The key numerical developments of the original MAESTRO algorithm are presented in a series of papers which we refer to as Papers I-V:
 \begin{itemize}
-\item In Paper I \citep{MAESTRO_I}, we derive the low Mach number equation set from the fully compressible equations.
+\item In Paper I \citep{MAESTRO_I}, we derive the low Mach number equation set for stratified environments from the fully compressible equations.
 \item In Paper II \citep{MAESTRO_II}, we incorporate the effects of atmospheric expansion through the use of a time-dependent background state.
 \item In Paper III \citep{MAESTRO_III}, we incorporate reactions and the associated coupling to the hydrodynamics.
 \item In Paper IV \citep{MAESTRO_IV}, we describe our treatment of spherical stars in a three-dimensional Cartesian geometry.
 \item In Paper V \citep{MAESTRO_V}, we describe the use of block-structured adaptive mesh refinement to focus spatial resolution in regions of interest.
 \end{itemize}
 
-Since then, there have been many scientific investigations using MAESTRO, which include additional algorithmic enhancements.  Topics include:
+Since then, there have been many scientific investigations using MAESTRO, which have included additional algorithmic enhancements.  Topics include:
 \begin{itemize}
 \item The convective phase preceding Chandrasekhar mass models for type Ia supernovae \citep{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}.
 \item Convection in massive stars \citep{Gilet:2013}.
@@ -42,22 +47,24 @@ Since then, there have been many scientific investigations using MAESTRO, which 
 %  In \cite{XRB_I} we discuss the modifications required for implicit thermal conduction, as well as an additional ``volume discrepancy'' modification to the velocity constraint to force the species and enthalpy to evolve in a manner consistent with the background pressure.
 \end{itemize}
 
-We also present new algorithmic methodology that improves upon Paper V in a number of ways.
+In this paper, we present new algorithmic methodology that improves upon Paper V in a number of ways.
 First, the overall temporal algorithm has been greatly simplified without compromising accuracy.
-The key design decision was to replace the predicted evolution of the base state with
-a predictor-corrector approach.  Not only does this greatly simplify the dynamics of the base
+The key design decisions were to eliminate the splitting of the velocity into average and perturbational components, 
+and also to replace the hydrodynamic evolution of the base state with a predictor-corrector approach.
+Not only does this greatly simplify the dynamics of the base
 state, but this treatment is more amenable to higher-order multiphysics coupling strategies
-based on method-of-lines integration.  In particular, schemes based on spectral deferred corrections \citep{dutt2000spectral} have been used to generate high-order temporal integrators for problems of reactive flow \citep{dutt2000spectral} and low Mach number combustion \citep{pazner2016high,nonaka2018conservative}
-Second, we now provide additional spatial mapping
-procedures that reduces, and in some cases eliminates, mapping error from the one-dimensional
-base state to the Cartesian grid state for spherical problems.
+based on method-of-lines integration.  
+In particular, schemes based on spectral deferred corrections \citep{dutt2000spectral} have been used to generate high-order temporal integrators for problems of reactive flow \citep{dutt2000spectral} and low Mach number combustion \citep{pazner2016high,nonaka2018conservative}.
+Second, we explore the effects of alternative spatial mapping routines for coupling the base state and the Cartesian grid state in spherical problems.
 Finally, the code has been completely ported to a new software framework suitable for modern manycore supercomputers.
-The resulting MAESTROeX is implemented in the C++/F90 AMReX public software library \cite{AMReX}.
+We examine the performance of our new MAESTROeX implementation in the new C++/F90 AMReX public software library \cite{AMReX}.
 MAESTROeX uses MPI+OpenMP parallelism and scales well to over 10,000 MPI processes, with each MPI process supporting tens of threads.
-The resulting code is publicly available on GitHub ({\tt https://github.com/AMReX-Astro/MAESTROeX}) and uses the Starkiller-Astro microphysics libraries ({\tt https://github.com/starkiller-astro/Microphysics}) and the AMReX software library for block-structured adaptive mesh refinement ({\tt https://github.com/AMReX-Codes/amrex}).
+The resulting code is publicly available on GitHub ({\tt https://github.com/AMReX-Astro/MAESTROeX}),
+uses the Starkiller-Astro microphysics libraries ({\tt https://github.com/starkiller-astro/Microphysics}),
+and the AMReX software library for block-structured adaptive mesh refinement ({\tt https://github.com/AMReX-Codes/amrex}).
 
 The rest of this paper is organized as follows.
 In Section \ref{sec:equations} we review our model for stratified low Mach number astrophysical flow.
 In Section \ref{eq:algorithm} we present our numerical algorithm in detail, highlighting the new temporal integration scheme as well as spatial base state mapping options.
 In Section \ref{sec:results} we validate our new approach and examine the performance of our algorithm on full spherical star problems used in previous scientific investigations.
-Finally, we conclude in Section \ref{sec:conclusions}.
+We conclude in Section \ref{sec:conclusions}.
