@@ -1,4 +1,4 @@
-\section{Governing Equations}
+\section{Governing Equations}\label{sec:equations}
 Low Mach number models for reacting flow were originally derived using asymptotic analysis
 \citep{rehm1978equations,majda1985derivation} and used in terrestrial combustion applications
 \citep{knio1999semi,day2000numerical}.  These models have been extended to nuclear flames
@@ -7,15 +7,12 @@ In Papers I-III, we derived a model and algorithm suitable for stratified astrop
 In our model, we take the standard equations of reacting, compressible flow, and recast the equation
 of state (EOS) as a divergence constraint on the velocity field.
 The resulting model is a series of evolution equations for mass, momentum, and energy, subject
-to these constraints:
+to to an additional constraint on velocity discussed below:
 \begin{eqnarray}
 \frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
 \frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
-\frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc,\label{eq:enthalpy}
+\frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc.\label{eq:enthalpy}
 \end{eqnarray}
-\begin{equation}
-\nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).\label{eq:U divergence}
-\end{equation}
 Here $\rho$, $\Ub$, and $h$ are the mass density,
 velocity and specific enthalpy, respectively, and
 $X_k$ are the mass fractions of species $k$ with associated
@@ -29,18 +26,19 @@ The pressure is decomposed into a hydrostatic base state
  pressure, $p_0 = p_0(r,t)$, and a dynamic pressure, $\pi = \pi(\xb,t)$, such that 
 $|\pi|/p_0 = \mathcal{O}(M^2)$ (we use $\xb$ to represent the Cartesian coordinate 
 directions of the full state and $r$ to represent the radial coordinate direction for 
-the base state).  We also define a base state density, $\rho_0 = \rho_0(r,t)$, 
-which is in hydrostatic equilibrium with $p_0$, i.e., 
+the base state).  We also define a base state density, $\rho_0 = \rho_0(r,t)$, that represents the lateral average (see Section \ref{Sec:Spatial}) of $\rho$ and is in hydrostatic equilibrium with $p_0$, i.e., 
 $\nabla p_0 = -\rho_0 g\eb_r$, where $g=g(r,t)$ is
 the magnitude of the gravitational acceleration and $\eb_r$ is the unit vector in the
 outward radial direction. 
 
-Mathematically, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) must still be closed by an equation of state.  
-This is done by taking the Langrangian derivative of the equation of state for pressure as a function of the density, composition, and enthalpy, requiring that the pressure is a prescribed function of altitude and time based on the hydrostatic equilibrium condition.
-Details are given in Papers I and II.
-After substituting the equations for mass and energy into the Lagrangian derivative, the result
+Mathematically, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) must still be closed by an EOS.  
+This is done by taking the Langrangian derivative of the EOS for pressure as a function of the density, composition, and enthalpy, requiring that the pressure is a prescribed function of altitude and time based on the hydrostatic equilibrium condition.
+Details are given in Papers I and II, but to summarize, after substituting the equations for mass and energy into the Lagrangian derivative, the result
 is a divergence constraint on the velocity field (\ref{eq:U divergence}),
-where $\beta_0$ is a density-like variable that carries background stratification, defined as
+\begin{equation}
+\nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).\label{eq:U divergence}
+\end{equation}
+Here $\beta_0$ is a density-like variable that carries background stratification, defined as
 \begin{equation}
 \beta_0(r,t) = \rho_0(0,t)\exp\left(\int_0^r\frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial r'}dr'\right),
 \end{equation}
@@ -57,3 +55,5 @@ p_\rho \equiv \left.
 p_T/(\rho c_p p_\rho)$, with $p_T \equiv \left. \partial p / \partial
 T \right|_{\rho, X_k}$ and $c_p \equiv \left.  \partial h / \partial T
 \right|_{p,X_k}$ is the specific heat at constant pressure.
+To summarize, we model equations (\ref{eq:momentum})-(\ref{eq:enthalpy})
+subject to (\ref{eq:U divergence}) and the hydrostatic equilibrium condition.
