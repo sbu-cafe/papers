@@ -1,6 +1,9 @@
 \appendix
 \section{Projection Details}\label{Sec:Projection}
 To enforce the divergence constraint in {\bf Step 3, 7}, and {\bf 11}, we use a projection method analgous to the methods originally developed for incompressible flow \citep{almgren1998conservative,bell1989second}.
+The basic idea is to decompose the velocity field into a divergence-free component and a curl-free (gradient of a scalar field) component by solving a variable-coefficient Poisson equation for the scalar field.
+The details for the MAC projection in {\bf Step 3} and {\bf Step 7} are given in Appendix B of Paper III.  The details of the nodal projection in {\bf Step 11} are given in Section 3.2 of Paper III.
+We note that in the nodal projection, the gradient of the scalar field is used to update the perturbational pressure, $\pi$.
 
 Based on our past experience in the MAESTRO project, we have found it useful to split the velocity dynamics into a perturbational and base state velocity,
 \begin{equation}
@@ -14,11 +17,11 @@ and sepratately solve for $w_0$ using
 \begin{equation}
 \nabla\cdot(\beta_0w_0\eb_r) = \beta_0\left(\overline{S} - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).
 \end{equation}
+To solve for $\Ubt$ we use a projection method, which involves the solution of a variable-coefficient Poisson solver to extract the curl-free component of the unprojected velocity.
+Note that MAESTRO contains alternate low Mach number formulations that conserve total energy in stratified systems, with minimal changes to the code (see Appendix A of \cite{subChandra_II} for details).
 To find $w_0$ we integrate in 1D using the procedure in Appendix B of Paper V.
-
-Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$.  After evolving the species, we compute this term in the same way as reported in Paper V for use in computing $w_0$.
-
-\MarginPar{mention alt energy fix for projection?  also mention changes in $w_0$ computation for irregular base state. also add graphic of temperature falling due to incorrect splitting}
+Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$).  After evolving the species, we compute this term in the same way as reported in Paper V for use in computing $w_0$.
+\MarginPar{mention changes in $w_0$ computation for irregular base state. Add graphic of temperature falling due to incorrect splitting?}
 
 \section{Old Notes (not for inclusion in paper)}
 
