@@ -16,7 +16,7 @@ The MUSIC code uses fully implicit time integration for the compressible Euler e
 
 Previously, we developed the low Mach number astrophysical solver, MAESTRO.
 Unlike several of the references above, MAESTRO is not an all-Mach solver, but is suitable for flows where the Mach number is small ($\sim 0.1$ or smaller).  
-Furthermore, the low Mach number model in MAESTRO is specifically designed for astrophysical settings with significant atmospheric stratification.
+Furthermore, the low Mach number model in MAESTRO is specifically designed for, but not limited to, astrophysical settings with significant atmospheric stratification.
 This includes full spherical stars, as well as planar simulations of dynamics within localized regions of a star.
 MAESTRO uses an explicit Godunov approach for advection, the stiff ODE VODE package \citep{vode} for reactions, and multigrid-based linear solvers for the pressure-projection steps, and is thus time-step limited by an advective CFL constraint based on the fluid velocity, not the sound speed.
 Central to the algorithm is a stratified background (or base) state density and pressure held in hydrostatic equilibrium, and also vary as a function of altitude and time.
@@ -58,6 +58,6 @@ The resulting code is publicly available on GitHub ({\tt https://github.com/AMRe
 
 The rest of this paper is organized as follows.
 In Section \ref{sec:equations} we review our model for stratified low Mach number astrophysical flow.
-In Section \ref{eq:algorithm} we present our numerical algorithm in detail.
+In Section \ref{eq:algorithm} we present our numerical algorithm in detail, highlighting the new temporal integration scheme as well as spatial base state mapping options.
 In Section \ref{sec:results} we validate our new approach and examine the performance of our algorithm on full spherical star problems used in previous scientific investigations.
 Finally, we conclude in Section \ref{sec:conclusions}.
