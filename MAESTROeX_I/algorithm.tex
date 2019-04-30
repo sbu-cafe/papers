@@ -33,15 +33,14 @@ The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With
 Previously we adopted an approach where we split the velocity into a base state component, $w_0(r,t)$, 
 and a local velocity $\Ubt(\xb,t)$, so that
 \begin{equation}
-\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
+\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r.
 \end{equation}
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
-Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than the perturbational and base state velocity separately.  This eliminates 
-Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no longer requires the complex algorithm from Paper V, yet still retains the same overall second-order accuracy.
+This resulted in some unnecessary complications to the temporal integration scheme.
+Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than a more complex evolution equation for the perturbational velocity.
+Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no longer requires evolution equations and the associated discretizations for the base state, greatly simplifying the algorithm while retaining the same overall second-order accuracy in time.
 
-We now describe the new temporal integration scheme, which has been greatly simplified from Paper V without formal loss of order of accuracy.
-Note that this temporal integration scheme is valid for the original base state mapping (with constant base state grid spacing), or the new irregularly spaced base state mapping.
-
+We now describe the new temporal integration scheme, which we note can be used for the original base state mapping (with constant base state grid spacing) as well as the new irregularly spaced base state mapping.
 At the beginning of each time step we have the cell-centered state,
 $(\Ub,\rho X_k,\rho h,\rho_0,p_0)^n$, and nodal state, $\pi^{n-\myhalf}$.
 At any time, the associated density, composition, and enthalpy can be trivially computed using, e.g.,
@@ -73,7 +72,7 @@ To summarize:
 There are a few key numerical modules we use in each time step.
 \begin{itemize}
 \item {\bf Average}$[\phi]\rightarrow[\overline\phi]$ computes the lateral average of a quantity over a layer at constant radius $r$, as described above in Section \ref{Sec:Spatial}.
-\item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in 1D (see equation (A10) in Paper V).  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
+\item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in one dimension; see equation (A10) in Paper V.  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
 \MarginPar{add note about changes for irregular}
 \item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ integrates the species and enthalpy due to reactions over $\Delta t/2$ by solving
 \begin{equation}
@@ -98,13 +97,7 @@ First, we use a cutoff density technique, where we hold the density constant out
 Second, we employ a sponge technique where we artificially damp the velocities near and beyond the cutoff region.
 For more details, refer to Paper V and the previous references cited within.
 
-To initialize the simulation we use the same procedure described in Paper III.
-At the beginning of each simulation, we define $(\Ub,\rho X_k,\rho h)$.
-We set initial values for $\Ub, \rho X_k$, and $\rho h$ and perform a sequence of projections 
-(to ensure the velocity field satisfies the divergence constraint) 
-followed by a small number of steps of the temporal advancement scheme to iteratively 
-find initial values for $\pi^{n-\myhalf}$ and $S^0$ and $S^1$ for use in the first time step.
-The new temporal integration strategy in MAESTROeX contains the following steps:
+The temporal integration scheme contains the following steps:
 \begin{description}
 
 %--------------------------------------------------------------------------
@@ -414,6 +407,13 @@ Refer to Appendix \ref{Sec:Projection} for more details about the projection ste
 
 \end{description}
 This completes one step of the algorithm.
+
+To initialize the simulation we use the same procedure described in Paper III.
+At the beginning of each simulation, we define $(\Ub,\rho X_k,\rho h)$.
+We set initial values for $\Ub, \rho X_k$, and $\rho h$ and perform a sequence of projections 
+(to ensure the velocity field satisfies the divergence constraint) 
+followed by a small number of steps of the temporal advancement scheme to iteratively 
+find initial values for $\pi^{n-\myhalf}$ and $S^0$ and $S^1$ for use in the first time step.
 
 Our approach to adaptive mesh refinement is algorithmically the same as the treatment described in Section 5 of Paper V; we refer the reader there for details.
 We note that for spherical problems, AMR is only available for the case of a regularly-spaced base state.

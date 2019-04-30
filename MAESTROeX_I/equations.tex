@@ -27,9 +27,10 @@ The pressure is decomposed into a hydrostatic base state
 $|\pi|/p_0 = \mathcal{O}(M^2)$ (we use $\xb$ to represent the Cartesian coordinate 
 directions of the full state and $r$ to represent the radial coordinate direction for 
 the base state).  We also define a base state density, $\rho_0 = \rho_0(r,t)$, that represents the lateral average (see Section \ref{Sec:Spatial}) of $\rho$ and is in hydrostatic equilibrium with $p_0$, i.e., 
-$\nabla p_0 = -\rho_0 g\eb_r$, where $g=g(r,t)$ is
-the magnitude of the gravitational acceleration and $\eb_r$ is the unit vector in the
-outward radial direction. 
+\begin{equation}
+\nabla p_0 = -\rho_0 g\eb_r, \label{eq:HSE}
+\end{equation}
+where $g=g(r,t)$ is the magnitude of the gravitational acceleration and $\eb_r$ is the unit vector in the outward radial direction. 
 
 Mathematically, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) must still be closed by an EOS.  
 This is done by taking the Langrangian derivative of the EOS for pressure as a function of the density, composition, and enthalpy, requiring that the pressure is a prescribed function of altitude and time based on the hydrostatic equilibrium condition.
@@ -55,5 +56,5 @@ p_\rho \equiv \left.
 p_T/(\rho c_p p_\rho)$, with $p_T \equiv \left. \partial p / \partial
 T \right|_{\rho, X_k}$ and $c_p \equiv \left.  \partial h / \partial T
 \right|_{p,X_k}$ is the specific heat at constant pressure.
-To summarize, we model equations (\ref{eq:momentum})-(\ref{eq:enthalpy})
-subject to (\ref{eq:U divergence}) and the hydrostatic equilibrium condition.
+
+To summarize, we model evolution equations for momentum, mass, and energy, (\ref{eq:momentum})-(\ref{eq:enthalpy}) subject to a divergence constraint on the velocity (\ref{eq:U divergence}) and the hydrostatic equilibrium condition (\ref{eq:HSE}).
