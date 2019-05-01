@@ -2,18 +2,28 @@
 
 \subsection{Spatial Discretization}\label{Sec:Spatial}
 \MarginPar{needs work}
-MAESTRO contains variables defined on Cartesian grids 
-one-dimensional base state stored on radial arrays.
+The spatial discretization and adaptive mesh refinement methodology remains unchanged from Paper V.
+We now summarize some of the key points here before describing the new temporal integrator in the next section.
+We recommend the reader review Section 3 of Paper V for further details.
 
- associated with square (in 2D) or cubic (in 3D)
-
-
-(description of base state mapping in planar, and original spherical, and new spherical)
-
-Mapping from the base state to the full state
-
-Mapping a Cartesian variable to a one-dimensional radial array uses the lateral averaging operator.
-
+We shall refer to local atmospheric flows in two and three dimensions as problems in ``planar'' geometry, and full-star flows
+in three dimensions as problems in ``spherical'' geometry. The solution in both cases consists of the Cartesian grid solution
+and the one-dimensional base state solution.
+Figure \ref{Fig:BaseGrid} illustrates the relationship between the base state and the Cartesian grid state for both planar and spherical geometries in the presence of spatially adaptive grids.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tb]
+\centering
+\includegraphics[height=2.0in]{./figs/base_grid} \hspace{0.5in}
+\includegraphics[height=2.0in]{./figs/base_spherical}
+\caption{\label{Fig:BaseGrid}  
+(Left) For multi-level problems in planar geometry, we force a direct alignment
+between the radial array cell centers and the Cartesian grid cell centers by 
+allowing the radial base state spacing to change with space and time.
+(Right) For multi-level problems in spherical geometry, since there is no direct alignment
+between the radial array cell centers and the Cartesian grid cell centers, we choose to fix
+the radial base state spacing across levels.}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 One of the key numerical modules is the ``lateral average'', which computes the average over a 
 layer of a Cartesian grid variable onto a one-dimensional radial array.
 In planar geometries, this is a straightforward arithmetic average of cells at
@@ -23,13 +33,15 @@ However for spherical problems, the procedure is much more complicated.
 In Section 4 of Paper V, we describe how there is a finite, easily computable set of radii that any Cartesian cell-center can map to.  
 Specifically, for every Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by $\hat{r}_m=\Delta x\sqrt{0.75+2m}$.
 We average by binning all the cells associated with each radii and taking the average.
-Then we interpolate this data onto a one-dimensional radial array.  Previously, MAESTRO only allowed for radial arrays with a constant $\Delta r$ (typically equal to $\Delta x/5$).
+Then we interpolate this data onto a one-dimensional radial array.  
+Previously, MAESTRO only allowed for radial arrays with a constant $\Delta r$ (typically equal to $\Delta x/5$).
 Here we present a new option to retain an irregularly-spaced radial array to eliminate mapping errors back onto the Cartesian grid state.
 Consider a spherical star in hydrostatic equlibrium at rest.  In the absense of reactions, the star should remain at rest.
 The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced array, the effects due to interpolation error are completely eliminated.
-
+\MarginPar{Doreen you had a great figure of this mapping in one of your talks}
 
 \subsection{Temporal Integration Scheme}\label{Sec:Temporal Integration Scheme}
+We now describe the new temporal integration scheme, which we note can be used for the original base state mapping (with constant base state grid spacing) as well as the new irregularly spaced base state mapping.
 Previously we adopted an approach where we split the velocity into a base state component, $w_0(r,t)$, 
 and a local velocity $\Ubt(\xb,t)$, so that
 \begin{equation}
@@ -40,7 +52,6 @@ This resulted in some unnecessary complications to the temporal integration sche
 Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than a more complex evolution equation for the perturbational velocity.
 Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no longer requires evolution equations and the associated discretizations for the base state, greatly simplifying the algorithm while retaining the same overall second-order accuracy in time.
 
-We now describe the new temporal integration scheme, which we note can be used for the original base state mapping (with constant base state grid spacing) as well as the new irregularly spaced base state mapping.
 At the beginning of each time step we have the cell-centered state,
 $(\Ub,\rho X_k,\rho h,\rho_0,p_0)^n$, and nodal state, $\pi^{n-\myhalf}$.
 At any time, the associated density, composition, and enthalpy can be trivially computed using, e.g.,
@@ -80,7 +91,7 @@ There are a few key numerical modules we use in each time step.
 \frac{dT}{dt} = \frac{1}{c_p}\left(-\sum_k\xi_k\dot\omega_k + H_{\rm nuc})\right)
 \end{equation}
 The inputs are the species, enthalpy, and base state pressure, and the outpus are the species, enthalpy, reaction rates, and nuclear energy generation rate.
-See Papers III and V for details.
+See Paper III for details.
 \end{itemize}
 Each time step is constrained by the standard advective CFL condition,
 \begin{equation}
