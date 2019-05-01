@@ -148,21 +148,14 @@ a standard multidimensional corner transport upwind approach
 one-dimensional tracing \citep{colella1984piecewise}.  The full details of this
 Godunov advection approach for all steps in this algorithm are described 
 in Appendix A of \cite{XRB_III}.
-
-In this step, using equation (\ref{eq:momentum}), 
-we compute time-centered edge velocities, $\uadvonedag$, using
-$\Ub^n$.  The $\dagger$ superscript refers to the
-fact that the predicted velocity field does not satisfy the divergence
-constraint.  We then construct $\uadvone$ from $\uadvonedag$
-using a MAC projection (see Appendix \ref{Sec:Projection} for details).
-We note that $\uadvone$ satisfies the divergence constraint
+Here we use equation (\ref{eq:momentum}) to compute time-centered edge velocities, $\uadvonedag$.
+The $\dagger$ superscript refers to the fact that the predicted velocity field does not satisfy the divergence constraint,
 \begin{equation}
 \nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left[S^{\nph,\star} - \frac{1}{\gammaonebar^np_0^n}\left(\frac{\partial p_0}{\partial t}\right)^{n-\myhalf} \right].\label{eq:div1}
 \end{equation}
-In practice, for all the projections in the algorithm, we solve a split dynamics
-system for a base state velocity, and a perturbational velocity, so that we can properly
-enforce boundary conditions at the edge of the star.
-Refer to Appendix \ref{Sec:Projection} for details.
+ We project $\uadvonedag$ onto the space of velocities that satisfy the constraint to obtain $\uadvone$.
+Each projection step in the algorithm involves the solution of a variable-coefficient Poisson solve using multigrid.
+The details of this ``MAC'' projection are provided in Appendix \ref{Sec:Projection}.
 
 %--------------------------------------------------------------------------
 % STEP 4
@@ -276,21 +269,18 @@ S^{n+1,\star} =  \left(-\sigma  \sum_k  \xi_k  \omegadot_k  + \frac{1}{\rho p_\r
 The procedure to construct $\uadvtwodag$ is identical to the Godunov procedure
 for computing $\uadvonedag$ in {\bf Step 3}, but uses
 the updated value $S^{\nph}$ rather than $S^{\nph,\star}$.
-The $\dagger$ superscript refers to the
-fact that the predicted velocity field does not satisfy the divergence
-constraint.  We then construct $\uadvtwo$ from $\uadvtwodag$
-using a MAC projection (see Appendix \ref{Sec:Projection} for details).
-We note that $\uadvtwo$ satisfies the divergence constraint
+The $\dagger$ superscript refers to the fact that the predicted velocity field does not satisfy the divergence constraint,
 \begin{equation}
 \nabla \cdot \left(\beta_0^{\nph} \uadvtwo\right) =
 \beta_0^{\nph} \left[S^{\nph} - \frac{1}{\gammaonebar^{\nph}p_0^{\nph}}\left(\frac{\partial p_0}{\partial t}\right)^{\nph}\right],\label{eq:div2}
 \end{equation}
-where
+with
 \begin{equation}
 \beta_0^{\nph} = \frac{ \beta_0^n +  \beta_0^{n+1,\star} }{2},
-\qquad
 \gammaonebar^{\nph} = \frac{ \gammaonebar^n +  \gammaonebar^{n+1,\star} }{2}.
+\qquad
 \end{equation}
+we project $\uadvtwodag$ onto the space of velocities that satisfy the constraint to obtain $\uadvtwo$ using a MAC projection (see Appendix \ref{Sec:Projection}).
 
 %--------------------------------------------------------------------------
 % STEP 8
@@ -398,23 +388,17 @@ equation (\ref{eq:momentum}) as
  - \dt \left[ \frac{1}{\rho^\nph} \nabla \pi^\nmh + \frac{\left(\rho^\nph-\rho_0^\nph\right)}{\rho^\nph} g^{\nph} \eb_r \right],
 \end{equation}
 Again, the $\dagger$ superscript refers
-to the fact that the updated velocity does not satisfy the divergence
-constraint.
-
-Finally, we use an approximate projection to define $\Ub^{n+1}$
-from $\Ub^{n+1,\dagger},$  such that $\Ub^{n+1}$ approximately
-satisfies the divergence constraint,
+to the fact that the updated velocity does not satisfy the divergence constraint,
 \begin{equation}
 \nabla \cdot \left(\beta_0^{n+1} \Ub^{n+1} \right) = \beta_0^{n+1} \left[ S^{n+1} - \frac{1}{\gammaonebar^{n+1}p_0^{n+1}}\left(\frac{\partial p_0}{\partial t}\right)^{\nph}\right].\label{eq:div3}
 \end{equation}
-As part of the projection we also define the new-time perturbational pressure, $\pi^\nph$.
-This pressure $\pi$ is a nodal quantity, and thus this projection step is often referred to as a nodal projection.
+We use an approximate projection to project $\Ub^{n+1,\dagger}$ onto the space of velocities that satisfy the constraint to obtain $\Ub^{n+1}$ using a ``nodal'' projection.
 This projection necessarily differs from the MAC projection used in
 {\bf Step 3} and {\bf Step 7} because the velocities in those steps are defined
 on edges and $\Ub^{n+1}$ is defined at cell centers, requiring different divergence
 and gradient operators.
-
-Refer to Appendix \ref{Sec:Projection} for more details about the projection steps.
+Furthermore, as part of the nodal projection, we also define a nodal new-time perturbational pressure, $\pi^\nph$.
+Refer to Appendix \ref{Sec:Projection} for more details.
 
 \end{description}
 This completes one step of the algorithm.
