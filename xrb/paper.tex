@@ -203,7 +203,7 @@ the lateral differences needed for flame spreading, they can help
 understand the role that convection plays in distributing the initial
 burning products vertically throughout the neutron star atmosphere.
 
-\cite{cavecchi:2013} \MarginPar{and others}
+\cite{cavecchi:2013,art-2015-cavecchi-etal,art-2016-cavecchi-etal} \MarginPar{need a summary}
 
 
 Challenges: timescale for flame propagation, lengthscales (flame
@@ -387,7 +387,7 @@ normal velocity set to the larger of zero or the velocity at the top
 of the domain (this prevents incoming velocities at the top) and the
 transverse velocities set to zero.
 
-sponge\MarginPar{write}
+sponge\AssignTo{Mike will write}
 
 In the discussions below, we will use the Castro coordinate 
 names, $(x, y)$ in our notation.
@@ -399,33 +399,8 @@ names, $(x, y)$ in our notation.
 %======================================================================
 \section{Flame Properties}\label{Sec:Flame}
 
-\input{flame_table_1d.tex}
-
-To understand the time and length scales involved in flame
-propagation, we do a 1D simulation of a laminar flame using our
-microphysics.  Figure~\ref{fig:flame} shows the flame properties for a
-He flame using the standard conductivities and our simple reaction
-network.  This flame had a density of $2\times 10^6~\gcc$ and
-temperature of $5\times 10^7$~K.  We note that this flame speed is
-about $2\times 10^4~\cms$, the flame width is about 20~cm, and it
-takes about 0.1~s to setting into a sustained flame.  Note this speed
-is quite small compared to the speed estimated in
-\citet{spitkovsky2002}.  We expected a multidimensional flame to
-accelerate due to hydrodynamics interactions (wrinkling, turbulence
-interactions, directed flows feeding fuel into the flame, ...).
-
-We measure the flame width as:
-\begin{equation}
-\lambda_f \equiv \frac{\Delta T}{\max\{|\nabla T|\}}
-\end{equation}
-
-\begin{figure*}[t]
-\plottwo{flame}{speed}
-\caption{\label{fig:flame} Our ``standard'' flame. {\color{red} this should be redone for the boosted flame}}
-\end{figure*}
-
-To make the simulation feasible, we artifically speed up the flame.
-Dimensional analysis shows that the flame speed scales as:\MarginPar{ref}
+The speed and thickness of a laminar helium flame is determined by the
+energy generation rate and conductivity and scale roughly as \MarginPar{need a ref}
 \begin{equation}
 v_f \approx \sqrt{k_\mathrm{th} \dot{\epsilon}}
 \end{equation}
@@ -433,16 +408,52 @@ and the flame width scales as:
 \begin{equation}
 \lambda_f = \sqrt{\frac{k_\mathrm{th}}{\dot{\epsilon}}}
 \end{equation}
-To boost the flame, while keeping the thickness the same, we can
-multiply both the burning rate and the conductivity by the same
-factor.  We choose 10 for each, to give a flame 10$\times$ faster.
+At the densities we consider in this simulation, the pure He flame
+speed is quite slow and would require a prohibitively long integration
+time to see significant evolution of the burning.  We therefore
+consider boosted flames in this first paper, to accelerate the burning
+and allow us to understand the qualitative effects of laterally
+propagating flames.  To boost the flame, while keeping the thickness
+the same, we can multiply both the burning rate and the conductivity
+by the same factor.  For our standard calculations, we choose 10 for
+each, to give a flame 10$\times$ faster.  We call this the ``10/10''
+flame.  We will also do a simulation with the reactions and
+conductivity both boosted by 5, the ``5/5'' flame.
 
+To understand the time and length scales involved in flame
+propagation, we do a 1D simulation of a laminar flame using our
+microphysics.  Figure~\ref{fig:flame} shows the flame properties for a \AssignTo{Kiran and Mike will remake with the 10/10 boosted flame}
+He flame using the standard conductivities and our simple reaction
+network.  This flame had a density of $2\times 10^6~\gcc$ and \MarginPar{double check}
+temperature of $5\times 10^7$~K.  We note that this flame speed is
+about $2\times 10^4~\cms$, the flame width is about 20~cm, and it
+takes about 0.1~s to settle into a sustained flame.  Note this speed
+is quite small compared to the speed estimated in
+\citet{spitkovsky2002}.  We expected a multidimensional flame to
+accelerate due to hydrodynamics interactions (wrinkling, turbulence
+interactions, directed flows feeding fuel into the flame, ...).
+
+
+\begin{figure*}[t]
+\plottwo{flame}{speed}
+\caption{\label{fig:flame} Our ``standard'' flame. {\color{red} this should be redone for the boosted flame}}
+\end{figure*}
+
+We measure the flame width as:
+\begin{equation}
+\lambda_f \equiv \frac{\Delta T}{\max\{|\nabla T|\}}
+\end{equation}
 Experience with modeling resolved flames suggests that we need a
-spatial resolution, $\Delta x$ of $\lambda_f/\Delta x \sim 5$.  These
+spatial resolution, $\Delta x$ of $\lambda_f/\Delta x \sim 5$~\citep{SNld}.  These
 conditions represent the bottom of the He layer.  As the density
 decreases with altitude, the flame thickness increases and the flame
 speed decreases, so we will easily resolve the flame structure throughout
 the rest of the atmosphere.
+
+Flame properties are show in Table XX \MarginPar{we'll redo the table with 10/10 and 5/5/ and unboosted flame}
+
+\input{flame_table_1d.tex}
+
 
 
 %======================================================================
@@ -452,7 +463,7 @@ the rest of the atmosphere.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{model}
+\plotone{model}
 \caption{\label{fig:sketch} A schematic of our model setup.}
 \end{figure}
 
@@ -569,14 +580,14 @@ f(x) = \begin{cases}
 \end{equation}
 Since the equation of hydrostatic equilibrium is linear and our
 blending is a linear combination of two models in hydrostatic
-equilibrum, the blended model is also in equilibrium initially.  We choose
+equilibrum, the blended model is also in vertical equilibrium initially.  We choose
 $x_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once
 the blended model is constructed, we compute $T(y)$ and $(\rho e)(y)$
 from the equation of state.  \MarginPar{show}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{initial_model_paper}
+\plotone{initial_model_paper}
 \caption{\label{fig:initial_models} Our ``cool'' (solid) and ``hot''
   (dashed) initial models, showing both the density and temperature.}
 \end{figure}
@@ -710,12 +721,12 @@ No.\ DE-AC02-05CH11231.  This research used resources of the Oak Ridge
 Leadership Computing Facility at the Oak Ridge National Laboratory,
 which is supported by the Office of Science of the U.S. Department of
 Energy under Contract No. DE-AC05-00OR22725, awarded through the DOE
-INCITE program.
+INCITE program.  This research has made use of NASA's Astrophysics
+Data System Bibliographic Services.
 
 \facilities{NERSC, OLCF}
 
-\software{ADS (http://adsabs.harvard.edu/),
-          AMReX (\url{https://github.com/AMReX-Codes/amrex}),
+\software{AMReX (\url{https://github.com/AMReX-Codes/amrex}),
           Castro \citep{castro},
           GCC (\url{https://gcc.gnu.org/}),
           linux (\url{https://www.kernel.org/}),
@@ -723,6 +734,7 @@ INCITE program.
           NumPy \citep{numpy,numpy2},
           python (\url{https://www.python.org/}),
           valgrind \citep{valgrind},
+          VODE \citep{vode},
           yt \citep{yt}}
 
 
