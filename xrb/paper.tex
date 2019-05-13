@@ -1,5 +1,5 @@
 %\documentclass[12pt, preprint]{aastex}
-\documentclass[twocolumn,times,tighten]{aastex62}
+\documentclass[preprint,times,tighten]{aastex62}
 
 \usepackage{epsf,color,amsmath}
 
@@ -78,7 +78,28 @@
 \newcommand{\half}{\frac{1}{2}}
 
 \setlength{\marginparwidth}{0.5in}
-\newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
+
+\newcommand{\MarginPar}[1]{
+    \marginpar{\vskip-\baselineskip%
+               \raggedright%
+               \tiny\sffamily%
+               {\color{red}\hrule%
+               \smallskip%
+               #1\par%
+               \smallskip%
+               \hrule}}%
+}
+
+\newcommand{\AssignTo}[1]{
+    \marginpar{\vskip-\baselineskip%
+               \raggedright%
+               \tiny\sffamily%
+               {\color{blue}\hrule%
+               \smallskip%
+               #1\par%
+               \smallskip%
+               \hrule}}%
+}
 
 \begin{document}
 %======================================================================
@@ -140,6 +161,8 @@ other multidimensional studies of burning in X-ray bursts.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
+\AssignTo{Mike, Alice}
+
 XRB intro
 
 Evidence for localized burning \MarginPar{refs}
@@ -162,7 +185,7 @@ very high densities, since it is difficult to detonation helium at the
 densities found in normal XRBs, and even harder to detonation hydrogen
 because of the waiting times for weak reactions.  This means that
 detonations may only really be applicable to superbursts (where carbon
-is the reactant).
+is the reactant). \MarginPar{ref}
 
 Global multidimensional studies were performed by \citet{spitkovsky2002}, where
 it was demonstrated that the Coriolis force plays an important role in 
@@ -184,7 +207,7 @@ burning products vertically throughout the neutron star atmosphere.
 
 
 Challenges: timescale for flame propagation, lengthscales (flame
-width, Rossby scale), reaction network size.\MarginPar{from talk}
+width, Rossby scale), reaction network size.\MarginPar{summarize AstroNum 2018 paper}
 
 Detonations are in some sense easier to model, since their structure
 follows from the jump conditions which are solved with shock-capturing
@@ -233,14 +256,15 @@ rate, $\epsdot$.  The total mass conservation,
 \end{equation}
 implies $\sum_k \omegadot_k = 0$.  \castro\ uses an unsplit piecewise
 parabolic method (PPM) with characteristic tracing for solving the
-hydrodynamics.  Reactions are incorporated via Strang splitting,
-giving a method that is overall second-order accurate in space and
-time.
+hydrodynamics~\cite{ppm,millercolella:2002}, generalized to an
+arbitrary equation of state~\cite{zingalekatz}.  Reactions are
+incorporated via Strang splitting~\cite{strang:1968}, giving a method that is overall
+second-order accurate in space and time.
 
  An equation of state of the form $p = p(\rho, e,
 \{X_k\})$ completes the thermodynamic description of the
 system.  Finally, $\kth$ is the thermal conductivity and $T$ is the
-temperature.
+temperature.  Diffusion is treated explicitly in time.
 
 We work in 2D axisymmetric coordinates, but we advective a third
 component of velocity, coming out of the simulation plane, that
