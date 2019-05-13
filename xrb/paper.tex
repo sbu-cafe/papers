@@ -337,15 +337,26 @@ Finally, we use the thermal conductivities described in
 All simulations use adaptive mesh refinement to refine on the
 atmosphere (leaving the space between the top of the atmosphere and
 upper boundary at low resolution).  In addition to the base grid, we
-use up to 3 refinement levels, the first two a factor of 4 finer than
-the previous and the last a factor of 2 finer than the previous.
-\castro\ subcycles in time, so the finer grids are evolved with a
-finer timestep than the coarse grids.  Occasionally the timestep
-chosen at the start of a cycle will violate the CFL condition during
-the advance of the finer grids.  In this case, we restart the finer
-grid evolution with a smaller timestep, subcycling within the larger
-timestep hierarchy.  The finest grid in most of our simulations (base
-+ 2 refined levels) corresponds to $4096\times 1024$ zones.
+use up to 3 refinement levels, the first one a factor of 4 finer than
+the previous and the remaining each a factor of 2 finer than the
+previous.  \castro\ subcycles in time, so the finer grids are evolved
+with a finer timestep than the coarse grids.  Occasionally the
+timestep chosen at the start of a cycle will violate the CFL condition
+during the advance of the finer grids.  In this case, we restart the
+finer grid evolution with a smaller timestep, subcycling within the
+larger timestep hierarchy.  We use a CFL number of 0.8 for our
+simulations.  \MarginPar{true for all?} The base grid for our standard
+simulations is $768\times 192$ zones and the corresponding finest grid
+when 3 refinement levels are added would be $12288\times 3072$ zones.
+Our standard domain is $1.2288\times 10^5~\mathrm{cm} \times
+3.072\times 10^4~\mathrm{cm}$, so we have $10~\mathrm{cm}$ resolution
+on the finest grid.  We only refine the fuel layer in the left half of
+the domain at the highest resolution (and only down to densities of
+$2.5\times 10^4~\gcc$), since this is where we expect the flame to
+propagate.  At the start of the simulation, $3.4\%$ of the domain is
+at the finest resolution.  This increases to $7.4\%$ by the end of the
+simulation, because of the increase in the scale height of the atmosphere
+behind the flame.
 
 Thermal diffusion is modeled explicitly, using a predictor-corrector
 scheme to achieve second-order accuracy.  A verification test of the
@@ -410,7 +421,7 @@ We measure the flame width as:
 
 \begin{figure*}[t]
 \plottwo{flame}{speed}
-\caption{\label{fig:flame} Our ``standard'' flame.}
+\caption{\label{fig:flame} Our ``standard'' flame. {\color{red} this should be redone for the boosted flame}}
 \end{figure*}
 
 To make the simulation feasible, we artifically speed up the flame.
