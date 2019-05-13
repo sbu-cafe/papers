@@ -266,19 +266,21 @@ second-order accurate in space and time.
 system.  Finally, $\kth$ is the thermal conductivity and $T$ is the
 temperature.  Diffusion is treated explicitly in time.
 
-We work in 2D axisymmetric coordinates, but we advective a third
-component of velocity, coming out of the simulation plane, that
-participates in the Coriolis force (sometimes described as a 2.5D
-simulation).  We will take the \castro\ $x$-coordinate to be the
-cylindrical $r$ coordinate with corresponding velocity $u$, the
-\castro\ $y$-coordinate to be the cylindrical $z$ coordinate with
-corresponding velocity $v$, and the \castro\ $z$-coordinate to be the
-cylindrical $\theta$ coordinate, with corresponding velocity $w$.  A
-righthanded coordinate system has positive $w$ pointing out of the
-page.  We will take $\Omegab = \Omega_0 \hat{\bf y}$ for the angular
-rotation rate, and $\gb = -g \hat{\bf y}$ for the gravitational
-acceleration, with $g$ constant.  With these choices, the Coriolis
-force is:
+Since the neutron star rotates, we work in a corotating frame, with
+angular velocity $\Omegab$.  Further, for the two-dimensional
+simulations presented here, we work in axisymmetric coordinates,
+but we advective a third component of velocity, coming out of the
+simulation plane, that participates in the Coriolis force (sometimes
+described as a 2.5D simulation).  We will take the
+\castro\ $x$-coordinate to be the cylindrical radial coordinate with
+corresponding velocity $u$, the \castro\ $y$-coordinate to be the
+cylindrical vertical coordinate with corresponding velocity $v$, and the
+\castro\ $z$-coordinate to be the cylindrical azimuthal coordinate,
+with corresponding velocity $w$.  A righthanded coordinate system has
+positive $w$ pointing out of the page.  We will take $\Omegab =
+\Omega_0 \hat{\bf y}$ for the angular rotation rate, and $\gb = -g
+\hat{\bf y}$ for the gravitational acceleration, with $g$ constant.
+With these choices, the Coriolis force is:
 \begin{equation}
 -2\rho \Omegab \times \Ub =
    -2\rho \left ( \Omegab w \hat{x} - \Omegab u \hat{z} \right )
@@ -286,9 +288,8 @@ force is:
 We will neglect the centrifugal force---with our plane-parallel
 geometry, this will act only in the lateral direction, and is not
 expected to greatly affect the dynamics.  Carrying the Coriolis force
-allows us to capture the geostrophic balance\MarginPar{ref} that sets up via lateral
-hydrostatic equilibrium.
-
+allows us to capture the geostrophic balance\MarginPar{ref} that sets
+up via lateral hydrostatic equilibrium.
 
 Writing the momentum equation in terms of the $u$, $v$, and $w$
 components, and neglecting the centrifugal force, we have:
@@ -314,17 +315,15 @@ will be positive and the Coriolis force results in $w > 0$ (out of the
 simulation plane).  The algorithmic implementation of rotation in
 \castro\ is described in \cite{wdmergerI}.
 
-
-
 We use a general stellar equation of state with nuclei (treated as an
 ideal gas), photons, and degenerate/relativistic electrons, as
-described in \cite{timmes_swesty:2000}.  We use a simple reaction
-network consisting of 4 nuclei, \isot{He}{4}, \isot{C}{12},
-\isot{O}{16}, \isot{Fe}{56}.  Only the first 3 are evolved, with the
-triple-$\alpha$ rate and $\isotm{C}{12}(\alpha, \gamma)\isotm{O}{16}$.
-Screening of the reactions is also included.  The network is provided
-in our open-source microphysics
-routines\footnote{\url{https://github.com/starkiller-astro/Microphysics}}.
+described in \cite{timmes_swesty:2000}.  For reactions, we use a 13
+isotope alpha chain, derived from the {\tt aprox13}
+network~\citep{timmes_aprox13}.  For one of our runs, we use the
+smaller 7-isotope network described in \citet{iso7}.  We integrate the
+network using the VODE integration package~\citep{vode}, and out
+implementation is provided in the StarKiller Microphysics
+source~\citep{starkiller}.
 
 We note that we do not explicitly model viscosity.  The reactions will
 provide the smallscale cutoff to the instabilities and turbulence at
