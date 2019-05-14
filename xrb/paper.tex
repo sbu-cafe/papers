@@ -64,6 +64,7 @@
 
 \newcommand{\maestro}{{\sf MAESTRO}}
 \newcommand{\castro}{{\sf Castro}}
+\newcommand{\amrex}{{\sf AMReX}}
 \newcommand{\pynucastro}{{\sf pynucastro}}
 
 \newcommand{\avg}[1]{\overline{#1}}
@@ -258,8 +259,11 @@ implies $\sum_k \omegadot_k = 0$.  \castro\ uses an unsplit piecewise
 parabolic method (PPM) with characteristic tracing for solving the
 hydrodynamics~\cite{ppm,millercolella:2002}, generalized to an
 arbitrary equation of state~\cite{zingalekatz}.  Reactions are
-incorporated via Strang splitting~\cite{strang:1968}, giving a method that is overall
-second-order accurate in space and time.
+incorporated via Strang splitting~\cite{strang:1968}, giving a method
+that is overall second-order accurate in space and time.
+\castro\ uses the \amrex\ adaptive mesh refinement
+library~\cite{amrex_joss} to manage a hierarchy of grids at different
+resolutions.
 
  An equation of state of the form $p = p(\rho, e,
 \{X_k\})$ completes the thermodynamic description of the
@@ -631,7 +635,50 @@ is less than half our domain width.
 We note that the entire simulation framework for these calculations is 
 freely available in the \castro\ github repository.
 
+\subsection{General Features}
+
+\AssignTo{Mike, Kiran, Alice}
+
+Here we'll show the large scale dynamics, colormap plots, etc. and discuss the trends.
+
+
+\subsection{Flame Acceleration}
+
+\AssignTo{Kiran}
+
+Describe the diagnostics used to measure the flame speed and compare to laminar.
+
+\subsection{Boosting}
+
+\AssignTo{Kiran, Mike}
+
+To meet reasonable timescales, we boosted the microphysical inputs to
+the flame to result in a faster flame.  Here we look at the effect of
+this choice.
+
+\subsection{Entrainment, Flow Features}
+
+\AssignTo{Alice, Don}
+
+Show the phase plots and whatever it was that Don cooked up.
+
+\subsection{Rotation Rate}
+
+\AssignTo{Mike, Kiran}
+
+We also try a rotation period of $P_\mathrm{rot} \sim 10^{-4}~\mathrm{s}$.
+
+\subsection{Reaction Network}
+
+\AssignTo{Mike, Kiran}
+
+We look at iso7 instead of aprox13
+
+
+
 \subsection{Resolution}
+
+\MarginPar{do we want to do a low res run?}
 
 Our default resolution puts $\sim 50$ zones vertically in the ``cool''
 model atmosphere height.  To understand the effects of resolution, we
@@ -640,26 +687,11 @@ refining just the region where the density is $10^4~\gcc < \rho \le
 4\times 10^4~\gcc$.  On this level, the grid resolution is
 $10~\mathrm{cm}$.
 
-\subsection{Rotation Rate}
-
-We also try a rotation period of $P_\mathrm{rot} \sim 10^{-4}~\mathrm{s}$.
-
-\subsection{Reaction Network}
-
-We use aprox13 instead of the small network to understand the
-differences.  Energy comes out faster.
-
-\subsection{Boosting}
-
-To meet reasonable timescales, we boosted the microphysical inputs to
-the flame to result in a faster flame.  Here we look at the effect of
-this choice.
-
-\subsection{Sponge}
-
 
 
 \section{Discussion}
+
+\AssignTo{everyone}
 
 Full hydrodynamics models of flame spreading in XRB are possible with certain approximations.
 
@@ -706,7 +738,7 @@ that is underway.  Additionally, we will move to fourth-order accurate
 methods and incorporate well-balanced reconstruction to better capture
 the burning.
 
-MHD, radiation transport
+MHD, radiation transport, GPUs
 
 
 \acknowledgements \castro\ is open-source and freely available at
@@ -726,7 +758,7 @@ Data System Bibliographic Services.
 
 \facilities{NERSC, OLCF}
 
-\software{AMReX (\url{https://github.com/AMReX-Codes/amrex}),
+\software{AMReX \citep{amrex_joss},
           Castro \citep{castro},
           GCC (\url{https://gcc.gnu.org/}),
           linux (\url{https://www.kernel.org/}),
