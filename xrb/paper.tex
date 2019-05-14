@@ -283,7 +283,7 @@ positive $w$ pointing out of the page.  We will take $\Omegab =
 With these choices, the Coriolis force is:
 \begin{equation}
 -2\rho \Omegab \times \Ub =
-   -2\rho \left ( \Omegab w \hat{x} - \Omegab u \hat{z} \right )
+   -2\rho \left ( \Omega_0 w \hat{x} - \Omega_0 u \hat{z} \right )
 \end{equation}
 We will neglect the centrifugal force---with our plane-parallel
 geometry, this will act only in the lateral direction, and is not
@@ -295,20 +295,20 @@ Writing the momentum equation in terms of the $u$, $v$, and $w$
 components, and neglecting the centrifugal force, we have:
 \begin{align}
 \frac{\partial (\rho u)}{\partial t} + \nabla \cdot (\rho u \Ub) +
-     \frac{\partial p}{\partial x} &= -2\rho \Omega w  \\
+     \frac{\partial p}{\partial x} &= -2\rho \Omega_0 w  \\
 %
 \frac{\partial (\rho v)}{\partial t} + \nabla \cdot (\rho v \Ub) +
      \frac{\partial p}{\partial y} &= -\rho g \\
 %
 \frac{\partial (\rho w)}{\partial t} + \nabla \cdot (\rho w \Ub) +
      \cancelto{0}{\frac{\partial p}{\partial z}} &=
-    2\rho \Omega u 
+    2\rho \Omega_0 u 
 \end{align}
 where we cancel $\partial p/\partial z$ because there are no
 variations in the azimuthal direction.  This allows us to recast the
 $w$-velocity equation as a simple advection equation:
 \begin{equation}
-\frac{\partial w}{\partial t} + \Ub \cdot \nabla w = 2\Omega u
+\frac{\partial w}{\partial t} + \Ub \cdot \nabla w = 2\Omega_0 u
 \end{equation}
 In our geometry, the flame will propagate from left to right, so $u$
 will be positive and the Coriolis force results in $w > 0$ (out of the
