@@ -160,10 +160,10 @@ GPU-enabled integration has been explored by \citep{brock:2015}.\MarginPar{XNet 
 
 
 In this paper, we describe our approach to performance portability
-with the \castro\ multiphysics simulation code.  We choose not to use
-a framework like Kokkos but instead we implement the mechanism for
-offloading compute kernels to GPUs inside of the AMReX adaptive mesh
-refinement library itself.  Our goal is to have the same computational
+with the \castro\ multiphysics simulation code.  Similar to the approaches
+of Kokkos and RAJA, we have implemented a mechanism for offloading compute
+kernels to GPUs inside of the AMReX adaptive mesh refinement library.
+Our goal is to have the same computational
 kernels run efficiently on CPUs (including manycore processors) and
 GPUs.  Early GPU results with a version of \castro\ were described in
 \citet{astronum:2017}.  Here, we describe the work we needed to do to
