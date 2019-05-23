@@ -9,7 +9,7 @@ We recommend the reader review Section 3 of Paper V for further details.
 We shall refer to local atmospheric flows in two and three dimensions as problems in ``planar'' geometry, and full-star flows
 in three dimensions as problems in ``spherical'' geometry. The solution in both cases consists of the Cartesian grid solution
 and the one-dimensional base state solution.
-Figure \ref{Fig:BaseGrid} illustrates the relationship between the base state and the Cartesian grid state for both planar and spherical geometries in the presence of spatially adaptive grids.
+Figure \ref{Fig:BaseGrid} illustrates the relationship between the base state and the Cartesian grid state for both planar and spherical geometries in the presence of spatially adaptive grids. \MarginPar{did this fig come from one of the earlier papers? if so, we will need to acknowledge that paper and make sure ApJ knows.}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tb]
 \centering
@@ -60,8 +60,7 @@ At any time, the associated density, composition, and enthalpy can be trivially 
 X_k^n = (\rho X_k)^n / \rho^n, \quad
 h^n = (\rho h)^n / \rho^n.
 \end{equation}
-Temperature is computed using the equation of state, e.g.,
-\footnote{As described in Paper V, for planar problems we compute temperature using $h$ instead of $p_0$, since we have successfully developed planar volume discrepancy schemes to effectively couple the enthalpy to the rest of the solution; see \cite{XRB_I}.  We are still exploring this option for spherical stars.}
+Temperature is computed using the equation of state\footnote{As described in Paper V, for planar problems we compute temperature using $h$ instead of $p_0$, since we have successfully developed planar volume discrepancy schemes to effectively couple the enthalpy to the rest of the solution; see \cite{XRB_I}.  We are still exploring this option for spherical stars.}, e.g.,
 \begin{equation}
 T = T(\rho,p_0,X_k),
 \end{equation}
@@ -73,11 +72,11 @@ We integrate the velocity using a standard second-order projection method to enf
 To summarize:
 \begin{itemize}
 \item In {\bf Step 1} we react the thermodynamic variables over $\Delta t/2$.
-\item In {\bf Steps 2-4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, project the face-centered, time-centered velocities so they satisfy the divergence constraint, and then advect the thermodynamic variables.
-\item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$.\footnote{After this step we could skip to the velocity advance in {\bf Steps 10-11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}
-\item In {\bf Steps 6-8} we redo the advection in {\bf Steps 2-4} but are able to use the trapezoidal rule to time-center certain quantities such as $S$, $\rho_0$, etc.
+\item In {\bf Steps 2--4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, project the face-centered, time-centered velocities so they satisfy the divergence constraint, and then advect the thermodynamic variables.
+\item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$\footnote{After this step we could skip to the velocity advance in {\bf Steps 10--11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}.
+\item In {\bf Steps 6--8} we redo the advection in {\bf Steps 2--4} but are able to use the trapezoidal rule to time-center certain quantities such as $S$, $\rho_0$, etc.
 \item In {\bf Step 9} we redo the reactions from {\bf Step 5} using the improved results for the corrector advection step.
-\item In {\bf Steps 10-11} we and update the velocity, compute the expansion term, $S$, and project the cell-centered velocities.
+\item In {\bf Steps 10--11} we and update the velocity, compute the expansion term, $S$, and project the cell-centered velocities.
 \end{itemize}
 
 There are a few key numerical modules we use in each time step.
@@ -104,7 +103,7 @@ and the local magnitude of the divergence constraint (to prevent too much mass e
 
 In stratified low Mach number models, due to the extreme variation in density, the velocity can become very large in low density regions at the edge of the star.
 Throughout Papers II-V, we have employed two techniques to help control these dynamics without significantly affecting the dynamics in the convective region.
-First, we use a cutoff density technique, where we hold the density constant outside a specified radius (typically near where the density is $\sim$4 orders of magnitude smaller than the largest densities in the simulation.
+First, we use a cutoff density technique, where we hold the density constant outside a specified radius (typically near where the density is $\sim$4 orders of magnitude smaller than the largest densities in the simulation).
 Second, we employ a sponge technique where we artificially damp the velocities near and beyond the cutoff region.
 For more details, refer to Paper V and the previous references cited within.
 
