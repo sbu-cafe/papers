@@ -57,7 +57,7 @@ based on method-of-lines integration.
 In particular, schemes based on spectral deferred corrections \citep{dutt2000spectral} have been used to generate high-order temporal integrators for problems of reactive flow \citep{dutt2000spectral} and low Mach number combustion \citep{pazner2016high,nonaka2018conservative}.
 Second, we explore the effects of alternative spatial mapping routines for coupling the base state and the Cartesian grid state in spherical problems.
 Finally, the code has been completely ported to a new software framework suitable for modern manycore supercomputers.
-We examine the performance of our new MAESTROeX implementation in the new C++/F90 AMReX public software library \cite{AMReX}.
+We examine the performance of our new MAESTROeX implementation in the new C++/F90 AMReX public software library \cite{AMReX,AMReX_JOSS}.
 MAESTROeX uses MPI+OpenMP parallelism and scales well to over 10,000 MPI processes, with each MPI process supporting tens of threads.
 The resulting code is publicly available on GitHub ({\tt https://github.com/AMReX-Astro/MAESTROeX}),
 uses the Starkiller-Astro microphysics libraries ({\tt https://github.com/starkiller-astro/Microphysics}),
