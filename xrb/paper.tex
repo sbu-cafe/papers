@@ -180,7 +180,7 @@ lightcurves and recurrance times (see, e.g., \citealt{woosley-xrb}).
 These assume spherical symmetry and thus cannot capture the effects of
 localized burning spreading across the neutron star.  These studies
 have also been used to explore the sensitivity of the burst
-observables to reaction rates\MarginPar{ref}.
+observables to accretion and reaction rates~\citep{Jose2010a,Lampe2016}\MarginPar{ref}.
 
 Multidimensional simulations of burning on a neutron star are more
 challenging, and thus a number of approximations have been made in the
@@ -188,24 +188,24 @@ past.
 
 Laterally propagating detonations were modeled by
 \citet{fryxellwoosley82,hedet}, but these would only be applicable at
-very high densities, since it is difficult to detonation helium at the
-densities found in normal XRBs, and even harder to detonation hydrogen
+very high densities, since it is difficult to detonate helium at the
+densities found in normal XRBs, and even harder to detonate hydrogen
 because of the waiting times for weak reactions.  This means that
 detonations may only really be applicable to superbursts (where carbon
-is the reactant). \MarginPar{ref}
+is the reactant)~\citep{Weinberg2006b,Weinberg2007}. \MarginPar{ref}
 
 Global multidimensional studies were performed by
 \citet{spitkovsky2002}, where it was demonstrated that the Coriolis
 force plays an important role in confining the burning as it spreads
 across the neutron star surface.  These calculations used the
-shallow-water approximation, so the vertical details of the atmosphere
+shallow-water approximation, so the vertical details of the atmosphere's
 structure we not modeled.
 
 Small-domain studies of convective burning in XRBs preceding flame
 development have been done in two-dimensions \citep{lin:2006,xrb,xrb2}
 and three-dimensions \citep{xrb3d}.  These calculations used low Mach
 number methods that approximate the hydrodynamics equations to filter
-soundswaves, enabling large timesteps and efficient modeling of
+soundwaves, enabling large timesteps and efficient modeling of
 subsonic convection.  While these calculations could not support
 the lateral differences needed for flame spreading, they can help
 understand the role that convection plays in distributing the initial
@@ -221,16 +221,16 @@ Detonations are in some sense easier to model, since their structure
 follows from the jump conditions which are solved with shock-capturing
 schemes.  For deflagrations, we either need to resolve the structure
 or use a flame model.  Flame models usually assume that the flame
-structure is thin compared to the size of the system (see, e.g., XX\MarginPar{refs} for applications to Type Ia supernovae).  For the XRB however, the flame thickness is comparable to the scale
-height of the atmosphere, so we cannot use the approximations.
+structure is thin compared to the size of the system (see, e.g., \citet{Ropke2007}\MarginPar{refs} for applications to Type Ia supernovae).  For XRBs however, the flame thickness is comparable to the scale
+height of the atmosphere, so we cannot use these approximations.
 
 The goal of this study is to understand what numerical and physical
 approximations are needed to perform a full hydrodynamical,
 multidimensional simulation of flame propagation through the
-atmosphere on the neutron star.  For simplicity in this first set of
+atmosphere on a neutron star.  For simplicity in this first set of
 calculations, we will use pure helium composition.  These studies
 complement the other multidimensional work described above in helping
-us build a picture of the dynamics of X-ray bursts.
+us to build a picture of the dynamics of X-ray bursts.
 
 
 %======================================================================
@@ -280,7 +280,7 @@ temperature.  Diffusion is treated explicitly in time.
 Since the neutron star rotates, we work in a corotating frame, with
 angular velocity $\Omegab$.  Further, for the two-dimensional
 simulations presented here, we work in axisymmetric coordinates,
-but we advective a third component of velocity, coming out of the
+but we advect a third component of velocity, coming out of the
 simulation plane, that participates in the Coriolis force (sometimes
 described as a 2.5D simulation).  We will take the
 \castro\ $x$-coordinate to be the cylindrical radial coordinate with
@@ -313,7 +313,7 @@ components, and neglecting the centrifugal force, we have:
 %
 \frac{\partial (\rho w)}{\partial t} + \nabla \cdot (\rho w \Ub) +
      \cancelto{0}{\frac{\partial p}{\partial z}} &=
-    2\rho \Omega_0 u 
+    2\rho \Omega_0 u
 \end{align}
 where we cancel $\partial p/\partial z$ because there are no
 variations in the azimuthal direction.  This allows us to recast the
@@ -332,7 +332,7 @@ described in \cite{timmes_swesty:2000}.  For reactions, we use a 13
 isotope alpha chain, derived from the {\tt aprox13}
 network~\citep{timmes_aprox13}.  For one of our runs, we use the
 smaller 7-isotope network described in \citet{iso7}.  We integrate the
-network using the VODE integration package~\citep{vode}, and out
+network using the VODE integration package~\citep{vode}, and our
 implementation is provided in the StarKiller Microphysics
 source~\citep{starkiller}.
 
@@ -400,7 +400,7 @@ transverse velocities set to zero.
 
 sponge\AssignTo{Mike will write}
 
-In the discussions below, we will use the Castro coordinate 
+In the discussions below, we will use the Castro coordinate
 names, $(x, y)$ in our notation.
 
 
@@ -565,7 +565,7 @@ $X_\mathrm{atm}(\isotm{He}{4})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
 \end{deluxetable}
 
 The choice of factors in front of $\delta_\mathrm{atm}$ were designed
-to make sure the peak $T$ is attained at the desired density 
+to make sure the peak $T$ is attained at the desired density
 of the burning layer.
 
 We create two models, a ``cool'' model representing the atmosphere
@@ -639,7 +639,7 @@ L_R = \frac{\sqrt{g H_0}}{\Omega} \sim 3\times 10^4~\mathrm{cm}
   Rossby length} using a scale height $H_0 = 10^3~\mathrm{cm}$.  This
 is less than half our domain width.
 
-We note that the entire simulation framework for these calculations is 
+We note that the entire simulation framework for these calculations is
 freely available in the \castro\ github repository.
 
 \subsection{General Features}
