@@ -34,11 +34,23 @@ In Section 4 of Paper V, we describe how there is a finite, easily computable se
 Specifically, for every Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by $\hat{r}_m=\Delta x\sqrt{0.75+2m}$.
 We average by binning all the cells associated with each radii and taking the average.
 Then we interpolate this data onto a one-dimensional radial array.  
+
 Previously, MAESTRO only allowed for radial arrays with a constant $\Delta r$ (typically equal to $\Delta x/5$).
 Here we present a new option to retain an irregularly-spaced radial array to eliminate mapping errors back onto the Cartesian grid state.
 Consider a spherical star in hydrostatic equlibrium at rest.  In the absense of reactions, the star should remain at rest.
 The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced array, the effects due to interpolation error are completely eliminated.
-\MarginPar{Doreen you had a great figure of this mapping in one of your talks}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tb]
+\centering
+\includegraphics[height=2.0in]{./figs/base_spherical_new}
+\caption{\label{Fig:NewBaseGrid}  
+A direct mapping between the radial array cell centers (red squares) and the Cartesian grid cell centers (blue crosses) 
+is enforced by computing the average of the grid cell centers that share the same radial distance from 
+the center of the domain.}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \subsection{Temporal Integration Scheme}\label{Sec:Temporal Integration Scheme}
 We now describe the new temporal integration scheme, which we note can be used for the original base state mapping (with constant base state grid spacing) as well as the new irregularly spaced base state mapping.
@@ -384,7 +396,7 @@ equation (\ref{eq:momentum}) as
 \begin{equation}
 \Ub^{n+1,\dagger}
 = \Ub^n - \dt \left[\uadvtwo \cdot \nabla \Ub^{\nph,\pred} \right]
- - \dt \left[ \frac{1}{\rho^\nph} \nabla \pi^\nmh + \frac{\left(\rho^\nph-\rho_0^\nph\right)}{\rho^\nph} g^{\nph} \eb_r \right],
+ - \dt \left[ \frac{\beta_0^\nph}{\rho^\nph} \nabla \left( \frac{\pi^\nmh}{\beta_0^\nmh} \right) + \frac{\left(\rho^\nph-\rho_0^\nph\right)}{\rho^\nph} g^{\nph} \eb_r \right],
 \end{equation}
 Again, the $\dagger$ superscript refers
 to the fact that the updated velocity does not satisfy the divergence constraint,

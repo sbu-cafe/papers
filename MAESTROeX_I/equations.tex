@@ -9,19 +9,22 @@ of state (EOS) as a divergence constraint on the velocity field.
 The resulting model is a series of evolution equations for mass, momentum, and energy, subject
 to to an additional constraint on velocity.  The evolution equations are
 \begin{eqnarray}
-\frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{1}{\rho}\nabla\pi - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
 \frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
+\frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{\beta_0}{\rho}\nabla\left(\frac{\pi}{\beta_0}\right) - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
 \frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc.\label{eq:enthalpy}
 \end{eqnarray}
-Here $\rho$, $\Ub$, and $h$ are the mass density,  \MarginPar{that's not the momentum equation we solve.  It doesn't have the energy fix.}
+Here $\rho$, $\Ub$, and $h$ are the mass density,  
 velocity and specific enthalpy, respectively, and
 $X_k$ are the mass fractions of species $k$ with associated
-production rate $\omegadot_k$.  The species are constrained
-such that $\sum_k X_k = 1$ giving $\rho = \sum_k (\rho X_k)$ and
+production rate $\omegadot_k$.  
+The species are constrained such that $\sum_k X_k = 1$ giving $\rho = \sum_k (\rho X_k)$ and
 \begin{equation}
 \frac{\partial\rho}{\partial t} = -\nabla\cdot(\rho\Ub).
 \end{equation}
-Here $\Hnuc$ is the nuclear energy generation rate per unit mass.
+Here $\Hnuc$ is the nuclear energy generation rate per unit mass. 
+Note that the momentum equation above enforces conservation of total energy in the 
+low Mach number system in the absence of external heating or viscous terms \citep{Vasil2013}, 
+and has been previously demonstrated in modeling sub-Chandrasekhar white dwarfs using MAESTRO \citep{subChandra_II}. 
 The total pressure is decomposed into a one-dimensional hydrostatic base state
  pressure, $p_0 = p_0(r,t)$, and a dynamic pressure, $\pi = \pi(\xb,t)$, such that 
 $p = p_0 + \pi$ and $|\pi|/p_0 = \mathcal{O}({\rm Ma}^2)$ (we use $\xb$ to represent the Cartesian coordinate 

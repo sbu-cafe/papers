@@ -482,7 +482,7 @@ We wish to create an initial atmosphere consisting of a hot
 ``post-flame'' region and a cooler atmosphere that the flame will
 laterally propagate into.  We put the hot region at the very left of
 the domain (the origin of the axisymmetric coordinates).  To create
-these initial conditions, w produce two different hydrostatic models,
+these initial conditions, we produce two different hydrostatic models,
 a ``hot'' model that will represent the perturbation that drives the
 flame and a ``cool'' model that will represent the state ahead of the
 flame.  These will have different scale heights.  To create these
@@ -668,6 +668,65 @@ this choice.
 \AssignTo{Alice, Don}
 
 Show the phase plots and whatever it was that Don cooked up.
+
+Baroclinicity is calculated as
+\begin{equation}
+    \boldsymbol{\psi} = \frac{1}{\rho^2} \nablab p \times \nablab \rho,
+\end{equation}
+and shows the misalignment of the local density and pressure gradients
+\citep{Malone2014a}. As we are considering a 2d system, the component of the
+baroclinicity we consider here (out of the plane) reflects the misalignment
+of the fields in the plane of the simulation. Figure~\ref{fig:baroclinicity}
+shows that the baroclinicity peaks along the flame front. This baroclinicity
+generates vorticity, which in turn entrains material along the surface of the
+flame.
+
+\begin{figure}[t]
+\centering
+\plotone{plots/results/baroclinicity}
+\caption{\label{fig:baroclinicity} Baroclinicity. This plot shows
+$\ln \left(\mathbf{\psi}\right)$ at time $t = 0.02~\mathrm{s}$.}
+\end{figure}
+
+We show some phase plots in Figure~\ref{fig:phase_plots}. The phase plot of the
+energy generation rate against the as a function of
+the $x$- and $y$-velocities shows that energy is preferentially generated in
+regions with negative $x$-velocity. This most likely corresponds to material
+being entrained along the underside of the flame front. There are loops of
+points of similar $\dot{e}_\mathrm{nuc}$ in the outer edges of the plot.
+These are likely to correspond to the vortices that appear within the flame,
+and show the fluid moving in a circular motion in $u-v$ phase space.
+
+The phase plot of the energy generation rate as a function of the $x$-velocity
+and the density demonstrates that the energy generation rate peaks at
+$\rho \sim 3 \times 10^5~\mathrm{g/cm}^3$, at the base of the flame.
+\MarginPar{I'm guessing? It's at least towards the base}
+
+\begin{figure}[t]
+\centering
+\plottwo{plots/results/vx_vy_129139}{plots/results/u_rho_129139}
+\caption{\label{fig:phase_plots} Phase plots at time $t = 0.02~\mathrm{s}$.
+\emph{Left}: Phase plot showing the energy generation rate as a function of
+the $x$- and $y$-velocities. \emph{Right}: phase plot showing the energy
+generation rate as a function of the $x$-velocity and the density.}
+\end{figure}
+
+Figure~\ref{fig:abar_temp} shows the energy generation rate as a function of the
+temperature and $\bar{A}$. \MarginPar{I'm assuming will be defined somewhere above}
+The energy generation rate peaks at low $\bar{A}$, where there is a high fraction
+of unburnt material. The burning raises the temperature of this material, such
+that the peak temperature coincides with the peak energy generation rate. The
+material then cools again as the burning converts the fuel into ashes,
+increasing $\bar{A}$ and reducing the energy generation rate as there is
+less available fuel. Along the base of the plot we see cool unburnt fluid and
+ashes. In the center of the plot there are thin `trails' in phase space, which
+could correspond to less common reaction pathways in the reaction network.
+
+\begin{figure}[t]
+\centering
+\plotone{plots/results/abar_temp_129139}
+\caption{\label{fig:abar_temp} Phase plot of energy generation rate as a function of $\bar{A}$ and temperature at time $t = 0.02~\mathrm{s}$.}
+\end{figure}
 
 \subsection{Rotation Rate}
 
