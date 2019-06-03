@@ -170,7 +170,7 @@ The details of this ``MAC'' projection are provided in Appendix \ref{Sec:Project
 \frac{\partial(\rho X_k)}{\partial t} = -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,
 \end{equation}
 %
-omitting the reaction terms, which were already
+omitting the reaction terms, which were already \MarginPar{since we are omitting the reaction terms, we should just leave them out of the Eq.}
 accounted for in {\bf React State}.  The update consists of two steps:
 
 \begin{enumerate}
@@ -275,7 +275,7 @@ The $\dagger$ superscript refers to the fact that the predicted velocity field d
 \end{equation}
 with
 \begin{equation}
-\beta_0^{\nph} = \frac{ \beta_0^n +  \beta_0^{n+1,\star} }{2},
+\beta_0^{\nph} = \frac{ \beta_0^n +  \beta_0^{n+1,\star} }{2}, \quad
 \gammaonebar^{\nph} = \frac{ \gammaonebar^n +  \gammaonebar^{n+1,\star} }{2}.
 \qquad
 \end{equation}
@@ -315,9 +315,9 @@ we project $\uadvtwodag$ onto the space of velocities that satisfy the constrain
 \item Update $p_0$ by calling {\bf Enforce HSE}$[\rho_0^{n+1}] \rightarrow [p_0^{n+1}]$.
 
 \item Update the enthalpy.  This step is identical to {\bf Step 4D} except we use
-  the updated values $\uadvtwo, \rho_0^{n+1}, (\rho h)_0^{n+1}$, and $p_0^{\nph}$
+  the updated values $\uadvtwo$, $\rho_0^{n+1}$, $(\rho h)_0^{n+1}$, and $p_0^{\nph}$
   rather than
-  $\uadvone, \rho_0^{n+1,\star}, (\rho h)_0^{n+1,\star}$, and $p_0^n$.
+  $\uadvone, \rho_0^{n+1,\star}$, $(\rho h)_0^{n+1,\star}$, and $p_0^n$.
   In particular:
 
 \begin{enumerate}
