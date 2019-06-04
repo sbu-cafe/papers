@@ -18,14 +18,33 @@ computationally expensive due to the presence of additional linear
 solves, but for many problems of interest the overall gains in
 efficiency can easily be an order of magnitude or more.
 
-Low Mach number models have been developed for a variety of contexts including combustion \citep{day2000numerical}, terrestrial atmospheric modeling \citep{duarte2015low},
-and elastic solids \citep{abbate2017all}.
-For astrophysical applications, a number of approaches to modeling low Mach number flows have been developed in recent years.
-These include semi-implicit all-Mach number solvers, where the Euler equations are split into an acoustic part and an advective part \citep{Kwatra2009,Degond2009,Cordier2012,Haack2012,Happenhofer2013,Chalons2016,Padioleau2019}.
-The fast acoustic waves are then solved using implicit time integration, while the slow material waves are solved explicitly.
-Another approach is to use preconditioned all-Mach number solvers \citep{Miczek2014,Barsukow2016}, where the numerical flux is multiplied by a preconditioning matrix.
-This reduces the stiffness of the system at low Mach numbers, while retaining the correct scaling behavior. In the reduced speed of sound technique (RSST) and related methods, the speed of sound is artificially reduced by including a suitable scaling factor in the continuity equation, reducing the restriction on the size of the timestep \citep{Rempel2005,Hotta2012,Wang2015,Takeyama2017,Iijima2018}.
-The MUSIC code uses fully implicit time integration for the compressible Euler equations, which therefore allows for arbitrarily large timesteps \citep{Viallet2011,Viallet2015,Goffrey2016}.
+Low Mach number models have been developed for a variety of contexts
+including combustion \citep{day2000numerical}, terrestrial atmospheric
+modeling \citep{durran:1989,oneill:2014,duarte2015low}, and elastic
+solids \citep{abbate2017all}.  For astrophysical applications, a
+number of approaches to modeling low Mach number flows have been
+developed in recent years.  These include methods atmospheric model similar to
+what is presented here~\cite{Lin:2006}.  There are also  semi-implicit all-Mach
+number solvers, where the Euler equations are split into an acoustic
+part and an advective part
+\citep{Kwatra2009,Degond2009,Cordier2012,Haack2012,Happenhofer2013,Chalons2016,Padioleau2019}.
+The fast acoustic waves are then solved using implicit time
+integration, while the slow material waves are solved explicitly.
+Another approach is to use preconditioned all-Mach number solvers
+\citep{Miczek2014,Barsukow2016}, where the numerical flux is
+multiplied by a preconditioning matrix.  This reduces the stiffness of
+the system at low Mach numbers, while retaining the correct scaling
+behavior. In the reduced speed of sound technique (RSST) and related
+methods, the speed of sound is artificially reduced by including a
+suitable scaling factor in the continuity equation, reducing the
+restriction on the size of the timestep
+\citep{Rempel2005,Hotta2012,Wang2015,Takeyama2017,Iijima2018}.
+Finally, there are fully implicit time integration codes for the
+compressible Euler equations
+\citep{Viallet2011,kifonidis:2012,Viallet2015,Goffrey2016}.  The MUSIC code
+uses fully implicit time integration for the compressible Euler
+equations, which therefore allows for arbitrarily large timesteps.
+
 
 Previously, we developed the low Mach number astrophysical solver, MAESTRO.
 MAESTRO is a block-structured, Cartesian grid finite-volume, adaptive mesh refinement (AMR) code that has been successfully used for many years for a number of applications, detailed below.
@@ -35,7 +54,7 @@ This includes full spherical stars, as well as planar simulations of dynamics wi
 MAESTRO uses an explicit Godunov approach for advection, a stiff ODE package (VODE) \citep{vode} for reactions, and multigrid-based linear solvers for the pressure-projection steps, and is thus time-step limited by an advective CFL constraint based on the fluid velocity, not the sound speed.
 The time-advancement strategy uses Strang splitting to couple the thermodynamic variables, and a second-order projection method to integrate the velocity equations subject to a divergence constraint.
 Central to the algorithm is a time-varying, one-dimensional stratified background (or base) state density and pressure held in hydrostatic equilibrium that couple to the full Cartesian grid solution.
-The original MAESTRO code was developed in the pure-Fortran90 FBoxLib software framework (see the FBoxLib repository in \cite{AMReX}) for block-structured AMR applications.
+The original MAESTRO code was developed in the pure-Fortran 90 FBoxLib software framework (available in the same github organization as AMReX).
 
 The key numerical developments of the original MAESTRO algorithm are presented in a series of papers which we refer to as Papers I-V:
 \begin{itemize}
@@ -49,7 +68,7 @@ The key numerical developments of the original MAESTRO algorithm are presented i
 Since then, there have been many scientific investigations using MAESTRO, which have included additional algorithmic enhancements.  Topics include:
 \begin{itemize}
 \item The convective phase preceding Chandrasekhar mass models for type Ia supernovae \citep{MAESTRO_convection,MAESTRO_AMR,MAESTRO_CASTRO}.
-\item Convection in massive stars \citep{Gilet:2013}.
+\item Convection in massive stars \citep{Gilet:2013,gilkis:2016}.
 \item Sub-Chandrasekhar white dwarfs \citep{subChandra_I,subChandra_II}.
 %  In the latter paper we introduced an optional modification to the momentum equation of velocity constraint that conserves total energy, can give results closer to compressible codes of convective dynamics, including low density regions at the surface of a star.
 \item Type I X-ray bursts \citep{XRB_I,XRB_II,XRB_III}.
