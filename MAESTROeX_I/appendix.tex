@@ -23,6 +23,22 @@ To find $w_0$ we integrate in 1D using the procedure in Appendix B of Paper V.
 Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$).  After evolving the species, we compute this term in the same way as reported in Paper V for use in computing $w_0$.
 \MarginPar{mention changes in $w_0$ computation for irregular base state. Add graphic of temperature falling due to incorrect splitting?}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
+\begin{tabular}{l r}
+\multirow{4}{3.5in}[34.5mm]{ \includegraphics[width=3.0in]{./figs/wdconvect_256_splitU} } & \multicolumn{1}{c}{\includegraphics[width=2.35in]{./figs/magvel_full_XY}} \\
+& \multicolumn{1}{c}{\begin{footnotesize} (a) $|\mathbf{U}|$, solved using $\mathbf{U}$ \end{footnotesize}} \\[1.em]
+& \multicolumn{1}{c}{\includegraphics[width=2.35in]{./figs/magvel_split_XY}} \\ 
+& \multicolumn{1}{c}{\begin{footnotesize} (b) $|\mathbf{U}|$, solved using $w_0 + \tilde{\mathbf{U}}$ \end{footnotesize}} \\
+\end{tabular}
+\caption{\label{fig:wdconvect_splitU} (Left) Peak temperature, $T_{\text{peak}}$ in a white dwarf at resolution of $256^3$ 
+         during initial transition. (Right) Velocity magnitude solved using the full velocity $\mathbf{U}$ in projection step 
+         results in large values outside the density cutoff region that is not seen with using the split velocities.}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Old Notes (not for inclusion in paper)}
 
 \subsection{Exact Base State Notes}
