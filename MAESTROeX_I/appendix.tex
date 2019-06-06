@@ -15,15 +15,16 @@ This is demonstrated in Figure \ref{fig:wdconvect_splitU} (right) where the velo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htb]
 \begin{center}
-\begin{tabular}{l r}
-\multirow{4}{3.5in}[34.5mm]{ \includegraphics[width=3.0in]{./figs/wdconvect_256_splitU} } & \multicolumn{1}{c}{\includegraphics[width=2.35in]{./figs/magvel_full_XY}} \\
-& \multicolumn{1}{c}{\begin{footnotesize} (a) $|\mathbf{U}|$, solved using $\mathbf{U}$ \end{footnotesize}} \\[1.em]
-& \multicolumn{1}{c}{\includegraphics[width=2.35in]{./figs/magvel_split_XY}} \\ 
-& \multicolumn{1}{c}{\begin{footnotesize} (b) $|\mathbf{U}|$, solved using $\tilde{\mathbf{U}}+w_0$ \end{footnotesize}} \\
+\begin{tabular}{l c}
+\multirow{4}{3.25in}[30mm]{ \includegraphics[width=3.0in]{./figs/wdconvect_256_splitU} } & \multicolumn{1}{c}{\includegraphics[width=2.35in]{./figs/magvel_full_XY}} \\
+& \multicolumn{1}{c}{\begin{footnotesize} (a) Velocity magnitude, solved using full $\mathbf{U}$ \end{footnotesize}} \\[1.em]
+& \multicolumn{1}{c}{\includegraphics[width=2.75in]{./figs/magvel_lineout_X}} \\ 
+& \multicolumn{1}{c}{\begin{footnotesize} (b) Comparison along white line \end{footnotesize}} \\
 \end{tabular}
 \caption{\label{fig:wdconvect_splitU} (Left) Peak temperature, $T_{\text{peak}}$ in a white dwarf at resolution of $256^3$ 
          during initial transition. (Right) Velocity magnitude solved using full velocity $\mathbf{U}$ in the projection step 
-         results in large values outside the density cutoff region that is not seen when we split the velocity dynamics.}
+         results in much larger values outside the density cutoff region, $\rho < 10^5 \text{ g cm}^{-3}$, that is not seen when 
+         we split the velocity dynamics.}
 \end{center}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%

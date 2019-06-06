@@ -1,7 +1,6 @@
 \section{Numerical Algorithm}\label{eq:algorithm}
 
 \subsection{Spatial Discretization}\label{Sec:Spatial}
-\MarginPar{needs work}
 The spatial discretization and adaptive mesh refinement methodology remains unchanged from Paper V.
 We now summarize some of the key points here before describing the new temporal integrator in the next section.
 We recommend the reader review Section 3 of Paper V for further details.
@@ -31,23 +30,28 @@ a particular height since the radial cell centers are in alignment
 with the Cartesian grid cell centers.
 However for spherical problems, the procedure is much more complicated.
 In Section 4 of Paper V, we describe how there is a finite, easily computable set of radii that any Cartesian cell-center can map to.  
-Specifically, for every Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by $\hat{r}_m=\Delta x\sqrt{0.75+2m}$.
+Specifically, for every Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by 
+\begin{equation}\label{eqn:radii}
+\hat{r}_m=\Delta x\sqrt{0.75+2m}.
+\end{equation}
 We average by binning all the cells associated with each radii and taking the average.
 Then we interpolate this data onto a one-dimensional radial array.  
 
 Previously, MAESTRO only allowed for radial arrays with a constant $\Delta r$ (typically equal to $\Delta x/5$).
 Here we present a new option to retain an irregularly-spaced radial array to eliminate mapping errors back onto the Cartesian grid state.
-Consider a spherical star in hydrostatic equlibrium at rest.  In the absense of reactions, the star should remain at rest.
+The idea is to follow the same method performed on planar geometries by simply computing an arithmetic average of cells that share the same radial distance from the center of the star. 
+Figure \ref{Fig:NewBaseGrid} illustrates the relationship between the Cartesian grid state and the one-dimensional array base state with this new mapping technique. Again, these radial distances, and hence the cell-center locations in the new base state array, can be predetermined using equation (\ref{eqn:radii}). Also note that $\Delta r$ decreases as the base state moves further from the center of the star, which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
+A potential benefit to eliminating the mapping error is to consider a spherical star in hydrostatic equlibrium at rest.  In the absense of reactions, the star should remain at rest.
 The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced array, the effects due to interpolation error are completely eliminated.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tb]
 \centering
-\includegraphics[height=2.0in]{./figs/base_spherical_new}
+\includegraphics[height=2.5in]{./figs/base_spherical_new}
 \caption{\label{Fig:NewBaseGrid}  
 A direct mapping between the radial array cell centers (red squares) and the Cartesian grid cell centers (blue crosses) 
 is enforced by computing the average of the grid cell centers that share the same radial distance from 
-the center of the domain.}
+the center of the star.}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -94,8 +98,7 @@ To summarize:
 There are a few key numerical modules we use in each time step.
 \begin{itemize}
 \item {\bf Average}$[\phi]\rightarrow[\overline\phi]$ computes the lateral average of a quantity over a layer at constant radius $r$, as described above in Section \ref{Sec:Spatial}.
-\item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in one dimension; see equation (A10) in Paper V.  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
-\MarginPar{add note about changes for irregular}
+\item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in one dimension. This follows equation (A10) in Paper V with the exception of computing a non-constant $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell-edge $j+1/2$ if using irregularly-spaced base states.  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
 \item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ integrates the species and enthalpy due to reactions over $\Delta t/2$ by solving
 \begin{equation}
 \frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
@@ -422,4 +425,4 @@ followed by a small number of steps of the temporal advancement scheme to iterat
 find initial values for $\pi^{n-\myhalf}$ and $S^0$ and $S^1$ for use in the first time step.
 
 Our approach to adaptive mesh refinement is algorithmically the same as the treatment described in Section 5 of Paper V; we refer the reader there for details.
-We note that for spherical problems, AMR is only available for the case of a regularly-spaced base state.
+We note that for spherical problems, AMR is only available for the case of a uniformly-spaced base state.
