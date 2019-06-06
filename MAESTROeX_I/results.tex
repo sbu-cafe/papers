@@ -1,6 +1,6 @@
 \section{Performance and Validation}\label{sec:results}
 
-\subsection{Performance and Scaling}
+\subsection{Performance and Scaling}\label{sec:scaling}
 We perform weak scaling tests for simulations of convection preceding ignition in a spherical, full-star sub-Chandrasekhar mass white dwarf.
 The simulation setup remains the same as reported in Section 3 of \cite{MAESTRO_AMR} and originally used in \cite{MAESTRO_convection}, and thus we emphasize that these scaling tests are performed using meaningful, scientific calculations.
 Here, we perform simulations using $256^3, 512^3, 768^3, 1024^3, 1280^3$, and $1536^3$ grid cells on a spatially uniform grid (no AMR).
@@ -42,6 +42,36 @@ The difference in total wallclock times with and without base state evolution is
 Note that as expected, advection, reactions, and calls to the equation of state scale almost perfectly, since there is only a single parallel communication call to fill ghost cells.
 
 
+
+\subsection{White Dwarf Convection}
+
+white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregularly-spaced base state)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htb]
+\begin{center}
+\includegraphics[width=2.75in]{./figs/wdconvect_256_maxT}  \hspace{0.5in}
+\includegraphics[width=2.75in]{./figs/wdconvect_256_maxMach}
+\caption{\label{fig:wdconvect_128_maxval} (left) Peak temperature, $T_{\text{peak}}$, and (right) peak Mach number 
+         in a white dwarf until time of ignition at resolution of $256^3$ for three different MAESTROeX algorithms.}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[hbt]
+\begin{center}
+\includegraphics[width=3.25in]{./figs/wdconvect_compare_Tmax}
+\caption{\label{fig:wdconvect_Tmax} Peak temperature, $T_{\text{peak}}$  in a white dwarf at grid resolutions of 
+         $256^3$ (dotted line) and $512^3$ (solid line) until $t=1000$ for uniform (d$x$) and irregular (d$r$) base state spacing. 
+         Note that the irregularly-spaced solution agrees better 
+         with the uniformly-spaced solution as the resolution increases.}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 \subsection{AMR Performance}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -57,6 +87,10 @@ Note that as expected, advection, reactions, and calls to the equation of state 
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+To test the performance of MAESTROeX for adaptive, three-dimensional simulations, we make use of the AMReX framework to track a localized feature over time. Figure \ref{fig:amr_grids} illustrates the initial grid structures with two levels of refinement for both planar and spherical geometries where the grid is refined according to the temperature and density profiles, respectively. For each of the problems we tested, the single-level simulation was run using the original temporal scheme and the adaptive simulations using the original and new temporal algorithms. We want to show that the adaptive simulation can give the similar results as the single-level simulation and in a more computationally efficient manner.
+
+In the planar case, we use the same problem setup for a hot bubble rising in a white-dwarf environment as described in Section 6 of Paper V. Here we use a domain size of $3.6\times 10^7$ cm by $3.6\times 10^7$ cm by $2.88\times 10^8$ cm, and allow the grid structure to change with time. The single-level simulation at a resolution of $128^2 \times 1024$ was run on Cori Haswell with 48 processors and took approximately 33.5 s per time step (averaged over 10 time steps) using either the original or new temporal algorithm. The adaptive simulation has a resolution of $32^2 \times 256$ at the coarsest level, resulting in the same effective resolution at the finest level as the single-level simulation. We tag cells that satisfy $T-\bar{T} > 3\times 10^7$ K as well as all cell at that height. The adaptive run took only 3.7 s per time step, and this 89\% decrease in runtime is mostly due to the fact that initially only 6.25\% of the cells (1,048,576 out of $128^2 \times 1024$ cells) are refined at the finest level. Figure \ref{fig:bubble_results} shows a series of planar slices of the temperature profile at time intervals of 1.25 s, and verifies that the adaptive simulation is able to capture the same dynamics as the single-level simulation at much lower computational cost. 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htb]
 \begin{center}
@@ -69,8 +103,7 @@ Note that as expected, advection, reactions, and calls to the equation of state 
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Reacting bubble simulation at effective resolution of $128^2 \times 1024$ run on Cori Haswell with 48 processors took approximately 33.5 s per time step (averaged over 10 time steps) to run on single-level grid using either the original or new temporal algorithm, and only 3.7 s on adaptive grid with two levels of refinement. This 89\% decrease in runtime is mostly due to the fact that only 6.25\% of the cells (1,048,576 out of $128^2 \times 1024$ cells) are refined at the finest level for the AMR run. 
-
+We continue to use the full-star white dwarf problem described in Section \ref{sec:scaling} to test adaptive simulations on spherical geometry. The simulation on a single-level grid of $512^3$ resolution took 26.01 s per time step (again averaged over 10 time steps) using the original temporal scheme, and 22.66 s using the new scheme. On the adaptive grid with two levels of refinement, 8.9\% of the cells (1,493,504 out of $256^3$ cells) are refined at the first level and 5.3\% (7,176,192 out of $512^3$ cells) at the second. The adaptive simulation took 11.55 s and 12.48 s using the orginal and new temporal schemes, respectively. Both simulations are computed to $t=400$ s and we choose to use the peak temperature as the diagnostics to compare the results. Figure \ref{fig:wdconvect_amr_Tmax} shows the evolution of the peak temperature for all three runs and shows that the adaptive simulation gives the same qualitative result as the single-level simulation. We do not expect the curves to match up exactly because the governing equations are highly nonlinear, and slight differences in the solution caused by solver tolerance and discretization error can change the details of the results. Each simulation was run on Cori KNL with 512 processors and 16 threads.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htb]
@@ -79,38 +112,6 @@ Reacting bubble simulation at effective resolution of $128^2 \times 1024$ run on
 \caption{\label{fig:wdconvect_amr_Tmax} Peak temperature, $T_{\text{peak}}$, in a white dwarf from $t=0$ to $400$ s 
          for grids with effective resolution of $512^3$. We can see that the adaptive grids with two levels of 
          refinement give very similar solution trends compared to the single-level grid.}
-\end{center}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Full white dwarf star simulation at effective resolution of $512^3$ on Cori KNL with 512 processors and 16 threads took 26.01 s per time step (averaged over 10 time steps) using the original temporal scheme, and 22.66 s using the new scheme. On an adaptive grid with two levels of refinement, 8.9\% of the cells (1,493,504 out of $256^3$ cells) are refined at the first level and 5.3\% (7,176,192 out of $512^3$ cells) at the second. The simulation took 11.55 s and 12.48 s using the orginial and new temporal schemes, respectively. 
-
-
-
-\subsection{White Dwarf Convection}
-
-white dwarf convection runs with 3 algorithms (original, new temporal, new temporal + irregularly-spaced base state)
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[htb]
-\begin{center}
-\includegraphics[width=2.75in]{./figs/wdconvect_128_maxT}  \hspace{0.5in}
-\includegraphics[width=2.75in]{./figs/wdconvect_128_maxMach}
-\caption{\label{fig:wdconvect_128_maxval} (left) Peak temperature, $T_{\text{peak}}$, and (right) peak Mach number 
-         in a white dwarf until time of ignition at resolution of $128^3$ for three different MAESTROeX algorithms.}
-\end{center}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[hbt]
-\begin{center}
-\includegraphics[width=2.7in]{./figs/wdconvect_256_maxT}  \hspace{0.5in}
-\includegraphics[width=2.75in]{./figs/wdconvect_512_maxT}
-\caption{\label{fig:wdconvect_Tmax} Peak temperature, $T_{\text{peak}}$  in a white dwarf at 
-         (left) resolution of $256^3$ until time of ignition and (right) resolution of $512^3$ until $t=1000$ 
-         for three different MAESTROeX algorithms. Note that the irregularly-spaced (d$r$) solution agrees better 
-         with the uniformly-spaced solution as the resolution increases.}
 \end{center}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
