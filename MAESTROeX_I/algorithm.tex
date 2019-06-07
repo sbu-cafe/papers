@@ -1,5 +1,4 @@
 \section{Numerical Algorithm}\label{eq:algorithm}
-
 \subsection{Spatial Discretization}\label{Sec:Spatial}
 The spatial discretization and adaptive mesh refinement methodology remains unchanged from Paper V.
 We now summarize some of the key points here before describing the new temporal integrator in the next section.
@@ -25,7 +24,7 @@ the radial base state spacing across levels. Reprinted from Paper V \citep{MAEST
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 One of the key numerical modules is the ``lateral average'', which computes the average over a 
-layer of constant altitude of a Cartesian grid variable onto a one-dimensional base state.
+layer of constant radius of a Cartesian grid variable onto a one-dimensional base state.
 In planar geometries, this is a straightforward arithmetic average of values in cells at
 a particular height since the base state cell centers are in alignment
 with the Cartesian grid cell centers.
@@ -36,6 +35,16 @@ Specifically, for every three-dimensional Cartesian cell, there exists an intege
 \begin{equation}
 \hat{r}_m=\Delta x\sqrt{0.75+2m}.\label{eqn:radii}
 \end{equation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tb]
+\centering
+\includegraphics[height=2.5in]{./figs/base_spherical_new}
+\caption{\label{Fig:NewBaseGrid}  
+A direct mapping between the base state cell centers (red squares) and the Cartesian grid cell centers (blue crosses) 
+is enforced by computing the average of the grid cell centers that share the same radial distance from 
+the center of the star.}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Figure \ref{Fig:NewBaseGrid} is a two-dimensional illustration 
 (two dimensions is chosen in the figure for ease of exposition; this mapping is only used for three-dimensional spherical stars) 
 of the relationship between the Cartesian grid state and the one-dimensional base state array.
@@ -62,61 +71,52 @@ machine precision effects resulting from averaging a large number of numerical v
 We note that $\Delta r$ decreases as the base state moves further from the center of the star, 
 which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[tb]
-\centering
-\includegraphics[height=2.5in]{./figs/base_spherical_new}
-\caption{\label{Fig:NewBaseGrid}  
-A direct mapping between the base state cell centers (red squares) and the Cartesian grid cell centers (blue crosses) 
-is enforced by computing the average of the grid cell centers that share the same radial distance from 
-the center of the star.}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 \subsection{Temporal Integration Scheme}\label{Sec:Temporal Integration Scheme}
 We now describe the new temporal integration scheme, which we note can be used for the original base state mapping (with constant base state grid spacing) as well as the new irregularly spaced base state mapping.
 Previously we adopted an approach where we split the velocity into a base state component, $w_0(r,t)$, 
 and a local velocity $\Ubt(\xb,t)$, so that
 \begin{equation}
-\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r.
+\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
 \end{equation}
+where $\eb_r$ is the normal vector in the outward radial direction.
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
 This resulted in some unnecessary complications to the temporal integration scheme.
 Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than a more complex evolution equation for the perturbational velocity.
-Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no longer requires evolution equations and the associated discretizations for the base state, greatly simplifying the algorithm while retaining the same overall second-order accuracy in time.
+Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no 
+longer requires evolution equations and the associated numerical discretizations to update the base state, greatly 
+simplifying the algorithm while retaining the same overall second-order accuracy in time.
 
-At the beginning of each time step we have the cell-centered state,
-$(\Ub,\rho X_k,\rho h,\rho_0,p_0)^n$, and nodal state, $\pi^{n-\myhalf}$.
+At the beginning of each time step we have the cell-centered Cartesian grid state,
+$(\Ub,\rho X_k,\rho h)^n$, and nodal Cartesian grid state, $\pi^{n-\myhalf}$, and base state $(\rho_0,p_0)^n$.
 At any time, the associated density, composition, and enthalpy can be trivially computed using, e.g.,
 \begin{equation}
 \rho^n = \sum_k(\rho X_k)^n, \quad
 X_k^n = (\rho X_k)^n / \rho^n, \quad
 h^n = (\rho h)^n / \rho^n.
 \end{equation}
-Temperature is computed using the equation of state\footnote{As described in Paper V, for planar problems we compute temperature using $h$ instead of $p_0$, since we have successfully developed planar volume discrepancy schemes to effectively couple the enthalpy to the rest of the solution; see \cite{XRB_I}.  We are still exploring this option for spherical stars.}, e.g.,
-\begin{equation}
-T = T(\rho,p_0,X_k),
-\end{equation}
-and ($\gammaonebar,\beta_0)$ are computed from $(\rho,p_0,X_k)$ (see Appendix A of Paper I and Appendix C of Paper III for details).
+Temperature is computed using the equation of state\footnote{As described in Paper V, for planar problems we compute temperature using $h$ instead of $p_0$, since we have successfully developed volume discrepancy schemes to effectively couple the enthalpy to the rest of the solution; see \cite{XRB_I}.  We are still exploring this option for spherical stars.}, e.g.,
+$T = T(\rho,p_0,X_k)$, where $p_0$ has been mapped to the Cartesian grid using the fill module,
+and ($\gammaonebar,\beta_0)$ are similarly computed from $(\rho,p_0,X_k)$;
+see Appendix A of Paper I and Appendix C of Paper III for details on how these terms are computed.
 
-The overall flow of the algorithm is a second-order Strang splitting approach for the coupling of the reactions and advection of the thermodynamic variables.  
-We use a predictor-corrector approach within the Strang splitting scheme to achieve second-order accuracy in time.
-We integrate the velocity using a standard second-order projection method to enforce the divergence constraint.
+The overall flow of the algorithm begins with a second-order Strang splitting approach to integrate the advection-reaction system for 
+the thermodynamic variables $(\rho X_k, \rho h)$, followed by a second-order projection methodology to integrate the velocities subject to a divergence constraint.  Within the thermodynamic variable update we use a predictor-corrector approach to achieve second-order accuracy in time.
 To summarize:
 \begin{itemize}
 \item In {\bf Step 1} we react the thermodynamic variables over $\Delta t/2$.
-\item In {\bf Steps 2--4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, project the face-centered, time-centered velocities so they satisfy the divergence constraint, and then advect the thermodynamic variables.
+\item In {\bf Steps 2--4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, compute face-centered, time-centered velocities that satisfy the divergence constraint, and then advect the thermodynamic variables.
 \item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$\footnote{After this step we could skip to the velocity advance in {\bf Steps 10--11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}.
 \item In {\bf Steps 6--8} we redo the advection in {\bf Steps 2--4} but are able to use the trapezoidal rule to time-center certain quantities such as $S$, $\rho_0$, etc.
-\item In {\bf Step 9} we redo the reactions from {\bf Step 5} using the improved results for the corrector advection step.
-\item In {\bf Steps 10--11} we and update the velocity, compute the expansion term, $S$, and project the cell-centered velocities.
+\item In {\bf Step 9} we redo the reactions from {\bf Step 5} beginning with the improved results from {\bf Steps 6--8}.
+\item In {\bf Steps 10--11} we advect the velocity, and then project these velocities so they satisfy the divergence constraint.
 \end{itemize}
 
 There are a few key numerical modules we use in each time step.
 \begin{itemize}
 \item {\bf Average}$[\phi]\rightarrow[\overline\phi]$ computes the lateral average of a quantity over a layer at constant radius $r$, as described above in Section \ref{Sec:Spatial}.
-\item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in one dimension. This follows equation (A10) in Paper V with the exception of computing a non-constant $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell-edge $j+1/2$ if using irregularly-spaced base states.  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
+\item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in one dimension. 
+This follows equation (A10) in Paper V, noting that for the irregularly spaced base state case, $\Delta r$ is not constant, where $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell-edge $j+1/2$.  
+The base state pressure remains equal to a constant value at the location of a prescribed cutoff density outward for the entire simulation.
 \item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ integrates the species and enthalpy due to reactions over $\Delta t/2$ by solving
 \begin{equation}
 \frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
