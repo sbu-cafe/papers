@@ -38,13 +38,13 @@ the system at low Mach numbers, while retaining the correct scaling
 behavior. In the reduced speed of sound technique (RSST) and related
 methods, the speed of sound is artificially reduced by including a
 suitable scaling factor in the continuity equation, reducing the
-restriction on the size of the timestep
+restriction on the size of the time step
 \citep{Rempel2005,Hotta2012,Wang2015,Takeyama2017,Iijima2018}.
 Finally, there are fully implicit time integration codes for the
 compressible Euler equations
 \citep{Viallet2011,kifonidis:2012,Viallet2015,Goffrey2016}.  The MUSIC code
 uses fully implicit time integration for the compressible Euler
-equations, which therefore allows for arbitrarily large timesteps.
+equations, which therefore allows for arbitrarily large time steps.
 
 Previously, we developed the low Mach number astrophysical solver, MAESTRO.
 MAESTRO is a block-structured, Cartesian grid finite-volume, adaptive mesh refinement (AMR) 
@@ -61,7 +61,7 @@ pressure-projection steps.  This, the time step is limited by an advective CFL c
 fluid velocity, not the sound speed.
 Central to the algorithm are time-varying, one-dimensional stratified background (or base) state 
 density and pressure fields that are held in hydrostatic equilibrium.
-The base state density couples to the full state solution through buyoancy terms in the momentum equation,
+The base state density couples to the full state solution through buoyancy terms in the momentum equation,
 and the base state pressure couples to the full state solution by constraining the evolution of the
 thermodynamic variables to match this pressure.
 The time-advancement strategy uses a predictor-corrector strategy for evolving the base state,

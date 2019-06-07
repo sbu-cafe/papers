@@ -61,8 +61,8 @@ For the lateral average, as before we first sum the values in all the cells asso
 by the number of contributing cells to obtain the arithmetic average.  However we do not map this onto a regularly spaced
 base state and retain the use of this irregularly-spaced base state.
 The advantage with this approach is that the fill module does not require any interpolation.
-A potential benefit to eliminating the mapping error is to consider a spherical star in hydrostatic equlibrium at rest.
-In the absense of reactions, the star should remain at rest.
+A potential benefit to eliminating the mapping error is to consider a spherical star in hydrostatic equilibrium at rest.
+In the absence of reactions, the star should remain at rest.
 The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors 
 in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error 
 from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced 
@@ -122,7 +122,7 @@ The base state pressure remains equal to a constant value at the location of a p
 \frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
 \frac{dT}{dt} = \frac{1}{c_p}\left(-\sum_k\xi_k\dot\omega_k + H_{\rm nuc})\right)
 \end{equation}
-The inputs are the species, enthalpy, and base state pressure, and the outpus are the species, enthalpy, reaction rates, and nuclear energy generation rate.
+The inputs are the species, enthalpy, and base state pressure, and the outputs are the species, enthalpy, reaction rates, and nuclear energy generation rate.
 See Paper III for details.
 \end{itemize}
 Each time step is constrained by the standard advective CFL condition,
@@ -130,7 +130,7 @@ Each time step is constrained by the standard advective CFL condition,
 \Delta t = \sigma^{\rm CFL} \min_i(\Delta x / U_i),
 \end{equation}
 where for our simulations we typically use $\sigma^{\rm CFL}\sim 0.7$ and the minimum is taken over all spatial directions over all cells.
-There are additional constraints on the timestep that are typically much less restrictive than the advective CFL including
+There are additional constraints on the time step that are typically much less restrictive than the advective CFL including
 the acceleration due to the buoyancy force (sometimes in effect when the velocity is approximately zero at the start of some simulations) 
 and the local magnitude of the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
 

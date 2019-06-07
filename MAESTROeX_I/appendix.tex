@@ -1,6 +1,6 @@
 \appendix
 \section{Projection Details}\label{Sec:Projection}
-To enforce the divergence constraint in {\bf Step 3, 7}, and {\bf 11}, we use a projection method analgous to the methods originally developed for incompressible flow \citep{almgren1998conservative,bell1989second}.
+To enforce the divergence constraint in {\bf Step 3, 7}, and {\bf 11}, we use a projection method analogous to the methods originally developed for incompressible flow \citep{almgren1998conservative,bell1989second}.
 The basic idea is to decompose the velocity field into a divergence-free component and a curl-free (gradient of a scalar field) component by solving a variable-coefficient Poisson equation for the scalar field.
 The details for the MAC projection in {\bf Step 3} and {\bf Step 7} are given in Appendix B of Paper III.  The details of the nodal projection in {\bf Step 11} are given in Section 3.2 of Paper III.
 We note that in the nodal projection, the gradient of the scalar field is used to update the perturbational pressure, $\pi$.
