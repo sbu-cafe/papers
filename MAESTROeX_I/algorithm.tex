@@ -6,7 +6,8 @@ We now summarize some of the key points here before describing the new temporal 
 We recommend the reader review Section 3 of Paper V for further details.
 
 We shall refer to local atmospheric flows in two and three dimensions as problems in ``planar'' geometry, and full-star flows
-in three dimensions as problems in ``spherical'' geometry. The solution in both cases consists of the Cartesian grid solution
+in three dimensions as problems in ``spherical'' geometry.
+The solution in both cases consists of the Cartesian grid solution
 and the one-dimensional base state solution.
 Figure \ref{Fig:BaseGrid} illustrates the relationship between the base state and the Cartesian grid state for both planar and spherical geometries in the presence of spatially adaptive grids. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,40 +17,57 @@ Figure \ref{Fig:BaseGrid} illustrates the relationship between the base state an
 \includegraphics[height=2.0in]{./figs/base_spherical}
 \caption{\label{Fig:BaseGrid}  
 (Left) For multi-level problems in planar geometry, we force a direct alignment
-between the radial array cell centers and the Cartesian grid cell centers by 
+between the base state cell centers and the Cartesian grid cell centers by 
 allowing the radial base state spacing to change with space and time.
 (Right) For multi-level problems in spherical geometry, since there is no direct alignment
-between the radial array cell centers and the Cartesian grid cell centers, we choose to fix
+between the base state cell centers and the Cartesian grid cell centers, we choose to fix
 the radial base state spacing across levels. Reprinted from Paper V \citep{MAESTRO_V}. }
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 One of the key numerical modules is the ``lateral average'', which computes the average over a 
-layer of a Cartesian grid variable onto a one-dimensional radial array.
-In planar geometries, this is a straightforward arithmetic average of cells at
-a particular height since the radial cell centers are in alignment
+layer of constant altitude of a Cartesian grid variable onto a one-dimensional base state.
+In planar geometries, this is a straightforward arithmetic average of values in cells at
+a particular height since the base state cell centers are in alignment
 with the Cartesian grid cell centers.
 However for spherical problems, the procedure is much more complicated.
-In Section 4 of Paper V, we describe how there is a finite, easily computable set of radii that any Cartesian cell-center can map to.  
-Specifically, for every Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by 
-\begin{equation}\label{eqn:radii}
-\hat{r}_m=\Delta x\sqrt{0.75+2m}.
+In Section 4 of Paper V, we describe how there is a finite, easily computable set of radii that any 
+there-dimensional Cartesian cell-center can map to.  
+Specifically, for every three-dimensional Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by 
+\begin{equation}
+\hat{r}_m=\Delta x\sqrt{0.75+2m}.\label{eqn:radii}
 \end{equation}
-We average by binning all the cells associated with each radii and taking the average.
-Then we interpolate this data onto a one-dimensional radial array.  
+Figure \ref{Fig:NewBaseGrid} is a two-dimensional illustration 
+(two dimensions is chosen in the figure for ease of exposition; this mapping is only used for three-dimensional spherical stars) 
+of the relationship between the Cartesian grid state and the one-dimensional base state array.
+We compute the lateral average by first summing the values in all the cells associated with each radius,
+dividing by the number of contributing cells to obtain the arithmetic average, and then use quadratic interpolation to map this data onto a one-dimensional base state.
+Previously, for spherical problems MAESTRO only allowed for a base state with constant $\Delta r$ (typically equal to $\Delta x/5$).
 
-Previously, MAESTRO only allowed for radial arrays with a constant $\Delta r$ (typically equal to $\Delta x/5$).
-Here we present a new option to retain an irregularly-spaced radial array to eliminate mapping errors back onto the Cartesian grid state.
-The idea is to follow the same method performed on planar geometries by simply computing an arithmetic average of cells that share the same radial distance from the center of the star. 
-Figure \ref{Fig:NewBaseGrid} illustrates the relationship between the Cartesian grid state and the one-dimensional array base state with this new mapping technique. Again, these radial distances, and hence the cell-center locations in the new base state array, can be predetermined using equation (\ref{eqn:radii}). Also note that $\Delta r$ decreases as the base state moves further from the center of the star, which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
-A potential benefit to eliminating the mapping error is to consider a spherical star in hydrostatic equlibrium at rest.  In the absense of reactions, the star should remain at rest.
-The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced array, the effects due to interpolation error are completely eliminated.
+The companion ``fill'' module maps a base state array onto the full Cartesian grid state.
+For planar problems, direct injection can be used due to the perfect alignment of the base state and Cartesian grid state.
+For spherical problems, quadratic interpolation of the base state is used to assign values to each Cartesian cell center.
+
+In this paper we explore a new option to retain an irregularly-spaced base state to eliminate mapping errors from the ``fill'' module.
+For the lateral average, as before we first sum the values in all the cells associated with each radius and divide
+by the number of contributing cells to obtain the arithmetic average.  However we do not map this onto a regularly spaced
+base state and retain the use of this irregularly-spaced base state.
+The advantage with this approach is that the fill module does not require any interpolation.
+A potential benefit to eliminating the mapping error is to consider a spherical star in hydrostatic equlibrium at rest.
+In the absense of reactions, the star should remain at rest.
+The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors 
+in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error 
+from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced 
+array, the effects due to interpolation error are nearly eliminated, but not completely eliminated since there are still 
+machine precision effects resulting from averaging a large number of numerical values.
+We note that $\Delta r$ decreases as the base state moves further from the center of the star, 
+which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tb]
 \centering
 \includegraphics[height=2.5in]{./figs/base_spherical_new}
 \caption{\label{Fig:NewBaseGrid}  
-A direct mapping between the radial array cell centers (red squares) and the Cartesian grid cell centers (blue crosses) 
+A direct mapping between the base state cell centers (red squares) and the Cartesian grid cell centers (blue crosses) 
 is enforced by computing the average of the grid cell centers that share the same radial distance from 
 the center of the star.}
 \end{figure}
