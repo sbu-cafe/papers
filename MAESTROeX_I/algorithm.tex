@@ -103,9 +103,9 @@ The overall flow of the algorithm begins with a second-order Strang splitting ap
 the thermodynamic variables $(\rho X_k, \rho h)$, followed by a second-order projection methodology to integrate the velocities subject to a divergence constraint.  Within the thermodynamic variable update we use a predictor-corrector approach to achieve second-order accuracy in time.
 To summarize:
 \begin{itemize}
-\item In {\bf Step 1} we react the thermodynamic variables over $\Delta t/2$.
+\item In {\bf Step 1} we react the thermodynamic variables over the first $\Delta t/2$ interval.
 \item In {\bf Steps 2--4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, compute face-centered, time-centered velocities that satisfy the divergence constraint, and then advect the thermodynamic variables.
-\item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$\footnote{After this step we could skip to the velocity advance in {\bf Steps 10--11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}.
+\item In {\bf Step 5} we react the thermodynamic variables over the second $\Delta t/2$ interval\footnote{After this step we could skip to the velocity advance in {\bf Steps 10--11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}.
 \item In {\bf Steps 6--8} we redo the advection in {\bf Steps 2--4} but are able to use the trapezoidal rule to time-center certain quantities such as $S$, $\rho_0$, etc.
 \item In {\bf Step 9} we redo the reactions from {\bf Step 5} beginning with the improved results from {\bf Steps 6--8}.
 \item In {\bf Steps 10--11} we advect the velocity, and then project these velocities so they satisfy the divergence constraint.
@@ -140,13 +140,14 @@ First, we use a cutoff density technique, where we hold the density constant out
 Second, we employ a sponge technique where we artificially damp the velocities near and beyond the cutoff region.
 For more details, refer to Paper V and the previous references cited within.
 
-The temporal integration scheme contains the following steps:
+Beginning with $(\Ub,\rho X_k,\rho h)^n$, $\pi^{n-\myhalf}$, and $(\rho_0,p_0)^n$,
+the temporal integration scheme contains the following steps:
 \begin{description}
 
 %--------------------------------------------------------------------------
 % STEP 1
 %--------------------------------------------------------------------------
-\item[Step 1] {\em React the full state through the first time interval of $\dt / 2.$}
+\item[Step 1] {\em React the thermodynamic variables over the first $\Delta t / 2$ interval.}
 
 Call {\bf React State}$[(\rho X_k)^n, (\rho h)^n, p_0^n] \rightarrow [(\rho X_k)^{(1)}, (\rho h)^{(1)}, (\rho \omegadot_k)^{(1)}, (\rho \Hnuc)^{(1)}]$.
 
@@ -154,8 +155,7 @@ Call {\bf React State}$[(\rho X_k)^n, (\rho h)^n, p_0^n] \rightarrow [(\rho X_k)
 % STEP 2
 %--------------------------------------------------------------------------
 
-\item[Step 2] {\em Compute the provisional time-centered expansion,
-    $S^{\nph,\star}$.}
+\item[Step 2] {\em Compute the time-centered expansion term, $S^{\nph,\star}$.}
 
 We compute an estimate for the time-centered expansion term in the velocity
 divergence constraint.  Following \citet{Bell:2004}, we extrapolate
@@ -170,13 +170,12 @@ initialization step.
 %--------------------------------------------------------------------------
 % STEP 3
 %--------------------------------------------------------------------------
-\item[Step 3] {\em Construct the provisional time-centered advective velocity on
-edges, $\uadvone$.}
+\item[Step 3] {\em Construct a time-centered advective velocity on edges, $\uadvone$.}
 
 The construction of face-centered time-centered states used to discretize the
 advection terms for velocity, species, and enthalpy, are performed using
 a standard multidimensional corner transport upwind approach
-\citep{colella1990multidimensional,saltzman1994unsplit} with piecewise-parabolic
+\citep{colella1990multidimensional,saltzman1994unsplit} with the piecewise-parabolic method (PPM)
 one-dimensional tracing \citep{colella1984piecewise}.  The full details of this
 Godunov advection approach for all steps in this algorithm are described 
 in Appendix A of \cite{XRB_III}.
@@ -192,7 +191,7 @@ The details of this ``MAC'' projection are provided in Appendix \ref{Sec:Project
 %--------------------------------------------------------------------------
 % STEP 4
 %--------------------------------------------------------------------------
-\item[Step 4] {\em Advect the full state through a time interval of $\dt.$}
+\item[Step 4] {\em Advect the thermodynamic variables over a time interval of $\dt.$}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -211,7 +210,8 @@ accounted for in {\bf React State}.  The update consists of two steps:
 
 \item Compute the time-centered species edge states, $(\rho X_k)^{\nph,\pred}$,
   for the conservative update of $(\rho X_k)^{(1)}$ using a Godunov approach \citep{XRB_III}.
-  As described in Paper V, we predict $\rho'^n=\rho^n-\rho_0^n$ and $X_k^n$ to edges
+  As described in Paper V, for robust numerical slope limiting we predict 
+  $\rho'^n=\rho^n-\rho_0^n$ and $X_k^n$ to edges
   and here we spatially interpolate $\rho_0^n$ to edges to assemble the fluxes.
 
 \item Evolve $(\rho X_k)^{(1)} \rightarrow (\rho X_k)^{(2),\star}$ using
@@ -235,11 +235,11 @@ accounted for in {\bf React State}.  The update consists of two steps:
 again omitting the reaction terms since we already accounted for
 them in {\bf React State}.  This equation takes the form:
 \begin{equation}
-\frac{\partial (\rho h)}{\partial t}  = - \nabla \cdot (\Ub \rho h) + \frac{\partial p_0}{\partial t} + (\Ub \cdot \eb_r) \frac{\partial p_0}{\partial r}.
+\frac{\partial (\rho h)}{\partial t}  = - \nabla \cdot (\rho h\Ub) + \frac{\partial p_0}{\partial t} + (\Ub \cdot \eb_r) \frac{\partial p_0}{\partial r}.
 \end{equation}
 For spherical geometry, we solve the analytically equivalent form,
 \begin{equation}
-\frac{\partial (\rho h)}{\partial t}  = - \nabla \cdot (\Ub \rho h) + \frac{\partial p_0}{\partial t} + \nabla \cdot (\Ub p_0) - p_0 \nabla \cdot \Ub.
+\frac{\partial (\rho h)}{\partial t}  = - \nabla \cdot (\rho h\Ub) + \frac{\partial p_0}{\partial t} + \nabla \cdot (\Ub p_0) - p_0 \nabla \cdot \Ub.
 \end{equation}
 The update consists of two steps:
 
@@ -248,7 +248,8 @@ The update consists of two steps:
 
 \item Compute the time-centered enthalpy edge state, $(\rho h)^{\nph,\pred},$
   for the conservative update of $(\rho h)^{(1)}$ using using a Godunov approach \citep{XRB_III}.
-  As described in Paper V, we predict $(\rho h)'^n=(\rho h)^n-(\rho h)_0^n$ to edges,
+  As described in Paper V, for robust numerical slope limiting 
+  we predict $(\rho h)'^n=(\rho h)^n-(\rho h)_0^n$ to edges,
   where $(\rho h)_0^n$ is obtained by calling {\bf Average}$[(\rho h)^n]\rightarrow[(\rho h)_0]$,
   and here we spatially interpolate $(\rho h)_0^n$ to edges to assemble the fluxes.
 
@@ -273,7 +274,7 @@ and $p_0^\nph = (p_0^n+p_0^{n+1,*})/2$.
 %--------------------------------------------------------------------------
 % STEP 5
 %--------------------------------------------------------------------------
-\item[Step 5] {\em React the full state through a second time interval of $\dt / 2.$}
+\item[Step 5] {\em React the thermodynamic variables over the second $\Delta t / 2$ interval.}
 
 Call {\bf React State}$[ (\rho X_k)^{(2),\star}, (\rho h)^{(2),\star}, p_0^{n+1,\star}] 
 \rightarrow 
@@ -282,7 +283,7 @@ Call {\bf React State}$[ (\rho X_k)^{(2),\star}, (\rho h)^{(2),\star}, p_0^{n+1,
 %--------------------------------------------------------------------------
 % STEP 6
 %--------------------------------------------------------------------------
-\item[Step 6] {\em Compute the time-centered expansion, $S^{\nph,\star}$.}
+\item[Step 6] {\em Compute the time-centered expansion term, $S^{\nph,\star}$.}
 
 First, compute $S^{n+1,\star}$ with
 \begin{equation}
@@ -296,7 +297,7 @@ S^{n+1,\star} =  \left(-\sigma  \sum_k  \xi_k  \omegadot_k  + \frac{1}{\rho p_\r
 %--------------------------------------------------------------------------
 % STEP 7
 %--------------------------------------------------------------------------
-\item[Step 7] {\em Construct the time-centered advective velocity on edges, $\uadvtwo$.}
+\item[Step 7] {\em Construct a time-centered advective velocity on edges, $\uadvtwo$.}
 
 The procedure to construct $\uadvtwodag$ is identical to the Godunov procedure
 for computing $\uadvonedag$ in {\bf Step 3}, but uses
@@ -317,7 +318,7 @@ we project $\uadvtwodag$ onto the space of velocities that satisfy the constrain
 %--------------------------------------------------------------------------
 % STEP 8
 %--------------------------------------------------------------------------
-\item[Step 8] {\em Advect the base state and full state through a time interval of $\dt.$}
+\item[Step 8] {\em Advect the thermodynamic variables over a time interval of $\dt.$}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -382,14 +383,14 @@ and $p_0^\nph = (p_0^n+p_0^{n+1})/2$.
 %--------------------------------------------------------------------------
 % STEP 9
 %--------------------------------------------------------------------------
-\item[Step 9] {\em React the full state through a second time interval of $\dt / 2.$}
+\item[Step 9] {\em React the thermodynamic variables over the second $\Delta t / 2$ interval.}
 
 Call {\bf React State}$[(\rho X_k)^{(2)},(\rho h)^{(2)}, p_0^{n+1}] \rightarrow [(\rho X_k)^{n+1}, (\rho h)^{n+1}, (\rho \omegadot_k)^{n+1}, (\rho \Hnuc)^{n+1}].$
 
 %--------------------------------------------------------------------------
 % STEP 10
 %--------------------------------------------------------------------------
-\item[Step 10] {\em Define the new time expansion, $S^{n+1}$.}
+\item[Step 10] {\em Define the new-time expansion term, $S^{n+1}$.}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
