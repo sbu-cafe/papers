@@ -1,12 +1,12 @@
 \section{Numerical Algorithm}\label{eq:algorithm}
-
 \subsection{Spatial Discretization}\label{Sec:Spatial}
 The spatial discretization and adaptive mesh refinement methodology remains unchanged from Paper V.
 We now summarize some of the key points here before describing the new temporal integrator in the next section.
 We recommend the reader review Section 3 of Paper V for further details.
 
 We shall refer to local atmospheric flows in two and three dimensions as problems in ``planar'' geometry, and full-star flows
-in three dimensions as problems in ``spherical'' geometry. The solution in both cases consists of the Cartesian grid solution
+in three dimensions as problems in ``spherical'' geometry.
+The solution in both cases consists of the Cartesian grid solution
 and the one-dimensional base state solution.
 Figure \ref{Fig:BaseGrid} illustrates the relationship between the base state and the Cartesian grid state for both planar and spherical geometries in the presence of spatially adaptive grids. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,95 +16,113 @@ Figure \ref{Fig:BaseGrid} illustrates the relationship between the base state an
 \includegraphics[height=2.0in]{./figs/base_spherical}
 \caption{\label{Fig:BaseGrid}  
 (Left) For multi-level problems in planar geometry, we force a direct alignment
-between the radial array cell centers and the Cartesian grid cell centers by 
+between the base state cell centers and the Cartesian grid cell centers by 
 allowing the radial base state spacing to change with space and time.
 (Right) For multi-level problems in spherical geometry, since there is no direct alignment
-between the radial array cell centers and the Cartesian grid cell centers, we choose to fix
+between the base state cell centers and the Cartesian grid cell centers, we choose to fix
 the radial base state spacing across levels. Reprinted from Paper V \citep{MAESTRO_V}. }
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 One of the key numerical modules is the ``lateral average'', which computes the average over a 
-layer of a Cartesian grid variable onto a one-dimensional radial array.
-In planar geometries, this is a straightforward arithmetic average of cells at
-a particular height since the radial cell centers are in alignment
+layer of constant radius of a Cartesian grid variable onto a one-dimensional base state.
+In planar geometries, this is a straightforward arithmetic average of values in cells at
+a particular height since the base state cell centers are in alignment
 with the Cartesian grid cell centers.
 However for spherical problems, the procedure is much more complicated.
-In Section 4 of Paper V, we describe how there is a finite, easily computable set of radii that any Cartesian cell-center can map to.  
-Specifically, for every Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by 
-\begin{equation}\label{eqn:radii}
-\hat{r}_m=\Delta x\sqrt{0.75+2m}.
+In Section 4 of Paper V, we describe how there is a finite, easily computable set of radii that any 
+there-dimensional Cartesian cell-center can map to.  
+Specifically, for every three-dimensional Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by 
+\begin{equation}
+\hat{r}_m=\Delta x\sqrt{0.75+2m}.\label{eqn:radii}
 \end{equation}
-We average by binning all the cells associated with each radii and taking the average.
-Then we interpolate this data onto a one-dimensional radial array.  
-
-Previously, MAESTRO only allowed for radial arrays with a constant $\Delta r$ (typically equal to $\Delta x/5$).
-Here we present a new option to retain an irregularly-spaced radial array to eliminate mapping errors back onto the Cartesian grid state.
-The idea is to follow the same method performed on planar geometries by simply computing an arithmetic average of cells that share the same radial distance from the center of the star. 
-Figure \ref{Fig:NewBaseGrid} illustrates the relationship between the Cartesian grid state and the one-dimensional array base state with this new mapping technique. Again, these radial distances, and hence the cell-center locations in the new base state array, can be predetermined using equation (\ref{eqn:radii}). Also note that $\Delta r$ decreases as the base state moves further from the center of the star, which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
-A potential benefit to eliminating the mapping error is to consider a spherical star in hydrostatic equlibrium at rest.  In the absense of reactions, the star should remain at rest.
-The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced array, the effects due to interpolation error are completely eliminated.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tb]
 \centering
 \includegraphics[height=2.5in]{./figs/base_spherical_new}
 \caption{\label{Fig:NewBaseGrid}  
-A direct mapping between the radial array cell centers (red squares) and the Cartesian grid cell centers (blue crosses) 
+A direct mapping between the base state cell centers (red squares) and the Cartesian grid cell centers (blue crosses) 
 is enforced by computing the average of the grid cell centers that share the same radial distance from 
 the center of the star.}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Figure \ref{Fig:NewBaseGrid} is a two-dimensional illustration 
+(two dimensions is chosen in the figure for ease of exposition; this mapping is only used for three-dimensional spherical stars) 
+of the relationship between the Cartesian grid state and the one-dimensional base state array.
+We compute the lateral average by first summing the values in all the cells associated with each radius,
+dividing by the number of contributing cells to obtain the arithmetic average, and then use quadratic interpolation to map this data onto a one-dimensional base state.
+Previously, for spherical problems MAESTRO only allowed for a base state with constant $\Delta r$ (typically equal to $\Delta x/5$).
 
+The companion ``fill'' module maps a base state array onto the full Cartesian grid state.
+For planar problems, direct injection can be used due to the perfect alignment of the base state and Cartesian grid state.
+For spherical problems, quadratic interpolation of the base state is used to assign values to each Cartesian cell center.
+
+In this paper we explore a new option to retain an irregularly-spaced base state to eliminate mapping errors from the ``fill'' module.
+For the lateral average, as before we first sum the values in all the cells associated with each radius and divide
+by the number of contributing cells to obtain the arithmetic average.  However we do not map this onto a regularly spaced
+base state and retain the use of this irregularly-spaced base state.
+The advantage with this approach is that the fill module does not require any interpolation.
+A potential benefit to eliminating the mapping error is to consider a spherical star in hydrostatic equilibrium at rest.
+In the absence of reactions, the star should remain at rest.
+The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors 
+in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error 
+from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced 
+array, the effects due to interpolation error are nearly eliminated, but not completely eliminated since there are still 
+machine precision effects resulting from averaging a large number of numerical values.
+We note that $\Delta r$ decreases as the base state moves further from the center of the star, 
+which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
 
 \subsection{Temporal Integration Scheme}\label{Sec:Temporal Integration Scheme}
 We now describe the new temporal integration scheme, which we note can be used for the original base state mapping (with constant base state grid spacing) as well as the new irregularly spaced base state mapping.
 Previously we adopted an approach where we split the velocity into a base state component, $w_0(r,t)$, 
 and a local velocity $\Ubt(\xb,t)$, so that
 \begin{equation}
-\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r.
+\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
 \end{equation}
+where $\eb_r$ is the normal vector in the outward radial direction.
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
 This resulted in some unnecessary complications to the temporal integration scheme.
 Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than a more complex evolution equation for the perturbational velocity.
-Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no longer requires evolution equations and the associated discretizations for the base state, greatly simplifying the algorithm while retaining the same overall second-order accuracy in time.
+Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no 
+longer requires evolution equations and the associated numerical discretizations to update the base state, greatly 
+simplifying the algorithm while retaining the same overall second-order accuracy in time.
 
-At the beginning of each time step we have the cell-centered state,
-$(\Ub,\rho X_k,\rho h,\rho_0,p_0)^n$, and nodal state, $\pi^{n-\myhalf}$.
+At the beginning of each time step we have the cell-centered Cartesian grid state,
+$(\Ub,\rho X_k,\rho h)^n$, and nodal Cartesian grid state, $\pi^{n-\myhalf}$, and base state $(\rho_0,p_0)^n$.
 At any time, the associated density, composition, and enthalpy can be trivially computed using, e.g.,
 \begin{equation}
 \rho^n = \sum_k(\rho X_k)^n, \quad
 X_k^n = (\rho X_k)^n / \rho^n, \quad
 h^n = (\rho h)^n / \rho^n.
 \end{equation}
-Temperature is computed using the equation of state\footnote{As described in Paper V, for planar problems we compute temperature using $h$ instead of $p_0$, since we have successfully developed planar volume discrepancy schemes to effectively couple the enthalpy to the rest of the solution; see \cite{XRB_I}.  We are still exploring this option for spherical stars.}, e.g.,
-\begin{equation}
-T = T(\rho,p_0,X_k),
-\end{equation}
-and ($\gammaonebar,\beta_0)$ are computed from $(\rho,p_0,X_k)$ (see Appendix A of Paper I and Appendix C of Paper III for details).
+Temperature is computed using the equation of state\footnote{As described in Paper V, for planar problems we compute temperature using $h$ instead of $p_0$, since we have successfully developed volume discrepancy schemes to effectively couple the enthalpy to the rest of the solution; see \cite{XRB_I}.  We are still exploring this option for spherical stars.}, e.g.,
+$T = T(\rho,p_0,X_k)$, where $p_0$ has been mapped to the Cartesian grid using the fill module,
+and ($\gammaonebar,\beta_0)$ are similarly computed from $(\rho,p_0,X_k)$;
+see Appendix A of Paper I and Appendix C of Paper III for details on how these terms are computed.
 
-The overall flow of the algorithm is a second-order Strang splitting approach for the coupling of the reactions and advection of the thermodynamic variables.  
-We use a predictor-corrector approach within the Strang splitting scheme to achieve second-order accuracy in time.
-We integrate the velocity using a standard second-order projection method to enforce the divergence constraint.
+The overall flow of the algorithm begins with a second-order Strang splitting approach to integrate the advection-reaction system for 
+the thermodynamic variables $(\rho X_k, \rho h)$, followed by a second-order projection methodology to integrate the velocities subject to a divergence constraint.  Within the thermodynamic variable update we use a predictor-corrector approach to achieve second-order accuracy in time.
 To summarize:
 \begin{itemize}
-\item In {\bf Step 1} we react the thermodynamic variables over $\Delta t/2$.
-\item In {\bf Steps 2--4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, project the face-centered, time-centered velocities so they satisfy the divergence constraint, and then advect the thermodynamic variables.
-\item In {\bf Step 5} we react the thermodynamic variables over $\Delta t/2$\footnote{After this step we could skip to the velocity advance in {\bf Steps 10--11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}.
+\item In {\bf Step 1} we react the thermodynamic variables over the first $\Delta t/2$ interval.
+\item In {\bf Steps 2--4} we advect the thermodynamic variables over $\Delta t$.  Specifically, we compute an estimate for the expansion term, $S$, compute face-centered, time-centered velocities that satisfy the divergence constraint, and then advect the thermodynamic variables.
+\item In {\bf Step 5} we react the thermodynamic variables over the second $\Delta t/2$ interval\footnote{After this step we could skip to the velocity advance in {\bf Steps 10--11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}.
 \item In {\bf Steps 6--8} we redo the advection in {\bf Steps 2--4} but are able to use the trapezoidal rule to time-center certain quantities such as $S$, $\rho_0$, etc.
-\item In {\bf Step 9} we redo the reactions from {\bf Step 5} using the improved results for the corrector advection step.
-\item In {\bf Steps 10--11} we and update the velocity, compute the expansion term, $S$, and project the cell-centered velocities.
+\item In {\bf Step 9} we redo the reactions from {\bf Step 5} beginning with the improved results from {\bf Steps 6--8}.
+\item In {\bf Steps 10--11} we advect the velocity, and then project these velocities so they satisfy the divergence constraint.
 \end{itemize}
 
 There are a few key numerical modules we use in each time step.
 \begin{itemize}
 \item {\bf Average}$[\phi]\rightarrow[\overline\phi]$ computes the lateral average of a quantity over a layer at constant radius $r$, as described above in Section \ref{Sec:Spatial}.
-\item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in one dimension. This follows equation (A10) in Paper V with the exception of computing a non-constant $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell-edge $j+1/2$ if using irregularly-spaced base states.  The base state pressure remains equal to a constant value from the location of a prescribed cutoff density outward for the entire simulation.
+\item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in one dimension. 
+This follows equation (A10) in Paper V, noting that for the irregularly spaced base state case, $\Delta r$ is not constant, where $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell-edge $j+1/2$.  
+The base state pressure remains equal to a constant value at the location of a prescribed cutoff density outward for the entire simulation.
 \item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ integrates the species and enthalpy due to reactions over $\Delta t/2$ by solving
 \begin{equation}
 \frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
 \frac{dT}{dt} = \frac{1}{c_p}\left(-\sum_k\xi_k\dot\omega_k + H_{\rm nuc})\right)
 \end{equation}
-The inputs are the species, enthalpy, and base state pressure, and the outpus are the species, enthalpy, reaction rates, and nuclear energy generation rate.
+The inputs are the species, enthalpy, and base state pressure, and the outputs are the species, enthalpy, reaction rates, and nuclear energy generation rate.
 See Paper III for details.
 \end{itemize}
 Each time step is constrained by the standard advective CFL condition,
@@ -112,7 +130,7 @@ Each time step is constrained by the standard advective CFL condition,
 \Delta t = \sigma^{\rm CFL} \min_i(\Delta x / U_i),
 \end{equation}
 where for our simulations we typically use $\sigma^{\rm CFL}\sim 0.7$ and the minimum is taken over all spatial directions over all cells.
-There are additional constraints on the timestep that are typically much less restrictive than the advective CFL including
+There are additional constraints on the time step that are typically much less restrictive than the advective CFL including
 the acceleration due to the buoyancy force (sometimes in effect when the velocity is approximately zero at the start of some simulations) 
 and the local magnitude of the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
 
@@ -122,13 +140,14 @@ First, we use a cutoff density technique, where we hold the density constant out
 Second, we employ a sponge technique where we artificially damp the velocities near and beyond the cutoff region.
 For more details, refer to Paper V and the previous references cited within.
 
-The temporal integration scheme contains the following steps:
+Beginning with $(\Ub,\rho X_k,\rho h)^n$, $\pi^{n-\myhalf}$, and $(\rho_0,p_0)^n$,
+the temporal integration scheme contains the following steps:
 \begin{description}
 
 %--------------------------------------------------------------------------
 % STEP 1
 %--------------------------------------------------------------------------
-\item[Step 1] {\em React the full state through the first time interval of $\dt / 2.$}
+\item[Step 1] {\em React the thermodynamic variables over the first $\Delta t / 2$ interval.}
 
 Call {\bf React State}$[(\rho X_k)^n, (\rho h)^n, p_0^n] \rightarrow [(\rho X_k)^{(1)}, (\rho h)^{(1)}, (\rho \omegadot_k)^{(1)}, (\rho \Hnuc)^{(1)}]$.
 
@@ -136,8 +155,7 @@ Call {\bf React State}$[(\rho X_k)^n, (\rho h)^n, p_0^n] \rightarrow [(\rho X_k)
 % STEP 2
 %--------------------------------------------------------------------------
 
-\item[Step 2] {\em Compute the provisional time-centered expansion,
-    $S^{\nph,\star}$.}
+\item[Step 2] {\em Compute the time-centered expansion term, $S^{\nph,\star}$.}
 
 We compute an estimate for the time-centered expansion term in the velocity
 divergence constraint.  Following \citet{Bell:2004}, we extrapolate
@@ -152,13 +170,12 @@ initialization step.
 %--------------------------------------------------------------------------
 % STEP 3
 %--------------------------------------------------------------------------
-\item[Step 3] {\em Construct the provisional time-centered advective velocity on
-edges, $\uadvone$.}
+\item[Step 3] {\em Construct a time-centered advective velocity on edges, $\uadvone$.}
 
 The construction of face-centered time-centered states used to discretize the
 advection terms for velocity, species, and enthalpy, are performed using
 a standard multidimensional corner transport upwind approach
-\citep{colella1990multidimensional,saltzman1994unsplit} with piecewise-parabolic
+\citep{colella1990multidimensional,saltzman1994unsplit} with the piecewise-parabolic method (PPM)
 one-dimensional tracing \citep{colella1984piecewise}.  The full details of this
 Godunov advection approach for all steps in this algorithm are described 
 in Appendix A of \cite{XRB_III}.
@@ -174,7 +191,7 @@ The details of this ``MAC'' projection are provided in Appendix \ref{Sec:Project
 %--------------------------------------------------------------------------
 % STEP 4
 %--------------------------------------------------------------------------
-\item[Step 4] {\em Advect the full state through a time interval of $\dt.$}
+\item[Step 4] {\em Advect the thermodynamic variables over a time interval of $\dt.$}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -193,7 +210,8 @@ accounted for in {\bf React State}.  The update consists of two steps:
 
 \item Compute the time-centered species edge states, $(\rho X_k)^{\nph,\pred}$,
   for the conservative update of $(\rho X_k)^{(1)}$ using a Godunov approach \citep{XRB_III}.
-  As described in Paper V, we predict $\rho'^n=\rho^n-\rho_0^n$ and $X_k^n$ to edges
+  As described in Paper V, for robust numerical slope limiting we predict 
+  $\rho'^n=\rho^n-\rho_0^n$ and $X_k^n$ to edges
   and here we spatially interpolate $\rho_0^n$ to edges to assemble the fluxes.
 
 \item Evolve $(\rho X_k)^{(1)} \rightarrow (\rho X_k)^{(2),\star}$ using
@@ -217,11 +235,11 @@ accounted for in {\bf React State}.  The update consists of two steps:
 again omitting the reaction terms since we already accounted for
 them in {\bf React State}.  This equation takes the form:
 \begin{equation}
-\frac{\partial (\rho h)}{\partial t}  = - \nabla \cdot (\Ub \rho h) + \frac{\partial p_0}{\partial t} + (\Ub \cdot \eb_r) \frac{\partial p_0}{\partial r}.
+\frac{\partial (\rho h)}{\partial t}  = - \nabla \cdot (\rho h\Ub) + \frac{\partial p_0}{\partial t} + (\Ub \cdot \eb_r) \frac{\partial p_0}{\partial r}.
 \end{equation}
 For spherical geometry, we solve the analytically equivalent form,
 \begin{equation}
-\frac{\partial (\rho h)}{\partial t}  = - \nabla \cdot (\Ub \rho h) + \frac{\partial p_0}{\partial t} + \nabla \cdot (\Ub p_0) - p_0 \nabla \cdot \Ub.
+\frac{\partial (\rho h)}{\partial t}  = - \nabla \cdot (\rho h\Ub) + \frac{\partial p_0}{\partial t} + \nabla \cdot (\Ub p_0) - p_0 \nabla \cdot \Ub.
 \end{equation}
 The update consists of two steps:
 
@@ -230,7 +248,8 @@ The update consists of two steps:
 
 \item Compute the time-centered enthalpy edge state, $(\rho h)^{\nph,\pred},$
   for the conservative update of $(\rho h)^{(1)}$ using using a Godunov approach \citep{XRB_III}.
-  As described in Paper V, we predict $(\rho h)'^n=(\rho h)^n-(\rho h)_0^n$ to edges,
+  As described in Paper V, for robust numerical slope limiting 
+  we predict $(\rho h)'^n=(\rho h)^n-(\rho h)_0^n$ to edges,
   where $(\rho h)_0^n$ is obtained by calling {\bf Average}$[(\rho h)^n]\rightarrow[(\rho h)_0]$,
   and here we spatially interpolate $(\rho h)_0^n$ to edges to assemble the fluxes.
 
@@ -255,7 +274,7 @@ and $p_0^\nph = (p_0^n+p_0^{n+1,*})/2$.
 %--------------------------------------------------------------------------
 % STEP 5
 %--------------------------------------------------------------------------
-\item[Step 5] {\em React the full state through a second time interval of $\dt / 2.$}
+\item[Step 5] {\em React the thermodynamic variables over the second $\Delta t / 2$ interval.}
 
 Call {\bf React State}$[ (\rho X_k)^{(2),\star}, (\rho h)^{(2),\star}, p_0^{n+1,\star}] 
 \rightarrow 
@@ -264,7 +283,7 @@ Call {\bf React State}$[ (\rho X_k)^{(2),\star}, (\rho h)^{(2),\star}, p_0^{n+1,
 %--------------------------------------------------------------------------
 % STEP 6
 %--------------------------------------------------------------------------
-\item[Step 6] {\em Compute the time-centered expansion, $S^{\nph,\star}$.}
+\item[Step 6] {\em Compute the time-centered expansion term, $S^{\nph,\star}$.}
 
 First, compute $S^{n+1,\star}$ with
 \begin{equation}
@@ -278,7 +297,7 @@ S^{n+1,\star} =  \left(-\sigma  \sum_k  \xi_k  \omegadot_k  + \frac{1}{\rho p_\r
 %--------------------------------------------------------------------------
 % STEP 7
 %--------------------------------------------------------------------------
-\item[Step 7] {\em Construct the time-centered advective velocity on edges, $\uadvtwo$.}
+\item[Step 7] {\em Construct a time-centered advective velocity on edges, $\uadvtwo$.}
 
 The procedure to construct $\uadvtwodag$ is identical to the Godunov procedure
 for computing $\uadvonedag$ in {\bf Step 3}, but uses
@@ -299,7 +318,7 @@ we project $\uadvtwodag$ onto the space of velocities that satisfy the constrain
 %--------------------------------------------------------------------------
 % STEP 8
 %--------------------------------------------------------------------------
-\item[Step 8] {\em Advect the base state and full state through a time interval of $\dt.$}
+\item[Step 8] {\em Advect the thermodynamic variables over a time interval of $\dt.$}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -364,14 +383,14 @@ and $p_0^\nph = (p_0^n+p_0^{n+1})/2$.
 %--------------------------------------------------------------------------
 % STEP 9
 %--------------------------------------------------------------------------
-\item[Step 9] {\em React the full state through a second time interval of $\dt / 2.$}
+\item[Step 9] {\em React the thermodynamic variables over the second $\Delta t / 2$ interval.}
 
 Call {\bf React State}$[(\rho X_k)^{(2)},(\rho h)^{(2)}, p_0^{n+1}] \rightarrow [(\rho X_k)^{n+1}, (\rho h)^{n+1}, (\rho \omegadot_k)^{n+1}, (\rho \Hnuc)^{n+1}].$
 
 %--------------------------------------------------------------------------
 % STEP 10
 %--------------------------------------------------------------------------
-\item[Step 10] {\em Define the new time expansion, $S^{n+1}$.}
+\item[Step 10] {\em Define the new-time expansion term, $S^{n+1}$.}
 
 \begin{enumerate}
 \renewcommand{\theenumi}{{\bf \Alph{enumi}}}
@@ -425,4 +444,5 @@ followed by a small number of steps of the temporal advancement scheme to iterat
 find initial values for $\pi^{n-\myhalf}$ and $S^0$ and $S^1$ for use in the first time step.
 
 Our approach to adaptive mesh refinement is algorithmically the same as the treatment described in Section 5 of Paper V; we refer the reader there for details.
+MAESTROeX supports refinement ratios of 2 between levels.
 We note that for spherical problems, AMR is only available for the case of a uniformly-spaced base state.

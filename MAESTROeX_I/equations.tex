@@ -4,16 +4,16 @@ Low Mach number models for reacting flow were originally derived using asymptoti
 \citep{knio1999semi,day2000numerical}.  These models have been extended to nuclear flames
 in astrophysical environments using adaptive algorithms in space and time \citep{Bell:2004}.
 In Papers I-III, we extended this work and the atmospheric model by \citet{durran:1989} by deriving a model and algorithm suitable for stratified astrophysical flow.
-In our model, we take the standard equations of reacting, compressible flow, and recast the equation
-of state (EOS) as a divergence constraint on the velocity field.
+We take the standard equations of reacting, compressible flow, and recast the equation
+of state (EOS) as a divergence constraint on the velocity field, as explained below.
 The resulting model is a series of evolution equations for mass, momentum, and energy, subject
-to to an additional constraint on velocity.  The evolution equations are
+to an additional constraint on velocity.  The evolution equations are
 \begin{eqnarray}
 \frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
 \frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{\beta_0}{\rho}\nabla\left(\frac{\pi}{\beta_0}\right) - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
 \frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc.\label{eq:enthalpy}
 \end{eqnarray}
-Here $\rho$, $\Ub$, and $h$ are the mass density,  
+Here $\rho$, $\Ub$, and $h$ are the mass density,
 velocity and specific enthalpy, respectively, and
 $X_k$ are the mass fractions of species $k$ with associated
 production rate $\omegadot_k$ and energy release per time per unit mass $\Hnuc$.
@@ -21,23 +21,30 @@ The species are constrained such that $\sum_k X_k = 1$ giving $\rho = \sum_k (\r
 \begin{equation}
 \frac{\partial\rho}{\partial t} = -\nabla\cdot(\rho\Ub).
 \end{equation}
-Note that the momentum equation above enforces conservation of total energy in the 
-low Mach number system in the absence of external heating or viscous terms \citep{kleinpauluis,Vasil2013}, 
-and has been previously demonstrated in modeling sub-Chandrasekhar white dwarfs using MAESTRO \citep{subChandra_II}. 
 The total pressure is decomposed into a one-dimensional hydrostatic base state
- pressure, $p_0 = p_0(r,t)$, and a dynamic pressure, $\pi = \pi(\xb,t)$, such that 
-$p = p_0 + \pi$ and $|\pi|/p_0 = \mathcal{O}({\rm Ma}^2)$ (we use $\xb$ to represent the Cartesian coordinate 
-directions of the full state and $r$ to represent the radial coordinate direction for 
-the base state).  We also define a one-dimensional base state density, $\rho_0 = \rho_0(r,t)$, that represents the lateral average (see Section \ref{Sec:Spatial}) of $\rho$ and is in hydrostatic equilibrium with $p_0$, i.e., 
+ pressure, $p_0 = p_0(r,t)$, and a dynamic pressure, $\pi = \pi(\xb,t)$, such that
+$p = p_0 + \pi$ and $|\pi|/p_0 = \mathcal{O}({\rm Ma}^2)$ (we use $\xb$ to represent the Cartesian coordinate
+directions of the full state and $r$ to represent the radial coordinate direction for
+the base state).
+By comparing the momentum equation (\ref{eq:momentum}) to the momentum equation used in equation (2) in Paper V, we
+note that we are using a formulation that enforces conservation of total energy in the
+low Mach number system in the absence of external heating or viscous terms \citep{kleinpauluis,Vasil2013}.
+We have previously validated this approach in modeling sub-Chandrasekhar white dwarfs using MAESTRO \citep{subChandra_II}.
+We also define a one-dimensional base state density, $\rho_0 = \rho_0(r,t)$, that represents the lateral average (see Section \ref{Sec:Spatial}) of $\rho$ and is in hydrostatic equilibrium with $p_0$, i.e.,
 \begin{equation}
 \nabla p_0 = -\rho_0 g\eb_r, \label{eq:HSE}
 \end{equation}
-where $g=g(r,t)$ is the magnitude of the gravitational acceleration and $\eb_r$ is the unit vector in the outward radial direction. 
-Thermal diffusion is not discussed in this paper, but we have previously described the modifications to the original algorithm required 
+where $g=g(r,t)$ is the magnitude of the gravitational acceleration and $\eb_r$ is the unit vector in the outward radial direction.
+Here $\beta_0$ is a density-like variable that carries background stratification, defined as
+\begin{equation}
+\beta_0(r,t) = \rho_0(0,t)\exp\left(\int_0^r\frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial r'}dr'\right),
+\end{equation}
+where $\gammaonebar$ is the lateral average of $\Gamma_1 = d(\log p)/d(\log\rho) |_s$ (evaluated with entropy, $s$, constant).
+Thermal diffusion is not discussed in this paper, but we have previously described the modifications to the original algorithm required
 for implicit thermal diffusion in \cite{XRB_I}; inclusion of these effects in the new algorithm presented here is straightforward.
 
-Mathematically, equations \ref{eq:momentum}--\ref{eq:enthalpy} must still be closed by the EOS.  
-This is done by taking the Langrangian derivative of the EOS for pressure as a function of the thermodynamic variables, 
+Mathematically, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) must still be closed by the EOS.
+This is done by taking the Lagrangian derivative of the EOS for pressure as a function of the thermodynamic variables,
 substituting in the equations of motion for mass and energy,
 and requiring that the pressure is a prescribed function of altitude and time based on the hydrostatic equilibrium condition.
 See Papers I and II for details of this derivation.
@@ -45,21 +52,16 @@ The resulting equation is a divergence constraint on the velocity field,
 \begin{equation}
 \nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).\label{eq:U divergence}
 \end{equation}
-Here $\beta_0$ is a density-like variable that carries background stratification, defined as
-\begin{equation}
-\beta_0(r,t) = \rho_0(0,t)\exp\left(\int_0^r\frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial r'}dr'\right),
-\end{equation}
-where $\gammaonebar$ is the lateral average of $\Gamma_1 = d(\log p)/d(\log\rho) |_s$ (evaluated with entropy, $s$, constant).
 The expansion term, $S$, incorporates local compressibility effects due to compositional changes and heat release from reactions,
 \begin{equation}
 S = -\sigma\sum_k\xi_k\omegadot_k + \frac{1}{\rho p_\rho}\sum_k p_{X_k}\omegadot_k + \sigma\Hnuc,\label{eq:S}
 \end{equation}
-where 
-$p_{X_k} \equiv \left. \partial p / \partial X_k \right|_{\rho,T,X_{j,j\ne k}}$, 
+where
+$p_{X_k} \equiv \left. \partial p / \partial X_k \right|_{\rho,T,X_{j,j\ne k}}$,
 $\xi_k \equiv \left. \partial h /\partial X_k \right |_{p,T,X_{j,j\ne k}}$,
-$p_\rho \equiv \left.\partial p/\partial \rho \right |_{T, X_k}$, and 
+$p_\rho \equiv \left.\partial p/\partial \rho \right |_{T, X_k}$, and
 $\sigma \equiv p_T/(\rho c_p p_\rho)$, with $p_T \equiv \left. \partial p / \partial
 T \right|_{\rho, X_k}$ and $c_p \equiv \left.  \partial h / \partial T
 \right|_{p,X_k}$ is the specific heat at constant pressure.
 
-To summarize, we model evolution equations for momentum, mass, and energy, equations \ref{eq:momentum}--\ref{eq:enthalpy} subject to a divergence constraint on the velocity, equation \ref{eq:U divergence}, and the hydrostatic equilibrium condition, equation \ref{eq:HSE}.
+To summarize, we model evolution equations for momentum, mass, and energy, equations (\ref{eq:momentum})-(\ref{eq:enthalpy}) subject to a divergence constraint on the velocity, equation (\ref{eq:U divergence}), and the hydrostatic equilibrium condition, equation (\ref{eq:HSE}).

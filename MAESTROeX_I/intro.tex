@@ -23,8 +23,9 @@ including combustion \citep{day2000numerical}, terrestrial atmospheric
 modeling \citep{durran:1989,oneill:2014,duarte2015low}, and elastic
 solids \citep{abbate2017all}.  For astrophysical applications, a
 number of approaches to modeling low Mach number flows have been
-developed in recent years.  These include methods atmospheric model similar to
-what is presented here~\cite{Lin:2006}.  There are also  semi-implicit all-Mach
+developed in recent years.  One of the more similar approaches to ours is
+\cite{Lin:2006}, however this approach is only first-order accurate and does
+not account for atmospheric expansion.  There are also semi-implicit all-Mach
 number solvers, where the Euler equations are split into an acoustic
 part and an advective part
 \citep{Kwatra2009,Degond2009,Cordier2012,Haack2012,Happenhofer2013,Chalons2016,Padioleau2019}.
@@ -37,32 +38,51 @@ the system at low Mach numbers, while retaining the correct scaling
 behavior. In the reduced speed of sound technique (RSST) and related
 methods, the speed of sound is artificially reduced by including a
 suitable scaling factor in the continuity equation, reducing the
-restriction on the size of the timestep
+restriction on the size of the time step
 \citep{Rempel2005,Hotta2012,Wang2015,Takeyama2017,Iijima2018}.
 Finally, there are fully implicit time integration codes for the
 compressible Euler equations
 \citep{Viallet2011,kifonidis:2012,Viallet2015,Goffrey2016}.  The MUSIC code
 uses fully implicit time integration for the compressible Euler
-equations, which therefore allows for arbitrarily large timesteps.
-
+equations, which therefore allows for arbitrarily large time steps.
 
 Previously, we developed the low Mach number astrophysical solver, MAESTRO.
-MAESTRO is a block-structured, Cartesian grid finite-volume, adaptive mesh refinement (AMR) code that has been successfully used for many years for a number of applications, detailed below.
-Unlike several of the references above, MAESTRO is not an all-Mach solver, but is suitable for flows where the Mach number is small ($\sim 0.1$ or smaller).  
-Furthermore, the low Mach number model in MAESTRO is specifically designed for, but not limited to, astrophysical settings with significant atmospheric stratification.
-This includes full spherical stars, as well as planar simulations of dynamics within localized regions of a star.
-MAESTRO uses an explicit Godunov approach for advection, a stiff ODE package (VODE) \citep{vode} for reactions, and multigrid-based linear solvers for the pressure-projection steps, and is thus time-step limited by an advective CFL constraint based on the fluid velocity, not the sound speed.
-The time-advancement strategy uses Strang splitting to couple the thermodynamic variables, and a second-order projection method to integrate the velocity equations subject to a divergence constraint.
-Central to the algorithm is a time-varying, one-dimensional stratified background (or base) state density and pressure held in hydrostatic equilibrium that couple to the full Cartesian grid solution.
-The original MAESTRO code was developed in the pure-Fortran 90 FBoxLib software framework (available in the same github organization as AMReX).
+MAESTRO is a block-structured, Cartesian grid finite-volume, adaptive mesh refinement (AMR)
+code that has been successfully used for many years for a number of applications, detailed below.
+Unlike several of the references above, MAESTRO is not an all-Mach solver, but is suitable for
+flows where the Mach number is small ($\sim 0.1$ or smaller).
+Furthermore, the low Mach number model in MAESTRO is specifically designed for, but not limited
+to, astrophysical settings with significant atmospheric stratification.
+This includes full spherical stars, as well as planar simulations of dynamics within localized
+regions of a star.
+The numerical methodology relies on an explicit Godunov approach for advection, a stiff ODE
+solver for reactions (VODE) \citep{vode}, and multigrid-based linear solvers for the
+pressure-projection steps.  This, \MarginPar{is there a word missing before or after the 'This'?} the time step is limited by an advective CFL constraint based on the 
+fluid velocity, not the sound speed.
+Central to the algorithm are time-varying, one-dimensional stratified background (or base) state
+density and pressure fields that are held in hydrostatic equilibrium.
+The base state density couples to the full state solution through buoyancy terms in the momentum equation,
+and the base state pressure couples to the full state solution by constraining the evolution of the
+thermodynamic variables to match this pressure.
+The time-advancement strategy uses a predictor-corrector strategy for evolving the base state,
+Strang splitting to integrate the thermodynamic variables, and a
+second-order projection method to integrate the velocity equations subject to a divergence constraint.
+The original MAESTRO code was developed in the pure-Fortran 90 FBoxLib software framework, whereas
+MAESTROeX is developed in the C++/F90 AMReX framework \citep{AMReX,AMReX_JOSS}.
 
-The key numerical developments of the original MAESTRO algorithm are presented in a series of papers which we refer to as Papers I-V:
+The key numerical developments of the original MAESTRO algorithm are presented in a series of
+papers which we refer to as Papers I-V:
 \begin{itemize}
-\item In Paper I \citep{MAESTRO_I}, we derive the low Mach number equation set for stratified environments from the fully compressible equations.
-\item In Paper II \citep{MAESTRO_II}, we incorporate the effects of atmospheric expansion through the use of a time-dependent background state.
-\item In Paper III \citep{MAESTRO_III}, we incorporate reactions and the associated coupling to the hydrodynamics.
-\item In Paper IV \citep{MAESTRO_IV}, we describe our treatment of spherical stars in a three-dimensional Cartesian geometry.
-\item In Paper V \citep{MAESTRO_V}, we describe the use of block-structured adaptive mesh refinement to focus spatial resolution in regions of interest.
+\item In Paper I \citep{MAESTRO_I}, we derive the low Mach number equation set for stratified
+environments from the fully compressible equations.
+\item In Paper II \citep{MAESTRO_II}, we incorporate the effects of atmospheric expansion
+through the use of a time-dependent background state.
+\item In Paper III \citep{MAESTRO_III}, we incorporate reactions and the associated coupling
+to the hydrodynamics.
+\item In Paper IV \citep{MAESTRO_IV}, we describe our treatment of spherical stars in a
+three-dimensional Cartesian geometry.
+\item In Paper V \citep{MAESTRO_V}, we describe the use of block-structured adaptive mesh
+refinement to focus spatial resolution in regions of interest.
 \end{itemize}
 
 Since then, there have been many scientific investigations using MAESTRO, which have included additional algorithmic enhancements.  Topics include:
@@ -76,20 +96,19 @@ Since then, there have been many scientific investigations using MAESTRO, which 
 \end{itemize}
 
 In this paper, we present new algorithmic methodology that improves upon Paper V in a number of ways.
-First, the overall temporal algorithm has been greatly simplified without compromising accuracy.
-The key design decisions were to eliminate the splitting of the velocity into average and perturbational components, 
+First, the overall temporal algorithm has been greatly simplified without compromising second-order accuracy.
+The key design decisions were to eliminate the splitting of the velocity into average and perturbational components,
 and also to replace the hydrodynamic evolution of the base state with a predictor-corrector approach.
 Not only does this greatly simplify the dynamics of the base
 state, but this treatment is more amenable to higher-order multiphysics coupling strategies
-based on method-of-lines integration.  
-In particular, schemes based on spectral deferred corrections have been used to generate high-order temporal integrators for problems of reactive flow \citep{dutt2000spectral} and low Mach number combustion \citep{pazner2016high,nonaka2018conservative}.
-Second, we explore the effects of alternative spatial mapping routines for coupling the base state and the Cartesian grid state in spherical problems.
-Finally, the code has been completely ported to a new software framework suitable for modern manycore and GPU-based supercomputers.
-We examine the performance of our new MAESTROeX implementation in the new C++/F90 AMReX public software library \citep{AMReX,AMReX_JOSS}.
+based on method-of-lines integration.
+In particular, schemes based on deferred corrections have been used to generate high-order temporal integrators for problems of reactive flow \citep{dutt2000spectral} and low Mach number combustion \citep{pazner2016high,nonaka2018conservative}.
+Second, we explore the effects of alternative spatial mapping routines for coupling the base state and the Cartesian grid state for spherical problems.
+Finally, we examine the performance of our new MAESTROeX implementation in the new C++/F90 AMReX public software library \citep{AMReX,AMReX_JOSS}.
 MAESTROeX uses MPI+OpenMP parallelism and scales well to over 10,000 MPI processes, with each MPI process supporting tens of threads.
 The resulting code is publicly available on GitHub ({\tt https://github.com/AMReX-Astro/MAESTROeX}),
-uses the Starkiller-Astro microphysics libraries \citep{starkiller},
-and the AMReX software library for block-structured adaptive mesh refinement ({\tt https://github.com/AMReX-Codes/amrex}).
+uses the Starkiller-Astro microphysics libraries \citep{starkiller} ({\tt https://github.com/starkiller-astro}) ,
+as well as AMReX ({\tt https://github.com/AMReX-Codes/amrex}).
 
 The rest of this paper is organized as follows.
 In Section \ref{sec:equations} we review our model for stratified low Mach number astrophysical flow.

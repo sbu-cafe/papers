@@ -1,7 +1,7 @@
 \appendix
 \section{Projection Details}\label{Sec:Projection}
-To enforce the divergence constraint in {\bf Step 3, 7}, and {\bf 11}, we use a projection method analgous to the methods originally developed for incompressible flow \citep{almgren1998conservative,bell1989second}.
-The basic idea is to decompose the velocity field into a divergence-free component and a curl-free (gradient of a scalar field) component by solving a variable-coefficient Poisson equation for the scalar field.
+To enforce the divergence constraint in {\bf Step 3, 7}, and {\bf 11}, we use a projection method analogous to the methods originally developed for incompressible flow \citep{almgren1998conservative,bell1989second}.
+The basic idea is to decompose the velocity field into a part that satisfies the divergence-satisfying component and a curl-free (gradient of a scalar field) component by solving a variable-coefficient Poisson equation for the scalar field.
 The details for the MAC projection in {\bf Step 3} and {\bf Step 7} are given in Appendix B of Paper III.  The details of the nodal projection in {\bf Step 11} are given in Section 3.2 of Paper III.
 We note that in the nodal projection, the gradient of the scalar field is used to update the perturbational pressure, $\pi$.
 
@@ -10,7 +10,8 @@ Based on our past experience in the MAESTRO project, we have found it useful to 
 \Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
 \end{equation}
 solve for each term separately, and immediately combine them to find a full velocity that satisfies the constraint.  We take that approach here, primarily because it allows us to enforce a boundary condition on $w_0$ at the edge of the star (i.e., the cutoff density location where we hold density constant).  Namely, to enforce that $r^2 w_0$ remain constant is difficult to do when solving for the full velocity. 
-This is demonstrated in Figure \ref{fig:wdconvect_splitU} (right) where the velocity magnitude is observed to incorrectly increase outside the cutoff density radius when we use the full velocity in the nodal projection. The resulting peak temperature also dips significantly as seen in Figure \ref{fig:wdconvect_splitU} (left).   
+This is demonstrated in Figure \ref{fig:wdconvect_splitU} (right) where the velocity magnitude is observed to incorrectly increase outside the cutoff density radius when we solve for the full velocity in the nodal projection.
+The resulting peak temperature also dips significantly as seen in Figure \ref{fig:wdconvect_splitU} (left), presumably because the dynamics of the overall expansion of the star are not being captured correctly.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htb]
@@ -29,7 +30,7 @@ This is demonstrated in Figure \ref{fig:wdconvect_splitU} (right) where the velo
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-So in practice, we solve the constraint over the lateral average,
+In practice, we solve the constraint over the lateral average,
 \begin{equation}
 \nabla\cdot\left(\beta_0\Ubt\right) = \beta_0(S-\overline{S})
 \end{equation}
@@ -37,10 +38,10 @@ and separately solve for $w_0$ using
 \begin{equation}
 \nabla\cdot(\beta_0w_0\eb_r) = \beta_0\left(\overline{S} - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right).
 \end{equation}
-To solve for $\Ubt$ we use a projection method, which involves the solution of a variable-coefficient Poisson solver to extract the curl-free component of the unprojected velocity.
+To solve for $\Ubt$ we use a projection method, which involves the solution of a variable-coefficient Poisson solver to extract the curl-free component of the unprojected velocity, leaving a velocity field that satisfies the divergence constraint.
 Note that MAESTRO contains alternate low Mach number formulations that conserve total energy in stratified systems, with minimal changes to the code (see Appendix A of \cite{subChandra_II} for details).
-To find $w_0$ we integrate in 1D using the procedure in Appendix B of Paper V, keeping in mind that the base state spacing ($\Delta r$) should be computed using the appropriate cell-edge and cell-center locations when using irregularly-spaced base state.
-Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$).  After evolving the species ({\bf Steps 4A/8A}), we compute this term in a similar fashion as reported in Paper V with the slight difference in using the full velocity instead of the split velocities. For example, after {\bf Step 8A}, we define a radial cell-centered $\etarho^{\nph}$, 
+To find $w_0$ we integrate in one dimension using the procedure in Appendix B of Paper V, keeping in mind that the base state spacing ($\Delta r$) should be computed using the appropriate cell-edge and cell-center locations when using irregularly-spaced base state.
+Note that in this approach, we estimated the time-derivative of the pressure in part by examining how laterally averaged $\rho'=\rho-\rho_0$ changed over time (quantified by $\eta_\rho = \overline{\rho'\Ub\cdot\eb_r}$).  After evolving the species ({\bf Steps 4A/8A}), we compute this term as reported in Paper V. For example, after {\bf Step 8A}, we define a radial cell-centered $\etarho^{\nph}$, 
 
 \begin{description}
 \item For planar geometry, $\etarho = \overline{\rho'(\Ub\cdot\eb_r)}$,
