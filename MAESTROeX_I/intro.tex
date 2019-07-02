@@ -57,7 +57,7 @@ This includes full spherical stars, as well as planar simulations of dynamics wi
 regions of a star.
 The numerical methodology relies on an explicit Godunov approach for advection, a stiff ODE
 solver for reactions (VODE) \citep{vode}, and multigrid-based linear solvers for the
-pressure-projection steps.  This, \MarginPar{is there a word missing before or after the 'This'?} the time step is limited by an advective CFL constraint based on the 
+pressure-projection steps.  Thus, the time step is limited by an advective CFL constraint based on the 
 fluid velocity, not the sound speed.
 Central to the algorithm are time-varying, one-dimensional stratified background (or base) state
 density and pressure fields that are held in hydrostatic equilibrium.
