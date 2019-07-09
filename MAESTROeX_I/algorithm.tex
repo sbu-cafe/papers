@@ -82,6 +82,7 @@ where $\eb_r$ is the normal vector in the outward radial direction.
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
 This resulted in some unnecessary complications to the temporal integration scheme.
 Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than a more complex evolution equation for the perturbational velocity.
+\MarginPar{Should emphasize that velocity splitting is still done for projection steps, but full velocity is used to update advection and reactions. Also mention role of $\eta_{\rho}$ here(?)}
 Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no 
 longer requires evolution equations and the associated numerical discretizations to update the base state, greatly 
 simplifying the algorithm while retaining the same overall second-order accuracy in time.
