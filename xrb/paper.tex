@@ -111,7 +111,7 @@
 \shorttitle{Lateral Flame Dynamics}
 \shortauthors{Eiden et al.}
 
-\author{Kiran Eiden}
+\author[0000-0001-6191-4285]{Kiran Eiden}
 \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
              Stony Brook, NY 11794-3800}
 
@@ -653,7 +653,27 @@ Here we'll show the large scale dynamics, colormap plots, etc. and discuss the t
 
 \AssignTo{Kiran}
 
-Describe the diagnostics used to measure the flame speed and compare to laminar.
+To measure the propagation rate of the burning front, we track the location beyond the hottest part of the flame where $\dot{e}_\mathrm{nuc}$ first drops to less than $0.1 \%$ of maximum. Using $0.1 \%$ of the peak value rather than the peak value itself helps to mitigate fluctuations caused by localized fluid motions, as the reduced value lies in a less turbulent part of the burning region. We also average $\dot{e}_\mathrm{nuc}$ over the vertical coordinate to further dampen these fluctuations. After an initial transient period typically spanning $\sim 3$ ms, the flame settles into a state of steady propagation. The position data here are well fitted by a linear function of time (as seen in Figure \ref{fig:flame_speed}), and the resulting slope gives the velocity of the flame front.
+
+Table \ref{table:flame_speeds} gives the flame speed measured in each multidimensional simulation, as well as laminar speeds obtained from any corresponding 1D runs. The 2D flames propagate at speeds about an order of magnitude faster than their 1D counterparts. The increase in flame speed is likely a product of hydrodynamical effects such as turbulence, wrinkling, and convective cycles, which bring cooler fuel from ahead of the front into the hottest part of the burning region.
+
+\begin{deluxetable}{lcc}
+	\tablecaption{\label{table:flame_speeds}Turbulent and laminar flame speeds.}
+	\tablehead{\colhead{run} & \colhead{$s_T$ (km s$^{-1}$)} & \colhead{$s_L$ (km s$^{-1}$)}}
+	\startdata
+	10/10 boost & $9.46 \pm 0.04$  & $1.06 \pm 0.01$ \\
+	5/5 boost & $3.97 \pm 0.01$ & $0.56 \pm 0.01$ \\
+	iso7 network & $7.66 \pm 0.04$ & $-$ \\
+	1000 Hz & $26.1 \pm 0.20$ & $-$ \\
+	\enddata
+	%
+\end{deluxetable}
+
+\begin{figure}[t]
+\centering
+\plotone{plots/results/speed_10_10.pdf}
+\caption{\label{fig:flame_speed}The position of the burning front for the 10/10 flame as a function of time. The dashed line shows a linear least squares fit for $t \gtrsim 10$ ms.}
+\end{figure}
 
 \subsection{Boosting}
 
@@ -732,7 +752,7 @@ could correspond to less common reaction pathways in the reaction network.
 
 \AssignTo{Mike, Kiran}
 
-We also try a rotation period of $P_\mathrm{rot} \sim 10^{-4}~\mathrm{s}$.
+We also try a rotation period of $P_\mathrm{rot} \sim 10^{-3}~\mathrm{s}$.
 
 \subsection{Reaction Network}
 
