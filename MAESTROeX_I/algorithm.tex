@@ -58,7 +58,7 @@ For spherical problems, quadratic interpolation of the base state is used to ass
 
 In this paper we explore a new option to retain an irregularly-spaced base state to eliminate mapping errors from the ``fill'' module.
 For the lateral average, as before we first sum the values in all the cells associated with each radius and divide
-by the number of contributing cells to obtain the arithmetic average.  However we do not map this onto a regularly spaced
+by the number of contributing cells to obtain the arithmetic average.  However we do not map this onto a uniformly spaced
 base state and retain the use of this irregularly-spaced base state.
 The advantage with this approach is that the fill module does not require any interpolation.
 A potential benefit to eliminating the mapping error is to consider a spherical star in hydrostatic equilibrium at rest.
@@ -72,17 +72,17 @@ We note that $\Delta r$ decreases as the base state moves further from the cente
 which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
 
 \subsection{Temporal Integration Scheme}\label{Sec:Temporal Integration Scheme}
-We now describe the new temporal integration scheme, which we note can be used for the original base state mapping (with constant base state grid spacing) as well as the new irregularly spaced base state mapping.
+We now describe the new temporal integration scheme, which we note can be used for the original base state mapping (with uniform base state grid spacing) as well as the new irregularly spaced base state mapping.
 Previously we adopted an approach where we split the velocity into a base state component, $w_0(r,t)$, 
 and a local velocity $\Ubt(\xb,t)$, so that
 \begin{equation}
-\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r,
+\Ub = \Ubt(\xb,t) + w_0(r,t)\eb_r, \label{eq:velsplit}
 \end{equation}
 where $\eb_r$ is the normal vector in the outward radial direction.
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
 This resulted in some unnecessary complications to the temporal integration scheme.
-Our new temporal integration scheme does not use this splitting, and is much simpler than the scheme from Paper V since we evolve the velocity directly rather than a more complex evolution equation for the perturbational velocity.
-\MarginPar{Should emphasize that velocity splitting is still done for projection steps, but full velocity is used to update advection and reactions. Also mention role of $\eta_{\rho}$ here(?)}
+Our new temporal integration scheme uses full velocities to evolve advection and reactions instead, and only uses the above splitting to satisfy the velocity divergence constraints due to boundary considerations. 
+This produces a cleaner scheme than the one from Paper V since we use the velocity directly rather than more complex terms involving the perturbational velocity.
 Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no 
 longer requires evolution equations and the associated numerical discretizations to update the base state, greatly 
 simplifying the algorithm while retaining the same overall second-order accuracy in time.
@@ -187,8 +187,9 @@ The $\dagger$ superscript refers to the fact that the predicted velocity field d
 \end{equation}
  We project $\uadvonedag$ onto the space of velocities that satisfy the constraint to obtain $\uadvone$.
 Each projection step in the algorithm involves the solution of a variable-coefficient Poisson solve using multigrid.
+Note that we still employ velocity-splitting as described by equation (\ref{eq:velsplit}) for this step 
+in order to enforce the appropriate behavior of the system near the edge of the star as determined by the cutoff density.
 The details of this ``MAC'' projection are provided in Appendix \ref{Sec:Projection}.
-\MarginPar{Mention that velocity splitting is still done for projection steps in order to properly enforce boundary conditions}
 
 %--------------------------------------------------------------------------
 % STEP 4
@@ -201,10 +202,10 @@ The details of this ``MAC'' projection are provided in Appendix \ref{Sec:Project
 \item Update $(\rho X_k)$ using a discretized version of
 %
 \begin{equation}
-\frac{\partial(\rho X_k)}{\partial t} = -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,
+\frac{\partial(\rho X_k)}{\partial t} = -\nabla\cdot(\rho X_k\Ub),
 \end{equation}
 %
-omitting the reaction terms, which were already \MarginPar{since we are omitting the reaction terms, we should just leave them out of the Eq.}
+where the reaction terms have been omitted since they were already 
 accounted for in {\bf React State}.  The update consists of two steps:
 
 \begin{enumerate}
