@@ -24,14 +24,15 @@ the radial base state spacing across levels. Reprinted from Paper V \citep{MAEST
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 One of the key numerical modules is the ``lateral average'', which computes the average over a 
-layer of constant radius of a Cartesian grid variable onto a one-dimensional base state.
+layer of constant radius of a Cartesian grid variable and stores the result in a one-dimensional base state array.
 In planar geometries, this is a straightforward arithmetic average of values in cells at
 a particular height since the base state cell centers are in alignment
 with the Cartesian grid cell centers.
 However for spherical problems, the procedure is much more complicated.
 In Section 4 of Paper V, we describe how there is a finite, easily computable set of radii that any 
 there-dimensional Cartesian cell-center can map to.  
-Specifically, for every three-dimensional Cartesian cell, there exists an integer $m$ such that the radius to the center of the star is given by 
+Specifically, for every three-dimensional Cartesian cell, there exists an integer $m$ such that the distance
+from the cell center to the center of the star is given by 
 \begin{equation}
 \hat{r}_m=\Delta x\sqrt{0.75+2m}.\label{eqn:radii}
 \end{equation}
@@ -58,7 +59,7 @@ For spherical problems, quadratic interpolation of the base state is used to ass
 
 In this paper we explore a new option to retain an irregularly-spaced base state to eliminate mapping errors from the ``fill'' module.
 For the lateral average, as before we first sum the values in all the cells associated with each radius and divide
-by the number of contributing cells to obtain the arithmetic average.  However we do not map this onto a uniformly spaced
+by the number of contributing cells to obtain the arithmetic average.  However we do not interpolate this onto a uniformly spaced
 base state and retain the use of this irregularly-spaced base state.
 The advantage with this approach is that the fill module does not require any interpolation.
 A potential benefit to eliminating the mapping error is to consider a spherical star in hydrostatic equilibrium at rest.
@@ -72,7 +73,8 @@ We note that $\Delta r$ decreases as the base state moves further from the cente
 which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
 
 \subsection{Temporal Integration Scheme}\label{Sec:Temporal Integration Scheme}
-We now describe the new temporal integration scheme, which we note can be used for the original base state mapping (with uniform base state grid spacing) as well as the new irregularly spaced base state mapping.
+We now describe the new temporal integration scheme, noting that it can be used for the original base state mapping 
+(with uniform base state grid spacing) as well as the new irregularly spaced base state mapping.
 Previously we adopted an approach where we split the velocity into a base state component, $w_0(r,t)$, 
 and a local velocity $\Ubt(\xb,t)$, so that
 \begin{equation}
@@ -80,11 +82,16 @@ and a local velocity $\Ubt(\xb,t)$, so that
 \end{equation}
 where $\eb_r$ is the normal vector in the outward radial direction.
 We used $w_0$ to provide an estimate of the base state density evolution over a time step.
-This resulted in some unnecessary complications to the temporal integration scheme.
-Our new temporal integration scheme uses full velocities to evolve advection and reactions instead, and only uses the above splitting to satisfy the velocity divergence constraints due to boundary considerations. 
-This produces a cleaner scheme than the one from Paper V since we use the velocity directly rather than more complex terms involving the perturbational velocity.
+This resulted in some unnecessary complications to the temporal integration scheme including
+base state advection modules for density, enthalpy, and velocity, as well as more 
+cumbersome split velocity dynamics evolution equations.
+Our new temporal integration scheme uses full velocities for scalar and velocity advection,
+and only uses the above splitting to satisfy the velocity divergence constraint due to boundary considerations
+at the edge of the star.
+This results in a much simpler numerical scheme than the one from Paper V 
+since we use the velocity directly rather than more complex terms involving the perturbational velocity.
 Additionally, the new scheme uses a simpler predictor-corrector approach to the base state density and pressure that no 
-longer requires evolution equations and the associated numerical discretizations to update the base state, greatly 
+longer requires evolution equations and numerical discretizations to update the base state, greatly 
 simplifying the algorithm while retaining the same overall second-order accuracy in time.
 
 At the beginning of each time step we have the cell-centered Cartesian grid state,
@@ -98,7 +105,7 @@ h^n = (\rho h)^n / \rho^n.
 Temperature is computed using the equation of state\footnote{As described in Paper V, for planar problems we compute temperature using $h$ instead of $p_0$, since we have successfully developed volume discrepancy schemes to effectively couple the enthalpy to the rest of the solution; see \cite{XRB_I}.  We are still exploring this option for spherical stars.}, e.g.,
 $T = T(\rho,p_0,X_k)$, where $p_0$ has been mapped to the Cartesian grid using the fill module,
 and ($\gammaonebar,\beta_0)$ are similarly computed from $(\rho,p_0,X_k)$;
-see Appendix A of Paper I and Appendix C of Paper III for details on how these terms are computed.
+see Appendix A of Paper I and Appendix C of Paper III for details on how $\beta_0$ is computed.
 
 The overall flow of the algorithm begins with a second-order Strang splitting approach to integrate the advection-reaction system for 
 the thermodynamic variables $(\rho X_k, \rho h)$, followed by a second-order projection methodology to integrate the velocities subject to a divergence constraint.  Within the thermodynamic variable update we use a predictor-corrector approach to achieve second-order accuracy in time.
@@ -109,7 +116,7 @@ To summarize:
 \item In {\bf Step 5} we react the thermodynamic variables over the second $\Delta t/2$ interval\footnote{After this step we could skip to the velocity advance in {\bf Steps 10--11}, however the overall scheme would be only first-order in time, so {\bf Steps 6-9} can be thought of as a trapezoidal corrector step.}.
 \item In {\bf Steps 6--8} we redo the advection in {\bf Steps 2--4} but are able to use the trapezoidal rule to time-center certain quantities such as $S$, $\rho_0$, etc.
 \item In {\bf Step 9} we redo the reactions from {\bf Step 5} beginning with the improved results from {\bf Steps 6--8}.
-\item In {\bf Steps 10--11} we advect the velocity, and then project these velocities so they satisfy the divergence constraint.
+\item In {\bf Steps 10--11} we advect the velocity, and then project these velocities so they satisfy the divergence constraint while updating $\pi$.
 \end{itemize}
 
 There are a few key numerical modules we use in each time step.
@@ -118,7 +125,8 @@ There are a few key numerical modules we use in each time step.
 \item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in one dimension. 
 This follows equation (A10) in Paper V, noting that for the irregularly spaced base state case, $\Delta r$ is not constant, where $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell-edge $j+1/2$.  
 The base state pressure remains equal to a constant value at the location of a prescribed cutoff density outward for the entire simulation.
-\item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ integrates the species and enthalpy due to reactions over $\Delta t/2$ by solving
+\item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ 
+uses VODE \citep{vode} to integrate the species and enthalpy due to reactions over $\Delta t/2$ by solving
 \begin{equation}
 \frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
 \frac{dT}{dt} = \frac{1}{c_p}\left(-\sum_k\xi_k\dot\omega_k + H_{\rm nuc})\right)
@@ -136,7 +144,9 @@ the acceleration due to the buoyancy force (sometimes in effect when the velocit
 and the local magnitude of the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
 
 In stratified low Mach number models, due to the extreme variation in density, the velocity can become very large in low density regions at the edge of the star.
-Throughout Papers II-V, we have employed two techniques to help control these dynamics without significantly affecting the dynamics in the convective region.
+These large velocities can severely affect the time step, so
+throughout Papers II-V, we have employed two techniques to help control these dynamics without significantly 
+affecting the dynamics in the convective region.
 First, we use a cutoff density technique, where we hold the density constant outside a specified radius (typically near where the density is $\sim$4 orders of magnitude smaller than the largest densities in the simulation).
 Second, we employ a sponge technique where we artificially damp the velocities near and beyond the cutoff region.
 For more details, refer to Paper V and the previous references cited within.

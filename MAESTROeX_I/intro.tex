@@ -64,9 +64,9 @@ density and pressure fields that are held in hydrostatic equilibrium.
 The base state density couples to the full state solution through buoyancy terms in the momentum equation,
 and the base state pressure couples to the full state solution by constraining the evolution of the
 thermodynamic variables to match this pressure.
-The time-advancement strategy uses a predictor-corrector strategy for evolving the base state,
-Strang splitting to integrate the thermodynamic variables, and a
-second-order projection method to integrate the velocity equations subject to a divergence constraint.
+The time-advancement strategy uses Strang splitting to integrate the thermodynamic variables, a
+second-order projection method to integrate the velocity subject to a divergence constraint,
+and a velocity splitting scheme that uses a radially-averaged velocity to hydrodynamically evolve the base state.\MarginPar{AJN changed this sentence.}
 The original MAESTRO code was developed in the pure-Fortran 90 FBoxLib software framework, whereas
 MAESTROeX is developed in the C++/F90 AMReX framework \citep{AMReX,AMReX_JOSS}.
 
@@ -102,7 +102,8 @@ and also to replace the hydrodynamic evolution of the base state with a predicto
 Not only does this greatly simplify the dynamics of the base
 state, but this treatment is more amenable to higher-order multiphysics coupling strategies
 based on method-of-lines integration.
-In particular, schemes based on deferred corrections have been used to generate high-order temporal integrators for problems of reactive flow \citep{dutt2000spectral} and low Mach number combustion \citep{pazner2016high,nonaka2018conservative}.
+In particular, schemes based on deferred corrections \citep{dutt2000spectral} have been used to generate 
+high-order temporal integrators for problems of reactive flow and low Mach number combustion \citep{pazner2016high,nonaka2018conservative}.
 Second, we explore the effects of alternative spatial mapping routines for coupling the base state and the Cartesian grid state for spherical problems.
 Finally, we examine the performance of our new MAESTROeX implementation in the new C++/F90 AMReX public software library \citep{AMReX,AMReX_JOSS}.
 MAESTROeX uses MPI+OpenMP parallelism and scales well to over 10,000 MPI processes, with each MPI process supporting tens of threads.

@@ -5,7 +5,7 @@ Low Mach number models for reacting flow were originally derived using asymptoti
 in astrophysical environments using adaptive algorithms in space and time \citep{Bell:2004}.
 In Papers I-III, we extended this work and the atmospheric model by \citet{durran:1989} by deriving a model and algorithm suitable for stratified astrophysical flow.
 We take the standard equations of reacting, compressible flow, and recast the equation
-of state (EOS) as a divergence constraint on the velocity field, as explained below.
+of state (EOS) as a divergence constraint on the velocity field.
 The resulting model is a series of evolution equations for mass, momentum, and energy, subject
 to an additional constraint on velocity.  The evolution equations are
 \begin{eqnarray}
@@ -24,8 +24,10 @@ The species are constrained such that $\sum_k X_k = 1$ giving $\rho = \sum_k (\r
 The total pressure is decomposed into a one-dimensional hydrostatic base state
  pressure, $p_0 = p_0(r,t)$, and a dynamic pressure, $\pi = \pi(\xb,t)$, such that
 $p = p_0 + \pi$ and $|\pi|/p_0 = \mathcal{O}({\rm Ma}^2)$ (we use $\xb$ to represent the Cartesian coordinate
-directions of the full state and $r$ to represent the radial coordinate direction for
-the base state).
+directions of the full state and $r$ to represent the radial coordinate direction for the base state).
+One way to mathematically think of the difference between $p_0$ and $\pi$ is that $\pi$ controls the velocity evolution 
+in a way that forces the thermodynamic variables $(\rho,h,X_k)$ to evolve in a manner that is consistent with the EOS and $p_0$.\MarginPar{AJN - added this sentence; does it make sense?}
+
 By comparing the momentum equation (\ref{eq:momentum}) to the momentum equation used in equation (2) in Paper V, we
 note that we are using a formulation that enforces conservation of total energy in the
 low Mach number system in the absence of external heating or viscous terms \citep{kleinpauluis,Vasil2013}.
