@@ -123,7 +123,7 @@ There are a few key numerical modules we use in each time step.
 \begin{itemize}
 \item {\bf Average}$[\phi]\rightarrow[\overline\phi]$ computes the lateral average of a quantity over a layer at constant radius $r$, as described above in Section \ref{Sec:Spatial}.
 \item {\bf Enforce HSE}$[\rho_0]\rightarrow[p_0]$ computes the base state pressure, $p_0$, from a base state density, $\rho_0$ by integrating the hydrostatic equilibrium condition in one dimension. 
-This follows equation (A10) in Paper V, noting that for the irregularly spaced base state case, $\Delta r$ is not constant, where $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell-edge $j+1/2$.  
+This follows equation (A10) in Paper V, noting that for the irregularly spaced base state case, $\Delta r$ is not constant, where $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell face with index $j+1/2$.  
 The base state pressure remains equal to a constant value at the location of a prescribed cutoff density outward for the entire simulation.
 \item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ 
 uses VODE \citep{vode} to integrate the species and enthalpy due to reactions over $\Delta t/2$ by solving
@@ -181,7 +181,7 @@ initialization step.
 %--------------------------------------------------------------------------
 % STEP 3
 %--------------------------------------------------------------------------
-\item[Step 3] {\em Construct a time-centered advective velocity on edges, $\uadvone$.}
+\item[Step 3] {\em Construct a face-centered, time-centered advective velocity, $\uadvone$.}
 
 The construction of face-centered time-centered states used to discretize the
 advection terms for velocity, species, and enthalpy, are performed using
@@ -190,7 +190,7 @@ a standard multidimensional corner transport upwind approach
 one-dimensional tracing \citep{colella1984piecewise}.  The full details of this
 Godunov advection approach for all steps in this algorithm are described 
 in Appendix A of \cite{XRB_III}.
-Here we use equation (\ref{eq:momentum}) to compute time-centered edge velocities, $\uadvonedag$.
+Here we use equation (\ref{eq:momentum}) to compute face-centered, time-centered velocities, $\uadvonedag$.
 The $\dagger$ superscript refers to the fact that the predicted velocity field does not satisfy the divergence constraint,
 \begin{equation}
 \nabla \cdot \left(\beta_0^n \uadvone\right) = \beta_0^n \left[S^{\nph,\star} - \frac{1}{\gammaonebar^np_0^n}\left(\frac{\partial p_0}{\partial t}\right)^{n-\myhalf} \right].\label{eq:div1}
@@ -221,11 +221,11 @@ accounted for in {\bf React State}.  The update consists of two steps:
 \begin{enumerate}
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
 
-\item Compute the time-centered species edge states, $(\rho X_k)^{\nph,\pred}$,
+\item Compute the face-centered, time-centered species, $(\rho X_k)^{\nph,\pred}$,
   for the conservative update of $(\rho X_k)^{(1)}$ using a Godunov approach \citep{XRB_III}.
   As described in Paper V, for robust numerical slope limiting we predict 
-  $\rho'^n=\rho^n-\rho_0^n$ and $X_k^n$ to edges
-  and here we spatially interpolate $\rho_0^n$ to edges to assemble the fluxes.
+  $\rho'^n=\rho^n-\rho_0^n$ and $X_k^n$ to faces
+  and here we spatially interpolate $\rho_0^n$ to faces to assemble the fluxes.
 
 \item Evolve $(\rho X_k)^{(1)} \rightarrow (\rho X_k)^{(2),\star}$ using
 \begin{equation}
@@ -259,12 +259,12 @@ The update consists of two steps:
 \begin{enumerate}
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
 
-\item Compute the time-centered enthalpy edge state, $(\rho h)^{\nph,\pred},$
+\item Compute the face-centered, time-centered enthalpy, $(\rho h)^{\nph,\pred},$
   for the conservative update of $(\rho h)^{(1)}$ using using a Godunov approach \citep{XRB_III}.
   As described in Paper V, for robust numerical slope limiting 
-  we predict $(\rho h)'^n=(\rho h)^n-(\rho h)_0^n$ to edges,
+  we predict $(\rho h)'^n=(\rho h)^n-(\rho h)_0^n$ to faces,
   where $(\rho h)_0^n$ is obtained by calling {\bf Average}$[(\rho h)^n]\rightarrow[(\rho h)_0]$,
-  and here we spatially interpolate $(\rho h)_0^n$ to edges to assemble the fluxes.
+  and here we spatially interpolate $(\rho h)_0^n$ to faces to assemble the fluxes.
 
 \item Evolve $(\rho h)^{(1)} \rightarrow (\rho h)^{(2),\star}$ using
 \begin{equation}
@@ -310,7 +310,7 @@ S^{n+1,\star} =  \left(-\sigma  \sum_k  \xi_k  \omegadot_k  + \frac{1}{\rho p_\r
 %--------------------------------------------------------------------------
 % STEP 7
 %--------------------------------------------------------------------------
-\item[Step 7] {\em Construct a time-centered advective velocity on edges, $\uadvtwo$.}
+\item[Step 7] {\em Construct a face-centered, time-centered advective velocity, $\uadvtwo$.}
 
 The procedure to construct $\uadvtwodag$ is identical to the Godunov procedure
 for computing $\uadvonedag$ in {\bf Step 3}, but uses
@@ -343,10 +343,10 @@ we project $\uadvtwodag$ onto the space of velocities that satisfy the constrain
 \begin{enumerate}
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
 
-\item Compute the time-centered species edge states, $(\rho X_k)^{\nph,\pred}$,
+\item Compute the face-centered, time-centered species, $(\rho X_k)^{\nph,\pred}$,
   for the conservative update of $(\rho X_k)^{(1)}$ using a Godunov approach \citep{XRB_III}.
-  Again, we predict $\rho'^n=\rho^n-\rho_0^n$ and $X_k^n$ to edges
-  and here we spatially interpolate $(\rho_0^n+\rho_0^{n+1,*})/2$ to edges to assemble the fluxes.
+  Again, we predict $\rho'^n=\rho^n-\rho_0^n$ and $X_k^n$ to faces
+  and here we spatially interpolate $(\rho_0^n+\rho_0^{n+1,*})/2$ to faces to assemble the fluxes.
 
 
 \item Evolve $(\rho X_k)^{(1)} \rightarrow (\rho X_k)^{(2)}$ using
@@ -370,10 +370,10 @@ we project $\uadvtwodag$ onto the space of velocities that satisfy the constrain
 \begin{enumerate}
 \renewcommand{\labelenumii}{{\bf \roman{enumii}}.}
 
-\item Compute the time-centered enthalpy edge state, $(\rho h)^{\nph,\pred},$
+\item Compute the face-centered, time-centered enthalpy, $(\rho h)^{\nph,\pred},$
   for the conservative update of $(\rho h)^{(1)}$ using a Godunov approach \citep{XRB_III}.
-  Again, we predict $(\rho h)'^n=(\rho h)^n-(\rho h)_0^n$ to edges
-  and here we spatially interpolate $[(\rho h)_0^n)+(\rho h)_0^{n+1,*}]/2$ to edges to assemble the fluxes.
+  Again, we predict $(\rho h)'^n=(\rho h)^n-(\rho h)_0^n$ to faces
+  and here we spatially interpolate $[(\rho h)_0^n)+(\rho h)_0^{n+1,*}]/2$ to faces to assemble the fluxes.
 
 \item Evolve $(\rho h)^{(1)} \rightarrow (\rho h)^{(2)}$.
 \begin{equation}
@@ -421,7 +421,7 @@ Call {\bf React State}$[(\rho X_k)^{(2)},(\rho h)^{(2)}, p_0^{n+1}] \rightarrow 
 %--------------------------------------------------------------------------
 \item[Step 11] {\em Update the velocity}.
 
-First, we compute the time-centered edge velocities, $\Ub^{\nph,\pred}$
+First, we compute the face-centered, time-centered velocities, $\Ub^{\nph,\pred}$
 using a Godunov approach \citep{XRB_III}. Then, we define
 \begin{equation}
 \rho^\nph = \frac{\rho^n + \rho^{n+1}}{2}, \qquad \rho_0^\nph = \frac{\rho_0^n + \rho_0^{n+1}}{2}.
@@ -441,7 +441,7 @@ to the fact that the updated velocity does not satisfy the divergence constraint
 We use an approximate projection to project $\Ub^{n+1,\dagger}$ onto the space of velocities that satisfy the constraint to obtain $\Ub^{n+1}$ using a ``nodal'' projection.
 This projection necessarily differs from the MAC projection used in
 {\bf Step 3} and {\bf Step 7} because the velocities in those steps are defined
-on edges and $\Ub^{n+1}$ is defined at cell centers, requiring different divergence
+on faces and $\Ub^{n+1}$ is defined at cell centers, requiring different divergence
 and gradient operators.
 Furthermore, as part of the nodal projection, we also define a nodal new-time perturbational pressure, $\pi^\nph$.
 Refer to Appendix \ref{Sec:Projection} for more details.
