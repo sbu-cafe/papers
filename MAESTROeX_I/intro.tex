@@ -56,7 +56,7 @@ to, astrophysical settings with significant atmospheric stratification.
 This includes full spherical stars, as well as planar simulations of dynamics within localized
 regions of a star.
 The numerical methodology relies on an explicit Godunov approach for advection, a stiff ODE
-solver for reactions (VODE) \citep{vode}, and multigrid-based linear solvers for the
+solver for reactions (VODE, \citealt{vode}), and multigrid-based linear solvers for the
 pressure-projection steps.  Thus, the time step is limited by an advective CFL constraint based on the 
 fluid velocity, not the sound speed.
 Central to the algorithm are time-varying, one-dimensional stratified background (or base) state
@@ -107,9 +107,9 @@ high-order temporal integrators for problems of reactive flow and low Mach numbe
 Second, we explore the effects of alternative spatial mapping routines for coupling the base state and the Cartesian grid state for spherical problems.
 Finally, we examine the performance of our new MAESTROeX implementation in the new C++/F90 AMReX public software library \citep{AMReX,AMReX_JOSS}.
 MAESTROeX uses MPI+OpenMP parallelism and scales well to over 10,000 MPI processes, with each MPI process supporting tens of threads.
-The resulting code is publicly available on GitHub ({\tt https://github.com/AMReX-Astro/MAESTROeX}),
-uses the Starkiller-Astro microphysics libraries \citep{starkiller} ({\tt https://github.com/starkiller-astro}) ,
-as well as AMReX ({\tt https://github.com/AMReX-Codes/amrex}).
+The resulting code is publicly available on GitHub (\url{https://github.com/AMReX-Astro/MAESTROeX}),
+uses the Starkiller-Astro microphysics libraries (\citealt{starkiller}, \url{https://github.com/starkiller-astro}) ,
+as well as AMReX (\url{https://github.com/AMReX-Codes/amrex}).
 
 The rest of this paper is organized as follows.
 In Section \ref{sec:equations} we review our model for stratified low Mach number astrophysical flow.
