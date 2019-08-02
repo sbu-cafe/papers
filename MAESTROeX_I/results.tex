@@ -48,10 +48,9 @@ To explore the accuracy of the new temporal algorithm, we now analyze in detail 
 
 Figure \ref{fig:wdconvect_Tmax} shows the peak temperature evolution over the first 1000 s on two grids of differing resolutions, $256^3$ and $512^3$.
 Limited allocations prevented us from running this simulation further.
-As previously suspected, the simulation using irregularly-spaced base state agrees much closer to the results from using uniform spacing as the resolution increases.
+As previously suspected, the simulation using irregularly-spaced base state agrees much closer with the results from using uniform spacing as the resolution increases.
 This is most likely due to the increased resolution of the initial model, which more closely matches the uniformly-spaced counterpart.
 This is especially important when computing the base state pressure from base state density, which is particularly sensitive to coarse resolution near the center of the star.
-\MarginPar{AJN: Simplified this paragraph - OK?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htb]
