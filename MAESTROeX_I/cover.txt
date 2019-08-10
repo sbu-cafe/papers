@@ -1,0 +1,8 @@
+Dear Editor,
+
+I have included the tex file, bibliography, and figures for our submission,
+"MAESTROeX: A Massively Parallel Low Mach Number Astrophysical Solver".
+This manuscript is a continuation of prior research conducted and published by Nonaka et al. in ApJSS titled "MAESTRO: An Adaptive Low Mach Number Hydrodynamics Algorithm for Stellar Flows". Please let me know if there is anything else required.
+
+Thank you,
+Duoming (Doreen) Fan
