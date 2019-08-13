@@ -815,16 +815,19 @@ Other future work includes mixed H/He bursts.  This will require a
 different reaction network, and perhaps different (more relaxed)
 resolution requirements.
 
-On the algorithmic front, we are exploring a change of our
-hydrodynamics and reactive coupling to eliminate splitting error from
-the traditional Strang splitting used in \castro\ and other
-hydrodynamics codes.  One advantage of this is that the new algorithm
-would be more amenable to offloading onto GPUs, a development task
-that is underway.  Additionally, we will move to fourth-order accurate
-methods and incorporate well-balanced reconstruction to better capture
-the burning.
+There are several changes we will pursue to the algorithm used to
+model these XRBs.  First, as shown in \citet{castro_sdc}, we have
+developed a fourth-order (in space and time) method for coupling
+hydrodynamics and reactions that should greatly improve the accuracy
+of the simulations.  We expect that by using this new high-order
+algorithm we can drop a level of refinement from the simulations while
+still accurately modeling the evolution.  We have also ported
+\castro\ to GPUs, giving an order of magnitude performance boost on
+nodes with both CPUs and GPUs.  The GPU-enabled algorithm will
+increase the performance, allowing us to run bigger domains and/or
+eliminate the boosting used here.
 
-MHD, radiation transport, GPUs
+MHD, radiation transport
 
 
 \acknowledgements \castro\ is open-source and freely available at
