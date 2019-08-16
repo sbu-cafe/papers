@@ -637,14 +637,33 @@ L_R = \frac{\sqrt{g H_0}}{\Omega} \sim 3\times 10^4~\mathrm{cm}
 \end{equation}
 \MarginPar{we should make the width of the hot region closer to the
   Rossby length} using a scale height $H_0 = 10^3~\mathrm{cm}$.  This
-is less than half our domain width.
+is less than half our domain width.  Table~\ref{table:sim_names} lists
+the simulations run and their parameters.
 
 We note that the entire simulation framework for these calculations is
 freely available in the \castro\ github repository.
 
+\begin{deluxetable}{lccccc}
+\tablecaption{\label{table:sim_names} Simulaiton parameters.}
+\tablehead{\colhead{name} & \colhead{reaction boost} & \colhead{conductivity boost} & \colhead{fine grid resolution} & \colhead{rotation rate}  & \colhead{network}}
+\startdata
+10/10 & 10 & 10 & 10~cm & 2000~Hz & {\tt aprox13} \\
+10/10 slow & 10 & 10 & 10~cm & 1000~Hz & {\tt aprox13} \\
+10/10 lores & 10 & 10 & 20~cm & 2000~Hz & {\tt aprox13} \\
+5/5 & 5 & 5 & 10~cm & 2000~Hz & {\tt aprox13} \\
+10/10 iso7 & 10 & 10 & 10~cm & 2000~Hz & {\tt iso7} \\
+\enddata
+\end{deluxetable}
+
+
+
+
+
 \subsection{General Features}
 
 \AssignTo{Mike, Kiran, Alice}
+
+Figure~\ref{fig:time_series} shows the time 
 
 Here we'll show the large scale dynamics, colormap plots, etc. and discuss the trends.
 
