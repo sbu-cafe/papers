@@ -648,10 +648,10 @@ freely available in the \castro\ github repository.
 \tablehead{\colhead{name} & \colhead{reaction boost} & \colhead{conductivity boost} & \colhead{fine grid resolution} & \colhead{rotation rate}  & \colhead{network}}
 \startdata
 10/10 & 10 & 10 & 10~cm & 2000~Hz & {\tt aprox13} \\
-10/10 slow & 10 & 10 & 10~cm & 1000~Hz & {\tt aprox13} \\
-10/10 lores & 10 & 10 & 20~cm & 2000~Hz & {\tt aprox13} \\
+10/10-slow & 10 & 10 & 10~cm & 1000~Hz & {\tt aprox13} \\
+10/10-lores & 10 & 10 & 20~cm & 2000~Hz & {\tt aprox13} \\
 5/5 & 5 & 5 & 10~cm & 2000~Hz & {\tt aprox13} \\
-10/10 iso7 & 10 & 10 & 10~cm & 2000~Hz & {\tt iso7} \\
+10/10-iso7 & 10 & 10 & 10~cm & 2000~Hz & {\tt iso7} \\
 \enddata
 \end{deluxetable}
 
@@ -667,13 +667,22 @@ Figure~\ref{fig:time_series} shows the time
 
 Here we'll show the large scale dynamics, colormap plots, etc. and discuss the trends.
 
+% made with time_series.py in flame_wave_boost_10_10_paper with --skip 100
 \begin{figure}[h]
 \centering
-\epsscale{0.95}
 \plotone{time_series}
 \caption{\label{fig:time_series} Time series of the mean molecular weight of the 
-flame for our standard 10/10 flame.}
+flame for our standard 10/10 simulation.}
 \end{figure}
+
+% made with overview.py
+\begin{figure}[h]
+\centering
+\plotone{flame_boost_10_10_overview}
+\caption{\label{fig:10_10_overview} Temperature, energy generation rate, and out-of-plane velocity for the 10/10 simulation.}
+\end{figure}
+
+
 
 \subsection{Flame Acceleration}
 
@@ -708,6 +717,13 @@ Table \ref{table:flame_speeds} gives the flame speed measured in each multidimen
 To meet reasonable timescales, we boosted the microphysical inputs to
 the flame to result in a faster flame.  Here we look at the effect of
 this choice.
+
+\begin{figure}[h]
+\centering
+\plotone{flame_wave_boost_5_5_slice}
+\caption{\label{fig:5_5_overview} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 5/5 simulation.}
+\end{figure}
+
 
 \subsection{Entrainment, Flow Features}
 
