@@ -14,8 +14,8 @@ def initial_model():
     r_min = 0
     r_max = 10000.0
 
-    r_min = 4500
-    r_max = 7000
+    r_min = 1500
+    r_max = 4500
 
     #-------------------------------------------------------------------------
     # density and temperature plots
