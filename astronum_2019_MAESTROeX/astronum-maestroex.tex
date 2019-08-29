@@ -156,29 +156,55 @@ New versions of the codes are released on the first of each month, and are archi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Rotation} \label{sec:rotation}
-rotation mixes things up
+Currently, \maestroex~is able to model spherically symmetric systems, however it has no support for rotation. We wish to model convection in the interiors of massive stars, and it is known that these stars often rotate and that trotation can have have significant effect on mixing at convective shell boundaries. We are therefore currently exploring several possible ways of implementing rotation in \maestroex. 
 
-\begin{itemize}
-\item Ignore centrifugal force - for slow rotation can neglect centrifugal, only include Coriolis force
-\item Introduce new pressure to balance centrifugal potential $$\rho \nabla \Phi_{\text{eff}} = \nabla p_0 + \nabla p_1 = \rho \nabla \phi + \frac{1}{2}\rho \nabla\Omega^2 r^2$$
-\item Rewrite base state in terms of equipotentials $$p_0(r) \rightarrow p_0(\Phi_{\text{eff}}) $$
-\item 2d base state $$p_0(r)  \rightarrow p_0(r, \theta)$$
-\end{itemize}
+The simplest way to include rotation is to ignore the effects of the centrifugal force, and only include the Coriolis force. This was done in \maestro, and should be a reasonable approximation for slowly rotating systems. 
+
+Another way that rotation could be incorporated would be to introduce a new `rotational pressure term', $p_1$, in order to balance the centrifugal potential:
+\begin{equation}
+    \nabla p_0 + \nabla p_1 = \rho \nabla \phi + \frac{1}{2}\rho \nabla\Omega^2 r^2 = \rho \nabla \Phi_{\text{eff}},
+\end{equation}
+where $\phi = \phi(r)$ is the gravitational potential (so $\nabla \phi(r) = -g \bm{e}_r$), $\Omega$ is the rotational frequency, and $\Phi_{\text{eff}}$ is the new effective gravitational potential. 
+
+In \maestroex, we currently write the 1d base state as a function of the radial coordinate, $r$. For a spherical system, this therefore assumes the base state to be spherically symmetric. However, a star that is rotating at a significant rate will no longer be spherical: it will instead become oblique, bulging around the equator. In order to capture the star's deformation without sacrificing the 1d base state, we can rewrite the base state pressure as a function of the effective potential: $p_0(r)\rightarrow p_0(\Phi_{\text{eff}})$. 
+
+The massive stars that we are interested in modelling are believed to be relatively slow rotators, so it is likely that one of the simpler approaches outlined above should be sufficient. However, for modelling e.g.~type I X-ray bursts, it may be that a more complex approach is needed. Type I X-ray bursts are produced by thermonuclear deflagrations in the liquid surface layers of fast rotating neutron stars. These stars typically rotate at frequencies of $\sim$300\textendash600 Hz, a significant fraction of the stars' breakup velocity. This produces non-negligible deformation of the star about the equator, and may cause surface flows with a significant dependence on the meriodional angle. To properly capture the effects of rotation in such a system, it may therefore be necessary to use a 2d base state, $p_0(r)\rightarrow p_0(r, \theta)$. 
+
+% \begin{itemize}
+% \item Ignore centrifugal force \textemdash~for slow rotation can neglect centrifugal, only include Coriolis force
+% \item Introduce new pressure to balance centrifugal potential $$\rho \nabla \Phi_{\text{eff}} = \nabla p_0 + \nabla p_1 = \rho \nabla \phi + \frac{1}{2}\rho \nabla\Omega^2 r^2$$
+% \item Rewrite base state in terms of equipotentials $$p_0(r) \rightarrow p_0(\Phi_{\text{eff}}) $$
+% \item 2d base state $$p_0(r)  \rightarrow p_0(r, \theta)$$
+% \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{GPUs} \label{sec:gpus}
-GPUs can make things faster
+
+\begin{itemize}
+    \item Why GPUs? Big computers use them.
+    \item GPUs in \amrex: it does everything for you. Also important to note performance portability: GPU-ported AMReX codes still run on other architectures, optimizations for GPU often improve performance on MPI+OpenMP as well.
+    \item GPUs in \maestroex: ported most of the source terms, working on the hydro. 1d base state causing headaches, especially for big problems where we suspect it may not fit in GPU memory.
+    \item Performance plots? Do these at the hackathon?
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Summary} \label{sec:summary}
 
-Summary 
+\maestroex~is an open source code for modelling low Mach number astrophysical codes. We use the low Mach number approximation, which allows us to use a much larger timestep than conventional compressible schemes by filtering out the soundwaves. Unlike other sound-proof methods, we still retain background stratification and large pressure perturbations from local compositional changes and heating, both of which are particularly important for modelling atmospheres and burning. 
+
+\maestroex~is a new and improved version of our previous code \maestro. It is based on \amrex~(rather than \fboxlib), which means we can exploit its powerful new solvers and ongoing improvements and don't have to write so much Fortran. It is part of the \amrexastro~suite of open source adaptive mesh refinement astrophysical hydrodynamics codes. New features developed in other codes in the family can therefore be easily implemented in \maestroex. As development is open, results from our simulations can be reproduced and monthly archiving to Zenodo ensures software sustainability.
+
+We're currently working on implementing rotation in \maestroex. For modelling the interiors of massive stars (which rotate relatively slowly), we may be able to get away with neglecting the centrifugal force and simply add the Coriolis force as a source term. However, this is no fun so we're also looking at doing things like modelling the centrifugal force as an effective pressure term, rewriting the base state as a function of the effective gravitational potential and using a 2d base state which is also a function of the meriodional angle.
+
+Copying the work done for \castro, we're currently in the process of porting \maestroex~to run on GPUs so that we can exploit the latest supercomputer architectures. So far, we've ported source terms and are in the process of porting the hydro. 
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ack acknowledgements here % ~\cite{yt}
+\ack Visualizations were probably done using~\cite{yt}.
 
 % The work at Stony Brook was supported by DOE/Office of Nuclear
 % Physics grant DE-FG02-87ER40317 and contract 7418390 with Lawrence
