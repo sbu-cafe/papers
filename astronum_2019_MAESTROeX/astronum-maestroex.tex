@@ -15,19 +15,23 @@
 \newcommand{\maestro}{{\sffamily Maestro}}
 \newcommand{\maestroex}{{\sffamily MAESTROeX}}
 \newcommand{\castro}{{\sffamily Castro}}
+\newcommand{\nyx}{{\sffamily Nyx}}
 \newcommand{\amrex}{{\sffamily AMReX}}
+\newcommand{\amrexastro}{{\sffamily AMReX-Astro}}
+\newcommand{\fboxlib}{{\sffamily FBoxLib}}
 
+\newcommand{\Ub}{{\,\bm{U}}}
 \newcommand{\Uc}{{\,\bm{\mathcal{U}}}}
 \newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
 \newcommand{\Advt}[1]{{\left [\mathcal{\tilde{A}} \left(#1\right)\right]}}
 \newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\md}[2]{\frac{\mathrm{D} #1}{\mathrm{D} #2}}
 
 \newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
 
 \newcommand{\gcc}{\mathrm{g~cm^{-3} }}
 \newcommand{\cms}{\mathrm{cm~s^{-1} }}
-
-
 
 \newcommand{\cpp}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
 
@@ -50,7 +54,7 @@
         M.~P. Katz$^3$,
         A.~J. Nonaka$^2$,
         D.~E. Willcox$^2$, and
-        M. Zingale$^1$,}
+        M. Zingale$^1$}
 
 \address{$^1$Department of Physics and Astronomy, Stony Brook
   University, Stony Brook, NY 11794-3800 USA}
@@ -63,32 +67,118 @@
 
 \ead{alice.harpole@stonybrook.edu}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{abstract}
-abstract abstract abstract
+Convective flows in the interiors of stars are challenging to model using conventional compressible hydrodynamics codes due to their low Mach number, which severely limits the timestep that can be taken in simulations. \maestroex\ is an open source low Mach number stellar hydrodynamics code that allows much larger timesteps to be taken, therefore enabling systems to be modelled for much longer periods of time. This is particularly important for the problem of convection in the cores of rotating massive stars prior to core collapse. To fully capture the dynamics, it is necessary to model these systems in 3d at high resolution over many rotational periods, but this has been too computationally expensive for existing, conventional schemes.
+
+We shall present an overview of \maestroex's current capabilities, describe ongoing work to incorporate the effects of rotation and discuss how we are optimizing the code to run on GPUs. 
 \end{abstract}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction} \label{sec:intro}
+
+For many flows in astrophysical systems, the magnitude of the fluid velocity is much less than the soundspeed. Consequently, the Mach number, $\textrm{Ma} = |\Ub| / c_s \ll 1$. Such low Mach number flows are challenging to model using standard compressible schemes, where the maximum size of the timestep is determined by the CFL condition: for a grid with cell spacing $\Delta x$, the timestep $\Delta t <  \Delta x / \max(|\Ub|+c_s)$. In low Mach number flows, this condition is dominated by the contributions of the sound speed, with the result that many fine timesteps are required to achieve high spatial resolution. 
+
+This restriction can be lifted by using sound-proof methods. These methods involve modifying the fluid equations, modifying the computational algorithm and/or modifying the flow parameters in order to allow much larger timesteps to be used. In \maestroex, we use the \emph{low Mach number approximation}. An overview of this shall be given in \sref{sec:low_mach_hydro}, with further details of the \maestroex~code and our development workflow given in \sref{sec:maestroex} and \sref{sec:workflow}.  
+
+An example of an astrophysical low Mach number flow is convection within the interiors of massive stars. Prior to core collapse, the interiors of massive stars consist of a series of convective burning shells, separated by inert, non-convective shells. Moving from the outermost layers inwards, the shells consist of heavier and heavier elements, with the core burning elements up to Fe. An accurate picture of the structure of such stars in the minutes before core collapse is important for supernova modelling. The composition and structure of the star prior to collapsing provides the initial data for these models, so this needs to be accurate if the supernova models are to be trusted. Modelling this convection is challenging using conventional compressible schemes because the domain size is very large (i.e. a significant fraction of the interior of the entire star), high resolution is required in order to properly capture the turbulent mixing that occurs at shell boundaries, and long time periods are required (multiple convective turnover times). In \sref{sec:rotation}, we shall describe ongoing work to model this problem in \maestroex, in particular describing how we are implementing rotation. 
+
+The latest generation of supercomputers coming on line are relying more and more on GPU architectures in order to increase the performance whilst minimizing the power requirements. For HPC codes to best exploit the top machines, it is therefore necessary to port these codes so that they can run on GPUs. In \sref{sec:gpus}, we describe our work to port \maestroex~to run on GPUs and demonstrate its performance.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Low Mach number hydrodynamics} \label{sec:low_mach_hydro}
+
+Sound-proof methods for modelling low Mach number flows can take a variety of forms. One technique is to use preconditioners in order to reduce the stiffness of the equations, allowing larger timesteps to be used CITE. Another technique is to modify the flow parameters, artificially boosting the speed of the flow without changing its behavior so that the system evolves faster and fewer timesteps are required CITE. 
+
+The technique that we use in \maestroex~is to modify the fluid equations themselves so as to filter out the soundwaves. This is a similar approach to the incompressible CITE and anelastic CITE approximations, however the approximation that we use (variously called the low Mach number approximation  CITE and the generalized pseudo-incompressible approximation CITE) allows background stratification and large pressure perturbations due to heating and changes in composition. This is achieved by decomposing the pressure into a 1d hydrostatic base state, $p_0 = p_0(r, t)$, and a dynamic pressure perturbation, $\pi = \pi(r, \bm{x}, t)$, such that $p(r, \bm{x}, t) = p_0 + \pi$. In order for the approximation to hold, $|\pi|/p_0 = O(\mathrm{Ma}^2)$. The low Mach number fluid equations are given by 
+\begin{align}
+    \pd{\left(\rho X_k\right)}{t} &= - \nabla\cdot\left(\rho X_k \Ub \right) + \rho\dot{\omega}_k, \\
+    \pd{\Ub}{t} &= - \Ub\cdot\nabla\Ub - \frac{\beta_0}{\rho}\nabla\left(\frac{\pi}{\beta_0}\right) - \frac{\rho - \rho_0}{\rho}\bm{e}_r,\\
+    \pd{\left(\rho h\right)}{t} &= -\nabla\cdot\left(\rho h \Ub\right) + \md{p_0}{t} + \rho H_{\mathrm{nuc}},
+\end{align}
+where $\rho$, $\Ub$ and $h$ are the mass density, fluid velocity and specific enthalpy, $X_k$ and $\dot{\omega}_k$ are the species mass fraction and production rate of species $k$, and $H_{\mathrm{nuc}}$ is the energy release per time per unit mass. From the base state pressure, we can define a 1d base state density, $\rho_0 = \rho_0(r, t)$, which represents the lateral average and is in hydrostatic equilibrium with $p_0$:
+\begin{equation}
+    \nabla p_0 = -\rho_0 g \bm{e}_r,
+\end{equation}
+where $g = g(r,t)$ is the magnitude of the gravitational acceleration, and $\bm{e}_r$ is the radial unit vector. The background stratification is captured by introducing a buoyancy-like term, $\beta_0$. It is defined as 
+\begin{equation}
+    \beta_0(r,t) = \rho_0(0,t) \exp\left(\int_0^r dr'\, \frac{1}{\bar{\Gamma}_1p_0}\pd{p_0}{r'} \right),
+\end{equation}
+where $\bar{\Gamma}_1$ is the lateral average of the first adiabatic exponent, $\Gamma_1 = d(\ln p)/d(\ln \rho)|_s$, and $s$ is the entropy. The equations are closed by casting the equation of state as a velocity divergence constraint. This is done by taking the Lagrangian derivative of the EoS for pressure as a function of the thermodynamic variables, substituting in the equations of motion for mass and energy, and requiring that the pressure is described by a function of $r$ and $t$ based on the condition of hydrostatic equilibrium. Details of this derivation can be found in CITE. The constraint is given by 
+\begin{equation}
+    \nabla\cdot\left(\beta_0\Ub\right) = \beta_0 \left(S - \frac{1}{\bar{\Gamma}_1 p_0}\pd{p_0}{t} \right).
+\end{equation}
+Here, $S$ is an expansion term which describes local compressibility effects due to changes in composition and heating from reactions:
+\begin{equation}
+    S = -\sigma \sum_k \xi_k\dot{\omega}_k + \frac{1}{\rho p_\rho}\sum_k p_{X_k}\dot{\omega}_k + \sigma H_{\mathrm{nuc}},
+\end{equation}
+where we define 
+\begin{align*}
+    p_{X_k} \equiv \left.\pd{p}{X_k}\right|_{\rho,T,X_{j,j\neq k}},\qquad
+     \xi_k&\equiv \left.\pd{h}{X_k}\right|_{p, T,X_{j,j\neq k}},\qquad
+     p_\rho\equiv \left.\pd{p}{\rho}\right|_{T, X_k},\\
+     \sigma \equiv \frac{p_T}{\rho c_p p_\rho}, \qquad
+     p_T&\equiv \left.\pd{p}{T}\right|_{\rho, X_k} \quad\mathrm{and}\quad 
+     c_p\equiv \left.\pd{h}{T}\right|_{p, X_k}.
+\end{align*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{MAESTROeX} \label{sec:maestroex}
 
 
-\section{Introduction}
+% \maestroex\ is our awesome new code for modelling slow fluids in space 
 
-intro intro intro
+Prior to \maestroex, we developed the low Mach number code \maestro. Like \maestroex, \maestro~is a block-structured adaptive mesh refinement (AMR) code for modelling low Mach number astrophysical codes. It was developed over a series of papers CITE. The system of low Mach number equations are solved using an explicit Godunov approach for the advection, a stiff ODE solver for the reactions (VODE, CITE), and multigrid linear solvers for the pressure projection steps. Strang spitting CITE is used to integrate the thermodynamic variables, a second order projection method to integrate the velocity subject to the divergence constraint, and a velocity splitting scheme to hydrodynamically evolve the base state. The original \maestro~code was developed using the pure Fortran 90 \fboxlib~software framework CITE; \maestroex~instead uses the C++/Fortran 90 \amrex~framework CITE. 
 
-\section{Low Mach Number hydrodynamics}
-slow fluids in space are hard to model 
+\maestro~has been used to model a number of astrophysical systems, including convection in white dwarfs prior to type Ia supernovae CITE, convection in massive stars CITE and type I X-ray bursts CITE. 
 
-\section{MAESTROeX}
-\maestroex\ is our awesome new code for modelling slow fluids in space 
+As well as being built using the new \amrex~framework, the numerical algorithm implemented in \maestroex~improves upon the original \maestro~algorithm in a number of ways. The temporal integration method has been greatly simplified without compromising the second order accuracy, and a new spherical base state mapping has been implemented in order to reduce mapping errors between spherical and Cartesian grids. \amrex~has also allowed us to use MPI+OpenMP parallelism, and has been shown to scale well to over 10,000 MPI processes. 
 
-\section{GPUs}
+Further details of the algorithm implemented in \maestroex~and its performance can be found in \cite{Fan2019}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{AMReX-Astro development workflow} \label{sec:workflow}
+
+% this section sounds kind of preachy
+
+\maestroex~is part of the \amrexastro~suite of open source adaptive mesh refinement hydrodynamics codes for astrophysical flows. Other codes in this family include \castro, an astrophysical radiation hydrodynamics simulation code, and \nyx, an N-body hydrodynamics cosmological simulation code. All three codes are developed using the \amrex~software framework, and share much in common in terms of their development, structure and numerical methods. Developers of the different codes work closely together (in fact many of the developers work on more than one of the codes), with their shared structure and framework meaning that new features developed in one code can easily be replicated in the others. Examples of this include the SDC solvers CITE and GPU port that have recently been implemented in \castro, and are currently in the process of being implemented in \maestroex. 
+
+All codes in the \amrexastro~suite are open source, with all development carried out in public repositories hosted on GitHub. We believe that having both the codes and the development process completely open promotes good scientific practices, as it means that results from our simulations are reproducible and the codes used to produce them can be investigated.\MarginPar{I feel like there is a better word here than investigated} Others can use the codes for their own scientific investigations, and it is possible to adapt all or parts of the codes to suite new problems. Using version control allows us to keep a record of the codes' development process, helping us to track down bugs and meaning that new and existing developers can learn from previous mistakes. The development branches of the codes are tested nightly using a test suite of problems, checking that any new additions to the code have significantly changed any of the solutions or significantly slowed down the performance.
+
+New versions of the codes are released on the first of each month, and are archived on Zenodo (which also provides us with DOIs, further enhancing the reproducibility of our results).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Rotation} \label{sec:rotation}
+rotation mixes things up
+
+\begin{itemize}
+\item Ignore centrifugal force - for slow rotation can neglect centrifugal, only include Coriolis force
+\item Introduce new pressure to balance centrifugal potential $$\rho \nabla \Phi_{\text{eff}} = \nabla p_0 + \nabla p_1 = \rho \nabla \phi + \frac{1}{2}\rho \nabla\Omega^2 r^2$$
+\item Rewrite base state in terms of equipotentials $$p_0(r) \rightarrow p_0(\Phi_{\text{eff}}) $$
+\item 2d base state $$p_0(r)  \rightarrow p_0(r, \theta)$$
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{GPUs} \label{sec:gpus}
 GPUs can make things faster
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-\section{Summary}
+\section{Summary} \label{sec:summary}
 
 Summary 
 
-\ack acknowledgements here ~\cite{yt}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ack acknowledgements here % ~\cite{yt}
 
 % The work at Stony Brook was supported by DOE/Office of Nuclear
 % Physics grant DE-FG02-87ER40317 and contract 7418390 with Lawrence
@@ -107,9 +197,6 @@ Summary
 % No.\ DE-AC02-05CH11231.  Visualizations were done using yt~\cite{yt}.
 % This research has made use of NASA's Astrophysics Data System
 % Bibliographic Services.
-
-
-%\section*{References}
 
 \bibliographystyle{iopart-num}
 \bibliography{ws}
