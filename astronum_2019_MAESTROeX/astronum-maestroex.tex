@@ -83,7 +83,7 @@ For many flows in astrophysical systems, the magnitude of the fluid velocity is 
 
 This restriction can be lifted by using sound-proof methods. These methods involve modifying the fluid equations, modifying the computational algorithm and/or modifying the flow parameters in order to allow much larger timesteps to be used. In \maestroex, we use the \emph{low Mach number approximation}. An overview of this shall be given in \sref{sec:low_mach_hydro}, with further details of the \maestroex~code and our development workflow given in \sref{sec:maestroex} and \sref{sec:workflow}.  
 
-An example of an astrophysical low Mach number flow is convection within the interiors of massive stars. Prior to core collapse, the interiors of massive stars consist of a series of convective burning shells, separated by inert, non-convective shells. Moving from the outermost layers inwards, the shells consist of heavier and heavier elements, with the core burning elements up to Fe. An accurate picture of the structure of such stars in the minutes before core collapse is important for supernova modelling. The composition and structure of the star prior to collapsing provides the initial data for these models, so this needs to be accurate if the supernova models are to be trusted. Modelling this convection is challenging using conventional compressible schemes because the domain size is very large (i.e. a significant fraction of the interior of the entire star), high resolution is required in order to properly capture the turbulent mixing that occurs at shell boundaries, and long time periods are required (multiple convective turnover times). In \sref{sec:rotation}, we shall describe ongoing work to model this problem in \maestroex, in particular describing how we are implementing rotation. 
+An example of an astrophysical low Mach number flow is convection within the interiors of massive stars. Prior to core collapse, the interiors of massive stars consist of a series of convective burning shells, separated by inert, non-convective shells. Moving from the outermost layers inwards, the shells consist of heavier and heavier elements, with the core burning elements up to Fe. An accurate picture of the structure of such stars in the minutes before core collapse is important for supernova modelling. The composition and structure of the star prior to collapsing provides the initial data for these models, so this needs to be accurate if the supernova models are to be trusted. Modelling this convection is challenging using conventional compressible schemes because the domain size is very large (i.e.~a significant fraction of the interior of the entire star), high resolution is required in order to properly capture the turbulent mixing that occurs at shell boundaries, and long time periods are required (multiple convective turnover times). In \sref{sec:rotation}, we shall describe ongoing work to model this problem in \maestroex, in particular describing how we are implementing rotation. 
 
 The latest generation of supercomputers coming on line are relying more and more on GPU architectures in order to increase the performance whilst minimizing the power requirements. For HPC codes to best exploit the top machines, it is therefore necessary to port these codes so that they can run on GPUs. In \sref{sec:gpus}, we describe our work to port \maestroex~to run on GPUs and demonstrate its performance.
 
@@ -156,6 +156,7 @@ New versions of the codes are released on the first of each month, and are archi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Rotation} \label{sec:rotation}
+
 Currently, \maestroex~is able to model spherically symmetric systems, however it has no support for rotation. We wish to model convection in the interiors of massive stars, and it is known that these stars often rotate and that trotation can have have significant effect on mixing at convective shell boundaries. We are therefore currently exploring several possible ways of implementing rotation in \maestroex. 
 
 The simplest way to include rotation is to ignore the effects of the centrifugal force, and only include the Coriolis force. This was done in \maestro, and should be a reasonable approximation for slowly rotating systems. 
@@ -180,13 +181,25 @@ The massive stars that we are interested in modelling are believed to be relativ
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{GPUs} \label{sec:gpus}
+ 
+% \begin{itemize}
+%     \item Why GPUs? Big computers use them.
+%     \item GPUs in \amrex: it does everything for you. Also important to note performance portability: GPU-ported AMReX codes still run on other architectures, optimizations for GPU often improve performance on MPI+OpenMP as well.
+%     \item GPUs in \maestroex: ported most of the source terms, working on the hydro. 1d base state causing headaches, especially for big problems where we suspect it may not fit in GPU memory.
+%     \item Performance plots? Do these at the hackathon?
+% \end{itemize}
 
-\begin{itemize}
-    \item Why GPUs? Big computers use them.
-    \item GPUs in \amrex: it does everything for you. Also important to note performance portability: GPU-ported AMReX codes still run on other architectures, optimizations for GPU often improve performance on MPI+OpenMP as well.
-    \item GPUs in \maestroex: ported most of the source terms, working on the hydro. 1d base state causing headaches, especially for big problems where we suspect it may not fit in GPU memory.
-    \item Performance plots? Do these at the hackathon?
-\end{itemize}
+
+\MarginPar{I feel like someone who knows what they're talking about should write/seriously edit this section}
+The latest generation of supercomputers to come online (e.g.~Summit, soon Perlmutter and Frontier) rely heavily on GPUs in order to achieve high performance while keeping energy consumption to a minimum (GPUs consume considerably less power per flop than CPUs). This trend is set to continue: supercomputers are moving to new architectures in order to increase their performance, rather than simply adding more and more CPUs. In order for HPC codes to be able to exploit these latest machines, it is therefore becoming increasingly necessary to port codes to run on GPUs.
+
+We have begun porting \maestroex~to GPUs, leveraging the GPU capabilities built into \amrex~and following the lessons learnt porting \castro~to GPUs. In the \amrex~framework, routines can be ported to GPUs by simply inserting a few macros into the code. The boilerplate code to required to compile this for GPU is then generated by a custom preprocessor prior to compilation. CUDA managed memory is used to take care of data transfers between the CPU and GPU, so no explicit copies of data to/from the CPU and GPU are required. One of the key emphases of the \amrex~approach to GPUs is to maintain performance portability: porting code to GPUs should not come at the expense of the code's performance on CPU-only machines. Because GPU-specific code is created by the preprocessor prior to compilation, it is not necessary to maintain separate versions of the code for different architectures. By changing the compiler flags, the same bit of code can be compiled for serial, MPI-only, OpenMP-only, MPI+OpenMP, GPU-only or MPI+GPU.   
+In order to achieve the best performance on the GPU, some additional optimization is required. However, it has been found that these optimizations often improve the performance when the code is run on the CPU only as well. 
+More details to appear in a forthcoming \amrexastro~GPU paper. 
+
+So far we have ported most of the source terms and hydrodynamics in \maestroex~to run on GPUs. We have found that one of the challenges moving forwards is dealing with the 1d base state. Currently, all AMR subgrids have a copy of the entire 1d base state. This is not a problem for small problems where the 1d base state does not contain many cells compared to the number of cells in a single subgrid, however as the problem size and/or resolution gets larger, the size of the 1d base state grows to the point it is now significantly larger than the size of a single subgrid. Compared to CPUs, GPUs typically have less memory. For larger problems, it is therefore not possible to store the entire base state on the GPU. This significantly reduces the performance of the GPU parts of the code, as it means data will be copied back and forth between the CPU and GPU (a slow process). To alleviate this problem, we are looking at ways to reduce the amount of 1d base state data that needs to be stored on the GPU at any one time. For example, in some routines we map the 1d base state to the 2d grid \textendash for these, we can move this operation to the CPU so that the GPU does not require the 1d base state. It may be necessary for us to develop a way to split up the 1d base state, so that subgrids only receive the portions of the base state necessary for their calculations. 
+
+Insert some performance plots here (do these at the hackathon?)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -199,6 +212,8 @@ The massive stars that we are interested in modelling are believed to be relativ
 We're currently working on implementing rotation in \maestroex. For modelling the interiors of massive stars (which rotate relatively slowly), we may be able to get away with neglecting the centrifugal force and simply add the Coriolis force as a source term. However, this is no fun so we're also looking at doing things like modelling the centrifugal force as an effective pressure term, rewriting the base state as a function of the effective gravitational potential and using a 2d base state which is also a function of the meriodional angle.
 
 Copying the work done for \castro, we're currently in the process of porting \maestroex~to run on GPUs so that we can exploit the latest supercomputer architectures. So far, we've ported source terms and are in the process of porting the hydro. 
+
+More future work: SDC, more science, etc.
 
 
 
@@ -226,6 +241,5 @@ Copying the work done for \castro, we're currently in the process of porting \ma
 
 \bibliographystyle{iopart-num}
 \bibliography{ws}
-
 
 \end{document}
