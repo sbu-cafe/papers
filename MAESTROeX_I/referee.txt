@@ -82,7 +82,7 @@ Minor points:
 small and badly readable. The same is true for the lines in these plots. Enlargement of
 fonts and line-thickness would be appreciated by a reader.
 
-   XXX
+   We have corrected Figs. 3, 4, 5, 8, and 9.
 
 - In Sect. 3.1 the authors say that even with the new interpolation scheme, small errors
 could appear from averaging a large number of numerical values. Could the authors specify
