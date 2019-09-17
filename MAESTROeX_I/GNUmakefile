@@ -31,7 +31,7 @@ pdf:	paper.pdf
 	$(EPStoPDF) $<
 
 clean:
-	$(RM) $(pdf_source) paper.dvi 
+	$(RM) $(pdf_source) paper.dvi paper.pdf
 	$(RM) paper.blg paper.log
 	$(RM) paper.aux paper.ps paper.bbl
 	$(RM) *~

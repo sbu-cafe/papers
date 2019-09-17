@@ -447,7 +447,7 @@ interactions, directed flows feeding fuel into the flame, ...).
 
 \begin{figure*}[t]
 \plottwo{flame}{speed}
-\caption{\label{fig:flame} Our ``standard'' flame. {\color{red} this should be redone for the boosted flame}}
+\caption{\label{fig:flame} Our ``standard'' flame.}
 \end{figure*}
 
 We measure the flame width as:
@@ -463,9 +463,9 @@ the rest of the atmosphere.
 
 Flame properties are show in Table XX \MarginPar{we'll redo the table with 10/10 and 5/5/ and unboosted flame}
 
+\iffalse
 \input{flame_table_1d.tex}
-
-
+\fi
 
 %======================================================================
 % Initial Model
@@ -644,7 +644,7 @@ We note that the entire simulation framework for these calculations is
 freely available in the \castro\ github repository.
 
 \begin{deluxetable}{lccccc}
-\tablecaption{\label{table:sim_names} Simulaiton parameters.}
+\tablecaption{\label{table:sim_names} Simulation parameters.}
 \tablehead{\colhead{name} & \colhead{reaction boost} & \colhead{conductivity boost} & \colhead{fine grid resolution} & \colhead{rotation rate}  & \colhead{network}}
 \startdata
 10/10 & 10 & 10 & 10~cm & 2000~Hz & {\tt aprox13} \\
@@ -696,18 +696,19 @@ Table \ref{table:flame_speeds} gives the flame speed measured in each multidimen
 	\tablecaption{\label{table:flame_speeds}Turbulent and laminar flame speeds.}
 	\tablehead{\colhead{run} & \colhead{$s_T$ (km s$^{-1}$)} & \colhead{$s_L$ (km s$^{-1}$)}}
 	\startdata
-	10/10 boost & $9.46 \pm 0.04$  & $1.06 \pm 0.01$ \\
-	5/5 boost & $3.97 \pm 0.01$ & $0.56 \pm 0.01$ \\
-	iso7 network & $7.66 \pm 0.04$ & $-$ \\
-	1000 Hz & $26.1 \pm 0.20$ & $-$ \\
+	10/10 boost & $9.18 \pm 0.03$  & $1.06 \pm 0.01$ \\
+	5/5 boost & $4.00 \pm 0.01$ & $0.56 \pm 0.01$ \\
+	iso7 network & $7.56 \pm 0.02$ & $-$ \\
+	lowres & $9.33 \pm 0.04$ & $-$ \\
+	1000 Hz & $18.6 \pm 0.16$ & $-$ \\
 	\enddata
 	%
 \end{deluxetable}
 
 \begin{figure}[t]
 \centering
-\plotone{plots/results/speed_10_10.pdf}
-\caption{\label{fig:flame_speed}The position of the burning front for the 10/10 flame as a function of time. The dashed line shows a linear least squares fit for $t \gtrsim 10$ ms.}
+\plotone{plots/results/speedplot_all.pdf}
+\caption{\label{fig:flame_speed}The position of the burning front for each simulation run as a function of time. The dashed lines show linear least squares fits for $t \gtrsim 6$ ms.}
 \end{figure}
 
 \subsection{Boosting}
