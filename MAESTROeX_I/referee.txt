@@ -38,10 +38,12 @@ Upwind Schemes in the Low Mach Number Limit: A Review. Which of the two limits t
 depends on the physical problem under consideration. But the new observational possibility
 of astro-seismology has recently boosted the use of the acoustic limit.
 
-   We have revised the first paragraph to state that it is *our* approach to use a low Mach
-   number formulation that analytically removes acoustic waves.  We have modified the second
-   paragraph discussion to elaborate on other approaches for modeling low Mach number flows
-   as indicated by the referee.
+   We have revised the first paragraph to state that the approach in this paper is to
+   use a low Mach number formulation that analytically removes acoustic waves, which
+   no longer implies that is the only low Mach number approach.  We have
+   modified the second paragraph discussion to elaborate on other approaches for
+   modeling low Mach number flows, particularly points and references brought up by
+   the referee.
 
 An important point to emphasize is that ordinary upwind schemes normally will produce wrong
 results for low Mach number flows (also discussed in the two papers mentioned above). This
@@ -67,7 +69,7 @@ hydrodynamics". A reference to this paper seems appropriate as it indeed describ
 more performent algorithm than the one described in the original paper Viallet, Baraffe,
 and Walder (2011).
 
-    (still need address first point)
+    We have noted potential issues with pressure scaling in implicit approaches.
     We have removed the reference to the 2011 paper, and fixed the typo in the reference
     to the 2015 paper.  Thanks to the referee for catching this error.
 
