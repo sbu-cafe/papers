@@ -55,7 +55,7 @@ but towards the acoustic limit which is achieved by this method, described for i
 Miczek et al. 2014.
 
    We added a statement that the Miczek reference retains the correct scaling behavior,
-   "in an acoustic limit of the Euler equations that retains $\mathcal{O}$(Ma$^2$) pressure
+   "in an acoustic limit of the Euler equations that retains $\mathcal{O}$(Ma) pressure
    fluctuations".
 
 The authors then mention implicit solvers. Here, it may be worth mentioning that also
