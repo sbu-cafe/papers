@@ -96,7 +96,11 @@ restrictive on the size of the time-step than the advective cfl-condition. It wo
 useful if the authors could give some examples and order of magnitudes of the different
 restrictions.
 
-   XXX
+   In practice, the only additional time step used is the buoyancy force restriction,
+   and in our history has only been used for the case of zero velocity at initialization.
+   The divergence constraint we referred to has never been used in practice and is
+   essentially a remnant of earlier testing of the algorithm.  We have removed the
+   discussion about this latter restriction and clarified the use of the former.
 
 - Can the authors give some insight in the time-stepping of the implicit solver for the
 nuclear reaction network. Do they use just one implicit time-step (dt/2 of the advection

@@ -145,9 +145,11 @@ Each time step is constrained by the standard advective CFL condition,
 \Delta t = \sigma^{\rm CFL} \min_i(\Delta x / U_i),
 \end{equation}
 where for our simulations we typically use $\sigma^{\rm CFL}\sim 0.7$ and the minimum is taken over all spatial directions over all cells.
-There are additional constraints on the time step that are typically much less restrictive than the advective CFL including
+\replaced{There are additional constraints on the time step that are typically much less restrictive than the advective CFL including
 the acceleration due to the buoyancy force (sometimes in effect when the velocity is approximately zero at the start of some simulations) 
-and the local magnitude of the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
+and the local magnitude of the divergence constraint (to prevent too much mass evacuation from a cell in a time step);}
+{For simulations that are initialized with zero velocity, we use the buoyancy force in the momentum equation to give a proper time scale
+to start the simulation;} see Section 3.4 in Paper III for details.
 
 In stratified low Mach number models, due to the extreme variation in density, the velocity can become very large in low density regions at the edge of the star.
 These large velocities can severely affect the time step, so
