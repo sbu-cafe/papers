@@ -66,9 +66,11 @@ A potential benefit to eliminating the mapping error is to consider a spherical 
 In the absence of reactions, the star should remain at rest.
 The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors 
 in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error 
-from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced 
-array, the effects due to interpolation error are nearly eliminated, but not completely eliminated since there are still 
-machine precision effects resulting from averaging a large number of numerical values.
+from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced array, 
+\replaced{the effects due to interpolation error are nearly eliminated, but not completely eliminated since there are still machine precision 
+effects resulting from averaging a large number of numerical values.}
+{the truncation error in the mapping scheme is completely eliminated.  The only source of error is due to machine precision effects resulting 
+from averaging a large number of values, which is not significant over the course of any simulation.}
 We note that $\Delta r$ decreases as the base state moves further from the center of the star, 
 which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
 
@@ -126,7 +128,11 @@ There are a few key numerical modules we use in each time step.
 This follows equation (A10) in Paper V, noting that for the irregularly spaced base state case, $\Delta r$ is not constant, where $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell face with index $j+1/2$.  
 The base state pressure remains equal to a constant value at the location of a prescribed cutoff density outward for the entire simulation.
 \item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ 
-uses VODE \citep{vode} to integrate the species and enthalpy due to reactions over $\Delta t/2$ by solving
+uses 
+\added{the multistep variable-coefficient Adams-Moulton and Backward Differentiation Formula (BDF) methods in the}
+VODE \citep{vode} 
+\added{package}
+to integrate the species and enthalpy due to reactions over $\Delta t/2$ by solving
 \begin{equation}
 \frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
 \frac{dT}{dt} = \frac{1}{c_p}\left(-\sum_k\xi_k\dot\omega_k + H_{\rm nuc})\right)

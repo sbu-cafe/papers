@@ -87,23 +87,26 @@ could appear from averaging a large number of numerical values. Could the author
 whether or not the solution on large integration times is affected by these errors or
 whether the error remains small for all times under consideration.
 
-   XXX    
+   We have added a sentence stating this error is not significant.
 
 - On page 7, after the cfl-condition, it is stated that additional constraints are less
 restrictive on the size of the time-step than the advective cfl-condition. It would be
 useful if the authors could give some examples and order of magnitudes of the different
 restrictions.
 
-   XXX    
+   XXX
 
 - Can the authors give some insight in the time-stepping of the implicit solver for the
 nuclear reaction network. Do they use just one implicit time-step (dt/2 of the advection
 time step defined above) or do they allow for sub-cycling to possibly improve the accuracy
 of the nuclear network solve?
 
-   XXX 
+   Added "uses the multistep variable-coefficient Adams-Moulton and
+   Backward Differentiation Formula (BDF) methods in the VODE \citep{vode} package
+   to integrate the species and enthalpy" to the description of React State.
 
 - Is a sub-title Acknowledgments missing at the end of the paper? Acknowledgments now
 rather seem to be the last paragraph of the paper.
 
-  In the most recent edition of ApJ, the acknowledgements appear as the last paragraph.
+  Fixed.  Updated to aastex63.cls that gives Acknowledgments a header.
+  
