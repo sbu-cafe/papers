@@ -74,7 +74,9 @@
 \ead{michael.zingale@stonybrook.edu}
 
 \begin{abstract}
-We discuss 
+We describe the \castro\ astrophysics simulation code, focusing on the
+recent developments in coupling hydrodynamics and reactions and describing
+upcoming developments.
 \end{abstract}
 
 
@@ -177,13 +179,27 @@ us enormous speed-ups.
 The SDC approach was demonstrated in \cite{castro:sdc} through a large
 suite of convergence tests and a thermonuclear flame problem.  
 
+We've run XRB on GPUs and with SDC
+
+
 \section{Future Developments}
 
-MHD
+The development of SDC in \castro\ continues, with the current focus
+on modeling detonations.  Reactions in astrophysical detonations are
+especially stiff and challenging to model when the ash state reaches
+nuclear statistical equilibrium.  We are exploring different
+quadrature schemes for the integral in Equation~\ref{eq:sdc} to model
+detonations in the SDC framework.  We are also working on extending
+the SDC integration methodology to adaptive mesh refinement with
+subcycling in time.
 
-Other SDC quadrature schemes / detonations
+To complement the existing suite of hydrodynamics solver in \castro,
+an MHD solver is under development and expected to be merged into the
+main branch soon.  We will use the experiences learned with the
+\castro\ hydrodynamics solver to port this solver to GPUs and fit into
+the SDC framework.
 
-SDC multilevel + XRBs
+All of these developments fit into our goal of modeling XRBs.
 
 
 \ack The work at Stony Brook was supported by DOE/Office of Nuclear
