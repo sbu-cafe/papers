@@ -26,6 +26,9 @@
 \newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
 
 \newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
+\newcommand{\Rbs}[1]{{\bf R} \left ( #1 \right )}
+\newcommand{\Ic}{\bm{\mathcal{I}}}
 
 \newcommand{\gcc}{\mathrm{g~cm^{-3} }}
 \newcommand{\cms}{\mathrm{cm~s^{-1} }}
@@ -107,16 +110,67 @@ graphical illustration of splitting error).  The SDC algorithm used in
 \castro\ follows the ideas of \cite{dutt:2000,minion:2003}, and uses
 low order explicit advection and implicit reaction updates in a
 correction equation that when applied iteratively achieves high-order
-time-accuracy.  \castro\ implements both a second-order and
-fourth-order method (in space and time) coupling reactions and
-hydrodynamics.  At the moment, the method is limited to single levels.
+time-accuracy.
+
+In an operator split implementation, reaction and burning proceed
+without knowing about the other process.  In contrast, the update in
+the SDC formulation explicitly couples the processes together.  In \castro\ we consider
+reactions and hydrodynamics, and write our conservative system as:
+\begin{equation}
+\Uc_t = \Advs{\Uc} + \Rbs{\Uc}
+\end{equation}
+where $\Uc$ is the vector of conserved quantities, $\Advs{\Uc}$ is the
+advective term (the divergence of the hydrodynamic fluxes along with
+hydrodynamic sources), and $\Rbs{\Uc}$ are the reactive source terms.
+The update is done at specific temporal nodes, the number of location
+of which are picked to give the desired temporal accuracy.  The update
+from one time node $m$ to $m+1$ appears as:
+    \begin{align}
+      \label{eq:sdc:general}
+      \avg{\Uc}^{{m+1},(k+1)} = \avg{\Uc}^{m,(k+1)}
+            &+ \delta t_m \left [ \avg{\Advs{\Uc}}^{m,(k+1)} - \avg{\Advs{\Uc}}^{m,(k)} \right ] \nonumber \\
+            &+ \delta t_m \left [ \avg{\Rbs{\Uc}}^{{m+1},(k+1)} - \avg{\Rbs{\Uc}}^{{m+1},(k)} \right ] \nonumber \\
+            &+ \int_{t^m}^{t^{m+1}} dt  \left (\avg{\Advs{\Uc}}^{(k)} + \avg{\Rbs{\Uc}}^{(k)}\right)
+   \end{align}
+We use a finite-volume formalism, so $\avg{\Uc}$ is the average of the
+conserved state in a zone, $\avg{\Advs{\Uc}}^m$ is the average
+advective term in a zone at time $t^m$, and $\avg{\Rbs{\Uc}}^{k+1}$ is
+the average of the reactive source at time $t^{m+1}$.  The second
+superscript on each term, $(k)$ or $(k+1)$, is the iteration.  This
+update is an implicit equation for the new state,
+$\avg{\Uc}^{{m+1},(k+1)}$.  The last term in the update is an integral
+over the sources constructed from the previous iteration's values at
+each time node.  Each iteration of the SDC method increases the
+temporal order of accuracy by one, up to the order of accuracy with
+which the integral is constructed.  \castro\ implements both a
+second-order method (using a trapezoid rule for the integral) and
+fourth-order method in space and time (using a Simpsons rule for the
+integral and the spatial reconstruction of
+\cite{mccorquodalecolella}).  At the moment, the method is limited to
+single levels.
 
 
 \section{Performance Portability}
 
 The original approach to parallelism in \castro\ was MPI + OpenMP,
 with scaling on manycore architectures achieve using a tiling approach
-to OpenMP~\cite{tiling}.  
+to OpenMP~\cite{tiling}.  More recently we've ported \castro\ to GPUs
+using CUDA, using the same computational kernels as the MPI + OpenMP
+version.  This reuse keeps the code base managable---we don't need
+separate kernels for each architecture---while allowing us to take
+advantage of current and next generation supercomputers.  All of the
+solvers needed to run our core science problems run on GPUs: the main
+unsplit PPM hydrodynamics scheme~\cite{ppm,millercolella:2002}, self-gravity via multigrid with
+isolated boundary conditions, thermal diffusion, and nuclear
+reactions.  Our approach is to put the data on GPUs and then run all
+of the kernels on the GPUs, minimizing data movement.  This has given
+us enormous speed-ups.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\linewidth]{wdmerger_gpu}
+\caption{\label{fig:gpu} blah}
+\end{figure}
 
 \section{Example Application}
 
