@@ -1,17 +1,17 @@
-ALL: astronum-xrb.pdf
+ALL: astronum-castro-2019.pdf
 
 PNGS := $(wildcard *.png)
-PDFS := $(filter-out astronum-xrb.pdf,$(wildcard *.pdf))
+PDFS := $(filter-out astronum-castro-2019.pdf,$(wildcard *.pdf))
 
-astronum-xrb.pdf: astronum-xrb.tex ws.bib $(PNGS) $(PDFS)
-	pdflatex astronum-xrb
-	bibtex astronum-xrb
-	pdflatex astronum-xrb
-	pdflatex astronum-xrb
+astronum-castro-2019.pdf: astronum-castro-2019.tex ws.bib $(PNGS) $(PDFS)
+	pdflatex $<
+	bibtex $(subst .tex,,$<)
+	pdflatex $<
+	pdflatex $<
 
 
 clean: 
-	rm -f astronum-xrb.aux astronum-xrb.log astronum-xrb.bbl astronum-xrb.blg
+	rm -f astronum-castro-2019.aux astronum-castro-2019.log astronum-castro-2019.bbl astronum-castro-2019.blg
 
 realclean: clean
-	rm -f astronum-xrb.pdf
+	rm -f astronum-castro-2019.pdf
