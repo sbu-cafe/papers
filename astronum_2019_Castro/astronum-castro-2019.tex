@@ -49,27 +49,23 @@
 \title{The Castro AMR Simulation Code: Current and Future Developments}
 
 \author{M. Zingale$^1$,
+        A.~S.~Almgren$^2$,
+        M.~Barrios Sazo$^1$,
         J.~B. Bell$^4$,
         K.~Eiden$^1$,
         A.~Harpole$^1$,
-        M.~P. Katz$^5$,
-        A.~J. Nonaka$^4$,
-        D.~E. Willcox$^4$, and
-        W. Zhang$^4$}
+        M.~P. Katz$^3$,
+        A.~J. Nonaka$^2$,
+        D.~E. Willcox$^2$, and
+        W. Zhang$^2$}
 
 \address{$^1$Department of Physics and Astronomy, Stony Brook
   University, Stony Brook, NY 11794-3800 USA}
 
-\address{$^2$Department of Astrophysical Sciences, Princeton University,
-  Peyton Hall, Princeton, NJ 08544, USA}
-
-\address{$^3$Mathematical Sciences and STAG Research Centre,
-  University of Southampton, SO17 1BJ, UK}
-
-\address{$^4$Center for Computational Sciences and Engineering,
+\address{$^2$Center for Computational Sciences and Engineering,
   Lawrence Berkeley National Lab, Berkeley, CA 94720 USA}
 
-\address{$^5$NVIDIA Corporation, 2788 San Tomas Expressway,
+\address{$^3$NVIDIA Corporation, 2788 San Tomas Expressway,
   Santa Clara, CA, 95050 USA}
 
 \ead{michael.zingale@stonybrook.edu}
@@ -82,11 +78,59 @@ We discuss
 
 \section{Introduction}
 
-Castro~\cite{castro}
+The \castro\ astrophysical simulation code~\cite{castro} is designed
+for modeling problems in nuclear astrophysics, with the ability to
+accurately capture the interplay between hydrodynamics, reactions,
+gravity, and radiation in stars with complex equations of state.
+Since \castro\ was first development, there have been a number of
+enhancements to the code base, expanding its applicability to a new
+range of scientific problems.
 
-\section{Summary}
+\castro\ has been applied to models of Type Ia supernovae,
+core-collapse supernovae, pair-instability supernova, and most
+recently X-ray bursts.  A common challenge in modeling these events is
+the range of length and timescales involved.  
 
-We did stuff
+To capture length scales, \castro\ uses adaptive mesh refinement,
+through the \amrex\ library~\cite{amrex_joss}.
+
+Approximations are usually made for multi-dimensional simulations.
+
+\section{Modeling Reactive Flow}
+
+The recent focus in \castro\ has been on high-fidelity simulations of
+reactive flow.  In \cite{castro:sdc} we introduced a new time
+integration strategy, spectral deferred corrections (SDC), that
+eliminates the coupling error introduced by commonly used operator
+splitting techniques (see the discussion in \cite{astronum:2018} for a
+graphical illustration of splitting error).  The SDC algorithm used in
+\castro\ follows the ideas of \cite{dutt:2000,minion:2003}, and uses
+low order explicit advection and implicit reaction updates in a
+correction equation that when applied iteratively achieves high-order
+time-accuracy.  \castro\ implements both a second-order and
+fourth-order method (in space and time) coupling reactions and
+hydrodynamics.  At the moment, the method is limited to single levels.
+
+
+\section{Performance Portability}
+
+The original approach to parallelism in \castro\ was MPI + OpenMP,
+with scaling on manycore architectures achieve using a tiling approach
+to OpenMP~\cite{tiling}.  
+
+\section{Example Application}
+
+The SDC approach was demonstrated in \cite{castro:sdc} through a large
+suite of convergence tests and a thermonuclear flame problem.  
+
+\section{Future Developments}
+
+MHD
+
+Other SDC quadrature schemes / detonations
+
+SDC multilevel + XRBs
+
 
 
 %\section*{References}
