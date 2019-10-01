@@ -117,26 +117,30 @@ We illustrate these new developments with our X-ray burst problem.
 
 \section{Modeling Reactive Flow}
 
-In modeling stellar explosions, it is often the case that the hydrodynamics method
-and the nuclear reaction network require different timesteps in order to produce stable
-and accurate models.  For the stiff nuclear reactions we encounter in stars, implicit ODE
-method are often used together with operator splitting to evolve the nuclear reactions separately
-from the hydrodynamics.  In the limit of small timesteps, the two processes are well-coupled together, but 
-The recent focus in \castro\ has been on high-fidelity simulations of
-reactive flow.  In \cite{castro:sdc} we introduced a new time
-integration strategy, spectral deferred corrections (SDC), that
-eliminates the coupling error introduced by commonly used operator
-splitting techniques (see the discussion in \cite{astronum:2018} for a
-graphical illustration of splitting error).  The SDC algorithm used in
-\castro\ follows the ideas of \cite{dutt:2000,minion:2003}, and uses
-low order explicit advection and implicit reaction updates in a
-correction equation that when applied iteratively achieves high-order
-time-accuracy.
+In modeling stellar explosions, it is often the case that the
+hydrodynamics method and the nuclear reaction network require
+different timesteps in order to produce stable and accurate models.
+For the stiff nuclear reactions we encounter in stars, implicit ODE
+method are often used together with operator splitting to evolve the
+nuclear reactions separately from the hydrodynamics.  In the limit of
+small timesteps, the two processes are well-coupled together, but
+these conditions are not always met in simulations.  The recent focus
+in \castro\ has been on high-fidelity simulations of reactive flow.
+In \cite{castro:sdc} we introduced a new time integration strategy,
+spectral deferred corrections (SDC), that eliminates the coupling
+error introduced by commonly used operator splitting techniques (see
+the discussion in \cite{astronum:2018} for a graphical illustration of
+splitting error).
 
-In an operator split implementation, reaction and burning proceed
-without knowing about the other process.  In contrast, the update in
-the SDC formulation explicitly couples the processes together.  In \castro\ we consider
-reactions and hydrodynamics, and write our conservative system as:
+The SDC algorithm used in \castro\ follows the ideas of
+\cite{dutt:2000,minion:2003}, and uses low order explicit advection
+and implicit reaction updates in a correction equation that when
+applied iteratively achieves high-order time-accuracy.  In an operator
+split implementation, reaction and burning proceed without knowing
+about the other process.  In contrast, the update in the SDC
+formulation explicitly couples the processes together.  In \castro\ we
+consider reactions and hydrodynamics, and write our conservative
+system as:
 \begin{equation}
 \Uc_t = \Advs{\Uc} + \Rbs{\Uc}
 \end{equation}
@@ -163,12 +167,18 @@ $\avg{\Uc}^{{m+1},(k+1)}$.  The last term in the update is an integral
 over the sources constructed from the previous iteration's values at
 each time node.  Each iteration of the SDC method increases the
 temporal order of accuracy by one, up to the order of accuracy with
-which the integral is constructed.  \castro\ implements both a
-second-order method (using a trapezoid rule for the integral) and
-fourth-order method in space and time (using a Simpsons rule for the
-integral and the spatial reconstruction of
-\cite{mccorquodalecolella}).  At the moment, the method is limited to
-single levels.
+which the integral is constructed.  
+
+\castro\ implements both a second-order method (using a trapezoid rule
+for the integral) and fourth-order method in space and time (using a
+Simpsons rule for the integral and the spatial reconstruction of
+\cite{mccorquodalecolella}).  We demonstrated that \castro\ achieves
+the expected convergence on a wide variety of problems in
+\cite{castro:sdc}.  At the moment, the method is limited to single
+levels, but work is underway to extend this methodology to AMR.  For
+problems where burning is imprtant and can dominate the computational
+expense, we expect these new SDC method will become the preferred
+integration technique in the future.
 
 
 \section{Performance Portability}
