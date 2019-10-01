@@ -87,14 +87,19 @@ The \castro\ astrophysical simulation code~\cite{castro} is designed
 for modeling problems in nuclear astrophysics, with the ability to
 accurately capture the interplay between hydrodynamics, reactions,
 gravity, and radiation in stars with complex equations of state.
-Since \castro\ was first development, there have been a number of
+Since \castro\ was first developed, there have been a number of
 enhancements to the code base, expanding its applicability to a new
-range of scientific problems.
+range of scientific problems.  The most active development presently
+focuses on new methods of time integration, with better coupling of
+physical processes, and GPU performance.  Here we discuss some of
+these features.
 
 \castro\ has been applied to models of Type Ia supernovae,
-core-collapse supernovae, pair-instability supernova, and most
-recently X-ray bursts.  A common challenge in modeling these events is
-the range of length and timescales involved.  
+core-collapse supernovae, pair-instability supernovae, exoplanet
+atmospheres, and most recently X-ray bursts (see, e.g.,
+\cite{castro-ccsne,castro-pairinstability,polin:2019,wdmergerI} for
+some example science applications).  A common challenge in modeling
+these events is the range of length and timescales involved.
 
 To capture length scales, \castro\ uses adaptive mesh refinement,
 through the \amrex\ library~\cite{amrex_joss}.
