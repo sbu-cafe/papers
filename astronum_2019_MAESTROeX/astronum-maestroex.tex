@@ -201,7 +201,14 @@ More details to appear in a forthcoming \amrexastro~GPU paper.
 
 So far we have ported most of the source terms and hydrodynamics in \maestroex~to run on GPUs. We have found that one of the challenges moving forwards is dealing with the 1d base state. Currently, all AMR subgrids have a copy of the entire 1d base state. This is not a problem for small problems where the 1d base state does not contain many cells compared to the number of cells in a single subgrid, however as the problem size and/or resolution gets larger, the size of the 1d base state grows to the point that it is now significantly larger than the size of a single subgrid. Compared to CPUs, GPUs typically have less memory. For larger problems, it is therefore not possible to store the entire base state on the GPU. This significantly reduces the performance of the GPU parts of the code, as it will increase the amount of data will be copied back and forth between the CPU and GPU (a slow process). To alleviate this problem, we are looking at ways to reduce the amount of 1d base state data that needs to be stored on the GPU at any one time. For example, in some routines we map the 1d base state to the 3d grid \textendash~for these, we can move this operation to the CPU so that the GPU does not require the 1d base state. It may be necessary for us to develop a way to split up the 1d base state, so that subgrids only receive the sections of the base state necessary for their calculations (rather than the base state for the entire problem domain). 
 
-Insert some performance plots here (do these at the hackathon?)
+\begin{figure}\label{fig:gpu_speedup}
+    \centering
+
+    \includegraphics[width=\textwidth]{plots/gpu_speedup}
+
+    \caption{Comparison of the performance of functions on the CPU vs the GPU. The plot shows the average execution time for several functions, recorded for a run of the 3d \texttt{reacting\_bubble} problem on Summit. Both tests were performed using a single node, with the CPU test using 42 MPI processes, each with 4 OpenMP threads, and the GPU test using 6 MPI processes, each process associated with a single GPU. Note that the $x$-axis scale is logarithmic.}
+
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -213,7 +220,7 @@ Insert some performance plots here (do these at the hackathon?)
 
 We're currently working on implementing rotation in \maestroex. For modelling the interiors of massive stars (which rotate relatively slowly), we may be able to get away with neglecting the centrifugal force and simply add the Coriolis force as a source term. However, this will not be sufficient for faster rotating systems (e.g.~for modelling Type I X-ray bursts on the surfaces of millisecond pulsars), so we are also exploring other methods including modelling the centrifugal force as an effective pressure term, rewriting the base state as a function of the effective gravitational potential and using a 2d base state which is also a function of the meriodional angle.
 
-We're currently in the process of porting \maestroex~to run on GPUs, using our experience doing the same for ~castro. This will enable us exploit the latest supercomputer architectures. So far, we've ported source terms and are in the process of porting the hydro. 
+We're currently in the process of porting \maestroex~to run on GPUs, using our experience doing the same for \castro. This will enable us exploit the latest supercomputer architectures. So far, we've ported source terms and are in the process of porting the hydro. 
 
 More future work: SDC, more science, etc.
 
