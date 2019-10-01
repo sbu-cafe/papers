@@ -185,22 +185,36 @@ integration technique in the future.
 
 The original approach to parallelism in \castro\ was MPI + OpenMP,
 with scaling on manycore architectures achieve using a tiling approach
-to OpenMP~\cite{tiling}.  More recently we've ported \castro\ to GPUs
-using CUDA, using the same computational kernels as the MPI + OpenMP
-version.  This reuse keeps the code base managable---we don't need
-separate kernels for each architecture---while allowing us to take
-advantage of current and next generation supercomputers.  All of the
-solvers needed to run our core science problems run on GPUs: the main
-unsplit PPM hydrodynamics scheme~\cite{ppm,millercolella:2002}, self-gravity via multigrid with
+to OpenMP~\cite{tiling,astronum:2017}.  The general approach is to
+have MPI distribute the AMR grids across nodes and have OpenMP threads
+work on regions of each grid (tiles) by passing the box describing the
+tile into the computational kernel.  More recently we've ported
+\castro\ to GPUs using CUDA, using the same computational kernels as
+the MPI + OpenMP version.  When run on GPUs, each CUDA thread handles
+the update of a single zone, simply by passing that zone index into
+the computational kernel.  This reuse keeps the code base
+managable---we don't need separate kernels for each
+architecture---while allowing us to take advantage of current and next
+generation supercomputers.  All of the solvers needed to run our core
+science problems run on GPUs: the main unsplit PPM hydrodynamics
+scheme~\cite{ppm,millercolella:2002}, self-gravity via multigrid with
 isolated boundary conditions, thermal diffusion, and nuclear
 reactions.  Our approach is to put the data on GPUs and then run all
 of the kernels on the GPUs, minimizing data movement.  This has given
-us enormous speed-ups.
+us enormous speed-ups.  Figure~ref{fig:gpu} shows weak scaling on the
+OLCF Summit machine for a WD merger problem~\cite{wdmergerI}.  When
+using CPUs, we use 42 IBM Power 9 cores per node, while when using
+GPUs we use 6 Nvidia Volta GPUs per node.  We see that the code
+performance is about $10\times$ higher per node when using GPUs, while
+both show excellent weak scaling.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=0.8\linewidth]{wdmerger_gpu}
-\caption{\label{fig:gpu} blah}
+\caption{\label{fig:gpu} \castro\ weak scaling on the OLCF Summit
+  machine for the white dwarf merger problem.  On each node we use
+  either 42 IBM Power 9 CPU cores or 6 Nvidia Volta GPUs.  Ideal
+  scaling is shown for both cases as the solid line.}
 \end{figure}
 
 \section{Example Application}
