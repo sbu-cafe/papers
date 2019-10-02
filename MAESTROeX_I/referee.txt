@@ -38,12 +38,12 @@ Upwind Schemes in the Low Mach Number Limit: A Review. Which of the two limits t
 depends on the physical problem under consideration. But the new observational possibility
 of astro-seismology has recently boosted the use of the acoustic limit.
 
-   We have revised the first paragraph to state that the approach in this paper is to
-   use a low Mach number formulation that analytically removes acoustic waves, which
-   no longer implies that is the only low Mach number approach.  We have
-   modified the second paragraph discussion to elaborate on other approaches for
-   modeling low Mach number flows, particularly points and references brought up by
-   the referee.
+        We have revised the first paragraph to state that the approach in this paper is to
+   	use a low Mach number formulation that analytically removes acoustic waves, which
+   	no longer implies that is the only low Mach number approach.  We have
+   	modified the second paragraph discussion to elaborate on other approaches for
+   	modeling low Mach number flows, particularly points and references brought up by
+   	the referee.
 
 An important point to emphasize is that ordinary upwind schemes normally will produce wrong
 results for low Mach number flows (also discussed in the two papers mentioned above). This
@@ -54,9 +54,9 @@ However, it should be emphasized that it is not the scaling towards the in-compr
 but towards the acoustic limit which is achieved by this method, described for instance in
 Miczek et al. 2014.
 
-   We added a statement that the Miczek reference retains the correct scaling behavior,
-   "in an acoustic limit of the Euler equations that retains $\mathcal{O}$(Ma) pressure
-   fluctuations".
+        We added a statement that the Miczek reference retains the correct scaling behavior,
+   	"in an acoustic limit of the Euler equations that retains $\mathcal{O}$(Ma) pressure
+   	fluctuations".
 
 The authors then mention implicit solvers. Here, it may be worth mentioning that also
 implicit solvers may produce wrong results for very low Mach number flows and a correct
@@ -69,9 +69,9 @@ hydrodynamics". A reference to this paper seems appropriate as it indeed describ
 more performent algorithm than the one described in the original paper Viallet, Baraffe,
 and Walder (2011).
 
-    We have noted potential issues with pressure scaling in implicit approaches.
-    We have removed the reference to the 2011 paper, and fixed the typo in the reference
-    to the 2015 paper.  Thanks to the referee for catching this error.
+        We have noted potential issues with pressure scaling in implicit approaches.
+    	We have removed the reference to the 2011 paper, and fixed the typo in the reference
+    	to the 2015 paper.  Thanks to the referee for catching this error.
 
 In summery, I would recommend to the authors to consider to include some of the discussion
 sketched here. This would, in my opinion, greatly improve the paper.
@@ -82,37 +82,37 @@ Minor points:
 small and badly readable. The same is true for the lines in these plots. Enlargement of
 fonts and line-thickness would be appreciated by a reader.
 
-   We have corrected Figs. 3, 4, 5, 8, and 9.
+        We have corrected Figs. 3, 4, 5, 8, and 9.
 
 - In Sect. 3.1 the authors say that even with the new interpolation scheme, small errors
 could appear from averaging a large number of numerical values. Could the authors specify
 whether or not the solution on large integration times is affected by these errors or
 whether the error remains small for all times under consideration.
 
-   We have added a sentence stating this error is not significant.
+        We have added a sentence stating this error is not significant.
 
 - On page 7, after the cfl-condition, it is stated that additional constraints are less
 restrictive on the size of the time-step than the advective cfl-condition. It would be
 useful if the authors could give some examples and order of magnitudes of the different
 restrictions.
 
-   In practice, the only additional time step used is the buoyancy force restriction,
-   and in our history has only been used for the case of zero velocity at initialization.
-   The divergence constraint we referred to has never been used in practice and is
-   essentially a remnant of earlier testing of the algorithm.  We have removed the
-   discussion about this latter restriction and clarified the use of the former.
+        In practice, the only additional time step used is the buoyancy force restriction,
+   	and in our history has only been used for the case of zero velocity at initialization.
+   	The divergence constraint we referred to has never been used in practice and is
+   	essentially a remnant of earlier testing of the algorithm.  We have removed the
+   	discussion about this latter restriction and clarified the use of the former.
 
 - Can the authors give some insight in the time-stepping of the implicit solver for the
 nuclear reaction network. Do they use just one implicit time-step (dt/2 of the advection
 time step defined above) or do they allow for sub-cycling to possibly improve the accuracy
 of the nuclear network solve?
 
-   Added "uses the multistep variable-coefficient Adams-Moulton and
-   Backward Differentiation Formula (BDF) methods in the VODE \citep{vode} package
-   to integrate the species and enthalpy" to the description of React State.
+        Added "uses the multistep variable-coefficient Adams-Moulton and
+   	Backward Differentiation Formula (BDF) methods in the VODE \citep{vode} package
+   	to integrate the species and enthalpy" to the description of React State.
 
 - Is a sub-title Acknowledgments missing at the end of the paper? Acknowledgments now
 rather seem to be the last paragraph of the paper.
 
-  Fixed.  Updated to aastex63.cls that gives Acknowledgments a header.
+        Fixed.  Updated to aastex63.cls that gives Acknowledgments a header.
   
