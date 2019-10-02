@@ -201,12 +201,12 @@ More details to appear in a forthcoming \amrexastro~GPU paper.
 
 So far we have ported most of the source terms and hydrodynamics in \maestroex~to run on GPUs. We have found that one of the challenges moving forwards is dealing with the 1d base state. Currently, all AMR subgrids have a copy of the entire 1d base state. This is not a problem for small problems where the 1d base state does not contain many cells compared to the number of cells in a single subgrid, however as the problem size and/or resolution gets larger, the size of the 1d base state grows to the point that it is now significantly larger than the size of a single subgrid. Compared to CPUs, GPUs typically have less memory. For larger problems, it is therefore not possible to store the entire base state on the GPU. This significantly reduces the performance of the GPU parts of the code, as it will increase the amount of data will be copied back and forth between the CPU and GPU (a slow process). To alleviate this problem, we are looking at ways to reduce the amount of 1d base state data that needs to be stored on the GPU at any one time. For example, in some routines we map the 1d base state to the 3d grid \textendash~for these, we can move this operation to the CPU so that the GPU does not require the 1d base state. It may be necessary for us to develop a way to split up the 1d base state, so that subgrids only receive the sections of the base state necessary for their calculations (rather than the base state for the entire problem domain). 
 
-\begin{figure}\label{fig:gpu_speedup}
+\begin{figure}
     \centering
 
     \includegraphics[width=\textwidth]{plots/gpu_speedup}
 
-    \caption{Comparison of the performance of functions on the CPU vs the GPU. The plot shows the average execution time for several functions, recorded for a run of the 3d \texttt{reacting\_bubble} problem on Summit. Both tests were performed using a single node, with the CPU test using 42 MPI processes, each with 4 OpenMP threads, and the GPU test using 6 MPI processes, each process associated with a single GPU. Note that the $x$-axis scale is logarithmic.}
+    \caption{Comparison of the performance of functions on the CPU vs the GPU. The plot shows the average execution time for several functions, recorded for a run of the 3d \texttt{reacting\_bubble} problem on Summit. Both tests were performed using a single node, with the CPU test using 42 MPI processes, each with 4 OpenMP threads, and the GPU test using 6 MPI processes, each process associated with a single GPU. Note that the $x$-axis scale is logarithmic.}\label{fig:gpu_speedup}
 
 \end{figure}
 
@@ -228,7 +228,7 @@ More future work: SDC, more science, etc.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ack Visualizations were probably done using~\cite{yt}.
+\ack Figure~\ref{fig:gpu_speedup} was generated using \texttt{Jupyter} \citep{Kluyver2016} and \texttt{matplotlib} \citep{Hunter2007}.
 
 % The work at Stony Brook was supported by DOE/Office of Nuclear
 % Physics grant DE-FG02-87ER40317 and contract 7418390 with Lawrence
@@ -244,9 +244,7 @@ More future work: SDC, more science, etc.
 % This research used resources of the National Energy Research
 % Scientific Computing Center, which is supported by the Office of
 % Science of the U.S. Department of Energy under Contract
-% No.\ DE-AC02-05CH11231.  Visualizations were done using yt~\cite{yt}.
-% This research has made use of NASA's Astrophysics Data System
-% Bibliographic Services.
+% No.\ DE-AC02-05CH11231.  
 
 \bibliographystyle{iopart-num}
 \bibliography{ws}
