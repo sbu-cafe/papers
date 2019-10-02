@@ -217,12 +217,35 @@ both show excellent weak scaling.
   scaling is shown for both cases as the solid line.}
 \end{figure}
 
-\section{Example Application}
+\section{Example Application: X-ray bursts}
 
-The SDC approach was demonstrated in \cite{castro:sdc} through a large
-suite of convergence tests and a thermonuclear flame problem.  
+Both the new SDC method and GPU offloading are important to our
+science goals, in particular the problem of modeling a flame spreading
+across the neutron star during an X-ray burst (XRB).  We discussed the
+computational challenges of modeling these events in
+\cite{astronum:2018}.  In short: the largest scale we need to model is
+the size of the neutron star, or atleast several times the scale at
+which rotation and the lateral flame spreading balance (the Rossby
+length).  The smallest scale we need to model is dictated by
+accurately capturing the burning---we are interested in both the
+energy release and nucleosynthesis.  Our first set of two-dimensional simulations
+(Eiden et al.\ in preparation) used two physical approximations to
+make the problem more tractable.  First, we used a higher rotation
+rate than expected in order to reduce the Rossby length, allowing us
+to model a smaller region of that star.  Second, we artificially
+boosted the speed of the flame to reduce the duration we need to
+model.  Our next set of calculations will relax these approximations.
 
-We've run XRB on GPUs and with SDC
+With the new fourth-order accurate reactive hydro solver, we believe
+we can capture the dynamics of the spreading flame accurately with one
+less refinement level.  This will allow us to expand to larger domains
+while keeping the memory demands reasonable.  Figure~XX shows a
+simulation of the flame spreading done with the second-order SDC
+solver (the 4th order solver does not yet work with axisymmetry),
+demonstrating that the SDC framework can evolve this system.
+
+The large increase in performance of the code when run on GPUs enables
+us to do away with the flame boosting.  Preliminary estimates show
 
 
 \section{Future Developments}
