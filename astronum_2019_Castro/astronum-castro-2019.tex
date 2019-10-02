@@ -74,9 +74,12 @@
 \ead{michael.zingale@stonybrook.edu}
 
 \begin{abstract}
-We describe the \castro\ astrophysics simulation code, focusing on the
-recent developments in coupling hydrodynamics and reactions and describing
-upcoming developments.
+We describe recent developments to the \castro\ astrophysics
+simulation code, focusing on new features that enable our simulations
+of X-ray bursts.  Two highlights of \castro's ongoing development are
+the new integration technique to couple hydrodynamics and reactions to
+high order and GPU offloading.  We discuss how these features will
+help offset some of the computational expense in X-ray burst models.
 \end{abstract}
 
 
@@ -89,10 +92,10 @@ accurately capture the interplay between hydrodynamics, reactions,
 gravity, and radiation in stars with complex equations of state.
 Since \castro\ was first developed, there have been a number of
 enhancements to the code base, expanding its applicability to a new
-range of scientific problems.  The most active development presently
-focuses on new methods of time integration, with better coupling of
-physical processes, and GPU performance.  Here we discuss some of
-these features.
+range of scientific problems.  Throughout this development,
+\castro\ has strived to perform well on modern supercomputers,
+adapting to trends in hardware and programming models, while
+maintaining portability across architectures.
 
 \castro\ has been applied to models of Type Ia supernovae,
 core-collapse supernovae, pair-instability supernovae, exoplanet
@@ -100,7 +103,7 @@ atmospheres, and most recently X-ray bursts (see, e.g.,
 \cite{castro-ccsne,castro-pairinstability,polin:2019,wdmergerI} for
 some example science applications).  A common challenge in modeling
 these events is the range of length and timescales involved.  To
-capture length scales, \castro\ uses adaptive mesh refinement, through
+capture length scales, \castro\ uses adaptive mesh refinement (AMR), through
 the \amrex\ library~\cite{amrex_joss}.  This allows us to focus the
 computational effort of regions where burning or the flow is
 important.  To address the range of timescales involved in
@@ -111,9 +114,10 @@ often precedes explosive events.  Both codes are open source and
 freely available on
 github\footnote{\url{https://github.com/AMReX-Astro/}}.
 
-In the next sections, we discuss \castro's new approach to coupling
-hydrodynamics and reactions and our efforts on performance portavbility.
-We illustrate these new developments with our X-ray burst problem.
+The most active development presently focuses on new methods of time
+integration, with better coupling of physical processes, and GPU
+performance.  In these next sections we discuss these features and
+their impact on our ongoing X-ray burst simulations.
 
 \section{Modeling Reactive Flow}
 
@@ -121,7 +125,7 @@ In modeling stellar explosions, it is often the case that the
 hydrodynamics method and the nuclear reaction network require
 different timesteps in order to produce stable and accurate models.
 For the stiff nuclear reactions we encounter in stars, implicit ODE
-method are often used together with operator splitting to evolve the
+methods are often used together with operator splitting to evolve the
 nuclear reactions separately from the hydrodynamics.  In the limit of
 small timesteps, the two processes are well-coupled together, but
 these conditions are not always met in simulations.  The recent focus
@@ -157,11 +161,11 @@ from one time node $m$ to $m+1$ appears as:
             &+ \delta t_m \left [ \avg{\Rbs{\Uc}}^{{m+1},(k+1)} - \avg{\Rbs{\Uc}}^{{m+1},(k)} \right ] \nonumber \\
             &+ \int_{t^m}^{t^{m+1}} dt  \left (\avg{\Advs{\Uc}}^{(k)} + \avg{\Rbs{\Uc}}^{(k)}\right)
    \end{align}
-We use a finite-volume formalism, so $\avg{\Uc}$ is the average of the
+We use a finite-volume formalism, so $\avg{\Uc}$ is the spatial average of the
 conserved state in a zone, $\avg{\Advs{\Uc}}^m$ is the average
 advective term in a zone at time $t^m$, and $\avg{\Rbs{\Uc}}^{k+1}$ is
 the average of the reactive source at time $t^{m+1}$.  The second
-superscript on each term, $(k)$ or $(k+1)$, is the iteration.  This
+superscript on each term, $(k)$ or $(k+1)$, is the iteration counter.  This
 update is an implicit equation for the new state,
 $\avg{\Uc}^{{m+1},(k+1)}$.  The last term in the update is an integral
 over the sources constructed from the previous iteration's values at
@@ -176,7 +180,7 @@ Simpsons rule for the integral and the spatial reconstruction of
 the expected convergence on a wide variety of problems in
 \cite{castro:sdc}.  At the moment, the method is limited to single
 levels, but work is underway to extend this methodology to AMR.  For
-problems where burning is imprtant and can dominate the computational
+problems where burning is important and can dominate the computational
 expense, we expect these new SDC method will become the preferred
 integration technique in the future.
 
@@ -201,7 +205,7 @@ scheme~\cite{ppm,millercolella:2002}, self-gravity via multigrid with
 isolated boundary conditions, thermal diffusion, and nuclear
 reactions.  Our approach is to put the data on GPUs and then run all
 of the kernels on the GPUs, minimizing data movement.  This has given
-us enormous speed-ups.  Figure~ref{fig:gpu} shows weak scaling on the
+us enormous speed-ups.  Figure~\ref{fig:gpu} shows weak scaling on the
 OLCF Summit machine for a WD merger problem~\cite{wdmergerI}.  When
 using CPUs, we use 42 IBM Power 9 cores per node, while when using
 GPUs we use 6 Nvidia Volta GPUs per node.  We see that the code
@@ -224,12 +228,12 @@ science goals, in particular the problem of modeling a flame spreading
 across the neutron star during an X-ray burst (XRB).  We discussed the
 computational challenges of modeling these events in
 \cite{astronum:2018}.  In short: the largest scale we need to model is
-the size of the neutron star, or atleast several times the scale at
-which rotation and the lateral flame spreading balance (the Rossby
+the size of the neutron star, or at least several times the scale at
+which rotation and the lateral pressure gradient balance (the Rossby
 length).  The smallest scale we need to model is dictated by
 accurately capturing the burning---we are interested in both the
 energy release and nucleosynthesis.  Our first set of two-dimensional simulations
-(Eiden et al.\ in preparation) used two physical approximations to
+(\cite{astronum:2018}, Eiden et al.\ in preparation) used two physical approximations to
 make the problem more tractable.  First, we used a higher rotation
 rate than expected in order to reduce the Rossby length, allowing us
 to model a smaller region of that star.  Second, we artificially
@@ -239,23 +243,34 @@ model.  Our next set of calculations will relax these approximations.
 With the new fourth-order accurate reactive hydro solver, we believe
 we can capture the dynamics of the spreading flame accurately with one
 less refinement level.  This will allow us to expand to larger domains
-while keeping the memory demands reasonable.  Figure~XX shows a
-simulation of the flame spreading done with the second-order SDC
-solver (the 4th order solver does not yet work with axisymmetry),
-demonstrating that the SDC framework can evolve this system.
+while keeping the memory demands reasonable.  Full science simulations
+will begin once we port the SDC framework to AMR and generalize the
+fourth order solver to axisymmetric geometries.  Proof-of-concept single
+level runs are running now, but the lack of AMR makes the very
+expensive.
 
 The large increase in performance of the code when run on GPUs enables
-us to do away with the flame boosting.  Preliminary estimates show
+us to do away with the flame boosting.  All of the physics solvers
+needed for the XRB simulations run on the GPUs: the hydrodynamics,
+explicit diffusion, realistic equation of state and conductivities,
+and the 13-isotope He burning network we are using.  Preliminary
+estimates show that we can expect a speed-up of atleast $5\times$ when
+comparing the NERSC Cori Haswell nodes (using CPUs) to the OLCF Summit
+nodes (using GPUs).  Work underway with further optimize the GPU code,
+especially the reaction networks.
 
 
 \section{Future Developments}
 
-The development of SDC in \castro\ continues, with the current focus
-on modeling detonations.  Reactions in astrophysical detonations are
-especially stiff and challenging to model when the ash state reaches
-nuclear statistical equilibrium.  We are exploring different
-quadrature schemes for the integral in Equation~\ref{eq:sdc:general} to model
-detonations in the SDC framework.  We are also working on extending
+Since its inception \castro\ has undergone steady development to
+enable new science investigations and take advantage of new
+supercomputer architectures.  The development of SDC, summarized here,
+continues, with the current focus on enabling our XRB studies.  We are
+also investigating astrophysical detonations with SDC to understand
+how well the method works with nuclear statistical equilibrium.  For
+the detonation work, we are exploring different quadrature schemes for
+the integral in Equation~\ref{eq:sdc:general} that are more amenable
+to highly-stiff reaction processes.  We are also working on extending
 the SDC integration methodology to adaptive mesh refinement with
 subcycling in time.
 
@@ -265,7 +280,12 @@ main branch soon.  We will use the experiences learned with the
 \castro\ hydrodynamics solver to port this solver to GPUs and fit into
 the SDC framework.
 
-All of these developments fit into our goal of modeling XRBs.
+Altogether, these developments will allow us to begin our first
+three-dimensional realistic XRB calculations by the end of the year,
+with parameter studies to follow.  These calculations will help us
+understand the nucleosynthesis during XRBs and its impact on
+observables and the interpretation of lightcurves and neutron star
+structure.
 
 
 \ack The work at Stony Brook was supported by DOE/Office of Nuclear
