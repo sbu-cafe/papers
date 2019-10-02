@@ -105,7 +105,7 @@ some example science applications).  A common challenge in modeling
 these events is the range of length and timescales involved.  To
 capture length scales, \castro\ uses adaptive mesh refinement (AMR), through
 the \amrex\ library~\cite{amrex_joss}.  This allows us to focus the
-computational effort of regions where burning or the flow is
+computational effort on regions where burning or the flow is
 important.  To address the range of timescales involved in
 astrophysical explosions, we have developed a low Mach number
 hydrodynamics code, \maestroex~\cite{maestroex}, built on the same
@@ -151,7 +151,7 @@ system as:
 where $\Uc$ is the vector of conserved quantities, $\Advs{\Uc}$ is the
 advective term (the divergence of the hydrodynamic fluxes along with
 hydrodynamic sources), and $\Rbs{\Uc}$ are the reactive source terms.
-The update is done at specific temporal nodes, the number of location
+The update is done at specific temporal nodes, the number of locations
 of which are picked to give the desired temporal accuracy.  The update
 from one time node $m$ to $m+1$ appears as:
     \begin{align}
@@ -163,7 +163,7 @@ from one time node $m$ to $m+1$ appears as:
    \end{align}
 We use a finite-volume formalism, so $\avg{\Uc}$ is the spatial average of the
 conserved state in a zone, $\avg{\Advs{\Uc}}^m$ is the average
-advective term in a zone at time $t^m$, and $\avg{\Rbs{\Uc}}^{k+1}$ is
+advective term in a zone at time $t^m$, and $\avg{\Rbs{\Uc}}^{k+1}$ \MarginPar{I think this should be $\avg{\Rbs{\Uc}}^{m+1}$?}is
 the average of the reactive source at time $t^{m+1}$.  The second
 superscript on each term, $(k)$ or $(k+1)$, is the iteration counter.  This
 update is an implicit equation for the new state,
@@ -181,14 +181,14 @@ the expected convergence on a wide variety of problems in
 \cite{castro:sdc}.  At the moment, the method is limited to single
 levels, but work is underway to extend this methodology to AMR.  For
 problems where burning is important and can dominate the computational
-expense, we expect these new SDC method will become the preferred
+expense, we expect this new SDC method will become the preferred
 integration technique in the future.
 
 
 \section{Performance Portability}
 
 The original approach to parallelism in \castro\ was MPI + OpenMP,
-with scaling on manycore architectures achieve using a tiling approach
+with scaling on manycore architectures achieved using a tiling approach
 to OpenMP~\cite{tiling,astronum:2017}.  The general approach is to
 have MPI distribute the AMR grids across nodes and have OpenMP threads
 work on regions of each grid (tiles) by passing the box describing the
@@ -246,7 +246,7 @@ less refinement level.  This will allow us to expand to larger domains
 while keeping the memory demands reasonable.  Full science simulations
 will begin once we port the SDC framework to AMR and generalize the
 fourth order solver to axisymmetric geometries.  Proof-of-concept single
-level runs are running now, but the lack of AMR makes the very
+level runs are running now, but the lack of AMR makes them very
 expensive.
 
 The large increase in performance of the code when run on GPUs enables
@@ -254,9 +254,9 @@ us to do away with the flame boosting.  All of the physics solvers
 needed for the XRB simulations run on the GPUs: the hydrodynamics,
 explicit diffusion, realistic equation of state and conductivities,
 and the 13-isotope He burning network we are using.  Preliminary
-estimates show that we can expect a speed-up of atleast $5\times$ when
+estimates show that we can expect a speed-up of at least $5\times$ when
 comparing the NERSC Cori Haswell nodes (using CPUs) to the OLCF Summit
-nodes (using GPUs).  Work underway with further optimize the GPU code,
+nodes (using GPUs).  Work is underway to further optimize the GPU code,
 especially the reaction networks.
 
 
