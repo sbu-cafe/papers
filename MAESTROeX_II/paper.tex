@@ -1,0 +1,555 @@
+%% Beginning of file 'sample63.tex'
+%%
+%% Modified 2019 June
+%%
+%% This is a sample manuscript marked up using the
+%% AASTeX v6.3 LaTeX 2e macros.
+%%
+%% AASTeX is now based on Alexey Vikhlinin's emulateapj.cls 
+%% (Copyright 2000-2015).  See the classfile for details.
+
+%% AASTeX requires revtex4-1.cls (http://publish.aps.org/revtex4/) and
+%% other external packages (latexsym, graphicx, amssymb, longtable, and epsf).
+%% All of these external packages should already be present in the modern TeX 
+%% distributions.  If not they can also be obtained at www.ctan.org.
+
+%% The first piece of markup in an AASTeX v6.x document is the \documentclass
+%% command. LaTeX will ignore any data that comes before this command. The 
+%% documentclass can take an optional argument to modify the output style.
+%% The command below calls the preprint style which will produce a tightly 
+%% typeset, one-column, single-spaced document.  It is the default and thus
+%% does not need to be explicitly stated.
+%%
+%%
+%% using aastex version 6.3
+%\documentclass[trackchanges]{aastex63}
+\documentclass{aastex63}
+
+%% The default is a single spaced, 10 point font, single spaced article.
+%% There are 5 other style options available via an optional argument. They
+%% can be invoked like this:
+%%
+%% \documentclass[arguments]{aastex63}
+%% 
+%% where the layout options are:
+%%
+%%  twocolumn   : two text columns, 10 point font, single spaced article.
+%%                This is the most compact and represent the final published
+%%                derived PDF copy of the accepted manuscript from the publisher
+%%  manuscript  : one text column, 12 point font, double spaced article.
+%%  preprint    : one text column, 12 point font, single spaced article.  
+%%  preprint2   : two text columns, 12 point font, single spaced article.
+%%  modern      : a stylish, single text column, 12 point font, article with
+%% 		  wider left and right margins. This uses the Daniel
+%% 		  Foreman-Mackey and David Hogg design.
+%%  RNAAS       : Preferred style for Research Notes which are by design 
+%%                lacking an abstract and brief. DO NOT use \begin{abstract}
+%%                and \end{abstract} with this style.
+%%
+%% Note that you can submit to the AAS Journals in any of these 6 styles.
+%%
+%% There are other optional arguments one can invoke to allow other stylistic
+%% actions. The available options are:
+%%
+%%   astrosymb    : Loads Astrosymb font and define \astrocommands. 
+%%   tighten      : Makes baselineskip slightly smaller, only works with 
+%%                  the twocolumn substyle.
+%%   times        : uses times font instead of the default
+%%   linenumbers  : turn on lineno package.
+%%   trackchanges : required to see the revision mark up and print its output
+%%   longauthor   : Do not use the more compressed footnote style (default) for 
+%%                  the author/collaboration/affiliations. Instead print all
+%%                  affiliation information after each name. Creates a much 
+%%                  longer author list but may be desirable for short 
+%%                  author papers.
+%% twocolappendix : make 2 column appendix.
+%%   anonymous    : Do not show the authors, affiliations and acknowledgments 
+%%                  for dual anonymous review.
+%%
+%% these can be used in any combination, e.g.
+%%
+%% \documentclass[twocolumn,linenumbers,trackchanges]{aastex63}
+%%
+%% AASTeX v6.* now includes \hyperref support. While we have built in specific
+%% defaults into the classfile you can manually override them with the
+%% \hypersetup command. For example,
+%%
+%% \hypersetup{linkcolor=red,citecolor=green,filecolor=cyan,urlcolor=magenta}
+%%
+%% will change the color of the internal links to red, the links to the
+%% bibliography to green, the file links to cyan, and the external links to
+%% magenta. Additional information on \hyperref options can be found here:
+%% https://www.tug.org/applications/hyperref/manual.html#x1-40003
+%%
+%% Note that in v6.3 "bookmarks" has been changed to "true" in hyperref
+%% to improve the accessibility of the compiled pdf file.
+%%
+%% If you want to create your own macros, you can do so
+%% using \newcommand. Your macros should appear before
+%% the \begin{document} command.
+%%
+
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand\aastex{AAS\TeX}
+\newcommand\latex{La\TeX}
+
+% for non-stacked fractions
+\newcommand{\sfrac}[2]{\mathchoice
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+   \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+   \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+   \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}}
+  {#1\!/#2}}
+
+\newcommand{\myhalf}{\sfrac{1}{2}}
+\newcommand{\thalf}{\sfrac{3}{2}}
+
+\newcommand{\eb}{{\bf{e}}}
+\newcommand{\Ub}{{\bf{U}}}
+\newcommand{\Ubt}{\widetilde{\Ub}}
+\newcommand{\Vb}{{\bf{V}}}
+\newcommand{\xb}{{\bf{x}}}
+
+\newcommand{\dr}{\Delta r}
+\newcommand{\dt}{\Delta t}
+
+\newcommand{\etarho}{\eta_\rho}
+\newcommand{\gammaonebar}{\overline{\Gamma}_1}
+\newcommand{\Hnuc}{H_{\rm nuc}}
+\newcommand{\omegadot}{\dot\omega}
+\newcommand{\pred}{{\rm pred}}
+\newcommand{\Sbar}{\overline{S}}
+
+\newcommand{\inp}{\mathrm{in}}
+\newcommand{\outp}{\mathrm{out}}
+\newcommand{\nph}{{n+\myhalf}}
+\newcommand{\nmh}{{n-\myhalf}}
+\newcommand{\ow}{\overline{w_0}}
+\newcommand{\dw}{\delta w_0}
+\newcommand{\uadvone}{\Ub^{\mathrm{ADV},\star}}
+\newcommand{\uadvonedag}{\Ub^{\mathrm{ADV},\dagger,\star}}
+\newcommand{\uadvtwo}{\Ub^{\mathrm{ADV}}}
+\newcommand{\uadvtwodag}{\Ub^{\mathrm{ADV},\dagger}}
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\kth}{{k_{\mathrm{th}}}}
+
+% for the red MarginPars
+\usepackage{color}
+% make the MarginPars look pretty
+\setlength{\marginparwidth}{0.5in}
+\newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily
+\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
+
+\usepackage{url}
+
+\usepackage{mathtools}
+
+\usepackage{multirow}
+
+%% Reintroduced the \received and \accepted commands from AASTeX v5.2
+\received{XXX X, XXXX}
+\revised{XXX X, XXXX}
+\accepted{XXX X, XXXX}
+%% Command to document which AAS Journal the manuscript was submitted to.
+%% Adds "Submitted to " the argument.
+\submitjournal{ApJ}
+
+%% For manuscript that include authors in collaborations, AASTeX v6.3
+%% builds on the \collaboration command to allow greater freedom to 
+%% keep the traditional author+affiliation information but only show
+%% subsets. The \collaboration command now must appear AFTER the group
+%% of authors in the collaboration and it takes TWO arguments. The last
+%% is still the collaboration identifier. The text given in this
+%% argument is what will be shown in the manuscript. The first argument
+%% is the number of author above the \collaboration command to show with
+%% the collaboration text. If there are authors that are not part of any
+%% collaboration the \nocollaboration command is used. This command takes
+%% one argument which is also the number of authors above to show. A
+%% dashed line is shown to indicate no collaboration. This example manuscript
+%% shows how these commands work to display specific set of authors 
+%% on the front page.
+%%
+%% For manuscript without any need to use \collaboration the 
+%% \AuthorCollaborationLimit command from v6.2 can still be used to 
+%% show a subset of authors.
+%
+%\AuthorCollaborationLimit=2
+%
+%% will only show Schwarz & Muench on the front page of the manuscript
+%% (assuming the \collaboration and \nocollaboration commands are
+%% commented out).
+%%
+%% Note that all of the author will be shown in the published article.
+%% This feature is meant to be used prior to acceptance to make the
+%% front end of a long author article more manageable. Please do not use
+%% this functionality for manuscripts with less than 20 authors. Conversely,
+%% please do use this when the number of authors exceeds 40.
+%%
+%% Use \allauthors at the manuscript end to show the full author list.
+%% This command should only be used with \AuthorCollaborationLimit is used.
+
+%% The following command can be used to set the latex table counters.  It
+%% is needed in this document because it uses a mix of latex tabular and
+%% AASTeX deluxetables.  In general it should not be needed.
+%\setcounter{table}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% The following section outlines numerous optional output that
+%% can be displayed in the front matter or as running meta-data.
+%%
+%% If you wish, you may supply running head information, although
+%% this information may be modified by the editorial offices.
+\shorttitle{SDC Scheme for Low Mach Number Flows}
+\shortauthors{Fan et al.}
+%%
+%% You can add a light gray and diagonal water-mark to the first page 
+%% with this command:
+%% \watermark{text}
+%% where "text", e.g. DRAFT, is the text to appear.  If the text is 
+%% long you can control the water-mark size with:
+%% \setwatermarkfontsize{dimension}
+%% where dimension is any recognized LaTeX dimension, e.g. pt, in, etc.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% This is the end of the preamble.  Indicate the beginning of the
+%% manuscript itself with \begin{document}.
+
+\begin{document}
+
+\title{Spectral Deferred Corrections Scheme for Low Mach Number Flows}
+
+%% LaTeX will automatically break titles if they run longer than
+%% one line. However, you may use \\ to force a line break if
+%% you desire. In v6.3 you can include a footnote in the title.
+
+%% A significant change from earlier AASTEX versions is in the structure for 
+%% calling author and affiliations. The change was necessary to implement 
+%% auto-indexing of affiliations which prior was a manual process that could 
+%% easily be tedious in large author manuscripts.
+%%
+%% The \author command is the same as before except it now takes an optional
+%% argument which is the 16 digit ORCID. The syntax is:
+%% \author[xxxx-xxxx-xxxx-xxxx]{Author Name}
+%%
+%% This will hyperlink the author name to the author's ORCID page. Note that
+%% during compilation, LaTeX will do some limited checking of the format of
+%% the ID to make sure it is valid. If the "orcid-ID.png" image file is 
+%% present or in the LaTeX pathway, the OrcID icon will appear next to
+%% the authors name.
+%%
+%% Use \affiliation for affiliation information. The old \affil is now aliased
+%% to \affiliation. AASTeX v6.3 will automatically index these in the header.
+%% When a duplicate is found its index will be the same as its previous entry.
+%%
+%% Note that \altaffilmark and \altaffiltext have been removed and thus 
+%% can not be used to document secondary affiliations. If they are used latex
+%% will issue a specific error message and quit. Please use multiple 
+%% \affiliation calls for to document more than one affiliation.
+%%
+%% The new \altaffiliation can be used to indicate some secondary information
+%% such as fellowships. This command produces a non-numeric footnote that is
+%% set away from the numeric \affiliation footnotes.  NOTE that if an
+%% \altaffiliation command is used it must come BEFORE the \affiliation call,
+%% right after the \author command, in order to place the footnotes in
+%% the proper location.
+%%
+%% Use \email to set provide email addresses. Each \email will appear on its
+%% own line so you can put multiple email address in one \email call. A new
+%% \correspondingauthor command is available in V6.3 to identify the
+%% corresponding author of the manuscript. It is the author's responsibility
+%% to make sure this name is also in the author list.
+%%
+%% While authors can be grouped inside the same \author and \affiliation
+%% commands it is better to have a single author for each. This allows for
+%% one to exploit all the new benefits and should make book-keeping easier.
+%%
+%% If done correctly the peer review system will be able to
+%% automatically put the author and affiliation information from the manuscript
+%% and save the corresponding author the trouble of entering it by hand.
+
+\correspondingauthor{Duoming Fan}
+\email{DFan@lbl.gov}
+
+\author[0000-0002-3246-4315]{Duoming Fan}
+\affiliation{Lawrence Berkeley National Laboratory \\
+Center for Computational Sciences and Engineering \\
+One Cyclotron Road, MS 50A-3111 \\
+Berkeley, CA 94720, USA}
+
+\author[0000-0003-1791-0265]{Andrew Nonaka}
+\affiliation{Lawrence Berkeley National Laboratory \\
+Center for Computational Sciences and Engineering \\
+One Cyclotron Road, MS 50A-3111 \\
+Berkeley, CA 94720, USA}
+
+\author[0000-0003-2103-312X]{Ann S. Almgren}
+\affiliation{Lawrence Berkeley National Laboratory \\
+Center for Computational Sciences and Engineering \\
+One Cyclotron Road, MS 50A-3111 \\
+Berkeley, CA 94720, USA}
+
+\author[0000-0002-1530-781X]{Alice Harpole}
+\affiliation{Stony Brook University \\
+Department of Physics and Astronomy \\
+Stony Brook, NY 11794-3800, USA}
+
+\author[0000-0001-8401-030X]{Michael Zingale}
+\affiliation{Stony Brook University \\
+Department of Physics and Astronomy \\
+Stony Brook, NY 11794-3800, USA}
+
+%% Note that the \and command from previous versions of AASTeX is now
+%% depreciated in this version as it is no longer necessary. AASTeX 
+%% automatically takes care of all commas and "and"s between authors names.
+
+%% AASTeX 6.3 has the new \collaboration and \nocollaboration commands to
+%% provide the collaboration status of a group of authors. These commands 
+%% can be used either before or after the list of corresponding authors. The
+%% argument for \collaboration is the collaboration identifier. Authors are
+%% encouraged to surround collaboration identifiers with ()s. The 
+%% \nocollaboration command takes no argument and exists to indicate that
+%% the nearby authors are not part of surrounding collaborations.
+
+%% Mark off the abstract in the ``abstract'' environment. 
+
+\begin{abstract}
+  We describe a spectral deferred corrections scheme for MAESTROeX, an adaptive
+  low Mach number hydrodynamics code that allows for efficient, long-time integration. 
+\end{abstract}
+
+%% Keywords should appear after the \end{abstract} command. 
+%% See the online documentation for the full list of available subject
+%% keywords and the rules for their use.
+\keywords{Stellar convective zones, Hydrodynamics, Computational methods, 
+Nuclear astrophysics, Nucleosynthesis, Nuclear abundances, Type Ia supernovae}
+
+%% From the front matter, we move on to the body of the paper.
+%% Sections are demarcated by \section and \subsection, respectively.
+%% Observe the use of the LaTeX \label
+%% command after the \subsection to give a symbolic KEY to the
+%% subsection for cross-referencing in a \ref command.
+%% You can use LaTeX's \ref and \label commands to keep track of
+%% cross-references to sections, equations, tables, and figures.
+%% That way, if you change the order of any elements, LaTeX will
+%% automatically renumber them.
+%%
+%% We recommend that authors also use the natbib \citep
+%% and \citet commands to identify citations.  The citations are
+%% tied to the reference list via symbolic KEYs. The KEY corresponds
+%% to the KEY in the \bibitem in the reference list below. 
+
+\section{Introduction} \label{sec:intro}
+
+
+\section{Numerical Considerations and Algorithm} \label{sec:equations}
+
+MAESTROeX integrates the following system of equations, 
+%%
+\begin{eqnarray}
+\frac{\partial\Ub}{\partial t} &=& -\Ub\cdot\nabla\Ub  - \frac{\beta_0}{\rho}\nabla\left(\frac{\pi}{\beta_0}\right) - \frac{\rho-\rho_0}{\rho} g\eb_r,\label{eq:momentum}\\
+\frac{\partial(\rho X_k)}{\partial t} &=& -\nabla\cdot(\rho X_k\Ub) + \rho\omegadot_k,\label{eq:species}\\
+\frac{\partial(\rho h)}{\partial t} &=& -\nabla\cdot(\rho h\Ub) + \frac{Dp_0}{Dt} + \rho\Hnuc + \nabla\cdot\kth\nabla T,\label{eq:enthalpy}
+\end{eqnarray}
+%%
+along with a velocity constraint equation,
+%
+\begin{equation}
+\nabla\cdot(\beta_0\Ub) = \beta_0\left(S - \frac{1}{\gammaonebar p_0}\frac{\partial p_0}{\partial t}\right), \label{eq:U divergence}
+\end{equation}
+%
+as described in previous papers \citep{MAESTRO_V,MAESTRO_VI}. Note that we have included thermal diffusion
+in the governing equations with the term 
+\begin{equation}
+\nabla\cdot\kth\nabla T = \nabla\cdot\frac{\kth}{c_p}\nabla h - \sum_k\nabla\cdot\frac{\xi_k k_{\rm th}}{c_p}\nabla X_k - \nabla\cdot\frac{h_p k_{\rm th}}{c_p}\nabla p_0 .
+\end{equation}
+The species are also constrained such that $\sum_k X_k = 1$ giving $\rho = \sum_k (\rho X_k)$ and
+%
+\begin{equation}
+\frac{\partial\rho}{\partial t} = -\nabla\cdot(\rho\Ub).
+\end{equation}
+%
+
+In past papers, MAESTROeX advance the thermodynamic variables by coupling advection, diffusion,
+and reactions using Strang splitting.  Specifically, we integrate the reaction terms 
+over half a time step ignoring contributions from advection and diffusion,
+then from this intermediate state we integrate the advection and diffusion terms over
+a full time step (while ignoring reactions), and finally integrate the reactions over
+a half time step (ignoring advection and diffusion). For problems where
+the reactions and/or diffusion greatly alter the energy balance or composition 
+as compared to advection, this operator splitting approach can lead to large 
+splitting errors and highly inaccurate solutions.
+This issue is can be particularly exasperating for low Mach number methods that can
+theoretically take large advection-based time steps.
+
+An alternate approach to advancing the thermodynamic variables is to use
+spectral deferred corrections (SDC). SDC is an iterative scheme used to couple the various processes
+together, with each process seeing an  approximation of the other processes as a source term.
+The SDC algorithm converges to an integral representation of the solution in
+time that couples all of the processes together in a self-consistent fashion.
+It has been shown to be more accurate and efficient than Strang splitting in a
+terrestrial, non-stratified, low Mach number reacting flow solver \cite{nonaka2012sdc},
+so we believe an SDC version of MAESTROeX would greatly improve the efficiency of the code.
+\\
+
+\emph{As a first attempt, we will work on coupling advection and reactions only
+via SDC, with a base state that is fixed in time, but not space.}
+\\
+
+The time-advancement is divided into three major steps.  The first step is the predictor, where we integrate the thermodynamic variables, $(\rho,\rho X_k,\rho h)$, over the full time step.  The second step is corrector, where we use the results from the predictor to perform a more accurate temporal integration of the thermodynamic variables.  The third step is the velocity and dynamic pressure update.\\
+
+{\bf Step 1:} ({\it Compute advection velocities})\\ \\
+Use $\Ub^n$ and a second-order Godunov method to compute time-centered edge velocities, $\uadvonedag$, with time-lagged dynamic pressure and explicit buoyancy as forcing terms.  The $\dagger$ superscript indicates that this field does not satisfy the divergence constraint.  Compute $S^{n+\myhalf,\star}$ by extrapolating in time,
+\begin{equation}
+S^{n+\myhalf,\star} = S^n + \frac{\Delta t^n}{2}\frac{S^n - S^{n-1}}{\Delta t^{n-1}},
+\end{equation}
+and project $\uadvonedag$ to obtain $\uadvone$, which satisfies
+\begin{equation}
+\nabla\cdot\left(\beta_0^n\uadvone\right) = S^{n+\myhalf,\star}.
+\end{equation}
+
+{\bf Step 2:} ({\it Predictor})\\ \\
+ In this step, we integrate $(\rho, \rho X_k, \rho h)$ over the full time step.  The quantities $(S, \beta_0, k_{\rm th}, c_p, \xi_k, h_p)^n$ are computed from the the thermodynamic variables at $t^n$.  This step is divided into several sub-steps:\\
+
+{\bf Step 2A:} ({\it Compute advective flux divergences})\\ \\
+Use $\uadvone$ and a second-order Godunov integrator to compute time-centered edge states, $(\rho X_k, \rho h)^{n+\myhalf,(0)}$, with time-lagged reactions ($I^{\rm lagged} = I^{(j_{\rm max})}$ from the previous time step), explicit diffusion, and time-centered thermodynamic pressure as source terms.  Define the advective flux divergences as
+\begin{eqnarray}
+A_{\rho X_k}^{(0)} &=& -\nabla\cdot\left[\left(\rho X_k\right)^{n+\myhalf,{(0)}}\uadvone\right],\\
+A_{\rho h}^{(0)} &=& -\nabla\cdot\left[\left(\rho h\right)^{n+\myhalf,(0)}\uadvone\right] + \uadvone\cdot\nabla p_0.
+\end{eqnarray}
+Next, use these fluxes to compute the time-advanced density,
+\begin{equation}
+\frac{\rho^{n+1} - \rho^n}{\Delta t} = \sum_k A_{\rho X_k}^{(0)}.
+\end{equation}
+Then, compute preliminary, time-advanced species using
+\begin{equation}
+\frac{\rho^{n+1}\widehat{X}_k^{n+1,(0)} - (\rho X_k)^n}{\Delta t} = A_{\rho X_k}^{(0)} + I_{\rho X_k}^{\rm lagged}.\label{eq:sdc species 2}
+\end{equation}
+
+{\bf Step 2B:} ({\it Compute diffusive flux divergence})\\ \\
+Solve a Crank-Nicolson-type diffusion equation for $\widehat{h}^{n+1,(0)}$, using transport coefficients evaluated at $t^n$ everywhere,
+\begin{eqnarray}
+\frac{\rho^{n+1}\widehat{h}^{n+1,(0)} - (\rho h)^n}{\Delta t} &=& A_{\rho h}^{(0)} + I_{\rho h}^{\rm lagged}\nonumber\\
+&& + \frac{1}{2}\left(\nabla\cdot\frac{\kth^n}{c_p^n}\nabla h^n + \nabla\cdot\frac{\kth^n}{c_p^n}\nabla \widehat{h}^{n+1,(0)}\right)\nonumber\\
+&& - \frac{1}{2}\left(\sum_k\nabla\cdot\frac{\xi_k^n k_{\rm th}^n}{c_p^n}\nabla X_k^n + \sum_k\nabla\cdot\frac{\xi_k^n k_{\rm th}^n}{c_p^n}\nabla\widehat{X}_k^{n+1,(0)}\right)\nonumber\\
+&& - \frac{1}{2}\left(\nabla\cdot\frac{h_p^n k_{\rm th}^n}{c_p^n}\nabla p_0 + \nabla\cdot\frac{h_p^n k_{\rm th}^n}{c_p^n}\nabla p_0\right),\label{eq:sdc enthalpy 2}
+\end{eqnarray}
+
+{\bf Step 2C:} ({\it Advance thermodynamic variables})\\ \\
+Define $Q_{\rho X_k}^{(0)}$ as the right hand side of (\ref{eq:sdc species 2}) without the $I_{\rho X_k}^{\rm lagged}$ term, and define $Q_{\rho h}^{(0)}$ as the right hand side of (\ref{eq:sdc enthalpy 2}) without the $I_{\rho h}^{\rm lagged}$ term.  Use {\tt VODE} to integrate (\ref{eq:species}) and (\ref{eq:enthalpy}) over $\Delta t$ to advance $(\rho X_k, \rho h)^n$ to $(\rho X_k, \rho h)^{n+1,(0)}$ using the piecewise-constant advection and diffusion source terms:
+\begin{eqnarray}
+\frac{\partial(\rho X_k)}{\partial t} &=& Q_{\rho X_k}^{(0)} + \rho\dot\omega_k\\
+\frac{\partial(\rho h)}{\partial t} &=& Q_{\rho h}^{(0)} + \rho\Hnuc.
+\end{eqnarray}
+At this point we can define $I_{\rho X_k}^{(0)}$ and $I_{\rho h}^{(0)}$, or whatever term we need depending on our species and enthalpy edge state prediction types, for use in the corrector step.  In our first implementation, we are predicting $\rho X_k$ and $\rho h$, in which case we define:
+\begin{eqnarray}
+I_{\rho X_k}^{(0)} &=& \frac{(\rho X_k)^{n+1,(0)} - (\rho X_k)^n}{\Delta t} - Q_{\rho X_k}^{(0)}\\
+I_{\rho h}^{(0)} &=& \frac{(\rho h)^{n+1,(0)} - (\rho h)^n}{\Delta t} - Q_{\rho h}^{(0)}.
+\end{eqnarray}
+
+{\bf Step 3:} ({\it Update advection velocities})\\ \\
+First, compute $S^{n+\myhalf}$ and $\beta_0^{n+\myhalf}$ using
+\begin{equation}
+S^{n+\myhalf} = \frac{S^n + S^{n+1,(0)}}{2}, \qquad \beta_0^{n+\myhalf} = \frac{\beta_0^n + \beta_0^{n+1,(0)}}{2}.
+\end{equation}
+Then, project $\uadvtwodag$ to obtain $\uadvtwo$, which satisfies
+\begin{equation}
+\nabla\cdot\left(\beta_0^{n+\myhalf}\uadvtwo\right) = S^{n+\myhalf}.
+\end{equation}
+
+{\bf Step 4:} ({\it Corrector Loop})\\ \\
+We loop over this step from $j=1,j_{\rm max}$ times.  In the corrector, we use the time-advanced state from the predictor to perform a more accurate integration of the thermodynamic variables.  The quantities $(S, \beta_0, k_{\rm th}, c_p, \xi_k, h_p)^{n+1,(j-1)}$ are computed from $(\rho,\rho X_k,\rho h)^{n+1,(j-1)}$.  This step is divided into several sub-steps:\\
+
+{\bf Step 4A:} ({\it Compute advective flux divergences})\\ \\
+Use $\uadvtwo$ and a second-order Godunov integrator to compute time-centered edge states, $(\rho X_k, \rho h)^{n+\myhalf}$, with iteratively-lagged reactions ($I^{(j-1)}$), explicit diffusion, and time-centered thermodynamic pressure as source terms.  Define the advective flux divergences as
+\begin{eqnarray}
+A_{\rho X_k}^{(j)} &=& -\nabla\cdot\left[\left(\rho X_k\right)^{n+\myhalf,(j)}\uadvtwo\right],\\
+A_{\rho h}^{(j)} &=& -\nabla\cdot\left[\left(\rho h\right)^{n+\myhalf,(j)}\uadvtwo\right] + \uadvtwo\cdot\nabla p_0.
+\end{eqnarray}
+Then, compute preliminary, time-advanced species using
+\begin{equation}
+\frac{\rho^{n+1}\widehat{X}_k^{n+1,(j)} - (\rho X_k)^n}{\Delta t} = A_{\rho X_k}^{(j)} + I_{\rho X_k}^{(j-1)}.\label{eq:sdc species 3}
+\end{equation}
+
+{\bf Step 4B:} ({\it Compute diffusive flux divergence})\\ \\
+Solve a backward-Euler-type correction equation for $\widehat{h}^{n+1,(j)}$,
+\begin{eqnarray}
+\frac{\rho^{n+1}\widehat{h}^{n+1,(j)} - (\rho h)^n}{\Delta t} &=& A_{\rho h}^{(j)} + I_{\rho h}^{(j-1)}\nonumber\\
+&& + \nabla\cdot\frac{\kth^{n+1,(j-1)}}{c_p^{n+1,(j-1)}}\nabla\widehat{h}^{n+1,(j)} + \frac{1}{2}\left(\nabla\cdot\frac{\kth^n}{c_p^n}\nabla h^n - \nabla\cdot\frac{\kth^{n+1,(j-1)}}{c_p^{n+1,(j-1)}}\nabla h^{n+1,(j-1)}\right)\nonumber\\
+&& - \frac{1}{2}\left(\sum_k\nabla\cdot\frac{\xi_k^n k_{\rm th}^n}{c_p^n}\nabla X_k^n + \sum_k\nabla\cdot\frac{\xi_k^{n+1,(j-1)} k_{\rm th}^{n+1,(j-1)}}{c_p^{n+1,(j-1)}}\nabla\widehat{X}_k^{n+1,(j)}\right)\nonumber\\
+&& - \frac{1}{2}\left(\nabla\cdot\frac{h_p^n k_{\rm th}^n}{c_p^n}\nabla p_0 + \nabla\cdot\frac{h_p^{n+1,(j-1)}k_{\rm th}^{n+1,(j-1)}}{c_p^{n+1,(j-1)}}\nabla p_0\right),\label{eq:sdc enthalpy 3}
+\end{eqnarray}
+
+{\bf Step 4C:} ({\it Advance thermodynamic variables})\\ \\
+Define $Q_{\rho X_k}^{(j)}$ as the right hand side of (\ref{eq:sdc species 3}) without the $I_{\rho X_k}^{(j-1)}$ term, and define $Q_{\rho h}^{(j)}$ as the right hand side of (\ref{eq:sdc enthalpy 3}) without the $I_{\rho h}^{(j-1)}$ term.  Use {\tt VODE} to integrate (\ref{eq:species}) and (\ref{eq:enthalpy}) over $\Delta t$ to advance $(\rho X_k, \rho h)^n$ to $(\rho X_k, \rho h)^{n+1,(j)}$ using the piecewise-constant advection and diffusion source terms:
+\begin{eqnarray}
+\frac{\partial(\rho X_k)}{\partial t} &=& Q_{\rho X_k}^{(j)} + \rho\dot\omega_k\\
+\frac{\partial(\rho h)}{\partial t} &=& Q_{\rho h}^{(j)} + \rho\Hnuc.
+\end{eqnarray}
+At this point we can define $I_{\rho X_k}^{(j)}$, $I_{\rho h}^{(j)}$, and any other $I$ terms we need depending on 
+our species and enthalpy edge state prediction types, for use in the predictor in the next time step.  In our first implementation, we are predicting $\rho X_k$ and $\rho h$, in which case we define:
+\begin{eqnarray}
+I_{\rho X_k}^{(j)} &=& \frac{(\rho X_k)^{n+1,(j)} - (\rho X_k)^n}{\Delta t} - Q_{\rho X_k}^{(j)}\\
+I_{\rho h}^{(j)} &=& \frac{(\rho h)^{n+1,(j)} - (\rho h)^n}{\Delta t} - Q_{\rho h}^{(j)}.
+\end{eqnarray}
+
+{\bf Step 5:} ({\it Advance velocity and dynamic pressure})\\ \\
+Similar to the original MAESTROeX algorithm, we first compute the face-centered, time-centered velocities, $\Ub^{\nph,\pred}$
+using a Godunov approach \citep{XRB_III}. Then, we update
+the velocity field $\Ub^n$ to $\Ub^{n+1,\dagger}$ by discretizing
+equation (\ref{eq:momentum}) as
+\begin{equation}
+\Ub^{n+1,\dagger}
+= \Ub^n - \dt \left[\uadvtwo \cdot \nabla \Ub^{\nph,\pred} \right]
+ - \dt \left[ \frac{\beta_0^\nph}{\rho^\nph} \nabla \left( \frac{\pi^\nmh}{\beta_0^\nmh} \right) + \frac{\left(\rho^\nph-\rho_0^\nph\right)}{\rho^\nph} g^{\nph} \eb_r \right],
+\end{equation}
+where
+\begin{equation}
+\rho^\nph = \frac{\rho^n + \rho^{n+1}}{2}, \qquad \rho_0^\nph = \frac{\rho_0^n + \rho_0^{n+1}}{2}.
+\end{equation}
+Again, the $\dagger$ superscript refers
+to the fact that the updated velocity does not satisfy the divergence constraint,
+\begin{equation}
+\nabla \cdot \left(\beta_0^{n+1} \Ub^{n+1} \right) = \beta_0^{n+1} \left[ S^{n+1} - \frac{1}{\gammaonebar^{n+1}p_0^{n+1}}\left(\frac{\partial p_0}{\partial t}\right)^{\nph}\right].\label{eq:div3}
+\end{equation}
+We use an approximate projection to project $\Ub^{n+1,\dagger}$ onto the space of velocities that satisfy the constraint to obtain $\Ub^{n+1}$ using a ``nodal'' projection.
+This projection necessarily differs from the MAC projection used in
+{\bf Step 1} and {\bf Step 3} because the velocities in those steps are defined
+on faces and $\Ub^{n+1}$ is defined at cell centers, requiring different divergence
+and gradient operators..
+
+
+\section{Numerical Algorithm} \label{sec:algorithm}
+
+
+\section{Results} \label{sec:results}
+
+
+%% For this sample we use BibTeX plus aasjournals.bst to generate the
+%% the bibliography. The sample63.bib file was populated from ADS. To
+%% get the citations to show in the compiled file do the following:
+%%
+%% pdflatex sample63.tex
+%% bibtext sample63
+%% pdflatex sample63.tex
+%% pdflatex sample63.tex
+
+\bibliography{references}{}
+\bibliographystyle{aasjournal}
+
+%% This command is needed to show the entire author+affiliation list when
+%% the collaboration and author truncation commands are used.  It has to
+%% go at the end of the manuscript.
+%\allauthors
+
+%% Include this line if you are using the \added, \replaced, \deleted
+%% commands to see a summary list of all changes at the end of the article.
+%\listofchanges
+\listofchanges
+
+\end{document}
+
+% End of file `sample63.tex'.
