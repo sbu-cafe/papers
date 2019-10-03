@@ -102,7 +102,7 @@ The low Mach number fluid equations are given by
     \pd{\Ub}{t} &= - \Ub\cdot\nabla\Ub - \frac{\beta_0}{\rho}\nabla\left(\frac{\pi}{\beta_0}\right) - \frac{\rho - \rho_0}{\rho} g \bm{e}_r,\\
     \pd{\left(\rho h\right)}{t} &= -\nabla\cdot\left(\rho h \Ub\right) + \md{p_0}{t} + \rho H_{\mathrm{nuc}},
 \end{align}
-where $\rho$, $\Ub$ and $h$ are the mass density, fluid velocity and specific enthalpy, $X_k$ and $\dot{\omega}_k$ are the species mass fraction and production rate of species $k$, and $H_{\mathrm{nuc}}$ is the energy release per time per unit mass. From the base state pressure, we can define a one-dimensional base state density, $\rho_0 = \rho_0(r, t)$, which represents the lateral average and is in hydrostatic equilibrium with $p_0$:
+where $\rho$, $\Ub$ and $h$ are the mass density, fluid velocity and specific enthalpy, $X_k$ and $\dot{\omega}_k$ are the species mass fraction and production rate of species $k$, and $H_{\mathrm{nuc}}$ is the energy release per time per unit mass. \maestroex~defines the base state pressure $p_0$ to be consistent with the one-dimensional base state density, $\rho_0 = \rho_0(r, t)$, which represents the lateral average and is in hydrostatic equilibrium with $p_0$:
 \begin{equation}
     \nabla p_0 = -\rho_0 g \bm{e}_r,
 \end{equation}
