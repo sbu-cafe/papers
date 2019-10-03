@@ -284,7 +284,7 @@ where here
 \frac{Dp_0}{Dt} =
 \begin{cases}
 \frac{p_0^{n+1,*} - p_0^n}{\Delta t} + \left(\uadvone \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n}& {\rm (planar)} \\
-\frac{p_0^{n+1,*} - p_0^n}{\Delta t} + \left[ \nabla \cdot \left (\uadvone p_0^{\nph} \right ) - p_0^{\nph} \nabla \cdot \uadvone \right]& {\rm (spherical)}
+\frac{p_0^{n+1,*} - p_0^n}{\Delta t} + \left[ \nabla \cdot \left (\uadvone p_0^{n} \right ) - p_0^{n} \nabla \cdot \uadvone \right]& {\rm (spherical)}
 \end{cases}
 ,
 \end{equation}
@@ -392,7 +392,7 @@ where here
 \begin{equation}
 \frac{Dp_0}{Dt} =
 \begin{cases}
-\frac{p_0^{n+1} - p_0^n}{\Delta t} + \left(\uadvtwo \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n}& {\rm (planar)} \\
+\frac{p_0^{n+1} - p_0^n}{\Delta t} + \left(\uadvtwo \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{\nph}& {\rm (planar)} \\
 \frac{p_0^{n+1} - p_0^n}{\Delta t} + \left[ \nabla \cdot \left (\uadvtwo p_0^{\nph} \right ) - p_0^{\nph} \nabla \cdot \uadvtwo \right]& {\rm (spherical)}
 \end{cases}
 ,
