@@ -99,7 +99,7 @@ The technique that we use in \maestroex~is to modify the fluid equations themsel
 The low Mach number fluid equations are given by 
 \begin{align}
     \pd{\left(\rho X_k\right)}{t} &= - \nabla\cdot\left(\rho X_k \Ub \right) + \rho\dot{\omega}_k, \\
-    \pd{\Ub}{t} &= - \Ub\cdot\nabla\Ub - \frac{\beta_0}{\rho}\nabla\left(\frac{\pi}{\beta_0}\right) - \frac{\rho - \rho_0}{\rho}\bm{e}_r,\\
+    \pd{\Ub}{t} &= - \Ub\cdot\nabla\Ub - \frac{\beta_0}{\rho}\nabla\left(\frac{\pi}{\beta_0}\right) - \frac{\rho - \rho_0}{\rho} g \bm{e}_r,\\
     \pd{\left(\rho h\right)}{t} &= -\nabla\cdot\left(\rho h \Ub\right) + \md{p_0}{t} + \rho H_{\mathrm{nuc}},
 \end{align}
 where $\rho$, $\Ub$ and $h$ are the mass density, fluid velocity and specific enthalpy, $X_k$ and $\dot{\omega}_k$ are the species mass fraction and production rate of species $k$, and $H_{\mathrm{nuc}}$ is the energy release per time per unit mass. From the base state pressure, we can define a one-dimensional base state density, $\rho_0 = \rho_0(r, t)$, which represents the lateral average and is in hydrostatic equilibrium with $p_0$:
@@ -166,7 +166,7 @@ New versions of the codes are released on the first of each month. In the case o
 
 As described in \cite{Zingale2011}, to incorporate rotation in our equation set, we add the Coriolis and/or centrifugal terms to the velocity evolution equation:
 \begin{equation}
-    \pd{\Ub}{t} = -\Ub\cdot\nabla\Ub - \frac{\beta_0}{\rho}\nabla\left(\frac{\pi}{\beta_0}\right) - \frac{\rho - \rho_0}{\rho}\bm{e}_r - 2\boldsymbol{\Omega} \times \Ub - \boldsymbol{\Omega} \times (\boldsymbol{\Omega} \times \bm{r}),
+    \pd{\Ub}{t} = -\Ub\cdot\nabla\Ub - \frac{\beta_0}{\rho}\nabla\left(\frac{\pi}{\beta_0}\right) - \frac{\rho - \rho_0}{\rho} g \bm{e}_r - 2\boldsymbol{\Omega} \times \Ub - \boldsymbol{\Omega} \times (\boldsymbol{\Omega} \times \bm{r}),
 \end{equation}
 where $\boldsymbol{\Omega}$ is the angular velocity, $\bm{F}_\text{Coriolis}=- 2\boldsymbol{\Omega} \times \Ub$ is the Coriolis force and $\bm{F}_\text{centrifugal}= - \boldsymbol{\Omega} \times (\boldsymbol{\Omega} \times \bm{r})$ the centrifugal force.  Note that for slowly rotating systems it is a reasonable approximation to ignore the centrifugal force.
 
