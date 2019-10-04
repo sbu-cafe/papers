@@ -1,0 +1,56 @@
+- Author Block:
+    - Yuri's at Southhampton now?
+
+- Introduction:
+    - Need some references
+    - Need Yuri's input on his papers
+    - Need to summarize the Astronum '18 paper
+
+- Flame Properties:
+    - Make axis labels on 1D speed plots larger
+    - What is Table XX? Was it the original 1D flame table, and should we include it if so?
+    
+- Initial Model:
+    - Next to "we compute T(y) and (ρe)(y) from the equation of state", it says show. Should we
+        include an equation for that? There is a plot showing ρ and T as functions of y (Figure 3).
+    
+- The "Simulation and Results" section needs work:
+    
+    - The introductory part is bulleted
+    
+    - General Features:
+        - Figure 4 (Abar) needs a description
+        - Discuss the hurricane in the z-velocity plots
+        - Talk about the instability at the top, noise at the bottom?
+        
+    - Flame Acceleration:
+        - Need to standardize the names of the runs
+        - Need to thicken the line for the standard run in the speed plot
+        - Change axis and legend fonts on 2D speed plot
+        
+    - Boosting:
+        - Need to write, currently just two sentences
+        
+    - Entrainment, Flow Features:
+        - Add a streamline plot
+        - Reinterpret the phase plots?
+        
+    - Rotation Rate:
+        - We started it further from the axis
+        - Discuss the effect on the flame speed
+        
+    - Reaction Network:
+        - Flame speed and energy generation drop by a small factor
+        - Abar plots show much slower development
+        
+    - Resolution:
+        - There is effectively no change in flame speed
+        - Are there other quantities we want to look at?
+        
+- So does the "Discussion" section:
+    - Turn bullet points into a few paragraphs
+    - These studies complement the _
+    - Talk more about mixed bursts and 3D, and write about MHD and radiation transport
+    
+- Appendix:
+    - Write about the diffusion tests?
