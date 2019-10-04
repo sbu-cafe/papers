@@ -3,13 +3,14 @@ Many astrophysical flows are highly subsonic.  In this regime,
 sound waves carry sufficiently little energy that they do not
 significantly affect the convective dynamics of the system.  In many
 of these flows, modeling long-time convective dynamics are of
-interest, and numerical approaches based on compressible hydrodynamics
-are intractable, even on modern supercomputers.  One approach to this
+interest, and numerical approaches based on \added{explicit} compressible hydrodynamics
+are intractable, even on modern supercomputers.  \replaced{One approach to this
 problem is to use low Mach number models.  In a low Mach number
-approach, sound waves are eliminated from the governing equations
+approach,}{Our approach to this problem is to use a low Mach number model where} 
+sound waves are eliminated from the governing equations
 while retaining compressibilitiy effects due to, e.g., nuclear energy
-release, stratification, compositional changes, and thermal diffusion.  When the Mach
-number (the ratio of the characteristic fluid velocity over the
+release, stratification, compositional changes, and thermal diffusion.
+When the Mach number (the ratio of the characteristic fluid velocity over the
 characteristic sound speed; Ma $= U/c$) is small, the resulting system
 can be numerically integrated with much larger time steps than a
 compressible model.  Specifically, the time step increase is at least
@@ -18,33 +19,51 @@ computationally expensive due to the presence of additional linear
 solves, but for many problems of interest the overall gains in
 efficiency can easily be an order of magnitude or more.
 
-Low Mach number models have been developed for a variety of contexts
+\explain{re-ordered discussion of other codes and approaches;
+kept text intact unless indicated otherwise}
+Low Mach number models \added{that do not contain acoustic waves}
+have been developed for a variety of contexts
 including combustion \citep{day2000numerical}, terrestrial atmospheric
 modeling \citep{durran:1989,oneill:2014,duarte2015low}, and elastic
-solids \citep{abbate2017all}.  For astrophysical applications, a
+solids \citep{abbate2017all}.  
+For astrophysical applications, a
 number of approaches to modeling low Mach number flows have been
 developed in recent years.  One of the more similar approaches to ours is
 \cite{Lin:2006}, however this approach is only first-order accurate and does
-not account for atmospheric expansion.  There are also semi-implicit all-Mach
+not account for atmospheric expansion.
+\added{There are several other approaches that retain the effects of acoustic wave 
+propagation with various strategies to efficiently and robustly handle 
+the low Mach number limit.}
+In the reduced speed of sound technique (RSST) and related
+methods, the speed of sound is artificially reduced by including a
+suitable scaling factor in the continuity equation, reducing the
+restriction on the size of the time step
+\citep{Rempel2005,Hotta2012,Wang2015,Takeyama2017,Iijima2018}.
+There are \deleted{also} semi-implicit all-Mach
 number solvers, where the Euler equations are split into an acoustic
 part and an advective part
 \citep{Kwatra2009,Degond2009,Cordier2012,Haack2012,Happenhofer2013,Chalons2016,Padioleau2019}.
 The fast acoustic waves are then solved using implicit time
 integration, while the slow material waves are solved explicitly.
-Another approach is to use preconditioned all-Mach number solvers
-\citep{Miczek2014,Barsukow2016}, where the numerical flux is
-multiplied by a preconditioning matrix.  This reduces the stiffness of
-the system at low Mach numbers, while retaining the correct scaling
-behavior. In the reduced speed of sound technique (RSST) and related
-methods, the speed of sound is artificially reduced by including a
-suitable scaling factor in the continuity equation, reducing the
-restriction on the size of the time step
-\citep{Rempel2005,Hotta2012,Wang2015,Takeyama2017,Iijima2018}.
-Finally, there are fully implicit time integration codes for the
+There are also fully implicit time integration codes for the
 compressible Euler equations
-\citep{Viallet2011,kifonidis:2012,Viallet2015,Goffrey2016}.  The MUSIC code
+\citep{kifonidis:2012,Viallet2015,Goffrey2016}.
+\explain{removed outdated Viallet2011 citation and corrected the typo in the Viallet2015 citation}
+The MUSIC code
 uses fully implicit time integration for the compressible Euler
 equations, which therefore allows for arbitrarily large time steps.
+\added{To resolve potential pressure scaling issues in very low Mach number flow
+in explicit or implicit schemes, }
+another approach is to use preconditioned all-Mach number solvers
+\citep{Miczek2015,Barsukow2016}
+\added{to properly capture pressure fluctuations in the low Mach number regime
+(see \citealt{guillard2017behaviour} for discussion).}
+\replaced{, where}{The numerical flux is
+multiplied by a preconditioning matrix}\replaced{.  This}{ that} reduces the stiffness of
+the system at low Mach numbers, while retaining the correct scaling
+behavior \added{in an acoustic limit of the Euler equations that 
+retains $\mathcal{O}$(Ma) pressure fluctuations}.
+
 
 Previously, we developed the low Mach number astrophysical solver, MAESTRO.
 MAESTRO is a block-structured, Cartesian grid finite-volume, adaptive mesh refinement (AMR)

@@ -7,590 +7,437 @@
 @String{ SJSSC   = "SIAM J. Sci. Statist. Comput."}
 @String{ CAMCOS  = "Communications in Applied Mathematics and Computational Science"}
 
-@ARTICLE{yt,
-   author = {{Turk}, M.~J. and {Smith}, B.~D. and {Oishi}, J.~S. and {Skory}, S. and
-{Skillman}, S.~W. and {Abel}, T. and {Norman}, M.~L.},
-    title = "{yt: A Multi-code Analysis Toolkit for Astrophysical Simulation Data}",
-  journal = APJ:sup,
-archivePrefix = "arXiv",
-   eprint = {1011.3514},
- primaryClass = "astro-ph.IM",
- keywords = {cosmology: theory, methods: data analysis, methods: numerical},
-     year = 2011,
-    month = jan,
-   volume = 192,
-      eid = {9},
-    pages = {9},
-      doi = {10.1088/0067-0049/192/1/9},
-   adsurl = {http://adsabs.harvard.edu/abs/2011ApJS..192....9T},
-  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+@article{yt,
+  title={yt: A multi-code analysis toolkit for astrophysical simulation data},
+  author={Turk, Matthew J and Smith, Britton D and Oishi, Jeffrey S and Skory, Stephen and Skillman, Samuel W and Abel, Tom and Norman, Michael L},
+  journal={The Astrophysical Journal Supplement Series},
+  volume={192},
+  number={1},
+  pages={9},
+  year={2010},
+  publisher={IOP Publishing}
 }
 
 @article{Fan2019,
-abstract = {We present MAESTROeX, a massively parallel solver for low Mach number astrophysical flows. The underlying low Mach number equation set allows for efficient, long-time integration for highly subsonic flows compared to compressible approaches. MAESTROeX is suitable for modeling full spherical stars as well as well as planar simulations of dynamics within localized regions of a star, and can robustly handle several orders of magnitude of density and pressure stratification. Previously, we have described the development of the predecessor of MAESTROeX, called MAESTRO, in a series of papers. Here, we present a new, greatly simplified temporal integration scheme that retains the same order of accuracy as our previous approaches. We also explore the use of alternative spatial mapping of the one-dimensional base state onto the full Cartesian grid. The code leverages the new AMReX software framework for block-structured adaptive mesh refinement (AMR) applications, allowing for scalability to large fractions of leadership-class machines. Using our previous studies on the convective phase of single-degenerate progenitor models of Type Ia supernovae as a guide, we characterize the performance of the code and validate the new algorithmic features. Like MAESTRO, MAESTROeX is fully open source.},
-archivePrefix = {arXiv},
-arxivId = {1908.03634},
-author = {Fan, Duoming and Nonaka, Andrew and Almgren, Ann S and Harpole, Alice and Zingale, Michael},
-eprint = {1908.03634},
-keywords = {abun-,convection,dances,general,hydrodynamics,methods,nuclear reactions,nucleosynthesis,numerical,supernovae},
-month = {aug},
-title = {{MAESTROeX: A Massively Parallel Low Mach Number Astrophysical Solver}},
-url = {http://arxiv.org/abs/1908.03634},
-year = {2019}
+  title={MAESTROeX: A Massively Parallel Low Mach Number Astrophysical Solver},
+  author={Fan, Duoming and Nonaka, Andrew and Almgren, Ann S and Harpole, Alice and Zingale, Michael},
+  journal={arXiv preprint arXiv:1908.03634},
+  year={2019}
 }
 
 @article{Zingale2019,
-abstract = {Simulations in stellar astrophysics involve the coupling of hydrodynamics and nuclear reactions under a wide variety of conditions, from simmering convective flows to explosive nucleosynthesis. Numerical techniques such as operator splitting (most notably Strang splitting) are usually employed to couple the physical processes, but this can affect the accuracy of the simulation, particularly when the burning is vigorous. Furthermore, Strang splitting does not have a straightforward extension to higher-order integration in time. We present a new temporal integration strategy based on spectral deferred corrections and describe the second- and fourth-order implementations in the open-source, finite-volume, compressible hydrodynamics code Castro. One notable advantage to these schemes is that they combine standard low-order discretizations for individual physical processes in a way that achieves an arbitrarily high order of accuracy. We demonstrate the improved accuracy of the new methods on several test problems of increasing complexity.},
-archivePrefix = {arXiv},
-arxivId = {1908.03661},
-author = {Zingale, M. and Katz, M. P. and Bell, J. B. and Minion, M. L. and Nonaka, A. J. and Zhang, W.},
-eprint = {1908.03661},
-keywords = {computational methods,hydrodynamics,nuclear astrophysics,nucleosynthe-,sis,stellar nucleosynthesis},
-month = {aug},
-title = {{Improved Coupling of Hydrodynamics and Nuclear Reactions via Spectral Deferred Corrections}},
-url = {http://arxiv.org/abs/1908.03661},
-year = {2019}
+  title={Improved Coupling of Hydrodynamics and Nuclear Reactions via Spectral Deferred Corrections},
+  author={Zingale, M and Katz, MP and Bell, JB and Minion, ML and Nonaka, AJ and Zhang, W},
+  journal={arXiv preprint arXiv:1908.03661},
+  year={2019}
 }
 
-@article{Miczek2014,
-abstract = {Many problems in stellar astrophysics feature flows at low Mach numbers. Conventional compressible hydrodynamics schemes frequently used in the field have been developed for the transonic regime and exhibit excessive numerical dissipation for these flows. While schemes were proposed that solve hydrodynamics strictly in the low Mach regime and thus restrict their applicability, we aim at developing a scheme that correctly operates in a wide range of Mach numbers. Based on an analysis of the asymptotic behavior of the Euler equations in the low Mach limit we propose a novel scheme that is able to maintain a low Mach number flow setup while retaining all effects of compressibility. This is achieved by a suitable modification of the well-known Roe solver. Numerical tests demonstrate the capability of this new scheme to reproduce slow flow structures even in moderate numerical resolution. Our scheme provides a promising approach to a consistent multidimensional hydrodynamical treatment of astrophysical low Mach number problems such as convection, instabilities, and mixing in stellar evolution.},
-archivePrefix = {arXiv},
-arxivId = {1409.8289},
-author = {Miczek, F. and R{\"{o}}pke, F. K. and Edelmann, P. V. F.},
-doi = {10.1051/0004-6361/201425059},
-eprint = {1409.8289},
-issn = {0004-6361},
-journal = {Astronomy {\&} Astrophysics},
-keywords = {hydrodynamics – methods: numerical},
-mendeley-tags = {hydrodynamics – methods: numerical},
-month = {apr},
-pages = {A50},
-title = {{New numerical solver for flows at various Mach numbers}},
-url = {http://dx.doi.org/10.1051/0004-6361/201425059},
-volume = {576},
-year = {2015}
+@article{Zingale2018,
+	doi = {10.1088/1742-6596/1031/1/012024},
+	year = 2018,
+	month = {may},
+	publisher = {{IOP} Publishing},
+	volume = {1031},
+	pages = {012024},
+	author = {M. Zingale and A. S. Almgren and M. G. Barrios Sazo and V. E. Beckner and J. B. Bell and B. Friesen and A. M. Jacobs and M. P. Katz and C. M. Malone and A. J. Nonaka and D. E. Willcox and W. Zhang},
+	title = {Meeting the Challenges of Modeling Astrophysical Thermonuclear Explosions: Castro, Maestro, and the {AMReX} Astrophysics Suite},
+	journal = {Journal of Physics: Conference Series}
 }
 
-
-@article{Barsukow2016,
-abstract = {Based on the Roe solver a new technique that allows to correctly represent low Mach number flows with a discretization of the compressible Euler equations was proposed in Miczek et al.: New numerical solver for flows at various mach numbers. A{\&}A 576, A50 (2015). We analyze properties of this scheme and demonstrate that its limit yields a discretization of the continuous limit system. Furthermore we perform a linear stability analysis for the case of explicit time integration and study the performance of the scheme under implicit time integration via the evolution of its condition number. A numerical implementation demonstrates the capabilities of the scheme on the example of the Gresho vortex which can be accurately followed down to Mach numbers of {\~{}}1e-10 .},
-archivePrefix = {arXiv},
-arxivId = {1612.03910},
-author = {Barsukow, Wasilij and Edelmann, Philipp V. F. and Klingenberg, Christian and Miczek, Fabian and Roepke, Friedrich K.},
-eprint = {1612.03910},
-keywords = {2000,asymptotic,compressible euler equations,flux preconditioning,low mach number,mathematics subject classification,msc 35b40,msc 35q31,msc 65m08,msc 76n15,preserving},
-month = {dec},
-title = {{A numerical scheme for the compressible low-Mach number regime of ideal fluid dynamics}},
-url = {http://arxiv.org/abs/1612.03910},
-year = {2016}
-}
-
-@article{Rempel2005,
-abstract = {We present a simple model for the solar differential rotation and meridional circulation based on a mean field parameterization of the Reynolds stresses that drive the differential rotation. We include the subadiabatic part of the tachocline and show that this, in conjunction with turbulent heat conductivity within the convection zone and overshoot region, provides the key physics to break the Taylor-Proudman constraint, which dictates differential rotation with contour lines parallel to the axis of rotation in case of an isentropic stratification. We show that differential rotation with contour lines inclined by 10°-30° with respect to the axis of rotation is a robust result of the model, which does not depend on the details of the Reynolds stress and the assumed viscosity, as long as the Reynolds stress transports angular momentum toward the equator. The meridional flow is more sensitive with respect to the details of the assumed Reynolds stress, but a flow cell, equatorward at the base of the convection zone and poleward in the upper half of the convection zone, is the preferred flow pattern.},
-archivePrefix = {arXiv},
-arxivId = {arXiv:astro-ph/0604451v1},
-author = {Rempel, M.},
-doi = {10.1086/428282},
-eprint = {0604451v1},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-month = {apr},
-number = {2},
-pages = {1320--1332},
-primaryClass = {arXiv:astro-ph},
-title = {{Solar Differential Rotation and Meridional Flow: The Role of a Subadiabatic Tachocline for the Taylor‐Proudman Balance}},
-url = {http://stacks.iop.org/0004-637X/622/i=2/a=1320},
-volume = {622},
-year = {2005}
-}
-
-@article{Hotta2012,
-abstract = {Context. The anelastic approximation is often adopted in numerical calculation with low Mach number, such as stellar internal convection. This approximation requires frequent global communication, because of an elliptic partial differential equation. Frequent global communication is negative factor for the parallel computing with a large number of CPUs. Aims. The main purpose of this paper is to test the validity of a method that artificially reduces the speed of sound for the compressible fluid equations in the context of stellar internal convection. The reduction of speed of sound allows for larger time steps in spite of low Mach number, while the numerical scheme remains fully explicit and the mathematical system is hyperbolic and thus does not require frequent global communication. Methods. Two and three dimensional compressible hydrodynamic equations are solved numerically. Some statistical quantities of solutions computed with different effective Mach numbers (due to reduction of speed of sound) are compared to test the validity of our approach. Results. Numerical simulations with artificially reduced speed of sound are a valid approach as long as the effective Mach number (based on the reduced speed of sound) remains less than 0.7.},
-archivePrefix = {arXiv},
-arxivId = {1201.1061},
-author = {Hotta, H. and Rempel, M. and Yokoyama, T. and Iida, Y. and Fan, Y.},
-doi = {10.1051/0004-6361/201118268},
-eprint = {1201.1061},
-issn = {0004-6361},
-journal = {Astronomy {\&} Astrophysics},
-keywords = {convection,interior,interiors,methods,numerical,stars,sun},
-month = {mar},
-pages = {A30},
-title = {{Numerical calculation of convection with reduced speed of sound technique}},
-url = {http://dx.doi.org/10.1051/0004-6361/201118268},
-volume = {539},
-year = {2012}
-}
-
-@article{Gough1968,
-abstract = {Subsonic thermal convection or internal gravity waves from formal scale analysis of equations of motion in plane parallel atmosphere},
-author = {Gough, D. O.},
-doi = {10.1175/1520-0469(1969)026<0448:TAAFTC>2.0.CO;2},
-issn = {0022-4928},
-journal = {Journal of the Atmospheric Sciences},
-month = {may},
-number = {3},
-pages = {448--456},
-title = {{The Anelastic Approximation for Thermal Convection}},
-url = {http://journals.ametsoc.org/doi/abs/10.1175/1520-0469{\%}281969{\%}29026{\%}3C0448{\%}3ATAAFTC{\%}3E2.0.CO{\%}3B2},
-volume = {26},
-year = {1969}
-}
-
-@article{Durran1989,
-abstract = {Dale R. . ABSTRACT. A new diagnostic is presented which exhibits many advantages over the conventional forms of the continuity},
-author = {Durran, Dale R.},
-doi = {10.1175/1520-0469(1989)046<1453:ITAA>2.0.CO;2},
-issn = {0022-4928},
-journal = {Journal of the Atmospheric Sciences},
-month = {jun},
-number = {11},
-pages = {1453--1461},
-title = {{Improving the Anelastic Approximation}},
-url = {http://journals.ametsoc.org/doi/abs/10.1175/1520-0469(1989)046{\%}3C1453{\%}3AITAA{\%}3E2.0.CO{\%}3B2},
-volume = {46},
-year = {1989}
-}
-
-@article{Day2000,
-abstract = {We present an adaptive algorithm for low Mach number reacting flows with$\backslash$ncomplex chemistry. Our approach uses a form of the low Mach number$\backslash$nequations that discretely conserves both mass and energy. The$\backslash$ndiscretization methodology is based on a robust projection formulation$\backslash$nthat accommodates large density contrasts. The algorithm uses an$\backslash$noperator-split treatment of stiff reaction terms and includes effects of$\backslash$ndifferential diffusion. The basic computational approach is embedded in$\backslash$nan adaptive projection framework that uses structured hierarchical grids$\backslash$nwith subcycling in time that preserves the discrete conservation$\backslash$nproperties of the underlying single-grid algorithm. We present numerical$\backslash$nexamples illustrating the performance of the method on both premixed and$\backslash$nnon-premixed dames.},
-author = {Day, M. S. and Bell, J. B.},
-doi = {10.1088/1364-7830/4/4/309},
-isbn = {1364-7830$\backslash$r1741-3559},
-issn = {1364-7830},
-journal = {Combustion Theory and Modelling},
-month = {dec},
-number = {4},
-pages = {535--556},
-title = {{Numerical simulation of laminar reacting flows with complex chemistry}},
-url = {http://www.tandfonline.com/doi/abs/10.1088/1364-7830/4/4/309},
-volume = {4},
-year = {2000}
-}
-
-@article{Almgren2006a,
-abstract = {We introduce a low Mach number equation set for the large-scale numerical simulation of carbon-oxygen white dwarfs experiencing a thermonuclear deflagration. Since most of the interesting physics in a Type Ia supernova transpires at Mach numbers from 0.01 to 0.1, such an approach enables both a considerable increase in accuracy and a savings in computer time compared with frequently used compressible codes. Our equation set is derived from the fully compressible equations using low Mach number asymptotics, but without any restriction on the size of perturbations in density or temperature. Comparisons with simulations that use the fully compressible equations validate the low Mach number model in regimes where both are applicable. Comparisons to simulations based on the more traditional anelastic approximation also demonstrate the agreement of these models in the regime for which the anelastic approximation is valid. For low Mach number flows with potentially finite amplitude variations in density and temperature, the low Mach number model overcomes the limitations of each of the more traditional models and can serve as the basis for an accurate and efficient simulation tool.},
-archivePrefix = {arXiv},
-arxivId = {astro-ph/0606496},
-author = {Almgren, A. S. and Bell, J. B. and Rendleman, C. A. and Zingale, M.},
-doi = {10.1086/498426},
-eprint = {0606496},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {Abundances,Convection,Hydrodynamics,Methods: Numerical,Nuclear Reactions,Nucleosynthesis,Stars: Supernovae: General,Stars: White Dwarfs,abundances — convection — methods: nu- merical,nucleosynthesis,supernovae: general — white dwarfs — hydrodynamics},
-mendeley-groups = {Low Mach Flows},
-mendeley-tags = {abundances — convection — methods: nu- merical,nucleosynthesis,supernovae: general — white dwarfs — hydrodynamics},
-month = {feb},
-number = {2},
-pages = {922--936},
-primaryClass = {astro-ph},
-title = {{Low Mach Number Modeling of Type Ia Supernovae. I. Hydrodynamics}},
-url = {http://adsabs.harvard.edu/abs/2006ApJ...637..922A},
-volume = {637},
-year = {2006}
-}
-
-
-@article{Vasil2013,
-author = {Vasil, Geoffrey M. and Lecoanet, Daniel and Brown, Benjamin P. and Wood, Toby S. and Zweibel, Ellen G.},
-doi = {10.1088/0004-637X/773/2/169},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {1,atmospheres,color figures,in astrophysical fluid dynamics,interior,interiors,introduction and motivation,online-only material,planets and satellites,stars,sun,the relevant timescales are},
-mendeley-groups = {Low Mach Flows},
-month = {aug},
-number = {2},
-pages = {169},
-title = {{Energy Conservation and Gravity Waves in Sound-Proof Treatments of Stellar Interiors. II. Lagrangian Constrained Analysis}},
-url = {http://stacks.iop.org/0004-637X/773/i=2/a=169?key=crossref.21d2d67f03cd2d6cdc65e8b0349d038f},
-volume = {773},
-year = {2013}
-}
-
-@article{Nonaka2010,
-abstract = {Many astrophysical phenomena are highly subsonic, requiring specialized numerical methods suitable
- for long-time integration. In a series of earlier papers we described the development of MAESTRO , a
- low Mach number stellar hydrodynamics code that can be used to simulate long-time, low-speed flows
- that would be prohibitively expensive to model using traditional compressible codes. MAESTRO is
- based on an equation set derived using low Mach number asymptotics; this equation set does not
- explicitly track acoustic waves and thus allows a significant increase in the time step. MAESTRO is
- suitable for two- and three-dimensional local atmospheric flows as well as three-dimensional
- full-star flows. Here, we continue the development of MAESTRO by incorporating adaptive mesh
- refinement (AMR). The primary difference between MAESTRO and other structured grid AMR approaches
- for incompressible and low Mach number flows is the presence of the time-dependent base state, whose
- evolution is coupled to the evolution of the full solution. We also describe how to incorporate the
- expansion of the base state for full-star flows, which involves a novel mapping technique between
- the one-dimensional base state and the Cartesian grid, as well as a number of overall improvements
- to the algorithm. We examine the efficiency and accuracy of our adaptive code, and demonstrate that
- it is suitable for further study of our initial scientific application, the convective phase of
- Type Ia supernovae.},
-author = {Nonaka, A. and Almgren, A. S. and Bell, J. B. and Lijewski, M. J. and Malone, C. M. and Zingale, M.},
-doi = {10.1088/0067-0049/188/2/358},
-issn = {0067-0049},
-journal = {The Astrophysical Journal Supplement Series},
-keywords = {abundances,convection,general,hydrodynamics,methods,nuclear reactions,nucleosynthesis,numerical,supernovae,white dwarfs},
-mendeley-groups = {KinSync Folder,Low Mach Flows},
-month = {jun},
-number = {2},
-pages = {358--383},
-title = {{Maestro: an Adaptive Low Mach Number Hydrodynamics Algorithm for Stellar Flows}},
-url = {http://stacks.iop.org/0067-0049/188/i=2/a=358},
-volume = {188},
-year = {2010}
-}
-
-@book{Boussinesq1901,
-address = {Paris},
-author = {Boussinesq, Joseph},
-pages = {172},
-publisher = {Gauthier-Villars},
-title = {{Th{\'{e}}orie analytique de la chaleur}},
-year = {1903}
+@article{Boussinesq1901,
+  title={Theorie Analytique de la Chaleur vol 2 (Paris: Gauthier-Villars)},
+  author={Boussinesq, J},
+  year={1903}
 }
 
 @article{Ogura1962a,
-abstract = {The approximate equations of motion derived by Batchelor in 1953 are derived by a formal scale analysis, with the assumption that the percentage range in potential temperature is small and that the time scale is set by the Brunt-V{\{}{\"{a}}{\}}is{\{}{\"{a}}{\}}l{\{}{\"{a}}{\}} frequency. Acoustic waves are then absent. If the vertical scale is small compared to the depth of an adiabatic atmosphere, the system reduces to the (non-viscous) Boussinesq equations. The computation of the saturation vapor pressure for deep convection is complicated by the important effect of the dynamic pressure on the temperature. For shallow convection this effect is not important, and a simple set of reversible equations is derived.},
-author = {Ogura, Y. and Phillips, N. A.},
-journal = {Journal of the Atmospheric Sciences},
-isbn = {0022-4928},
-issn = {0022-4928},
-number = {2},
-pages = {173--179},
-title = {{Scale Analysis of Deep and Shallow Convection in the Atmosphere}},
-volume = {19},
-year = {1962}
+  title={Scale analysis of deep and shallow convection in the atmosphere},
+  author={Ogura, Yoshimitsu and Phillips, Norman A},
+  journal={Journal of the atmospheric sciences},
+  volume={19},
+  number={2},
+  pages={173--179},
+  year={1962}
 }
 
 @article{Almgren2006b,
-abstract = {We introduce a low Mach number equation set for the large-scale numerical simulation of carbon-oxygen white dwarfs experiencing a thermonuclear deflagration. Since most of the interesting physics in a Type Ia supernova transpires at Mach numbers from 0.01 to 0.1, such an approach enables both a considerable increase in accuracy and a savings in computer time compared with frequently used compressible codes. Our equation set is derived from the fully compressible equations using low Mach number asymptotics, but without any restriction on the size of perturbations in density or temperature. Comparisons with simulations that use the fully compressible equations validate the low Mach number model in regimes where both are applicable. Comparisons to simulations based on the more traditional anelastic approximation also demonstrate the agreement of these models in the regime for which the anelastic approximation is valid. For low Mach number flows with potentially finite amplitude variations in density and temperature, the low Mach number model overcomes the limitations of each of the more traditional models and can serve as the basis for an accurate and efficient simulation tool.},
-archivePrefix = {arXiv},
-arxivId = {astro-ph/0606496},
-author = {Almgren, A. S. and Bell, J. B. and Rendleman, C. A. and Zingale, M.},
-doi = {10.1086/498426},
-eprint = {0606496},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {Abundances,Convection,Hydrodynamics,Methods: Numerical,Nuclear Reactions,Nucleosynthesis,Stars: Supernovae: General,Stars: White Dwarfs,abundances — convection — methods: nu- merical,nucleosynthesis,supernovae: general — white dwarfs — hydrodynamics},
-mendeley-groups = {KinSync Folder,Low Mach Flows},
-mendeley-tags = {abundances — convection — methods: nu- merical,nucleosynthesis,supernovae: general — white dwarfs — hydrodynamics},
-month = {feb},
-number = {2},
-pages = {922--936},
-primaryClass = {astro-ph},
-title = {{Low Mach Number Modeling of Type Ia Supernovae. I. Hydrodynamics}},
-url = {http://adsabs.harvard.edu/abs/2006ApJ...637..922A},
-volume = {637},
-year = {2006}
+  title={Low Mach number modeling of type Ia supernovae. I. Hydrodynamics},
+  author={Almgren, Ann S and Bell, John B and Rendleman, Charles A and Zingale, Michael},
+  journal={The Astrophysical Journal},
+  volume={637},
+  number={2},
+  pages={922},
+  year={2006},
+  publisher={IOP Publishing}
 }
 
-
 @article{Viallet2011,
-abstract = {This paper describes the first steps of development of a new multidimensional time implicit code devoted to the study of hydrodynamical processes in stellar interiors. The code solves the hydrodynamical equations in spherical geometry and is based on the finite volume method. Radiation transport is taken into account within the diffusion approximation. Realistic equation of state and opacities are implemented, allowing the study of a wide range of problems characteristic of stellar interiors. We describe in details the numerical method and various standard tests performed to validate the method. We present preliminary results devoted to the description of stellar convection. We first perform a local simulation of convection in the surface layers of a A-type star model. This simulation is used to test the ability of the code to address stellar conditions and to validate our results, since they can be compared to similar previous simulations based on explicit codes. We then present a global simulation of turbulent convective motions in a cold giant envelope, covering 80{\%} in radius of the stellar structure. Although our implicit scheme is unconditionally stable, we show that in practice there is a limitation on the time step which prevent the flow to move over several cells during a time step. Nevertheless, in the cold giant model we reach a hydro CFL number of 100. We also show that we are able to address flows with a wide range of Mach numbers (10{\^{}}-3 {\textless} Ms{\textless} 0.5), which is impossible with an anelastic approach. Our first developments are meant to demonstrate that the use of an implicit scheme applied to a stellar evolution context is perfectly thinkable and to provide useful guidelines to optimise the development of an implicit multi-D hydrodynamical code.},
-archivePrefix = {arXiv},
-arxivId = {1103.1524},
-author = {Viallet, M. and Baraffe, I. and Walder, R.},
-doi = {10.1051/0004-6361/201016374},
-eprint = {1103.1524},
-issn = {0004-6361},
-journal = {Astronomy {\&} Astrophysics},
-keywords = {convection,hydrodynamics,hydrodynamics - convection -,interiors,methods,methods: numerical,numerical - stars,stars: interiors},
-pages = {A86},
-title = {{Towards a new generation of multi-dimensional stellar evolution models: development of an implicit hydrodynamic code}},
-url = {http://www.aanda.org/articles/aa/pdf/2011/07/aa16374-10.pdf{\%}5Cn},
-volume = {531},
-year = {2011}
+  title={Towards a new generation of multi-dimensional stellar evolution models: development of an implicit hydrodynamic code},
+  author={Viallet, M and Baraffe, I and Walder, R},
+  journal={Astronomy \& Astrophysics},
+  volume={531},
+  pages={A86},
+  year={2011},
+  publisher={EDP Sciences}
 }
 
 @article{Viallet2015,
-abstract = {This work is a continuation of our efforts to develop an efficient implicit solver for multidimensional hydrodynamics for the purpose of studying important physical processes in stellar interiors, such as turbulent convection and overshooting. We present an implicit solver that results from the combination of a Jacobian-Free Newton-Krylov method and a preconditioning technique tailored to the inviscid, compressible equations of stellar hydrodynamics. We assess the accuracy and performance of the solver for both 2D and 3D problems for Mach numbers down to {\$}10{\^{}}{\{}-6{\}}{\$}. Although our applications concern flows in stellar interiors, the method can be applied to general advection and/or diffusion-dominated flows. The method presented in this paper opens up new avenues in 3D modeling of realistic stellar interiors allowing the study of important problems in stellar structure and evolution.},
-archivePrefix = {arXiv},
-arxivId = {1512.03662},
-author = {Viallet, M. and Goffrey, T. and Baraffe, I. and Folini, D. and Geroux, C. and Popov, M. and Pratt, J. and Walder, R.},
-doi = {10.1051/0004-6361/201527339},
-eprint = {1512.03662},
-issn = {14320746},
-journal = {Efficient solution of large systems of linear PDEs in science},
-keywords = {hydrodynamics - methods,interiors,numerical - stars},
-month = {dec},
-title = {{A Jacobian-free Newton-Krylov method for time-implicit multidimensional hydrodynamics}},
-url = {http://dx.doi.org/10.1051/0004-6361/201527339},
-volume = {6},
-year = {2015}
+  title={A Jacobian-free Newton-Krylov method for time-implicit multidimensional hydrodynamics-Physics-based preconditioning for sound waves and thermal diffusion},
+  author={Viallet, Maxime and Goffrey, Tom and Baraffe, Isabelle and Folini, Doris and Geroux, Chris and Popov, MV and Pratt, Jane and Walder, Rolf},
+  journal={Astronomy \& Astrophysics},
+  volume={586},
+  pages={A153},
+  year={2016},
+  publisher={EDP Sciences}
 }
 
 @article{Goffrey2016,
-abstract = {We present the results of a numerical benchmark study for the MUlti-dimensional Stellar Implicit Code (MUSIC) based on widely applicable two- and three-dimensional compressible hydrodynamics problems relevant to stellar interiors. MUSIC is an implicit large eddy simulation code that uses implicit time integration, implemented as a Jacobian-free Newton Krylov method. A physics based preconditioning technique which can be adjusted to target varying physics is used to improve the performance of the solver. The problems used for this benchmark study include the Rayleigh-Taylor and Kelvin-Helmholtz instabilities, and the decay of the Taylor-Green vortex. Additionally we show a test of hydrostatic equilibrium, in a stellar environment which is dominated by radiative effects. In this setting the flexibility of the preconditioning technique is demonstrated. This work aims to bridge the gap between the hydrodynamic test problems typically used during development of numerical methods and the complex flows of stellar interiors. A series of multi-dimensional tests are performed and analysed. Each of these test cases is analysed with a simple, scalar diagnostic, with the aim of enabling direct code comparisons. As the tests performed do not have analytic solutions we verify MUSIC by comparing to established codes including ATHENA and the PENCIL code. MUSIC is able to both reproduce behaviour from established and widely-used codes as well as results expected from theoretical predictions. This benchmarking study concludes a series of papers describing the development of the MUSIC code and provides confidence in the future applications.},
-archivePrefix = {arXiv},
-arxivId = {1610.10053},
-author = {Goffrey, T. and Pratt, J. and Viallet, M. and Baraffe, I. and Popov, M. V. and Walder, R. and Folini, D. and Geroux, C. and Constantino, T.},
-doi = {10.1051/0004-6361/201628960},
-eprint = {1610.10053},
-issn = {0004-6361},
-journal = {Astronomy {\&} Astrophysics},
-keywords = {evolution,hydrodynamics,instabilities,methods,numerical,stars},
-month = {apr},
-pages = {A7},
-title = {{Benchmarking the Multidimensional Stellar Implicit Code MUSIC}},
-url = {http://dx.doi.org/10.1051/0004-6361/201628960},
-volume = {600},
-year = {2017}
+  title={Benchmarking the Multidimensional Stellar Implicit Code MUSIC},
+  author={Goffrey, T and Pratt, J and Viallet, M and Baraffe, I and Popov, MV and Walder, R and Folini, D and Geroux, C and Constantino, T},
+  journal={Astronomy \& Astrophysics},
+  volume={600},
+  pages={A7},
+  year={2017},
+  publisher={EDP Sciences}
 }
 
 @article{Zingale2011,
-author = {Zingale, M. and Nonaka, A. and Almgren, A. S. and Bell, J. B. and Malone, C. M. and Woosley, S. E.},
-doi = {10.1088/0004-637X/740/1/8},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {abundances,color figures,convection,general,hydrodynamics,methods,nuclear reactions,nucleosynthesis,numerical,online-only material,supernovae,white dwarfs},
-month = {oct},
-number = {1},
-pages = {8},
-title = {{The Convective Phase Preceding Type Ia Supernovae}},
-url = {http://stacks.iop.org/0004-637X/740/i=1/a=8?key=crossref.53411a5c5fabdc52c40675c128a718e9},
-volume = {740},
-year = {2011}
+  title={The convective phase preceding type ia supernovae},
+  author={Zingale, M and Nonaka, A and Almgren, AS and Bell, JB and Malone, CM and Woosley, SE},
+  journal={The Astrophysical Journal},
+  volume={740},
+  number={1},
+  pages={8},
+  year={2011},
+  publisher={IOP Publishing}
 }
 
 @article{Nonaka2011,
-abstract = {We extend our previous three-dimensional, full-star simulations of the final hours of convection preceding ignition in Type Ia supernovae to higher resolution using the adaptive mesh refinement capability of our low Mach number code, MAESTRO. We report the statistics of the ignition of the first flame at an effective 4.34 km resolution, and general flow field properties at an effective 2.17 km resolution. We find that off-center ignition is likely, with radius of 50 km most favored and a likely range of 40 to 75 km. This is consistent with our previous coarser (8.68 km resolution) simulations, implying that we have achieved sufficient resolution in our determination of likely ignition radii. The dynamics of the last few hot spots preceding ignition suggest that a multiple ignition scenario is not likely. With improved resolution, we can more clearly see the general flow pattern in the convective region, characterized by a strong outward plume with a lower speed recirculation. We show that the convective core is turbulent with a Kolmogorov spectrum and has a lower turbulent intensity and larger integral length scale than previously thought (on the order of 16 km s{\$}{\^{}}{\{}-1{\}}{\$} and 200 km, respectively), and we discuss the potential consequences for the first flames.},
-archivePrefix = {arXiv},
-arxivId = {1111.3086},
-author = {Nonaka, A. and Aspden, A. J. and Zingale, M. and Almgren, A. S. and Bell, J. B. and Woosley, S. E.},
-doi = {10.1088/0004-637X/745/1/73},
-eprint = {1111.3086},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-month = {nov},
-number = {1},
-pages = {73},
-title = {{High-Resolution Simulations of Convection Preceding Ignition in Type Ia Supernovae Using Adaptive Mesh Refinement}},
-url = {http://dx.doi.org/10.1088/0004-637X/745/1/73},
-volume = {745},
-year = {2011}
+  title={High-resolution simulations of convection preceding ignition in type ia supernovae using adaptive mesh refinement},
+  author={Nonaka, A and Aspden, AJ and Zingale, M and Almgren, AS and Bell, JB and Woosley, SE},
+  journal={The Astrophysical Journal},
+  volume={745},
+  number={1},
+  pages={73},
+  year={2011},
+  publisher={IOP Publishing}
 }
 
 @article{Malone2014a,
-abstract = {We present high-resolution, full-star simulations of the post-ignition phase of Type Ia supernovae using the compressible hydrodynamics code Castro. Initial conditions, including the turbulent velocity field and ignition site, are imported directly from a simulation of the last few hours of presupernova convection using a low Mach number code, Maestro. Adaptive mesh refinement allows the initial burning front to be modeled with an effective resolution of 36,8643 zones (136 m zone–1). The initial rise and expansion of the deflagration front are tracked until burning reaches the star's edge and the role of the background turbulence on the flame is investigated. The effect of artificially moving the ignition location closer to the star's center is explored. The degree to which turbulence affects the burning front decreases with increasing ignition radius since the buoyancy force is stronger at larger radii. Even central ignition—in the presence of a background convective flow field—is rapidly carried off-center as the flame is carried by the flow field. We compare our results to analytic models for burning thermals, and find that they reproduce the general trends of the bubble's size and mass, but underpredict the amount of buoyant acceleration due to simplifying assumptions of the bubble's properties. Overall, we find that the amount of mass that burns prior to flame break out is small, consistent with a "gravitationally confined detonation" occurring at a later epoch, but additional burning will occur following breakout that may modify this conclusion.},
-archivePrefix = {arXiv},
-arxivId = {arXiv:1309.4042v1},
-author = {Malone, C. M. and Nonaka, A. and Woosley, S. E. and Almgren, A. S. and Bell, J. B. and Dong, S. and Zingale, M.},
-doi = {10.1088/0004-637X/782/1/11},
-eprint = {arXiv:1309.4042v1},
-issn = {15384357},
-journal = {Astrophysical Journal},
-keywords = {abundances,color figures,convection,garc,general,hydrodynamics,methods,methods: numerical,nuclear reactions,nuclear reactions nucleosynthesis abundances,nucleosynthesis,numerical,of the stellar interior,online-only material,supernovae,supernovae:general,throughout an extended region,white dwarfs},
-month = {feb},
-number = {1},
-pages = {11--35},
-title = {{The Deflagration Stage of Chandrasekhar Mass Models For Type Ia Supernovae: I. Early Evolution}},
-url = {http://arxiv.org/abs/1309.4042 http://stacks.iop.org/0004-637X/782/i=1/a=11?key=crossref.763e834632a66b1b21300e972f7c6e40},
-volume = {782},
-year = {2014}
+  title={The deflagration stage of Chandrasekhar mass models for type Ia supernovae. I. Early evolution},
+  author={Malone, CM and Nonaka, A and Woosley, SE and Almgren, AS and Bell, JB and Dong, S and Zingale, M},
+  journal={The Astrophysical Journal},
+  volume={782},
+  number={1},
+  pages={11},
+  year={2014},
+  publisher={IOP Publishing}
 }
 
 @article{Gilet2013,
-author = {Gilet, C. and Almgren, A. S. and Bell, J. B. and Nonaka, A. and Woosley, S. E. and Zingale, M.},
-doi = {10.1088/0004-637X/773/2/137},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {color figures,convection,hydrodynamics,interiors,methods,numerical,online-only material,stars,turbulence},
-month = {aug},
-number = {2},
-pages = {137},
-title = {{Low Mach Number Modeling of Core Convection in Massive Stars}},
-url = {http://stacks.iop.org/0004-637X/773/i=2/a=137?key=crossref.279b6f6c8d48b60b0793df2e23672824},
-volume = {773},
-year = {2013}
+  title={Low mach number modeling of core convection in massive stars},
+  author={Gilet, C and Almgren, AS and Bell, JB and Nonaka, A and Woosley, SE and Zingale, M},
+  journal={The Astrophysical Journal},
+  volume={773},
+  number={2},
+  pages={137},
+  year={2013},
+  publisher={IOP Publishing}
 }
 
 @article{Zingale2013,
-archivePrefix = {arXiv},
-arxivId = {arXiv:1212.4380v1},
-author = {Zingale, M. and Nonaka, A. and Almgren, A. S. and Bell, J. B. and Malone, C. M. and Orvedahl, R. J.},
-doi = {10.1088/0004-637X/764/1/97},
-eprint = {arXiv:1212.4380v1},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-month = {feb},
-number = {1},
-pages = {97},
-title = {{Low Mach Number Modeling of Convection in Helium Shells on Sub-Chandrasekhar White Dwarfs. I. Methodology}},
-url = {http://stacks.iop.org/0004-637X/764/i=1/a=97?key=crossref.595e34e18b889dcbfa230fed615b0920},
-volume = {764},
-year = {2013}
+  title={Low mach number modeling of convection in helium shells on sub-chandrasekhar white dwarfs. I. Methodology},
+  author={Zingale, M and Nonaka, A and Almgren, AS and Bell, JB and Malone, CM and Orvedahl, RJ},
+  journal={The Astrophysical Journal},
+  volume={764},
+  number={1},
+  pages={97},
+  year={2013},
+  publisher={IOP Publishing}
 }
 
 @article{Jacobs2016,
-abstract = {The dynamics of helium shell convection driven by nuclear burning establish the conditions for runaway in the sub-Chandrasekhar mass, double detonation model for Type Ia supernovae, as well as for a variety of other explosive phenomena. We explore these convection dynamics for a range of white dwarf core and helium shell masses in three dimensions using the low Mach number hydrodynamics code Maestro. We present calculations of the bulk properties of this evolution, including time-series evolution of global diagnostics, lateral averages of the 3D state, and the global 3D state. We find a variety of outcomes including quasi-equilibrium, localized runaway, and nova-like runaway. Our results suggest the double detonation progenitor model is promising, that 3D, dynamic convection plays a key role, and that these systems warrant further study.},
-archivePrefix = {arXiv},
-arxivId = {1507.06696},
-author = {Jacobs, Adam M. and Zingale, Michael and Nonaka, Andy and Almgren, Ann S. and Bell, John B.},
-doi = {10.3847/0004-637X/827/1/84},
-eprint = {1507.06696},
-issn = {1538-4357},
-journal = {The Astrophysical Journal},
-mendeley-groups = {KinSync Folder},
-month = {aug},
-number = {1},
-pages = {84},
-title = {{LOW MACH NUMBER MODELING OF CONVECTION IN HELIUM SHELLS ON SUB-CHANDRASEKHAR WHITE DWARFS. II. BULK PROPERTIES OF SIMPLE MODELS}},
-url = {http://dx.doi.org/10.3847/0004-637X/827/1/84},
-volume = {827},
-year = {2016}
+  title={Low mach number modeling of convection in helium shells on sub-chandrasekhar white dwarfs. ii. bulk properties of simple models},
+  author={Jacobs, Adam M and Zingale, Michael and Nonaka, Andy and Almgren, Ann S and Bell, John B},
+  journal={The Astrophysical Journal},
+  volume={827},
+  number={1},
+  pages={84},
+  year={2016},
+  publisher={IOP Publishing}
 }
 
 @article{Malone2011,
-author = {Malone, C. M. and Nonaka, A. and Almgren, A. S. and Bell, J. B. and Zingale, M.},
-doi = {10.1088/0004-637X/728/2/118},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {2002,bursts,color figures,convection,hydrodynamics,methods,modulated by the neutron,muno et al,neutron,numerical,online-only material,oscillations observed during the,quency,star spin fre-,stars,suggests that they are,x-rays},
-mendeley-groups = {KinSync Folder,Neutron stars},
-month = {feb},
-number = {2},
-pages = {118},
-title = {{Multidimensional Modeling of Type I X-ray Bursts. I. Two-Dimensional Convection Prior to the Outburst of a Pure He Accretor}},
-url = {http://stacks.iop.org/0004-637X/728/i=2/a=118?key=crossref.01fcbda591c1eb58c6f5cea65d895c39},
-volume = {728},
-year = {2011}
+  title={Multidimensional modeling of type I x-ray bursts. I. Two-dimensional convection prior to the outburst of a pure 4He accretor},
+  author={Malone, CM and Nonaka, A and Almgren, AS and Bell, JB and Zingale, M},
+  journal={The Astrophysical Journal},
+  volume={728},
+  number={2},
+  pages={118},
+  year={2011},
+  publisher={IOP Publishing}
 }
 
 @article{Malone2014,
-abstract = {Type I X-ray bursts are thermonuclear explosions of accreted material on the surface of neutron stars in low-mass X-ray binaries. Prior to the ignition of a subsonic burning front, runaway burning at the base of the accreted layer drives convection that mixes fuel and heavy-element ashes. In this paper, the second in a series, we explore the behavior of this low Mach number convection in mixed hydrogen/helium layers on the surface of a neutron star using two-dimensional simulations with the Maestro code. Maestro takes advantage of the highly subsonic flow field by filtering dynamically unimportant sound waves while retaining local compressibility effects, such as those due to stratification and energy release from nuclear reactions. In these preliminary calculations, we find that the rp-process approximate network creates a convective region that is split into two layers. While this splitting appears artificial due to the approximations of the network regarding nuclear flow out of the breakout reaction 18Ne({\$}\alpha{\$}, p)21Na, these calculations hint at further simplifications and improvements of the burning treatment for use in subsequent calculations in three dimensions for a future paper.},
-archivePrefix = {arXiv},
-arxivId = {arXiv:1404.6286v1},
-author = {Malone, C. M. and Zingale, M. and Nonaka, A. and Almgren, A. S. and Bell, J. B.},
-doi = {10.1088/0004-637X/788/2/115},
-eprint = {arXiv:1404.6286v1},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {Compact Objects},
-mendeley-groups = {Neutron stars},
-month = {jun},
-number = {2},
-pages = {115},
-publisher = {IOP Publishing},
-title = {{Multidimensional Modeling of Type I X-ray Bursts. II. Two-Dimensional Convection in a Mixed H/He Accretor}},
-url = {http://iopscience.iop.org/0004-637X/788/2/115/article/},
-volume = {788},
-year = {2014}
+  title={Multidimensional modeling of type I X-ray bursts. II. Two-dimensional convection in a mixed H/He accretor},
+  author={Malone, CM and Zingale, M and Nonaka, A and Almgren, AS and Bell, JB},
+  journal={The Astrophysical Journal},
+  volume={788},
+  number={2},
+  pages={115},
+  year={2014},
+  publisher={IOP Publishing}
 }
 
 @article{Zingale2015,
-abstract = {We perform the first detailed three-dimensional simulation of low Mach number convection preceding thermonuclear ignition in a mixed H/He X-ray burst. Our simulations include a moderate-sized, approximate network that captures hydrogen and helium burning up through rp-process breakout. We look in detail at the difference between two- and three-dimensional convective fields, including the details of the turbulent convection.},
-archivePrefix = {arXiv},
-arxivId = {arXiv:1410.5796v1},
-author = {Zingale, M. and Malone, C. M. and Nonaka, A. and Almgren, A. S. and Bell, J. B.},
-doi = {10.1088/0004-637X/807/1/60},
-eprint = {arXiv:1410.5796v1},
-issn = {1538-4357},
-journal = {The Astrophysical Journal},
-mendeley-groups = {KinSync Folder,Neutron stars},
-month = {oct},
-number = {1},
-pages = {60},
-title = {{Comparisons of Two-and Three-Dimensional Convection in Type I X-ray Bursts}},
-url = {http://stacks.iop.org/0004-637X/807/i=1/a=60?key=crossref.1a88bcc5ec2b00a82933e350109c5804},
-volume = {807},
-year = {2015}
+  title={Comparisons of two-and three-dimensional convection in type I X-ray bursts},
+  author={Zingale, Michael and Malone, Christopher M and Nonaka, Andy and Almgren, Ann S and Bell, John B},
+  journal={The Astrophysical Journal},
+  volume={807},
+  number={1},
+  pages={60},
+  year={2015},
+  publisher={IOP Publishing}
 }
 
 @article{Zhang2016,
-abstract = {In this paper we introduce a block-structured adaptive mesh refinement (AMR) software framework that incorporates tiling, a well-known loop transformation. Because the multiscale, multiphysics codes built in BoxLib are designed to solve complex systems at high resolution, performance on current and next generation architectures is essential. With the expectation of many more cores per node on next generation architectures, the ability to effectively utilize threads within a node is essential, and the current model for parallelization will not be sufficient. We describe a new version of BoxLib in which the tiling constructs are embedded so that BoxLib-based applications can easily realize expected performance gains without extra effort on the part of the application developer. We also discuss a path forward to enable future versions of BoxLib to take advantage of NUMA-aware optimizations using the TiDA portable library.},
-archivePrefix = {arXiv},
-arxivId = {1604.03570},
-author = {Zhang, Weiqun and Almgren, Ann and Day, Marcus and Nguyen, Tan and Shalf, John and Unat, Didem},
-eprint = {1604.03570},
-journal = {ArXiv e-prints},
-month = {apr},
-title = {{BoxLib with Tiling: An AMR Software Framework}},
-url = {http://arxiv.org/abs/1604.03570},
-volume = {1604.03570},
-year = {2016}
+  title={Boxlib with tiling: An adaptive mesh refinement software framework},
+  author={Zhang, Weiqun and Almgren, Ann and Day, Marcus and Nguyen, Tan and Shalf, John and Unat, Didem},
+  journal={SIAM Journal on Scientific Computing},
+  volume={38},
+  number={5},
+  pages={S156--S172},
+  year={2016},
+  publisher={SIAM}
 }
 
-
 @article{Zhang2019,
-author = {Zhang, Weiqun and Almgren, Ann and Beckner, Vince and Bell, John and Blaschke, Johannes and Chan, Cy and Day, Marcus and Friesen, Brian and Gott, Kevin and Graves, Daniel and Katz, Max and Myers, Andrew and Nguyen, Tan and Nonaka, Andrew and Rosso, Michele and Williams, Samuel and Zingale, Michael},
-doi = {10.21105/joss.01370},
-issn = {2475-9066},
-journal = {Journal of Open Source Software},
-month = {may},
-number = {37},
-pages = {1370},
-title = {{AMReX: a framework for block-structured adaptive mesh refinement}},
-url = {http://joss.theoj.org/papers/10.21105/joss.01370},
-volume = {4},
-year = {2019}
+  title={AMReX: a framework for block-structured adaptive mesh refinement},
+  author={Zhang, W and others},
+  journal={Journal of Open Source Software},
+  volume={4},
+  number={37},
+  pages={1370},
+  year={2019}
 }
 
 @article{Almgren2010,
-abstract = {We present a new code, CASTRO, that solves the multicomponent compressible hydrodynamic equations for astrophysical flows including self-gravity, nuclear reactions, and radiation. CASTRO uses an Eulerian grid and incorporates adaptive mesh refinement (AMR). Our approach to AMR uses a nested hierarchy of logically rectangular grids with simultaneous refinement in both space and time. The radiation component of CASTRO will be described in detail in the next paper, Part II, of this series.},
-archivePrefix = {arXiv},
-arxivId = {astro-ph.IM/1005.0114},
-author = {Almgren, A. S. and Beckner, V. E. and Bell, J. B. and Day, M. S. and Howell, L. H. and Joggerst, C. C. and Lijewski, M. J. and Nonaka, A. and Singer, M. and Zingale, M.},
-doi = {10.1088/0004-637X/715/2/1221},
-eprint = {1005.0114},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {abundances,color figures,equation of state,gravitation,hydrodynamics,methods,nuclear reactions,nucleosynthesis,numerical,online-only material},
-number = {2},
-pages = {1221--1238},
-primaryClass = {astro-ph.IM},
-title = {{Castro: a New Compressible Astrophysical Solver. I. Hydrodynamics and Self-Gravity}},
-url = {http://stacks.iop.org/0004-637X/715/i=2/a=1221?key=crossref.650ddf6b197967af733dd86ff5ffd831},
-volume = {715},
-year = {2010}
+  title={CASTRO: A new compressible astrophysical solver. I. Hydrodynamics and self-gravity},
+  author={Almgren, AS and Beckner, VE and Bell, JB and Day, MS and Howell, LH and Joggerst, CC and Lijewski, MJ and Nonaka, A and Singer, M and Zingale, M},
+  journal={The Astrophysical Journal},
+  volume={715},
+  number={2},
+  pages={1221},
+  year={2010},
+  publisher={IOP Publishing}
 }
 
 @article{Almgren2013,
-author = {Almgren, Ann S and Bell, John B and Lijewski, Mike J and Luki{\'{c}}, Zarija and {Van Andel}, Ethan},
-doi = {10.1088/0004-637X/765/1/39},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {color figures,gravitation,hydrodynamics,methods,numerical,online-only material},
-month = {feb},
-number = {1},
-pages = {39},
-title = {{Nyx: A MASSIVELY PARALLEL AMR CODE FOR COMPUTATIONAL COSMOLOGY}},
-url = {http://stacks.iop.org/0004-637X/765/i=1/a=39?key=crossref.223dfb0da323c71b2691a9f962cc9252},
-volume = {765},
-year = {2013}
+  title={Nyx: A massively parallel amr code for computational cosmology},
+  author={Almgren, Ann S and Bell, John B and Lijewski, Mike J and Luki{\'c}, Zarija and Van Andel, Ethan},
+  journal={The Astrophysical Journal},
+  volume={765},
+  number={1},
+  pages={39},
+  year={2013},
+  publisher={IOP Publishing}
 }
 
 @article{Almgren2008a,
-abstract = {We continue the description of a low Mach number hydrodynamics algorithm for reacting, full star flows. Here we demonstrate how to accurately incorporate reactions using a second-order accurate Strang-splitting technique. We also improve the fidelity of the model by allowing the base state to evolve in response to large-scale convection as well as large-scale heating, taking care to account for the compositional changes to the base state as well. The new algorithm is tested via comparisons with a fully compressible code and shown to be in good agreement. The resulting code, MAESTRO, once extended to incorporate a spherically symmetric base state, will be used to study the convection and ignition phases of Type Ia supernovae.},
-author = {Almgren, A. S. and Bell, J. B. and Nonaka, A. and Zingale, M.},
-doi = {10.1086/590321},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-keywords = {Abundances,Convection,Hydrodynamics,Methods: Numerical,Nuclear Reactions,Nucleosynthesis,Stars: Supernovae: General,Stars: White Dwarfs},
-mendeley-groups = {Low Mach Flows},
-month = {sep},
-number = {1},
-pages = {449--470},
-title = {{Low Mach Number Modeling of Type Ia Supernovae. III. Reactions}},
-url = {http://stacks.iop.org/0004-637X/684/i=1/a=449},
-volume = {684},
-year = {2008}
+  title={Low mach number modeling of type ia supernovae. iii. reactions},
+  author={Almgren, AS and Bell, JB and Nonaka, A and Zingale, M},
+  journal={The Astrophysical Journal},
+  volume={684},
+  number={1},
+  pages={449},
+  year={2008},
+  publisher={IOP Publishing}
 }
 
 @article{Zingale2009,
+  title={Low Mach number modeling of type Ia supernovae. IV. White dwarf convection},
+  author={Zingale, M and Almgren, AS and Bell, JB and Nonaka, A and Woosley, SE},
+  journal={The Astrophysical Journal},
+  volume={704},
+  number={1},
+  pages={196},
+  year={2009},
+  publisher={IOP Publishing}
+}
+
+@article{Miczek2014,
+  title={New numerical solver for flows at various Mach numbers},
+  author={Miczek, Fabian and R{\"o}pke, Friedrich K and Edelmann, Philip VF},
+  journal={Astronomy \& Astrophysics},
+  volume={576},
+  pages={A50},
+  year={2015},
+  publisher={EDP Sciences}
+}
+
+@article{Barsukow2016,
+  title={A numerical scheme for the compressible low-Mach number regime of ideal fluid dynamics},
+  author={Barsukow, Wasilij and Edelmann, Philipp VF and Klingenberg, Christian and Miczek, Fabian and R{\"o}pke, Friedrich K},
+  journal={Journal of Scientific Computing},
+  volume={72},
+  number={2},
+  pages={623--646},
+  year={2017},
+  publisher={Springer}
+}
+
+@article{Rempel2005,
+  title={Solar differential rotation and meridional flow: the role of a subadiabatic tachocline for the Taylor-Proudman balance},
+  author={Rempel, Matthias},
+  journal={The Astrophysical Journal},
+  volume={622},
+  number={2},
+  pages={1320},
+  year={2005},
+  publisher={IOP Publishing}
+}
+
+@article{Hotta2012,
+  title={Numerical calculation of convection with reduced speed of sound technique},
+  author={Hotta, H and Rempel, M and Yokoyama, T and Iida, Y and Fan, Y},
+  journal={Astronomy \& Astrophysics},
+  volume={539},
+  pages={A30},
+  year={2012},
+  publisher={EDP Sciences}
+}
+
+@article{Gough1968,
+  title={The anelastic approximation for thermal convection},
+  author={Gough, DO},
+  journal={Journal of the atmospheric sciences},
+  volume={26},
+  number={3},
+  pages={448--456},
+  year={1969}
+}
+
+@article{Durran1989,
+  title={Improving the anelastic approximation},
+  author={Durran, Dale R},
+  journal={Journal of the atmospheric sciences},
+  volume={46},
+  number={11},
+  pages={1453--1461},
+  year={1989}
+}
+
+@article{Day2000,
+  title={Numerical simulation of laminar reacting flows with complex chemistry},
+  author={Day, Mark S and Bell, John B},
+  journal={Combustion Theory and Modelling},
+  volume={4},
+  number={4},
+  pages={535--556},
+  year={2000},
+  publisher={Taylor \& Francis}
+}
+
+@article{Almgren2006a,
+  title={Low Mach number modeling of type Ia supernovae. I. Hydrodynamics},
+  author={Almgren, Ann S and Bell, John B and Rendleman, Charles A and Zingale, Michael},
+  journal={The Astrophysical Journal},
+  volume={637},
+  number={2},
+  pages={922},
+  year={2006},
+  publisher={IOP Publishing}
+}
+
+@article{Vasil2013,
+  title={Energy conservation and gravity waves in sound-proof treatments of stellar interiors. II. Lagrangian constrained analysis},
+  author={Vasil, Geoffrey M and Lecoanet, Daniel and Brown, Benjamin P and Wood, Toby S and Zweibel, Ellen G},
+  journal={The Astrophysical Journal},
+  volume={773},
+  number={2},
+  pages={169},
+  year={2013},
+  publisher={IOP Publishing}
+}
+
+@article{Nonaka2010,
+  title={MAESTRO: An adaptive low Mach number hydrodynamics algorithm for stellar flows},
+  author={Nonaka, Andrew and Almgren, AS and Bell, JB and Lijewski, MJ and Malone, CM and Zingale, M},
+  journal={The Astrophysical Journal Supplement Series},
+  volume={188},
+  number={2},
+  pages={358},
+  year={2010},
+  publisher={IOP Publishing}
+}
+
+@article{Hunter2007,
+  title={Matplotlib: A 2D graphics environment},
+  author={Hunter, John D},
+  journal={Computing in science \& engineering},
+  volume={9},
+  number={3},
+  pages={90},
+  year={2007},
+  publisher={IEEE Computer Society}
+}
+
+@inproceedings{Kluyver2016,
+  title={Jupyter Notebooks-a publishing format for reproducible computational workflows.},
+  author={Kluyver, Thomas and Ragan-Kelley, Benjamin and P{\'e}rez, Fernando and Granger, Brian E and Bussonnier, Matthias and Frederic, Jonathan and Kelley, Kyle and Hamrick, Jessica B and Grout, Jason and Corlay, Sylvain and others},
+  booktitle={ELPUB},
+  pages={87--90},
+  year={2016}
+}
+
+@article{vode,
+  title={VODE: A variable-coefficient ODE solver},
+  author={Brown, Peter N and Byrne, George D and Hindmarsh, Alan C},
+  journal={SIAM journal on scientific and statistical computing},
+  volume={10},
+  number={5},
+  pages={1038--1051},
+  year={1989},
+  publisher={SIAM}
+}
+
+@ARTICLE{strang:1968,
+   author = {{Strang}, G.},
+    title = "{On the Construction and Comparison of Difference Schemes}",
+  journal = {SIAM Journal on Numerical Analysis},
+     year = 1968,
+    month = sep,
+   volume = 5,
+    pages = {506-517},
+      doi = {10.1137/0705041},
+   adsurl = {https://ui.adsabs.harvard.edu/abs/1968SJNA....5..506S},
+  adsnote = {Provided by the SAO/NASA Astrophysics Data System}
+}
+
+@ARTICLE{castro:sdc,
+       author = {{Zingale}, M. and {Katz}, M.~P. and {Bell}, J.~B. and {Minion}, M.~L. and
+         {Nonaka}, A.~J. and {Zhang}, W.},
+        title = "{Improved Coupling of Hydrodynamics and Nuclear Reactions via Spectral Deferred Corrections}",
+      journal = {arXiv e-prints},
+     keywords = {Physics - Computational Physics, Astrophysics - Instrumentation and Methods for Astrophysics},
+         year = "2019",
+        month = "Aug",
+          eid = {arXiv:1908.03661},
+        pages = {arXiv:1908.03661},
 archivePrefix = {arXiv},
-arxivId = {arXiv:0908.2668v1},
-author = {Zingale, M. and Almgren, A. S. and Bell, J. B. and Nonaka, A. and Woosley, S. E.},
-doi = {10.1088/0004-637X/704/1/196},
-eprint = {arXiv:0908.2668v1},
-issn = {0004-637X},
-journal = {The Astrophysical Journal},
-mendeley-groups = {KinSync Folder},
-month = {oct},
-number = {1},
-pages = {196--210},
-title = {{Low Mach Number Modeling of Type Ia Supernovae. IV. White Dwarf Convection}},
-url = {http://stacks.iop.org/0004-637X/704/i=1/a=196?key=crossref.837bb82527e7c338b4d934f34f3f2292},
-volume = {704},
-year = {2009}
+       eprint = {1908.03661},
+ primaryClass = {physics.comp-ph},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2019arXiv190803661Z},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
 
+@inproceedings{heger2004presupernova,
+  title={Presupernova evolution of rotating massive stars and the rotation rate of pulsars},
+  author={Heger, A and Woosley, SE and Langer, N and Spruit, HC},
+  booktitle={Symposium-International Astronomical Union},
+  volume={215},
+  pages={591--600},
+  year={2004},
+  organization={Cambridge University Press}
+}

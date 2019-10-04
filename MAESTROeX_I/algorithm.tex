@@ -1,4 +1,4 @@
-\section{Numerical Algorithm}\label{eq:algorithm}
+\section{Numerical Algorithm}\label{sec:algorithm}
 \subsection{Spatial Discretization}\label{Sec:Spatial}
 The spatial discretization and adaptive mesh refinement methodology remains unchanged from Paper V.
 We now summarize some of the key points here before describing the new temporal integrator in the next section.
@@ -66,9 +66,11 @@ A potential benefit to eliminating the mapping error is to consider a spherical 
 In the absence of reactions, the star should remain at rest.
 The buoyancy forcing term in the momentum equation contains $\rho-\rho_0$.  With the original scheme, interpolation errors 
 in computing $\rho_0$ by averaging would cause artificial acceleration in the velocity field due to the interpolation error 
-from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced 
-array, the effects due to interpolation error are nearly eliminated, but not completely eliminated since there are still 
-machine precision effects resulting from averaging a large number of numerical values.
+from the Cartesian grid to and from the radial base state.  By retaining the radial base state as an irregularly spaced array, 
+\replaced{the effects due to interpolation error are nearly eliminated, but not completely eliminated since there are still machine precision 
+effects resulting from averaging a large number of numerical values.}
+{the truncation error in the mapping scheme is completely eliminated.  The only source of error is due to machine precision effects resulting 
+from averaging a large number of values, which is not significant over the course of any simulation.}
 We note that $\Delta r$ decreases as the base state moves further from the center of the star, 
 which results in far more total cells in the irregularly-spaced array than the previous uniformly-spaced array. 
 
@@ -126,7 +128,11 @@ There are a few key numerical modules we use in each time step.
 This follows equation (A10) in Paper V, noting that for the irregularly spaced base state case, $\Delta r$ is not constant, where $\Delta r_{j+1/2} = r_{j+1} - r_j$ for cell face with index $j+1/2$.  
 The base state pressure remains equal to a constant value at the location of a prescribed cutoff density outward for the entire simulation.
 \item {\bf React State}$[(\rho X_k)^{\rm in},(\rho h)^{\rm in},p_0]\rightarrow[(\rho X_k)^{\rm out},(\rho h)^{\rm out},(\rho\dot\omega),(\rho\Hnuc)]$ 
-uses VODE \citep{vode} to integrate the species and enthalpy due to reactions over $\Delta t/2$ by solving
+uses 
+\added{the multistep variable-coefficient Adams-Moulton and Backward Differentiation Formula (BDF) methods in the}
+VODE \citep{vode} 
+\added{package}
+to integrate the species and enthalpy due to reactions over $\Delta t/2$ by solving
 \begin{equation}
 \frac{dX_k}{dt} = \dot\omega_k(\rho,X_k,T); \qquad
 \frac{dT}{dt} = \frac{1}{c_p}\left(-\sum_k\xi_k\dot\omega_k + H_{\rm nuc})\right)
@@ -139,9 +145,11 @@ Each time step is constrained by the standard advective CFL condition,
 \Delta t = \sigma^{\rm CFL} \min_i(\Delta x / U_i),
 \end{equation}
 where for our simulations we typically use $\sigma^{\rm CFL}\sim 0.7$ and the minimum is taken over all spatial directions over all cells.
-There are additional constraints on the time step that are typically much less restrictive than the advective CFL including
+\replaced{There are additional constraints on the time step that are typically much less restrictive than the advective CFL including
 the acceleration due to the buoyancy force (sometimes in effect when the velocity is approximately zero at the start of some simulations) 
-and the local magnitude of the divergence constraint (to prevent too much mass evacuation from a cell in a time step); see Section 3.4 in Paper III for details.
+and the local magnitude of the divergence constraint (to prevent too much mass evacuation from a cell in a time step);}
+{For simulations that are initialized with zero velocity, we use the buoyancy force in the momentum equation to give a proper time scale
+to start the simulation;} see Section 3.4 in Paper III for details.
 
 In stratified low Mach number models, due to the extreme variation in density, the velocity can become very large in low density regions at the edge of the star.
 These large velocities can severely affect the time step, so
@@ -276,7 +284,7 @@ where here
 \frac{Dp_0}{Dt} =
 \begin{cases}
 \frac{p_0^{n+1,*} - p_0^n}{\Delta t} + \left(\uadvone \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n}& {\rm (planar)} \\
-\frac{p_0^{n+1,*} - p_0^n}{\Delta t} + \left[ \nabla \cdot \left (\uadvone p_0^{\nph} \right ) - p_0^{\nph} \nabla \cdot \uadvone \right]& {\rm (spherical)}
+\frac{p_0^{n+1,*} - p_0^n}{\Delta t} + \left[ \nabla \cdot \left (\uadvone p_0^{n} \right ) - p_0^{n} \nabla \cdot \uadvone \right]& {\rm (spherical)}
 \end{cases}
 ,
 \end{equation}
@@ -384,7 +392,7 @@ where here
 \begin{equation}
 \frac{Dp_0}{Dt} =
 \begin{cases}
-\frac{p_0^{n+1} - p_0^n}{\Delta t} + \left(\uadvtwo \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{n}& {\rm (planar)} \\
+\frac{p_0^{n+1} - p_0^n}{\Delta t} + \left(\uadvtwo \cdot \eb_r\right) \left(\frac{\partial p_0}{\partial r} \right)^{\nph}& {\rm (planar)} \\
 \frac{p_0^{n+1} - p_0^n}{\Delta t} + \left[ \nabla \cdot \left (\uadvtwo p_0^{\nph} \right ) - p_0^{\nph} \nabla \cdot \uadvtwo \right]& {\rm (spherical)}
 \end{cases}
 ,

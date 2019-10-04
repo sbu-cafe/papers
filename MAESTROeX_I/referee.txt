@@ -1,45 +1,118 @@
 Referee report
 Article ID:     ApJ - AAS19370
 Title:  MAESTROeX: A Massively Parallel Low Mach Number Astrophysical Solver
+Authors: D. Fan, A. Nonaka, A. S. Almgren, A. Harpole, M. Zingale
         
         Edit V1
 
+-----------------------------------------------
+Dear Editor,
 
-The paper describes a new, simplified temporal integration scheme for the well known low Mach number solver MAESTRO, together with an update of the AMR framework - the new AMReX software framework - resulting in the updated code MAESTROeX. The updates, the validity of the new time marching scheme and the excellent parallel performance of MAESTROeX are carefully and suitably documented. I recommend publication in ApJ, after some revisions.
+We thank the reviewer for the constructive and insighful comments and suggestions.
+Below you will find the referee report, along with our specific responses as indented text.
 
-While I have only minor comments for the main text, I disagree with some statements in the Introduction of the paper. Here, it is stated that (Line 4 in the Introduction) "In low Mach number approaches, sound waves are eliminated from the governing equations ... .". However, this is not generally true. Other low Mach number solvers retain sound waves. Generally, it can be shown that the Euler equations have two different low Mach number limits. Firstly, the in-compressible Euler equations with a limit scaling ~Ma². This approach is used in MAESTROeX. A second possible limit is the acoustic limit with a limit scaling ~Ma. This approach is used for instance in Miczek et al. 2014 (referenced in the paper draft on MAESTROeX). For a general and extended discussion of these two limits and their numerical caveats I refer to e.g. Guillard & Viozat, 1999; or Zeng et al., International Journal for Numerical Methods in Fluids, 2016, chapter 8 On the Behaviour of Upwind Schemes in the Low Mach Number Limit: A Review. Which of the two limits to be used depends on the physical problem under consideration. But the new observational possibility of astro-seismology has recently boosted the use of the acoustic limit.
+Thank you,
+Duoming Fan
+DFan@lbl.gov
+-----------------------------------------------
 
-    
+The paper describes a new, simplified temporal integration scheme for the well known
+low Mach number solver MAESTRO, together with an update of the AMR framework - the new
+AMReX software framework - resulting in the updated code MAESTROeX. The updates, the
+validity of the new time marching scheme and the excellent parallel performance of
+MAESTROeX are carefully and suitably documented. I recommend publication in ApJ,
+after some revisions.
 
-An important point to emphasize is that ordinary upwind schemes normally will produce wrong results for low Mach number flows (also discussed in the two papers mentioned above). This can be avoided by re-scaling the flux-matrix accordingly. As the authors state, this pre-conditioning reduces the stiffness of the equations (and thus allows large time-steps). The authors also state that the pre-conditioning "retains the correct scaling behavior". However, it should be emphasized that it is not the scaling towards the in-compressible, but towards the acoustic limit which is achieved by this method, described for instance in Miczek et al. 2014.
+While I have only minor comments for the main text, I disagree with some statements in the
+Introduction of the paper. Here, it is stated that (Line 4 in the Introduction) "In low
+Mach number approaches, sound waves are eliminated from the governing equations ... .".
+However, this is not generally true. Other low Mach number solvers retain sound waves.
+Generally, it can be shown that the Euler equations have two different low Mach number
+limits. Firstly, the in-compressible Euler equations with a limit scaling ~Ma². This
+approach is used in MAESTROeX. A second possible limit is the acoustic limit with a limit
+scaling ~Ma. This approach is used for instance in Miczek et al. 2014 (referenced in the
+paper draft on MAESTROeX). For a general and extended discussion of these two limits and
+their numerical caveats I refer to e.g. Guillard & Viozat, 1999; or Zeng et al.,
+International Journal for Numerical Methods in Fluids, 2016, chapter 8 On the Behaviour of
+Upwind Schemes in the Low Mach Number Limit: A Review. Which of the two limits to be used
+depends on the physical problem under consideration. But the new observational possibility
+of astro-seismology has recently boosted the use of the acoustic limit.
 
-    
+        We have revised the first paragraph to state that the approach in this paper is to
+   	use a low Mach number formulation that analytically removes acoustic waves, which
+   	no longer implies that is the only low Mach number approach.  We have
+   	modified the second paragraph discussion to elaborate on other approaches for
+   	modeling low Mach number flows, particularly points and references brought up by
+   	the referee.
 
-The authors then mention implicit solvers. Here, it may be worth mentioning that also implicit solvers may produce wrong results for very low Mach number flows and a correct scaling is not automatically realized. As for the references to implicit codes, I think the reference to Viallet et al. (2015), "Efficient solution of large systems of linear PDEs in science", 6, doi: 10.1051/0004-6361/201527339 is probably wrong, as I cannot find a paper with this title and the given doi rather points to Vialet et al., A&A 586, idA153 (2016), "A Jacobian-free Newton-Krylov method for time-implicit multidimensional hydrodynamics". A reference to this paper seems appropriate as it indeed describes a much more performent algorithm than the one described in the original paper Viallet, Baraffe, and Walder (2011).
+An important point to emphasize is that ordinary upwind schemes normally will produce wrong
+results for low Mach number flows (also discussed in the two papers mentioned above). This
+can be avoided by re-scaling the flux-matrix accordingly. As the authors state, this
+pre-conditioning reduces the stiffness of the equations (and thus allows large time-steps).
+The authors also state that the pre-conditioning "retains the correct scaling behavior".
+However, it should be emphasized that it is not the scaling towards the in-compressible,
+but towards the acoustic limit which is achieved by this method, described for instance in
+Miczek et al. 2014.
 
-    
+        We added a statement that the Miczek reference retains the correct scaling behavior,
+   	"in an acoustic limit of the Euler equations that retains $\mathcal{O}$(Ma) pressure
+   	fluctuations".
 
-In summery, I would recommend to the authors to consider to include some of the discussion sketched here. This would, in my opinion, greatly improve the paper.
+The authors then mention implicit solvers. Here, it may be worth mentioning that also
+implicit solvers may produce wrong results for very low Mach number flows and a correct
+scaling is not automatically realized. As for the references to implicit codes, I think
+the reference to Viallet et al. (2015), "Efficient solution of large systems of linear
+PDEs in science", 6, doi: 10.1051/0004-6361/201527339 is probably wrong, as I cannot find
+a paper with this title and the given doi rather points to Vialet et al., A&A 586, idA153
+(2016), "A Jacobian-free Newton-Krylov method for time-implicit multidimensional
+hydrodynamics". A reference to this paper seems appropriate as it indeed describes a much
+more performent algorithm than the one described in the original paper Viallet, Baraffe,
+and Walder (2011).
 
+        We have noted potential issues with pressure scaling in implicit approaches.
+    	We have removed the reference to the 2011 paper, and fixed the typo in the reference
+    	to the 2015 paper.  Thanks to the referee for catching this error.
+
+In summery, I would recommend to the authors to consider to include some of the discussion
+sketched here. This would, in my opinion, greatly improve the paper.
 
 Minor points:
 
-- In some figures (in particular Figs. 3 and 4), the labels and axis-titles are rather small and badly readable. The same is true for the lines in these plots. Enlargement of fonts and line-thickness would be appreciated by a reader.
+- In some figures (in particular Figs. 3 and 4), the labels and axis-titles are rather
+small and badly readable. The same is true for the lines in these plots. Enlargement of
+fonts and line-thickness would be appreciated by a reader.
 
-    
+        We have corrected Figs. 3, 4, 5, 8, and 9.
 
-- In Sect. 3.1 the authors say that even with the new interpolation scheme, small errors could appear from averaging a large number of numerical values. Could the authors specify whether or not the solution on large integration times is affected by these errors or whether the error remains small for all times under consideration.
+- In Sect. 3.1 the authors say that even with the new interpolation scheme, small errors
+could appear from averaging a large number of numerical values. Could the authors specify
+whether or not the solution on large integration times is affected by these errors or
+whether the error remains small for all times under consideration.
 
-    
+        We have added a sentence stating this error is not significant.
 
-- On page 7, after the cfl-condition, it is stated that additional constraints are less restrictive on the size of the time-step than the advective cfl-condition. It would be useful if the authors could give some examples and order of magnitudes of the different restrictions.
+- On page 7, after the cfl-condition, it is stated that additional constraints are less
+restrictive on the size of the time-step than the advective cfl-condition. It would be
+useful if the authors could give some examples and order of magnitudes of the different
+restrictions.
 
-    
+        In practice, the only additional time step used is the buoyancy force restriction,
+   	and in our history has only been used for the case of zero velocity at initialization.
+   	The divergence constraint we referred to has never been used in practice and is
+   	essentially a remnant of earlier testing of the algorithm.  We have removed the
+   	discussion about this latter restriction and clarified the use of the former.
 
-- Can the authors give some insight in the time-stepping of the implicit solver for the nuclear reaction network. Do they use just one implicit time-step (dt/2 of the advection time step defined above) or do they allow for sub-cycling to possibly improve the accuracy of the nuclear network solve?
+- Can the authors give some insight in the time-stepping of the implicit solver for the
+nuclear reaction network. Do they use just one implicit time-step (dt/2 of the advection
+time step defined above) or do they allow for sub-cycling to possibly improve the accuracy
+of the nuclear network solve?
 
-    
+        Added "uses the multistep variable-coefficient Adams-Moulton and
+   	Backward Differentiation Formula (BDF) methods in the VODE \citep{vode} package
+   	to integrate the species and enthalpy" to the description of React State.
 
-- Is a sub-title Acknowledgments missing at the end of the paper? Acknowledgments now rather seem to be the last paragraph of the paper.
+- Is a sub-title Acknowledgments missing at the end of the paper? Acknowledgments now
+rather seem to be the last paragraph of the paper.
 
-    
+        Fixed.  Updated to aastex63.cls that gives Acknowledgments a header.
+  
