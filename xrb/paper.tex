@@ -127,8 +127,8 @@
 \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
 
 \author{Yuri Cavecchi}
-\affiliation{Princeton University}
-
+\affiliation{Department of Astrophysical Sciences, Princeton University, Peyton Hall, Princeton, NJ 08544}
+\affiliation{Mathematical Sciences and STAG Research Centre, University of Southampton, SO17 1BJ}
 
 \author[0000-0003-0439-4556]{Max P.\ Katz}
 \affiliation{NVIDIA Corp}
@@ -299,7 +299,7 @@ With these choices, the Coriolis force is:
 We will neglect the centrifugal force---with our plane-parallel
 geometry, this will act only in the lateral direction, and is not
 expected to greatly affect the dynamics.  Carrying the Coriolis force
-allows us to capture the geostrophic balance\MarginPar{ref} that sets
+allows us to capture the geostrophic balance\MarginPar{ref, Spitkovsky 2002?} that sets
 up via lateral hydrostatic equilibrium.
 
 Writing the momentum equation in terms of the $u$, $v$, and $w$
@@ -356,7 +356,9 @@ timestep chosen at the start of a cycle will violate the CFL condition
 during the advance of the finer grids.  In this case, we restart the
 finer grid evolution with a smaller timestep, subcycling within the
 larger timestep hierarchy.  We use a CFL number of 0.8 for our
-simulations.  \MarginPar{true for all?} The base grid for our standard
+simulations.  
+% \MarginPar{true for all?} 
+The base grid for our standard
 simulations is $768\times 192$ zones and the corresponding finest grid
 when 3 refinement levels are added would be $12288\times 3072$ zones.
 Our standard domain is $1.2288\times 10^5~\mathrm{cm} \times
@@ -410,8 +412,8 @@ names, $(x, y)$ in our notation.
 %======================================================================
 \section{Flame Properties}\label{Sec:Flame}
 
-The speed and thickness of a laminar helium flame is determined by the
-energy generation rate and conductivity and scale roughly as \MarginPar{need a ref}
+The speed and thickness of a laminar helium flame are determined by the
+energy generation rate and conductivity, and scale roughly as \MarginPar{need a ref}
 \begin{equation}
 v_f \approx \sqrt{k_\mathrm{th} \dot{\epsilon}}
 \end{equation}
@@ -433,9 +435,11 @@ conductivity both boosted by 5, the ``5/5'' flame.
 
 To understand the time and length scales involved in flame
 propagation, we do a 1D simulation of a laminar flame using our
-microphysics.  Figure~\ref{fig:flame} shows the flame properties for a \AssignTo{Kiran and Mike will remake with the 10/10 boosted flame}
+microphysics.  Figure~\ref{fig:flame} shows the flame properties for a 
+% \AssignTo{Kiran and Mike will remake with the 10/10 boosted flame}
 He flame using the standard conductivities and our simple reaction
-network.  This flame had a density of $2\times 10^6~\gcc$ and \MarginPar{double check}
+network.  This flame had a density of $2\times 10^6~\gcc$ and 
+% \MarginPar{double check}
 temperature of $5\times 10^7$~K.  We note that this flame speed is
 about $2\times 10^4~\cms$, the flame width is about 20~cm, and it
 takes about 0.1~s to settle into a sustained flame.  Note this speed
@@ -472,11 +476,11 @@ Flame properties are show in Table XX \MarginPar{we'll redo the table with 10/10
 %======================================================================
 \section{Initial Model}\label{Sec:inital_model}
 
-\begin{figure}[t]
-\centering
-\plotone{model}
-\caption{\label{fig:sketch} A schematic of our model setup.}
-\end{figure}
+% \begin{figure}[t]
+% \centering
+% \plotone{model}
+% \caption{\label{fig:sketch} A schematic of our model setup.}
+% \end{figure}
 
 We wish to create an initial atmosphere consisting of a hot
 ``post-flame'' region and a cooler atmosphere that the flame will
@@ -491,8 +495,9 @@ layers: the underlying star, a ramp-up to the base of the
 accreted atmosphere, a fuel layer representing the bulk of the
 atmosphere where the flame will propagate, and an outer, low density,
 isothermal buffer above the atmosphere that allows us
-to capture expansion and explosive dynamics.  This is sketched in
-Figure~\ref{fig:sketch}.
+to capture expansion and explosive dynamics.  
+% This is sketched in
+% Figure~\ref{fig:sketch}.
 
 The temperature profile in the star and ramp region is given as:
 \begin{equation}
@@ -641,7 +646,7 @@ is less than half our domain width.  Table~\ref{table:sim_names} lists
 the simulations run and their parameters.
 
 We note that the entire simulation framework for these calculations is
-freely available in the \castro\ github repository.
+freely available in the \castro\ github repository\footnote{\url{https://github.com/AMReX-Astro/Castro}}.
 
 \begin{deluxetable}{lccccc}
 \tablecaption{\label{table:sim_names} Simulation parameters.}
@@ -663,7 +668,7 @@ freely available in the \castro\ github repository.
 
 \AssignTo{Mike, Kiran, Alice}
 
-Figure~\ref{fig:time_series} shows the time 
+Figure~\ref{fig:time_series} shows the time \MarginPar{this plot needs a description}
 
 Here we'll show the large scale dynamics, colormap plots, etc. and discuss the trends.
 
@@ -807,7 +812,7 @@ We look at iso7 instead of aprox13
 
 \subsection{Resolution}
 
-\MarginPar{do we want to do a low res run?}
+\MarginPar{talk about the low res run?}
 
 Our default resolution puts $\sim 50$ zones vertically in the ``cool''
 model atmosphere height.  To understand the effects of resolution, we
@@ -852,14 +857,14 @@ Larger networks are a straightforward change, and already supported in
 \castro\ using the \pynucastro\ framework~\citep{pynucastro} and JINA
 ReacLib rate database~\citep{reaclib}.
 
-These studies complement the
+These studies complement the\MarginPar{???? Finish this sentence}
 
 Other future work includes mixed H/He bursts.  This will require a
 different reaction network, and perhaps different (more relaxed)
 resolution requirements.
 
 There are several changes we will pursue to the algorithm used to
-model these XRBs.  First, as shown in \citet{castro_sdc}, we have
+model these XRBs.  First, as shown in \citet{castro-sdc}, we have
 developed a fourth-order (in space and time) method for coupling
 hydrodynamics and reactions that should greatly improve the accuracy
 of the simulations.  We expect that by using this new high-order
