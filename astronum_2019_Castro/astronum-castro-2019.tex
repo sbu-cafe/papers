@@ -69,7 +69,7 @@
   Lawrence Berkeley National Lab, Berkeley, CA 94720 USA}
 
 \address{$^3$NVIDIA Corporation, 2788 San Tomas Expressway,
-  Santa Clara, CA, 95050 USA}
+  Santa Clara, CA, 95051 USA}
 
 \ead{michael.zingale@stonybrook.edu}
 
@@ -208,7 +208,7 @@ of the kernels on the GPUs, minimizing data movement.  This has given
 us enormous speed-ups.  Figure~\ref{fig:gpu} shows weak scaling on the
 OLCF Summit machine for a WD merger problem~\cite{wdmergerI}.  When
 using CPUs, we use 42 IBM Power 9 cores per node, while when using
-GPUs we use 6 Nvidia Volta GPUs per node.  We see that the code
+GPUs we use 6 NVIDIA Volta GPUs per node.  We see that the code
 performance is about $10\times$ higher per node when using GPUs, while
 both show excellent weak scaling.
 
@@ -217,7 +217,7 @@ both show excellent weak scaling.
 \includegraphics[width=0.8\linewidth]{wdmerger_gpu}
 \caption{\label{fig:gpu} \castro\ weak scaling on the OLCF Summit
   machine for the white dwarf merger problem.  On each node we use
-  either 42 IBM Power 9 CPU cores or 6 Nvidia Volta GPUs.  Ideal
+  either 42 IBM Power 9 CPU cores or 6 NVIDIA Volta GPUs.  Ideal
   scaling is shown for both cases as the solid line.}
 \end{figure}
 
