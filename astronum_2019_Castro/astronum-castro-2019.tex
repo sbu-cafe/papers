@@ -197,7 +197,7 @@ tile into the computational kernel.  More recently we've ported
 the MPI + OpenMP version.  When run on GPUs, each CUDA thread handles
 the update of a single zone, simply by passing that zone index into
 the computational kernel.  This reuse keeps the code base
-managable---we don't need separate kernels for each
+manageable---we don't need separate kernels for each
 architecture---while allowing us to take advantage of current and next
 generation supercomputers.  All of the solvers needed to run our core
 science problems run on GPUs: the main unsplit PPM hydrodynamics
