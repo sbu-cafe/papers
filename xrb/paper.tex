@@ -127,13 +127,10 @@
 \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
 
 \author{Yuri Cavecchi}
-\affiliation{Department of Astrophysical Sciences, Princeton University, Peyton Hall, Princeton, NJ 08544}
 \affiliation{Mathematical Sciences and STAG Research Centre, University of Southampton, SO17 1BJ}
 
 \author[0000-0003-0439-4556]{Max P.\ Katz}
 \affiliation{NVIDIA Corp}
-
-%
 
 \author[0000-0001-8092-1974]{Weiqun Zhang}
 \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
@@ -608,8 +605,12 @@ Since the equation of hydrostatic equilibrium is linear and our
 blending is a linear combination of two models in hydrostatic
 equilibrum, the blended model is also in vertical equilibrium initially.  We choose
 $x_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once
-the blended model is constructed, we compute $T(y)$ and $(\rho e)(y)$
-from the equation of state.  \MarginPar{show}
+the blended model is constructed, we compute $T(x,y)$ and $(\rho e)(x,y)$
+from the equation of state,
+\begin{align}
+  T(x,y) &= T(\rho(x,y), p(x,y), X_k(x,y)) \\
+  (\rho e)(x,y) &= \rho(x, y) \cdot e(\rho(x,y), p(x,y), X_k(x,y)) 
+\end{align}
 
 \begin{figure}[t]
 \centering
