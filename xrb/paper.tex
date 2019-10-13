@@ -167,25 +167,27 @@ He layer on the surface of a neutron star (see~\citealt{galloway:2017}
 for a review).  Observations of bursts can help constrain the
 properties of the underlying neutron star, helping to illuminate the
 nuclear equation of state~\citep{steiner:2010,ozel:2010}.  Extensive
-observations of XRBs have provided evidence that the burning begins in
-a localized region and spreads over the surface of the neutron
-star~\citep{bhattacharyya:2006,bhattacharyya:2007}.
-
+observations of brightness oscillations during the rise have provided
+evidence that the burning begins in a localized region and spreads
+over the surface of the neutron
+star~\citep{bhattacharyya:2006,bhattacharyya:2007,chakraborty:2014}.
 
 One dimensional studies of XRBs are very successful in predicting the
 lightcurves and recurrance times (see, e.g., \citealt{woosley-xrb}).
 These assume spherical symmetry and thus cannot capture the effects of
 localized burning spreading across the neutron star.  These studies
 have also been used to explore the sensitivity of the burst
-observables to accretion and reaction rates~\citep{Jose2010a,Lampe2016}\MarginPar{ref}.
+observables to accretion and reaction
+rates~\citep{cyburt:2010,Jose2010a,Lampe2016}, and model individual
+bursts~\citep{johnston:2019}.
 
 Multidimensional simulations of burning on a neutron star are more
 difficult, with both the temporal and spatial scales presenting
-challenges~\citep{astronum_2018}.  For the spatial scales, we need to
+challenges (see \citealt{astronum_2018} for an overview).  For the spatial scales, we need to
 resolve the reaction zone, $\mathcal{O}(10~\mbox{cm})$ or smaller, the
 scale height of the atmosphere, $\mathcal{O}(500~\mbox{cm})$, and the
 Rossby scale where the Coriolis force balances the lateral pressure
-gradient, $\mathcal{O}(10^5~\mbox{cm})$~\citep{spitkovsky2002}.  In
+gradient, $\mathcal{O}(10^5~\mbox{cm})$~\citep{spitkovsky2002}.  For
 the temporal scales, capturing the rise, $\mathcal{O}(1~\mbox{s})$,
 and the decay of the burst, $\mathcal{O}(10~\mbox{s})$, and the
 accretion period between bursts, $\mathcal{O}(10^4~\mbox{s})$ is
@@ -218,18 +220,21 @@ soundwaves, enabling large timesteps and efficient modeling of
 subsonic convection.  While these calculations could not support
 the lateral differences needed for flame spreading, they can help
 understand the role that convection plays in distributing the initial
-burning products vertically throughout the neutron star atmosphere.
+burning products vertically throughout the neutron star atmosphere as well
+as the nature of any turbulence the burning front might encounter.
 
 
 
 \cite{cavecchi:2013,art-2015-cavecchi-etal,art-2016-cavecchi-etal} \MarginPar{need a summary}
 
-Detonations are in some sense easier to model, since their structure
-follows from the jump conditions which are solved with shock-capturing
-schemes.  For deflagrations, we either need to resolve the structure
-or use a flame model.  Flame models usually assume that the flame
-structure is thin compared to the size of the system (see, e.g., \citet{Ropke2007}\MarginPar{refs} for applications to Type Ia supernovae).  For XRBs however, the flame thickness is comparable to the scale
-height of the atmosphere, so we cannot use these approximations.
+For deflagrations, we either need to resolve the structure of the
+reaction zone or use a flame model.  Flame models usually assume that
+the flame structure is thin compared to the size of the system (see,
+e.g., \citet{Ropke2007} for applications to Type Ia supernovae).  For
+XRBs however, the flame thickness is comparable to the scale height of
+the atmosphere, so we cannot use these approximations.  Accurate
+models of flames therefore require that we resolve the thermal width,
+which is $\mathcal{O}(10~cm)$ for helium flames~\citep{Timmes00}.
 
 The goal of this study is to understand what numerical and physical
 approximations are needed to perform a full hydrodynamical,
