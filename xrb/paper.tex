@@ -705,12 +705,12 @@ Above that, the composition begins as pure \isot{He}{4}, but as the
 simulation progresses, the flame processes this to heavier nuclei,
 increasing $\bar{A}$.  By about $10~\mbox{ms}$, we see the flame front
 is reasonable well-defined.  We see that the bottom of the burning
-front is listed off of the base of the atmosphere, greatly increasing
+front is lifted off of the base of the atmosphere, greatly increasing
 the surface area of the burning compared with a perfectly vertical
 flame front.  By $20~\mbox{ms}$ the flame has moved out substantially
 and we are beginning to see a gradient in the composition of the ash,
 with the heavier nuclei furthest behind the flame.  The boosting of
-the burning likely artificially increases this effect.
+the burning likely artificially increases this effect. \MarginPar{Doesn't the increased flame speed of the 10/10 run vs. the 5/5 run show this?}
 
 
 % made with time_series.py in flame_wave_boost_10_10_paper with --skip 100
@@ -724,7 +724,7 @@ flame for our standard 10/10 simulation.}
 Figure~\ref{fig:10_10_overview} shows the temperature, energy
 generation rate, and $w$ component of the velocity (the out-of-plane
 velocity induced by the Coriolis force).  This latter field
-illustrates the hurricane effect setup by the laterally spreading
+illustrates the hurricane effect set up by the laterally spreading
 burning front.  In the energy generation rate plot, we see that the
 burning is mostly concentrated toward the bottom of the layer, as
 expected since the density is greatest there.  We see that the peak of
@@ -733,12 +733,12 @@ burning front is propagating to the right.  In the temperature plot,
 we see the effect of our refinement criteria focusing only on the
 atmosphere where we are most dense, with an artificial drop in the
 temperature at the refinement boundary likely due to the thermal
-diffusion.  As we'll see when the lower resolution case, we do not
+diffusion. \MarginPar{Remind the reader what this was/where they should be looking in the plot to see this temperature drop} As we'll see when the lower resolution case, we do not
 believe that this affects the results.
 
 A final feature worth noting is the ash that seems to move along the
 surface at a higher velocity than the flame, via surface gravity
-waves.  The sponging that we perform is likely damping this some, and
+waves.  The sponging that we perform is likely damping this to some extent, and
 the method by which we initialize the flame may induce a larger
 transient than in nature, nevertheless, this surface ash is intriguing
 because it affects the composition of the photosphere ahead of the
@@ -756,8 +756,8 @@ the future.
 
 Our default resolution puts $\sim 80$ zones vertically in the
 ``cool'' \MarginPar{double check} model atmosphere height.  To
-understand the effects of resolution, we also perform a run with one
-fewer level, giving at $20~\mbox{cm}$ resolution overall (this is our
+understand the effects of resolution, we also performed a run with one
+fewer level, giving a $20~\mbox{cm}$ resolution overall (this is our
 10/10-lores run).  Figure~\ref{fig:10_10_lowres} shows the fields at
 20~ms.  The structure is largely the same as the 10/10 run, with
 largely the same flame shape and position, and the same structure in
@@ -874,26 +874,24 @@ $\ln \left(\mathbf{\psi}\right)$ at time $t = 0.02~\mathrm{s}$ for the 10/10 sim
 \end{figure}
 
 We show some phase plots in Figure~\ref{fig:phase_plots}. The phase plot of the
-energy generation rate against the as a function of
-the $x$- and $y$-velocities shows that energy is preferentially generated in
-regions with negative $x$-velocity. This most likely corresponds to material
-being entrained along the underside of the flame front. There are loops of
+energy generation rate as a function of
+the $r$- and $z$-velocities shows that energy is preferentially generated in
+regions with negative $r$-velocity. This most likely corresponds to the burning along the underside of the flame front, where fuel has been entrained along the surface of the flame. This is further supported by the phase plot of the energy generation rate as a function of the $r$-velocity
+and the density, which shows that the energy generation rate peaks at
+$\rho \sim 3 \times 10^5~\mathrm{g/cm}^3$, at the base of the flame.
+
+In the first plot, there are ``loops" of
 points of similar $\dot{e}_\mathrm{nuc}$ in the outer edges of the plot.
 These are likely to correspond to the vortices that appear within the flame,
 and show the fluid moving in a circular motion in $u-v$ phase space.
-
-The phase plot of the energy generation rate as a function of the $x$-velocity
-and the density demonstrates that the energy generation rate peaks at
-$\rho \sim 3 \times 10^5~\mathrm{g/cm}^3$, at the base of the flame.
-\MarginPar{I'm guessing? It's at least towards the base}
 
 \begin{figure}[t]
 \centering
 \plottwo{plots/results/vx_vy_129139}{plots/results/u_rho_129139}
 \caption{\label{fig:phase_plots} Phase plots at time $t = 0.02~\mathrm{s}$.
 \emph{Left}: Phase plot showing the energy generation rate as a function of
-the $x$- and $y$-velocities. \emph{Right}: phase plot showing the energy
-generation rate as a function of the $x$-velocity and the density.}
+the $r$- and $z$-velocities. The black cross shows the location of $u = v = 0$. \emph{Right}: phase plot showing the energy
+generation rate as a function of the $r$-velocity and the density.}
 \end{figure}
 
 Figure~\ref{fig:abar_temp} shows the energy generation rate as a function of the
