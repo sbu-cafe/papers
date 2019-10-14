@@ -654,7 +654,10 @@ one fewer level of refinement.  The slower rotating case using a
 slightly wider domain to accommodate the expected larger Rossby
 length.  We note that the entire simulation framework for these
 calculations is freely available in the \castro\ github
-repository\footnote{\url{https://github.com/AMReX-Astro/Castro}}.
+repository\footnote{\url{https://github.com/AMReX-Astro/Castro}, using
+  the {\tt flame\_wave} setup.}.  In the discussions below, we'll use
+the simulation names defined in the table to refer to specific runs
+and we'll use the 10/10 run as the reference calculation.
 
 \begin{deluxetable}{lcccccc}
 \tablecaption{\label{table:sim_names} Simulation parameters.}
@@ -689,11 +692,24 @@ repository\footnote{\url{https://github.com/AMReX-Astro/Castro}}.
 
 \subsection{General Features}
 
-\AssignTo{Mike, Kiran, Alice}
+Figure~\ref{fig:time_series} shows the time evolution of the 10/10
+simulation, focusing on the mean-molecular weight,
+\begin{equation}
+\bar{A} = \left ( \sum_k \frac{X_k}{A_k} \right )^{-1}
+\end{equation}
+In each frame the buffer of \isot{Ni}{56} that serves as the
+underlying neutron star is seen spanning the bottom of the domain.
+Above that, the composition begins as pure \isot{He}{4}, but as the
+simulation progresses, the flame processes this to heavier nuclei,
+increasing $\bar{A}$.  By about $10~\mbox{ms}$, we see the flame front
+is reasonable well-defined.  We see that the bottom of the burning
+front is listed off of the base of the atmosphere, greatly increasing
+the surface area of the burning compared with a perfectly vertical
+flame front.  By $20~\mbox{ms}$ the flame has moved out substantially
+and we are beginning to see a gradient in the composition of the ash,
+with the heavier nuclei furthest behind the flame.  The boosting of
+the burning likely artificially increases this effect.
 
-Figure~\ref{fig:time_series} shows the time \MarginPar{this plot needs a description}
-
-Here we'll show the large scale dynamics, colormap plots, etc. and discuss the trends.
 
 % made with time_series.py in flame_wave_boost_10_10_paper with --skip 100
 \begin{figure}[h]
@@ -703,18 +719,43 @@ Here we'll show the large scale dynamics, colormap plots, etc. and discuss the t
 flame for our standard 10/10 simulation.}
 \end{figure}
 
+Figure~\ref{fig:10_10_overview} shows the temperature, energy
+generation rate, and $w$ component of the velocity (the out-of-plane
+velocity induced by the Coriolis force).  This latter field
+illustrates the hurricane effect setup by the laterally spreading
+burning front.  In the energy generation rate plot, we see that the
+burning is mostly concentrated toward the bottom of the layer, as
+expected since the density is greatest there.  We see that the peak of
+the burning has moved off of the symmetry axis, demonstrating that the
+burning front is propagating to the right.  In the temperature plot,
+we see the effect of our refinement criteria focusing only on the
+atmosphere where we are most dense, with an artificial drop in the
+temperature at the refinement boundary likely due to the thermal
+diffusion.  As we'll see when the lower resolution case, we do not
+believe that this affects the results.
+
 % made with overview.py
 \begin{figure}[h]
 \centering
 \plotone{flame_wave_boost_10_10_overview}
-\caption{\label{fig:10_10_overview} Temperature, energy generation rate, and out-of-plane velocity for the 10/10 simulation.}
+\caption{\label{fig:10_10_overview} Temperature, energy generation rate, and out-of-plane velocity for the 10/10 simulation at 20~ms.}
 \end{figure}
+
+
+Our default resolution puts $\sim 100$ zones vertically in the
+``cool'' \MarginPar{double check} model atmosphere height.  To
+understand the effects of resolution, we also perform a run with one
+fewer level, giving at $20~\mbox{cm}$ resolution overall.  Figure~\ref{fig:10_10_lowres}
+shows the fields at 20~ms.  
+
 
 % made with slice_multi_crop.py
 \begin{figure}[h]
 \centering
 \plotone{flame_wave_boost_10_10_lowres_slice}
-\caption{\label{fig:10_10_lowres} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 10/10 low resolution simulation.}
+\caption{\label{fig:10_10_lowres} Temperature, mean molecular weight,
+  energy generation rate, and out-of-plane velocity for the 10/10 low
+  resolution simulation at 20~ms.}
 \end{figure}
 
 
@@ -838,18 +879,6 @@ We also try a rotation period of $P_\mathrm{rot} \sim 10^{-3}~\mathrm{s}$.
 
 We look at iso7 instead of aprox13
 
-
-
-\subsection{Resolution}
-
-\MarginPar{talk about the low res run?}
-
-Our default resolution puts $\sim 50$ zones vertically in the ``cool''
-model atmosphere height.  To understand the effects of resolution, we
-also perform a run with one additional level, with a $2\times$ jump
-refining just the region where the density is $10^4~\gcc < \rho \le
-4\times 10^4~\gcc$.  On this level, the grid resolution is
-$10~\mathrm{cm}$.
 
 
 
