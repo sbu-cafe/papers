@@ -626,9 +626,11 @@ from the equation of state,
 
 \begin{figure}[t]
 \centering
+\epsscale{0.75}
 \plotone{initial_model_paper}
 \caption{\label{fig:initial_models} Our ``cool'' (solid) and ``hot''
   (dashed) initial models, showing both the density and temperature.}
+\epsscale{1.0}
 \end{figure}
 
 
@@ -654,7 +656,10 @@ one fewer level of refinement.  The slower rotating case using a
 slightly wider domain to accommodate the expected larger Rossby
 length.  We note that the entire simulation framework for these
 calculations is freely available in the \castro\ github
-repository\footnote{\url{https://github.com/AMReX-Astro/Castro}}.
+repository\footnote{\url{https://github.com/AMReX-Astro/Castro}, using
+  the {\tt flame\_wave} setup.}.  In the discussions below, we'll use
+the simulation names defined in the table to refer to specific runs
+and we'll use the 10/10 run as the reference calculation.
 
 \begin{deluxetable}{lcccccc}
 \tablecaption{\label{table:sim_names} Simulation parameters.}
@@ -689,11 +694,24 @@ repository\footnote{\url{https://github.com/AMReX-Astro/Castro}}.
 
 \subsection{General Features}
 
-\AssignTo{Mike, Kiran, Alice}
+Figure~\ref{fig:time_series} shows the time evolution of the 10/10
+simulation, focusing on the mean-molecular weight,
+\begin{equation}
+\bar{A} = \left ( \sum_k \frac{X_k}{A_k} \right )^{-1}
+\end{equation}
+In each frame the buffer of \isot{Ni}{56} that serves as the
+underlying neutron star is seen spanning the bottom of the domain.
+Above that, the composition begins as pure \isot{He}{4}, but as the
+simulation progresses, the flame processes this to heavier nuclei,
+increasing $\bar{A}$.  By about $10~\mbox{ms}$, we see the flame front
+is reasonable well-defined.  We see that the bottom of the burning
+front is listed off of the base of the atmosphere, greatly increasing
+the surface area of the burning compared with a perfectly vertical
+flame front.  By $20~\mbox{ms}$ the flame has moved out substantially
+and we are beginning to see a gradient in the composition of the ash,
+with the heavier nuclei furthest behind the flame.  The boosting of
+the burning likely artificially increases this effect.
 
-Figure~\ref{fig:time_series} shows the time \MarginPar{this plot needs a description}
-
-Here we'll show the large scale dynamics, colormap plots, etc. and discuss the trends.
 
 % made with time_series.py in flame_wave_boost_10_10_paper with --skip 100
 \begin{figure}[h]
@@ -703,29 +721,111 @@ Here we'll show the large scale dynamics, colormap plots, etc. and discuss the t
 flame for our standard 10/10 simulation.}
 \end{figure}
 
+Figure~\ref{fig:10_10_overview} shows the temperature, energy
+generation rate, and $w$ component of the velocity (the out-of-plane
+velocity induced by the Coriolis force).  This latter field
+illustrates the hurricane effect setup by the laterally spreading
+burning front.  In the energy generation rate plot, we see that the
+burning is mostly concentrated toward the bottom of the layer, as
+expected since the density is greatest there.  We see that the peak of
+the burning has moved off of the symmetry axis, demonstrating that the
+burning front is propagating to the right.  In the temperature plot,
+we see the effect of our refinement criteria focusing only on the
+atmosphere where we are most dense, with an artificial drop in the
+temperature at the refinement boundary likely due to the thermal
+diffusion.  As we'll see when the lower resolution case, we do not
+believe that this affects the results.
+
+A final feature worth noting is the ash that seems to move along the
+surface at a higher velocity than the flame, via surface gravity
+waves.  The sponging that we perform is likely damping this some, and
+the method by which we initialize the flame may induce a larger
+transient than in nature, nevertheless, this surface ash is intriguing
+because it affects the composition of the photosphere ahead of the
+burning front, potentially changing our interpretation of
+observations.  This is something that will be explored more fully in
+the future.
+
 % made with overview.py
 \begin{figure}[h]
 \centering
 \plotone{flame_wave_boost_10_10_overview}
-\caption{\label{fig:10_10_overview} Temperature, energy generation rate, and out-of-plane velocity for the 10/10 simulation.}
+\caption{\label{fig:10_10_overview} Temperature, energy generation rate, and out-of-plane velocity for the 10/10 simulation at 20~ms.}
 \end{figure}
+
+
+Our default resolution puts $\sim 80$ zones vertically in the
+``cool'' \MarginPar{double check} model atmosphere height.  To
+understand the effects of resolution, we also perform a run with one
+fewer level, giving at $20~\mbox{cm}$ resolution overall (this is our
+10/10-lores run).  Figure~\ref{fig:10_10_lowres} shows the fields at
+20~ms.  The structure is largely the same as the 10/10 run, with
+largely the same flame shape and position, and the same structure in
+the energy generation rate.  Since we do not have a jump in refinement
+right below the atmosphere, we don't see the strong diffusive effect
+there, but we do see some cooling in the \isot{Ni}{56} region.  This
+is likely a resolution effect, again due to the strong gradient in
+temperature at the base of the atmosphere.
+
 
 % made with slice_multi_crop.py
 \begin{figure}[h]
 \centering
 \plotone{flame_wave_boost_10_10_lowres_slice}
-\caption{\label{fig:10_10_lowres} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 10/10 low resolution simulation.}
+\caption{\label{fig:10_10_lowres} Temperature, mean molecular weight,
+  energy generation rate, and out-of-plane velocity for the 10/10 low
+  resolution simulation at 20~ms.}
 \end{figure}
 
 
 
+
+\subsection{Effects of our Approximations}
+
+The results above all used a boosting of 10/10.  To see how the
+results are sensitivity to our boosting we ran a simulation with a
+boosting of 5/5.  This is shown in Figure~\ref{fig:5_5_overview}.  The
+results look qualitatively the same---a laterally propagating flame
+develops that is lifted off of the bottom of the fuel layer.  The
+flame has not moved out as far as in the 10/10 simulation, simply
+because there is less energy release, but we expect that if we were to
+run this out twice as long, the flame would have advanced to the
+position seen in our 10/10 runs.  The good agreement in the structure
+of the flame seen with the lower boosting gives us confidence that the
+overall aspects of the flame structure and acceleration we are seeing
+are robust to the approximations we make.
+
+\begin{figure}[h]
+\centering
+\plotone{flame_wave_boost_5_5_slice}
+\caption{\label{fig:5_5_overview} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 5/5 simulation at 20~ms.}
+\end{figure}
+
+We can also look at the 
+
 \subsection{Flame Acceleration}
 
-\AssignTo{Kiran}
+To measure the propagation rate of the burning front, we track the
+location beyond the hottest part of the flame where
+$\dot{e}_\mathrm{nuc}$ first drops to less than $0.1 \%$ of
+maximum. Using $0.1 \%$ of the peak value rather than the peak value
+itself helps to mitigate fluctuations caused by localized fluid
+motions, as the reduced value lies in a less turbulent part of the
+burning region. We also average $\dot{e}_\mathrm{nuc}$ over the
+vertical coordinate to further dampen these fluctuations. After an
+initial transient period typically spanning $\sim 3$ ms, the flame
+settles into a state of steady propagation. The position data here are
+well fitted by a linear function of time (as seen in Figure
+\ref{fig:flame_speed}), and the resulting slope gives the velocity of
+the flame front.
 
-To measure the propagation rate of the burning front, we track the location beyond the hottest part of the flame where $\dot{e}_\mathrm{nuc}$ first drops to less than $0.1 \%$ of maximum. Using $0.1 \%$ of the peak value rather than the peak value itself helps to mitigate fluctuations caused by localized fluid motions, as the reduced value lies in a less turbulent part of the burning region. We also average $\dot{e}_\mathrm{nuc}$ over the vertical coordinate to further dampen these fluctuations. After an initial transient period typically spanning $\sim 3$ ms, the flame settles into a state of steady propagation. The position data here are well fitted by a linear function of time (as seen in Figure \ref{fig:flame_speed}), and the resulting slope gives the velocity of the flame front.
-
-Table \ref{table:flame_speeds} gives the flame speed measured in each multidimensional simulation, as well as laminar speeds obtained from any corresponding 1D runs. The 2D flames propagate at speeds about an order of magnitude faster than their 1D counterparts. The increase in flame speed is likely a product of hydrodynamical effects such as turbulence, wrinkling, and convective cycles, which bring cooler fuel from ahead of the front into the hottest part of the burning region.
+Table \ref{table:flame_speeds} gives the flame speed measured in each
+multidimensional simulation, as well as laminar speeds obtained from
+any corresponding 1D runs. The 2D flames propagate at speeds about an
+order of magnitude faster than their 1D counterparts. The increase in
+flame speed is likely a product of hydrodynamical effects such as
+turbulence, wrinkling, and convective cycles, which bring cooler fuel
+from ahead of the front into the hottest part of the burning region.
 
 \begin{deluxetable}{lcc}
 	\tablecaption{\label{table:flame_speeds}Turbulent and laminar flame speeds.}
@@ -746,20 +846,7 @@ Table \ref{table:flame_speeds} gives the flame speed measured in each multidimen
 \caption{\label{fig:flame_speed}The position of the burning front for each simulation run as a function of time. The dashed lines show linear least squares fits for $t \gtrsim 6$ ms.}
 \end{figure}
 
-\subsection{Boosting}
-
-\AssignTo{Kiran, Mike}
-
-To meet reasonable timescales, we boosted the microphysical inputs to
-the flame to result in a faster flame.  Here we look at the effect of
-this choice.
-
-\begin{figure}[h]
-\centering
-\plotone{flame_wave_boost_5_5_slice}
-\caption{\label{fig:5_5_overview} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 5/5 simulation.}
-\end{figure}
-
+{\color{red} Should say qualitatively what the plot shows}
 
 \subsection{Entrainment, Flow Features}
 
@@ -826,30 +913,7 @@ could correspond to less common reaction pathways in the reaction network.
 \caption{\label{fig:abar_temp} Phase plot of energy generation rate as a function of $\bar{A}$ and temperature at time $t = 0.02~\mathrm{s}$.}
 \end{figure}
 
-\subsection{Rotation Rate}
 
-\AssignTo{Mike, Kiran}
-
-We also try a rotation period of $P_\mathrm{rot} \sim 10^{-3}~\mathrm{s}$.
-
-\subsection{Reaction Network}
-
-\AssignTo{Mike, Kiran}
-
-We look at iso7 instead of aprox13
-
-
-
-\subsection{Resolution}
-
-\MarginPar{talk about the low res run?}
-
-Our default resolution puts $\sim 50$ zones vertically in the ``cool''
-model atmosphere height.  To understand the effects of resolution, we
-also perform a run with one additional level, with a $2\times$ jump
-refining just the region where the density is $10^4~\gcc < \rho \le
-4\times 10^4~\gcc$.  On this level, the grid resolution is
-$10~\mathrm{cm}$.
 
 
 
