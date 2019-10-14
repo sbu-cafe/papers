@@ -642,6 +642,13 @@ from the equation of state,
 \epsscale{1.0}
 \end{figure}
 
+The initial model is created on a uniform grid at the resolution
+corresponding to the finest level of refinement.  At regions of the
+atmosphere that are not refined to the finest level, we interpolate
+density, pressure, and composition on the grid and then obtain the
+temperature from the EOS.  Because of the strong degeneracy at the
+high densities at the bottom of the domain, the numerical error in the
+interpolation can create a temperature jump there.\MarginPar{discuss better}
 
 
 %======================================================================
@@ -741,9 +748,12 @@ the burning has moved off of the symmetry axis, demonstrating that the
 burning front is propagating to the right.  In the temperature plot,
 we see the effect of our refinement criteria focusing only on the
 atmosphere where we are most dense, with an artificial drop in the
-temperature at the refinement boundary likely due to the thermal
-diffusion. \MarginPar{Remind the reader what this was/where they should be looking in the plot to see this temperature drop} As we'll see when the lower resolution case, we do not
-believe that this affects the results.
+temperature at the refinement boundary due to the interpolation
+procedure of our initial model which focused on pressure and density
+rather than temperature. \MarginPar{Remind the reader what this
+  was/where they should be looking in the plot to see this temperature
+  drop} As we'll see when the lower resolution case, we do not believe
+that this affects the results.
 
 A final feature worth noting is the ash that seems to move along the
 surface at a higher velocity than the flame, via surface gravity
@@ -771,10 +781,10 @@ fewer level, giving a $20~\mbox{cm}$ resolution overall (this is our
 20~ms.  The structure is largely the same as the 10/10 run, with
 largely the same flame shape and position, and the same structure in
 the energy generation rate.  Since we do not have a jump in refinement
-right below the atmosphere, we don't see the strong diffusive effect
-there, but we do see some cooling in the \isot{Ni}{56} region.  This
-is likely a resolution effect, again due to the strong gradient in
-temperature at the base of the atmosphere.
+right below the atmosphere, we don't see the temperature feature from
+the initial model mapping there, but we do see some cooling in the
+\isot{Ni}{56} region.  This is likely a resolution effect, again due
+to the strong gradient in temperature at the base of the atmosphere.
 
 
 % made with slice_multi_crop.py
@@ -1039,12 +1049,14 @@ Data System Bibliographic Services.
 
 \begin{deluxetable}{rL}
 	\tablecaption{\label{table:diffusion} Convergence of diffusion test problem.}
-	\tablehead{\colhead{resolution} & \colhead{error}}
+	\tablehead{\colhead{base resolution} & \colhead{L-inf error}}
 	\startdata
+\cutinhead{no refinement}
 	32  & 5.995\times 10^{-3} \\
         64  & 1.477\times 10^{-3} \\
        128  & 3.664\times 10^{-4} \\
        256  & 9.139\times 10^{-5} \\
+\cutinhead{one level of refinement}
         32  & 1.480\times 10^{-3} \\
         64  & 3.685\times 10^{-4} \\
        128  & 9.406\times 10^{-5} \\
@@ -1053,12 +1065,20 @@ Data System Bibliographic Services.
 	%
 \end{deluxetable}
 
-Show diffusion test problem and convergence.
+Table~\ref{table:diffusion} shows the L-inf error against the analytic
+solution for the diffusion test problem.  The tests were run in two
+fashions: no AMR, and AMR with one level of refinement (a jump of
+$2\times$).  In both cases we see second-order convergence of the
+error.  Figure~\ref{fig:diffusion} shows the temperature at the end of
+the simulation of the $64\times 128$ base grid plus one level of
+refinement simulation, with the grids shown to illustrate where the
+refinement jump is.
 
 \begin{figure}[t]
 \centering
 \plotone{diffusion_temp_amr}
-\caption{\label{fig:diffusion} blah}
+\caption{\label{fig:diffusion} Temperature for the diffusion test problem at $10^{-3}~\mbox{s}$
+for a diffusion test with a $64\times 128$ zone base grid and one level of refinement.}
 \end{figure}
 
 
