@@ -936,43 +936,60 @@ could correspond to less common reaction pathways in the reaction network.
 
 \AssignTo{everyone}
 
-Full hydrodynamics models of flame spreading in XRB are possible with certain approximations.
+We have shown the results of our fully hydrodynamical, multidimensional simulations of flame propagation through the atmosphere of a neutron star. By using the fully compressible hydrodynamics equations, we are able to capture the vertical dynamics of the system. To accurately model the flame propagation, it is necessary to sufficiently resolve the scale height of the atmosphere. It is also important that there is a thin transition between the underlying neutron star and the atmosphere, to ensure that the peak temperature occurs at the correct base density. 
 
-CPU cost
-
-Accurate simulations require
-\begin{enumerate}
-\item Resolving the scale height of the atmosphere
-
-\item Thin transition between underlying neutron star and atmosphere, to ensure that the peak temperature
-hits right at the proper base density
-\end{enumerate}
-
-The main approximations we made were
-\begin{enumerate}
-\item A higher than normal rotation rate
-\item A boosted flame
-\item Simplified reaction network
-\item A 2.5D model for the flow
-\end{enumerate}
-The first two of these were needed to reduce the spatial and temporal
-scales needed to model, making the simulations feasible.  Using the
-simulation framework developed here, these both can be relaxed in the
-future, at the cost of more computer time.  The same goes for 2.5D
+In order to satisfy these requirements whilst allowing the simulations to be computationally feasible, we used several approximations: a higher than normal rotation rate, a boosted flame, a simplified reaction network, and a 2.5D model for the flow. The first two of these were needed to reduce the spatial and temporal scales needed to model. Using the simulation framework developed here, these both can be relaxed in the future, at the cost of more computer time. The same goes for 2.5D
 vs.\ full 3D---the only difference is computer time, and our future
-calculations will explore the 3D evolution and compare to these.  In particular,
+calculations will explore the 3D evolution and compare to the 2.5D simulations presented here. In particular,
 in 3D we will be able to explore shear instabilities at the flame front.
 Larger networks are a straightforward change, and already supported in
 \castro\ using the \pynucastro\ framework~\citep{pynucastro} and JINA
-ReacLib rate database~\citep{reaclib}.
+ReacLib rate database~\citep{reaclib}. 
 
-These studies complement the\MarginPar{???? Finish this sentence}
+\MarginPar{Relate our work to previous work}
 
-Other future work includes mixed H/He bursts.  This will require a
+In addition to extending our models to 3D and relaxing the approximations used in this study, in the future we plan to perform a number of additional further studies. These include investigating the effects of ignition latitude and different initial models. We also plan to model mixed H/He bursts. This will require a
 different reaction network, and perhaps different (more relaxed)
-resolution requirements.
+resolution requirements. A long term goal is to include magnetohydrodynamics in our models. Although the magnetic fields of neutron stars exhibiting X-ray bursts are relatively weak, with $B \leq 10^8 - 10^9$G \citep{mukherjee2015magnetic} (at least compared to e.g. magnetars, which have $B\sim 10^{15}$G), it has been found by \citet{art-2016-cavecchi-etal} that even weak magnetic fields could have a non-negligible effect on the flame propagation, reducing confinement due to the Coriolis force and leading to increased flame speeds. Ultimately, we wish to link our simulations to observed light curves. To do this, we will need to explore radiation transport in order to model how the burst energy propagates through the outer layers of the neutron star atmosphere. 
 
-There are several changes we will pursue to the algorithm used to
+
+% Full hydrodynamics models of flame spreading in XRB are possible with certain approximations.
+
+% CPU cost
+
+% Accurate simulations require
+% \begin{enumerate}
+% \item Resolving the scale height of the atmosphere
+
+% \item Thin transition between underlying neutron star and atmosphere, to ensure that the peak temperature
+% hits right at the proper base density
+% \end{enumerate}
+
+% The main approximations we made were
+% \begin{enumerate}
+% \item A higher than normal rotation rate
+% \item A boosted flame
+% \item Simplified reaction network
+% \item A 2.5D model for the flow
+% \end{enumerate}
+% The first two of these were needed to reduce the spatial and temporal
+% scales needed to model, making the simulations feasible.  Using the
+% simulation framework developed here, these both can be relaxed in the
+% future, at the cost of more computer time.  The same goes for 2.5D
+% vs.\ full 3D---the only difference is computer time, and our future
+% calculations will explore the 3D evolution and compare to these.  In particular,
+% in 3D we will be able to explore shear instabilities at the flame front.
+% Larger networks are a straightforward change, and already supported in
+% \castro\ using the \pynucastro\ framework~\citep{pynucastro} and JINA
+% ReacLib rate database~\citep{reaclib}.
+
+% These studies complement the\MarginPar{???? Finish this sentence}
+
+% Other future work includes mixed H/He bursts.  This will require a
+% different reaction network, and perhaps different (more relaxed)
+% resolution requirements.
+
+In addition to exploring other aspects of the XRB physics, there are several changes we will pursue to the algorithm used to
 model these XRBs.  First, as shown in \citet{castro-sdc}, we have
 developed a fourth-order (in space and time) method for coupling
 hydrodynamics and reactions that should greatly improve the accuracy
@@ -984,7 +1001,7 @@ nodes with both CPUs and GPUs.  The GPU-enabled algorithm will
 increase the performance, allowing us to run bigger domains and/or
 eliminate the boosting used here.
 
-MHD, radiation transport
+% MHD, radiation transport
 
 
 \acknowledgements \castro\ is open-source and freely available at
