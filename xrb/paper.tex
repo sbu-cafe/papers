@@ -626,9 +626,11 @@ from the equation of state,
 
 \begin{figure}[t]
 \centering
+\epsscale{0.75}
 \plotone{initial_model_paper}
 \caption{\label{fig:initial_models} Our ``cool'' (solid) and ``hot''
   (dashed) initial models, showing both the density and temperature.}
+\epsscale{1.0}
 \end{figure}
 
 
@@ -733,6 +735,16 @@ atmosphere where we are most dense, with an artificial drop in the
 temperature at the refinement boundary likely due to the thermal
 diffusion.  As we'll see when the lower resolution case, we do not
 believe that this affects the results.
+
+A final feature worth noting is the ash that seems to move along the
+surface at a higher velocity than the flame, via surface gravity
+waves.  The sponging that we perform is likely damping this some, and
+the method by which we initialize the flame may induce a larger
+transient than in nature, nevertheless, this surface ash is intriguing
+because it affects the composition of the photosphere ahead of the
+burning front, potentially changing our interpretation of
+observations.  This is something that will be explored more fully in
+the future.
 
 % made with overview.py
 \begin{figure}[h]
