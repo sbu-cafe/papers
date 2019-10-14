@@ -1047,6 +1047,26 @@ Data System Bibliographic Services.
 \section{Diffusion Tests}
 \label{app:diffusion}
 
+To test our implementation of diffusion we created a unit test in
+\castro\ that just uses the diffusion solver.  This test uses the
+standard Gaussian initial conditions---the diffusion of a Gaussian
+remains Gaussian, with a lower amplitude and wider width.  This is run
+with a constant diffusion coefficent.  The point of this test is to
+demonstrate that the implementation, done in a predictor-corrector
+form is second-order accurate.
+
+We use a 2-d axisymmetric geometry, with a reflection boundary on the symmetry axis (left)
+and Neumann boundaries on all other sides.  In this geometry, the solution behaves like
+a spherical problem, and has the form:
+\begin{equation}
+  T(r) = T_1 + (T_2 - T_1) \left (\frac{t_0}{t + t_0} \right )^{3/2} e^{-r^2/(4 D (t + t_0))}
+\end{equation}
+where $t_0$ is a small time used to set the initial width of the
+Gaussian, $r$ is the distance from the origin, and $D$ is the
+diffusion coefficient.  $T_1$ is the ambient temperature and $T_2$ is
+the temperature of the peak of the Gaussian.  We use $D = 1$, $T_1 = 1$, $T_2 = 2$,
+and $t_0 = 0.001$.
+
 \begin{deluxetable}{rL}
 	\tablecaption{\label{table:diffusion} Convergence of diffusion test problem.}
 	\tablehead{\colhead{base resolution} & \colhead{L-inf error}}
