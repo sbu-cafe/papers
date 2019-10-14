@@ -638,30 +638,23 @@ from the equation of state,
 %======================================================================
 \section{Simulations and Results}\label{Sec:results}
 
-
-All simulations were run with in a domain $8.192\times
-10^4~\mathrm{cm} \times 2.048\times 10^4~\mathrm{cm}$.  With our
-default refinement, this gives a resolution of $20~\mathrm{cm}$ on the
-finest level.  As a comparison, the resolution in our detonation
-models was $98~\mathrm{cm}$ and in our multidimensional convection
-studies was $6~\mathrm{cm}$.
-
-We specify the rotation period, $P_\mathrm{rot}$, which is related to
-the angular rotation rate as $\Omega = 2\pi / P_\mathrm{rot}$.  Our
-default rotation period is $0.0005~\mathrm{s}$ (2000 times per
-second).  This is quite fast, but picked to make the Rossby length
-small enough to fit in the spatial scales we can model.  With this
-rotation rate, the Rossby length is
+Table~\ref{table:sim_names} summarizes the simulations that we ran.
+The majority of them used a reaction rate boosting of $10$ and a
+conductivity boosting of $10$, which should increase the flame speed
+by a factor of $10$.  Most simulations used a resolution of
+$10~\mbox{cm}$ and a domain width of a little more than one kilometer.  
+We use an artifically high rotation rate of
+$2000~\mbox{Hz}$, which gives a Rossby length of
 \begin{equation}
 L_R = \frac{\sqrt{g H_0}}{\Omega} \sim 3\times 10^4~\mathrm{cm}
 \end{equation}
-\MarginPar{we should make the width of the hot region closer to the
-  Rossby length} using a scale height $H_0 = 10^3~\mathrm{cm}$.  This
-is less than half our domain width.  Table~\ref{table:sim_names} lists
-the simulations run and their parameters.
-
-We note that the entire simulation framework for these calculations is
-freely available in the \castro\ github repository\footnote{\url{https://github.com/AMReX-Astro/Castro}}.
+using a scale height $H_0 = 10^3~\mathrm{cm}$.  This is about one
+quarter of domain width.  The run at $20~\mbox{cm}$ resolution used
+one fewer level of refinement.  The slower rotating case using a
+slightly wider domain to accommodate the expected larger Rossby
+length.  We note that the entire simulation framework for these
+calculations is freely available in the \castro\ github
+repository\footnote{\url{https://github.com/AMReX-Astro/Castro}}.
 
 \begin{deluxetable}{lcccccc}
 \tablecaption{\label{table:sim_names} Simulation parameters.}
