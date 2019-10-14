@@ -638,14 +638,6 @@ from the equation of state,
 %======================================================================
 \section{Simulations and Results}\label{Sec:results}
 
-Things to try to make the model feasible:
-\begin{itemize}
-\item Start the initial perturbation location near the Rossby radius
-\item Hotter ``hot'' model
-\item Aprox13
-\item Higher diffusion cutoff lessens the timestep restriction
-\end{itemize}
-
 
 All simulations were run with in a domain $8.192\times
 10^4~\mathrm{cm} \times 2.048\times 10^4~\mathrm{cm}$.  With our
@@ -671,15 +663,30 @@ the simulations run and their parameters.
 We note that the entire simulation framework for these calculations is
 freely available in the \castro\ github repository\footnote{\url{https://github.com/AMReX-Astro/Castro}}.
 
-\begin{deluxetable}{lccccc}
+\begin{deluxetable}{lcccccc}
 \tablecaption{\label{table:sim_names} Simulation parameters.}
-\tablehead{\colhead{name} & \colhead{reaction boost} & \colhead{conductivity boost} & \colhead{fine grid resolution} & \colhead{rotation rate}  & \colhead{network}}
+\tablehead{\colhead{name} &
+           \colhead{reaction} &
+           \colhead{conductivity} &
+           \colhead{fine grid} &
+           \colhead{rotation} &
+           \colhead{domain size} &
+           \colhead{network} \\
+%
+           \colhead{} &
+           \colhead{boost} &
+           \colhead{boost} &
+           \colhead{resolution} &
+           \colhead{rate} &
+           \colhead{} &
+           \colhead{}
+}
 \startdata
-10/10 & 10 & 10 & 10~cm & 2000~Hz & {\tt aprox13} \\
-10/10-slow & 10 & 10 & 10~cm & 1000~Hz & {\tt aprox13} \\
-10/10-lores & 10 & 10 & 20~cm & 2000~Hz & {\tt aprox13} \\
-5/5 & 5 & 5 & 10~cm & 2000~Hz & {\tt aprox13} \\
-10/10-iso7 & 10 & 10 & 10~cm & 2000~Hz & {\tt iso7} \\
+10/10 & 10 & 10 & 10~cm & 2000~Hz & $1.2288\times 10^5~\mbox{cm} \times 3.072\times 10^4~\mbox{cm}$ & {\tt aprox13} \\
+10/10-slow & 10 & 10 & 10~cm & 1000~Hz & $1.8432\times 10^5~\mbox{cm} \times 3.072\times 10^4~\mbox{cm}$ &{\tt aprox13} \\
+10/10-lores & 10 & 10 & 20~cm & 2000~Hz & $1.2288\times 10^5~\mbox{cm} \times 3.072\times 10^4~\mbox{cm}$ &{\tt aprox13} \\
+5/5 & 5 & 5 & 10~cm & 2000~Hz & $1.2288\times 10^5~\mbox{cm} \times 3.072\times 10^4~\mbox{cm}$  &{\tt aprox13} \\
+10/10-iso7 & 10 & 10 & 10~cm & 2000~Hz & $1.2288\times 10^5~\mbox{cm} \times 3.072\times 10^4~\mbox{cm}$ &{\tt iso7} \\
 \enddata
 \end{deluxetable}
 
@@ -706,8 +713,15 @@ flame for our standard 10/10 simulation.}
 % made with overview.py
 \begin{figure}[h]
 \centering
-\plotone{flame_boost_10_10_overview}
+\plotone{flame_wave_boost_10_10_overview}
 \caption{\label{fig:10_10_overview} Temperature, energy generation rate, and out-of-plane velocity for the 10/10 simulation.}
+\end{figure}
+
+% made with slice_multi_crop.py
+\begin{figure}[h]
+\centering
+\plotone{flame_wave_boost_10_10_lowres_slice}
+\caption{\label{fig:10_10_lowres} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 10/10 low resolution simulation.}
 \end{figure}
 
 
