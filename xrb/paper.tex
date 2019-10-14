@@ -801,7 +801,24 @@ are robust to the approximations we make.
 \caption{\label{fig:5_5_overview} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 5/5 simulation at 20~ms.}
 \end{figure}
 
-We can also look at the 
+We can also look at the effect of the network size.
+Figure~\ref{fig:network} shows a comparison of the 10/10 boosting run
+with the standard 13-isotope ``aprox13'' network and the reduced
+7-isotope ``iso7'' network.  We see that the flame in the aprox13 case
+is slightly more advanced and has a higher $\bar{A}$ than the iso7
+case.  We see in the next section that these two networks give largely
+the same flame speed.  The reduced network size saves a lot of memory
+which will be important when we transition to 3-d simulations.
+
+\begin{figure}[h]
+\centering
+\plotone{network_compare}
+\caption{\label{fig:network} Mean molecular weight at 15~ms comparing a run with
+  aprox13 vs a run with the iso7 network.}
+\end{figure}
+
+
+The final approximation to explore is our choice of rotation rate.
 
 \subsection{Flame Acceleration}
 
