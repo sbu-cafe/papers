@@ -160,8 +160,6 @@ other multidimensional studies of burning in X-ray bursts.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-\AssignTo{Mike, Alice}
-
 X-ray bursts (XRBs) are thermonuclear explosions of an accreted H or
 He layer on the surface of a neutron star (see~\citealt{galloway:2017}
 for a review).  Observations of bursts can help constrain the
@@ -234,7 +232,7 @@ e.g., \citet{Ropke2007} for applications to Type Ia supernovae).  For
 XRBs however, the flame thickness is comparable to the scale height of
 the atmosphere, so we cannot use these approximations.  Accurate
 models of flames therefore require that we resolve the thermal width,
-which is $\mathcal{O}(10~cm)$ for helium flames~\citep{Timmes00}.
+which is $\mathcal{O}(10~\mbox{cm})$ for helium flames~\citep{Timmes00}.
 
 The goal of this study is to understand what numerical and physical
 approximations are needed to perform a full hydrodynamical,
@@ -284,10 +282,10 @@ that is overall second-order accurate in space and time.
 library~\citep{amrex_joss} to manage a hierarchy of grids at different
 resolutions.
 
- An equation of state of the form $p = p(\rho, e,
-\{X_k\})$ completes the thermodynamic description of the
-system.  Finally, $\kth$ is the thermal conductivity and $T$ is the
-temperature.  Diffusion is treated explicitly in time.
+An equation of state of the form $p = p(\rho, e, X_k)$ completes the
+thermodynamic description of the system.  Finally, $\kth$ is the
+thermal conductivity and $T$ is the temperature.  Diffusion is treated
+explicitly in time.
 
 Since the neutron star rotates, we work in a corotating frame, with
 angular velocity $\Omegab$.  Further, for the two-dimensional
@@ -312,7 +310,9 @@ We will neglect the centrifugal force---with our plane-parallel
 geometry, this will act only in the lateral direction, and is not
 expected to greatly affect the dynamics.  Carrying the Coriolis force
 allows us to capture the geostrophic balance\MarginPar{ref, Spitkovsky 2002?} that sets
-up via lateral hydrostatic equilibrium.
+up via lateral hydrostatic equilibrium.  In the discussions below, we will use the Castro coordinate
+names, $(x, y)$ in our notation.
+
 
 Writing the momentum equation in terms of the $u$, $v$, and $w$
 components, and neglecting the centrifugal force, we have:
@@ -412,10 +412,19 @@ normal velocity set to the larger of zero or the velocity at the top
 of the domain (this prevents incoming velocities at the top) and the
 transverse velocities set to zero.
 
-sponge\AssignTo{Mike will write}
+When we begin the simulation, there is a transient phase as the flame
+gets established.  Material that is forced upward will encounter the
+steep density gradient at the top of the atmosphere and accelerate as
+it is blown out of the atmosphere.  Eventually this material will fall
+back to the top of the atmosphere.  In this paper, we are mostly
+concerned with the behavior of the flame and not any material that is
+violently blown out of the top of the atmosphere, so we apply a sponge
+to this region.  This is similar to what we've done in \cite{xrb3d}.
+The sponge drives the velocity of the material in the low
+density \MarginPar{add mathematical form of sponge} regions at the top
+of the atmosphere to zero.  This sponging helps increase our timestep
+as well.
 
-In the discussions below, we will use the Castro coordinate
-names, $(x, y)$ in our notation.
 
 
 
