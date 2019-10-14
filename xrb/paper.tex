@@ -459,18 +459,18 @@ microphysics.  Figure~\ref{fig:flame} shows the flame properties for a
 He flame using the standard conductivities and our simple reaction
 network.  This flame had a density of $2\times 10^6~\gcc$ and 
 % \MarginPar{double check}
-temperature of $5\times 10^7$~K.  We note that this flame speed is
-about $2\times 10^4~\cms$, the flame width is about 20~cm, and it
-takes about 0.1~s to settle into a sustained flame.  Note this speed
+temperature of $5\times 10^7$~K.  We observe that this flame speed is
+about $10^5~\cms$, the flame width is about 40~cm, and it
+takes about 3~ms to settle into a sustained flame.  Note that this speed
 is quite small compared to the speed estimated in
-\citet{spitkovsky2002}.  We expected a multidimensional flame to
+\citet{spitkovsky2002}.  We expect a multidimensional flame to
 accelerate due to hydrodynamics interactions (wrinkling, turbulence
 interactions, directed flows feeding fuel into the flame, ...).
 
 
 \begin{figure*}[t]
-\plottwo{flame}{speed}
-\caption{\label{fig:flame} Our ``standard'' flame.}
+\plottwo{flame.pdf}{speed.pdf}
+\caption{\label{fig:flame} Time-evolution of the 10$\times$ boosted 1D laminar flame. The left plot shows temperature and nuclear energy generation profiles at 11 different time points, while the right plot shows flame propagation speed and flame thickness as functions of time.}
 \end{figure*}
 
 We measure the flame width as:
@@ -482,13 +482,22 @@ spatial resolution, $\Delta x$ of $\lambda_f/\Delta x \sim 5$~\citep{SNld}.  The
 conditions represent the bottom of the He layer.  As the density
 decreases with altitude, the flame thickness increases and the flame
 speed decreases, so we will easily resolve the flame structure throughout
-the rest of the atmosphere.
+the rest of the atmosphere. 
 
-Flame properties are show in Table XX \MarginPar{we'll redo the table with 10/10 and 5/5/ and unboosted flame}
+Flame propagation rates from both the 1D laminar flames and full 2D simulations are given in Table \ref{table:flame_speeds}. 
 
-\iffalse
-\input{flame_table_1d.tex}
-\fi
+\begin{deluxetable}{lcc}
+	\tablecaption{\label{table:flame_speeds}Turbulent and laminar flame speeds.}
+	\tablehead{\colhead{run} & \colhead{$s_T$ (km s$^{-1}$)} & \colhead{$s_L$ (km s$^{-1}$)}}
+	\startdata
+	10/10 boost & $9.18 \pm 0.03$  & $1.06 \pm 0.01$ \\
+	5/5 boost & $4.00 \pm 0.01$ & $0.56 \pm 0.01$ \\
+	iso7 network & $7.56 \pm 0.02$ & $-$ \\
+	lowres & $9.33 \pm 0.04$ & $-$ \\
+	1000 Hz & $18.6 \pm 0.16$ & $-$ \\
+	\enddata
+	%
+\end{deluxetable}
 
 %======================================================================
 % Initial Model
@@ -843,19 +852,6 @@ order of magnitude faster than their 1D counterparts. The increase in
 flame speed is likely a product of hydrodynamical effects such as
 turbulence, wrinkling, and convective cycles, which bring cooler fuel
 from ahead of the front into the hottest part of the burning region.
-
-\begin{deluxetable}{lcc}
-	\tablecaption{\label{table:flame_speeds}Turbulent and laminar flame speeds.}
-	\tablehead{\colhead{run} & \colhead{$s_T$ (km s$^{-1}$)} & \colhead{$s_L$ (km s$^{-1}$)}}
-	\startdata
-	10/10 boost & $9.18 \pm 0.03$  & $1.06 \pm 0.01$ \\
-	5/5 boost & $4.00 \pm 0.01$ & $0.56 \pm 0.01$ \\
-	iso7 network & $7.56 \pm 0.02$ & $-$ \\
-	lowres & $9.33 \pm 0.04$ & $-$ \\
-	1000 Hz & $18.6 \pm 0.16$ & $-$ \\
-	\enddata
-	%
-\end{deluxetable}
 
 \begin{figure}[t]
 \centering
