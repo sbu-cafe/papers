@@ -145,7 +145,7 @@
 %======================================================================
 \begin{abstract}
 We investigate the structure of laterally-propagating flames through
-the highly-stratified burning layer in an X-ray burst.  Simple
+the highly-stratified burning layer in an X-ray burst.  Simple \MarginPar{is simple the right word here?}
 two-dimensional simulations of flame propagation are performed through
 a rotating plane-parallel atmosphere, exploring the structure of the
 flame.  We discuss the approximations needed to capture the length and
@@ -347,7 +347,6 @@ smaller 7-isotope network described in \citet{iso7}.  We integrate the
 network using the VODE integration package~\citep{vode}, and our
 implementation is provided in the StarKiller Microphysics
 source~\citep{starkiller}.
-
 We note that we do not explicitly model viscosity.  The reactions will
 provide the smallscale cutoff to the instabilities and turbulence at
 the flame front.  We also do not include species
@@ -381,7 +380,7 @@ $2.5\times 10^4~\gcc$), since this is where we expect the flame to
 propagate.  At the start of the simulation, $3.4\%$ of the domain is
 at the finest resolution.  This increases to $7.4\%$ by the end of the
 simulation, because of the increase in the scale height of the atmosphere
-behind the flame.
+behind the flame.  \MarginPar{add a pic of the grid to show refinement}
 
 Thermal diffusion is modeled explicitly, using a predictor-corrector
 scheme to achieve second-order accuracy.  A verification test of the
