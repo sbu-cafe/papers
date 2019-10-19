@@ -455,7 +455,7 @@ To understand the time and length scales involved in flame
 propagation, we do a 1D simulation of a laminar flame using our
 microphysics.  Figure~\ref{fig:flame} shows the flame properties for a 
 % \AssignTo{Kiran and Mike will remake with the 10/10 boosted flame}
-He flame using the standard conductivities and our simple reaction
+He flame using the standard conductivities and our simple reaction \MarginPar{standard?  this is a boosted flame, right?}
 network.  This flame had a density of $2\times 10^6~\gcc$ and 
 % \MarginPar{double check}
 temperature of $5\times 10^7$~K.  We observe that this flame speed is
@@ -483,7 +483,7 @@ decreases with altitude, the flame thickness increases and the flame
 speed decreases, so we will easily resolve the flame structure throughout
 the rest of the atmosphere. 
 
-Flame propagation rates from both the 1D laminar flames and full 2D simulations are given in Table \ref{table:flame_speeds}. 
+Flame propagation rates from both the 1D laminar flames and full 2D simulations are given in Table \ref{table:flame_speeds}.  \MarginPar{I think we should only report the laminar speeds here and defer the turbulent speeds until the section where we talk about how they are computed}
 
 \begin{deluxetable}{lcc}
 	\tablecaption{\label{table:flame_speeds}Turbulent and laminar flame speeds.}
@@ -518,7 +518,7 @@ a ``hot'' model that will represent the perturbation that drives the
 flame and a ``cool'' model that will represent the state ahead of the
 flame.  These will have different scale heights.  To create these
 models, we break the vertical structure of the atmosphere into 4
-layers: the underlying star, a ramp-up to the base of the
+layers: the underlying neutron star, a ramp-up to the base of the
 accreted atmosphere, a fuel layer representing the bulk of the
 atmosphere where the flame will propagate, and an outer, low density,
 isothermal buffer above the atmosphere that allows us
@@ -534,9 +534,10 @@ with
 \begin{equation}
 \tilde{y} = y - H_\star - \frac{3}{2} \delta_\mathrm{atm}
 \end{equation}
-Here, $\delta_\mathrm{atm}$ is a characteristic width of the transition
-ramp, $T_\mathrm{hi}$ is the highest temperature in the HSE model---it
-will represent the base of the fuel layer.
+Here, $\delta_\mathrm{atm}$ is a characteristic width of the
+transition ramp, $T_\star$ is the temperature of the neutron star, and
+$T_\mathrm{hi}$ is the highest temperature in the HSE model---it will
+represent the base of the fuel layer.
 
 The mass fractions use this same profile, switching from a set
 describing the underlying star, ${X_k}_\star$, and the set for the
@@ -603,7 +604,7 @@ of the burning layer.
 We create two models, a ``cool'' model representing the atmosphere
 ahead of the flame and a ``hot'' (or perturbed) model that will
 initiate the flame by driving the burning.  The parameters we use for
-the model generation are listed in Table~\ref{table:params}.
+the model generation are listed in Table~\ref{table:params}. \MarginPar{reference and discuss the figure of initial model here}
 
 We blend the hot and cold models laterally to produce the perturbation
 needed to initiate a localized flame, with the hot model at the
@@ -624,7 +625,7 @@ f(x) = \begin{cases}
 Since the equation of hydrostatic equilibrium is linear and our
 blending is a linear combination of two models in hydrostatic
 equilibrum, the blended model is also in vertical equilibrium initially.  We choose
-$x_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once
+$x_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once \MarginPar{double check these numbers}
 the blended model is constructed, we compute $T(x,y)$ and $(\rho e)(x,y)$
 from the equation of state,
 \begin{align}
@@ -645,9 +646,7 @@ The initial model is created on a uniform grid at the resolution
 corresponding to the finest level of refinement.  At regions of the
 atmosphere that are not refined to the finest level, we interpolate
 density, pressure, and composition on the grid and then obtain the
-temperature from the EOS.  Because of the strong degeneracy at the
-high densities at the bottom of the domain, the numerical error in the
-interpolation can create a temperature jump there.\MarginPar{discuss better}
+temperature from the EOS.  
 
 
 %======================================================================
@@ -729,7 +728,7 @@ the burning likely artificially increases this effect. \MarginPar{Doesn't the in
 
 
 % made with time_series.py in flame_wave_boost_10_10_paper with --skip 100
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
 \plotone{time_series}
 \caption{\label{fig:time_series} Time series of the mean molecular weight of the 
@@ -746,10 +745,9 @@ expected since the density is greatest there.  We see that the peak of
 the burning has moved off of the symmetry axis, demonstrating that the
 burning front is propagating to the right.  In the temperature plot,
 we see the effect of our refinement criteria focusing only on the
-atmosphere where we are most dense, with an artificial drop in the
-temperature at the refinement boundary due to the interpolation
-procedure of our initial model which focused on pressure and density
-rather than temperature. \MarginPar{Remind the reader what this
+atmosphere where we are most dense, with an artificial change in the
+temperature at the refinement boundary due in part to the construction
+of the initial model using the fine grid resolution for HSE. \MarginPar{Remind the reader what this
   was/where they should be looking in the plot to see this temperature
   drop} As we'll see when the lower resolution case, we do not believe
 that this affects the results.
@@ -765,7 +763,7 @@ observations.  This is something that will be explored more fully in
 the future.
 
 % made with overview.py
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
 \plotone{flame_wave_boost_10_10_overview}
 \caption{\label{fig:10_10_overview} Temperature, energy generation rate, and out-of-plane velocity for the 10/10 simulation at 20~ms.}
@@ -784,10 +782,11 @@ right below the atmosphere, we don't see the temperature feature from
 the initial model mapping there, but we do see some cooling in the
 \isot{Ni}{56} region.  This is likely a resolution effect, again due
 to the strong gradient in temperature at the base of the atmosphere.
-
+The strong agreement in the low resolution run to the 10/10 run gives
+us confidence that we are capturing the flame physics properly.
 
 % made with slice_multi_crop.py
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
 \plotone{flame_wave_boost_10_10_lowres_slice}
 \caption{\label{fig:10_10_lowres} Temperature, mean molecular weight,
@@ -813,7 +812,7 @@ of the flame seen with the lower boosting gives us confidence that the
 overall aspects of the flame structure and acceleration we are seeing
 are robust to the approximations we make.
 
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
 \plotone{flame_wave_boost_5_5_slice}
 \caption{\label{fig:5_5_overview} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 5/5 simulation at 20~ms.}
@@ -828,7 +827,7 @@ case.  We see in the next section that these two networks give largely
 the same flame speed.  The reduced network size saves a lot of memory
 which will be important when we transition to 3-d simulations.
 
-\begin{figure}[h]
+\begin{figure}[t]
 \centering
 \plotone{network_compare}
 \caption{\label{fig:network} Mean molecular weight at 15~ms comparing a run with
@@ -842,12 +841,12 @@ The final approximation to explore is our choice of rotation rate.
 \subsection{Flame Acceleration}
 
 To measure the propagation rate of the burning front, we track the
-location beyond the hottest part of the flame where
+location beyond the hottest part of the flame \MarginPar{what does this mean?} where
 $\dot{e}_\mathrm{nuc}$ first drops to less than $0.1 \%$ of
 maximum. Using $0.1 \%$ of the peak value rather than the peak value
 itself helps to mitigate fluctuations caused by localized fluid
 motions, as the reduced value lies in a less turbulent part of the
-burning region. We also average $\dot{e}_\mathrm{nuc}$ over the
+burning region. We also average $\dot{e}_\mathrm{nuc}$ over the  \MarginPar{I think we should discuss the averaging first, before we discuss the peak value}
 vertical coordinate to further dampen these fluctuations. After an
 initial transient period typically spanning $\sim 3$ ms, the flame
 settles into a state of steady propagation. The position data here are
@@ -918,7 +917,7 @@ generation rate as a function of the $r$-velocity and the density.}
 \end{figure}
 
 Figure~\ref{fig:abar_temp} shows the energy generation rate as a function of the
-temperature and $\bar{A}$. \MarginPar{I'm assuming will be defined somewhere above}
+temperature and $\bar{A}$. 
 The energy generation rate peaks at low $\bar{A}$, where there is a high fraction
 of unburnt material. The burning raises the temperature of this material, such
 that the peak temperature coincides with the peak energy generation rate. The
@@ -954,9 +953,26 @@ ReacLib rate database~\citep{reaclib}.
 
 \MarginPar{Relate our work to previous work}
 
-In addition to extending our models to 3D and relaxing the approximations used in this study, in the future we plan to perform a number of additional further studies. These include investigating the effects of ignition latitude and different initial models. We also plan to model mixed H/He bursts. This will require a
-different reaction network, and perhaps different (more relaxed)
-resolution requirements. A long term goal is to include magnetohydrodynamics in our models. Although the magnetic fields of neutron stars exhibiting X-ray bursts are relatively weak, with $B \leq 10^8 - 10^9$G \citep{mukherjee2015magnetic} (at least compared to e.g. magnetars, which have $B\sim 10^{15}$G), it has been found by \citet{art-2016-cavecchi-etal} that even weak magnetic fields could have a non-negligible effect on the flame propagation, reducing confinement due to the Coriolis force and leading to increased flame speeds. Ultimately, we wish to link our simulations to observed light curves. To do this, we will need to explore radiation transport in order to model how the burst energy propagates through the outer layers of the neutron star atmosphere. 
+In addition to extending our models to 3D and relaxing the
+approximations used in this study, in the future we plan to perform a
+number of additional further studies. These include investigating the
+effects of ignition latitude and different initial models. We also
+plan to model mixed H/He bursts. This will require a different
+reaction network, and perhaps different (more relaxed) resolution
+requirements. A long term goal is to include magnetohydrodynamics in
+our models. Although the magnetic fields of neutron stars exhibiting
+X-ray bursts are relatively weak, with $B \leq 10^8 - 10^9$G
+\citep{mukherjee2015magnetic} (at least compared to e.g. magnetars,
+which have $B\sim 10^{15}$G), it has been found by
+\citet{art-2016-cavecchi-etal} that even weak magnetic fields could
+have a non-negligible effect on the flame propagation, reducing
+confinement due to the Coriolis force and leading to increased flame
+speeds. The effect of magnetic fields on the conductivities and
+anisotropic conduction might also be important.  Ultimately, we wish
+to link our simulations to observed light curves. To do this, we will
+need to explore radiation transport in order to model how the burst
+energy propagates through the outer layers of the neutron star
+atmosphere.
 
 
 % Full hydrodynamics models of flame spreading in XRB are possible with certain approximations.
@@ -1058,7 +1074,7 @@ We use a 2-d axisymmetric geometry, with a reflection boundary on the symmetry a
 and Neumann boundaries on all other sides.  In this geometry, the solution behaves like
 a spherical problem, and has the form:
 \begin{equation}
-  T(r) = T_1 + (T_2 - T_1) \left (\frac{t_0}{t + t_0} \right )^{3/2} e^{-r^2/(4 D (t + t_0))}
+  T(r,t) = T_1 + (T_2 - T_1) \left (\frac{t_0}{t + t_0} \right )^{3/2} e^{-r^2/(4 D (t + t_0))}
 \end{equation}
 where $t_0$ is a small time used to set the initial width of the
 Gaussian, $r$ is the distance from the origin, and $D$ is the
@@ -1095,9 +1111,11 @@ refinement jump is.
 
 \begin{figure}[t]
 \centering
+\epsscale{0.5}
 \plotone{diffusion_temp_amr}
 \caption{\label{fig:diffusion} Temperature for the diffusion test problem at $10^{-3}~\mbox{s}$
 for a diffusion test with a $64\times 128$ zone base grid and one level of refinement.}
+\epsscale{1.0}
 \end{figure}
 
 
