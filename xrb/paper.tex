@@ -145,11 +145,11 @@
 %======================================================================
 \begin{abstract}
 We investigate the structure of laterally-propagating flames through
-the highly-stratified burning layer in an X-ray burst.  Simple \MarginPar{is simple the right word here?}
+the highly-stratified burning layer in an X-ray burst.  Simple \MarginPar{is simple the right word here?} \MarginPar{It might be better to say simulations are performed through a simplified atmosphere?}
 two-dimensional simulations of flame propagation are performed through
 a rotating plane-parallel atmosphere, exploring the structure of the
 flame.  We discuss the approximations needed to capture the length and
-time scales at play in an X-ray burst.  Our studies complement the
+time scales at play in an X-ray burst.  Our studies complement 
 other multidimensional studies of burning in X-ray bursts.
 \end{abstract}
 
@@ -160,23 +160,23 @@ other multidimensional studies of burning in X-ray bursts.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-X-ray bursts (XRBs) are thermonuclear explosions of an accreted H or
+X-ray bursts (XRBs) are thermonuclear explosions in an accreted H or
 He layer on the surface of a neutron star (see~\citealt{galloway:2017}
-for a review).  Observations of bursts can help constrain the
+for a review).  Observations of bursts can assist in constraining the
 properties of the underlying neutron star, helping to illuminate the
 nuclear equation of state~\citep{steiner:2010,ozel2016masses}.  Extensive
-observations of brightness oscillations during the rise have provided
+observations of brightness oscillations during the rise (the initial phase of the burst where the observed flux rapidly increases) have provided
 evidence that the burning begins in a localized region and spreads
 over the surface of the neutron
 star~\citep{bhattacharyya:2006,bhattacharyya:2007,chakraborty:2014}.
 
-One dimensional studies of XRBs are very successful in predicting the
-lightcurves and recurrance times (see, e.g., \citealt{woosley-xrb}).
+One dimensional studies of XRBs have been very successful in predicting the
+lightcurves and recurrence times (see, e.g., \citealt{woosley-xrb}).
 These assume spherical symmetry and thus cannot capture the effects of
 localized burning spreading across the neutron star.  These studies
 have also been used to explore the sensitivity of the burst
 observables to accretion and reaction
-rates~\citep{cyburt:2010,Jose2010a,Lampe2016}, and model individual
+rates~\citep{cyburt:2010,Jose2010a,Lampe2016}, and to model individual
 bursts~\citep{johnston:2019}.
 
 Multidimensional simulations of burning on a neutron star are more
@@ -187,17 +187,17 @@ scale height of the atmosphere, $\mathcal{O}(500~\mbox{cm})$, and the
 Rossby scale where the Coriolis force balances the lateral pressure
 gradient, $\mathcal{O}(10^5~\mbox{cm})$~\citep{spitkovsky2002}.  For
 the temporal scales, capturing the rise, $\mathcal{O}(1~\mbox{s})$,
-and the decay of the burst, $\mathcal{O}(10~\mbox{s})$, and the
-accretion period between bursts, $\mathcal{O}(10^4~\mbox{s})$ is
-beyond the ability of multidimensional hydro codes currently.
+and the decay of the burst, $\mathcal{O}(10~\mbox{s})$, as well as the
+accretion period between bursts, $\mathcal{O}(10^4~\mbox{s})$, is
+currently beyond the ability of multidimensional hydro codes.
 Nevertheless, significant progress has been made in understanding the
-multidimensional nature of XRBs, through various approximations.x
+multidimensional nature of XRBs, through various approximations.
 
 Laterally propagating detonations were modeled by
-\citet{fryxellwoosley82,hedet}, but these would only be applicable at
-very high densities, since it is difficult to detonate helium at the
+\citet{fryxellwoosley82,hedet}. However, since it is difficult to detonate helium at the
 densities found in normal XRBs, and even harder to detonate hydrogen
-because of the waiting times for weak reactions.  This means that
+because of the waiting times for weak reactions, these would only occur at
+very high densities.  This means that
 detonations may only really be applicable to superbursts (where carbon
 is the reactant)~\citep{Weinberg2006b,Weinberg2007}.
 
@@ -206,20 +206,20 @@ Global multidimensional studies were performed by
 force plays an important role in confining the burning as it spreads
 across the neutron star surface.  These calculations used the
 shallow-water approximation, so the vertical details of the
-atmosphere's structure we not modeled.  The model showed that the
+atmosphere's structure we not captured.  Their model showed that the
 horizontal pressure gradient between the ash and fuel can be important
 in accelerating the burning front.
 
 Small-domain studies of convective burning in XRBs preceding flame
 development have been done in two-dimensions \citep{lin:2006,xrb,xrb2}
 and three-dimensions \citep{xrb3d}.  These calculations used low Mach
-number methods that approximate the hydrodynamics equations to filter
+number methods, which approximate the hydrodynamics equations to filter
 soundwaves, enabling large timesteps and efficient modeling of
 subsonic convection.  While these calculations could not support
 the lateral differences needed for flame spreading, they can help
 understand the role that convection plays in distributing the initial
 burning products vertically throughout the neutron star atmosphere as well
-as the nature of any turbulence the burning front might encounter.
+as the nature of any turbulence the burning front might encounter as it propagates through the atmosphere.
 
 
 
@@ -231,15 +231,15 @@ the flame structure is thin compared to the size of the system (see,
 e.g., \citet{Ropke2007} for applications to Type Ia supernovae).  For
 XRBs however, the flame thickness is comparable to the scale height of
 the atmosphere, so we cannot use these approximations.  Accurate
-models of flames therefore require that we resolve the thermal width,
+models of flames in XRBs therefore require that we resolve the thermal width,
 which is $\mathcal{O}(10~\mbox{cm})$ for helium flames~\citep{Timmes00}.
 
 The goal of this study is to understand what numerical and physical
-approximations are needed to perform a full hydrodynamical,
+approximations are required to perform a full hydrodynamical,
 multidimensional simulation of flame propagation through the
-atmosphere on a neutron star.  For simplicity in this first set of
-calculations, we will use pure helium composition.  These studies
-complement the other multidimensional work described above in helping
+atmosphere of a neutron star.  For simplicity in this first set of
+calculations, we will use a pure helium composition.  These studies
+complement the prior multidimensional studies described above in helping
 us to build a picture of the dynamics of X-ray bursts.
 
 
@@ -263,7 +263,7 @@ equations for reacting flow:
     \nabla \cdot \kth \nabla T + \rho \epsdot +\nonumber\\
   && \rho \Ub \cdot \gb - \rho (\Omegab \cdot \rb)(\Omegab \cdot \Ub) + \rho |\Omegab|^2 (\Ub \cdot \rb)
 \end{eqnarray}
-Here, $\rho$ is the mass density, $\Ub$ is the velocity, and $E$ is
+Here, $\rho$ is the mass density, $\Ub$ is the velocity, $p$ is the pressure and $E$ is
 the specific total energy, which is related to the specific internal
 energy as $e = E - |\Ub|^2/2$.  Species are described by mass
 fractions, $X_k$ (such that $\sum_k X_k = 1$), and creation rates,
@@ -285,7 +285,7 @@ resolutions.
 An equation of state of the form $p = p(\rho, e, X_k)$ completes the
 thermodynamic description of the system.  Finally, $\kth$ is the
 thermal conductivity and $T$ is the temperature.  Diffusion is treated
-explicitly in time.
+explicitly in time. \MarginPar{Have not defined what r is in eqs 1-3, and Omega and g are only defined with respect to eq. 5}
 
 Since the neutron star rotates, we work in a corotating frame, with
 angular velocity $\Omegab$.  Further, for the two-dimensional
@@ -340,8 +340,8 @@ simulation plane).  The algorithmic implementation of rotation in
 
 We use a general stellar equation of state with nuclei (treated as an
 ideal gas), photons, and degenerate/relativistic electrons, as
-described in \cite{timmes_swesty:2000}.  For reactions, we use a 13
-isotope alpha chain, derived from the {\tt aprox13}
+described in \cite{timmes_swesty:2000}.  To model reactions, we use a 
+13-isotope alpha chain, derived from the {\tt aprox13}
 network~\citep{timmes_aprox13}.  For one of our runs, we use the
 smaller 7-isotope network described in \citet{iso7}.  We integrate the
 network using the VODE integration package~\citep{vode}, and our
@@ -362,18 +362,18 @@ upper boundary at low resolution).  In addition to the base grid, we
 use up to 3 refinement levels, the first one a factor of 4 finer than
 the previous and the remaining each a factor of 2 finer than the
 previous.  \castro\ subcycles in time, so the finer grids are evolved
-with a finer timestep than the coarse grids.  Occasionally the
+with a finer timestep than the coarse grids.  Occasionally, the
 timestep chosen at the start of a cycle will violate the CFL condition
-during the advance of the finer grids.  In this case, we restart the
+during the advancement of the finer grids.  In this case, we restart the
 finer grid evolution with a smaller timestep, subcycling within the
 larger timestep hierarchy.  We use a CFL number of 0.8 for our
 simulations.  
 % \MarginPar{true for all?} 
 The base grid for our standard
-simulations is $768\times 192$ zones and the corresponding finest grid
+simulations is $768\times 192$ zones, and the equivalent finest grid
 when 3 refinement levels are added would be $12288\times 3072$ zones.
 Our standard domain is $1.2288\times 10^5~\mathrm{cm} \times
-3.072\times 10^4~\mathrm{cm}$, so we have $10~\mathrm{cm}$ resolution
+3.072\times 10^4~\mathrm{cm}$, corresponding to $10~\mathrm{cm}$ resolution
 on the finest grid.  We only refine the fuel layer in the left half of
 the domain at the highest resolution (and only down to densities of
 $2.5\times 10^4~\gcc$), since this is where we expect the flame to
@@ -390,8 +390,8 @@ explicit thermal diffusion requires a timestep limiter of the form:
 \Delta t_\mathrm{diff} \le \frac{1}{2} \frac{\Delta x^2}{\mathcal{D}}
 \end{equation}
 where $\mathcal{D} = \kth/(\rho c_v)$ is the thermal diffusivity.  The
-diffusivity increases rapidly at the top of the atmosphere, making
-these low density regions determine the overall timestep for the
+diffusivity increases rapidly at the top of the atmosphere, causing
+these low density regions to determine the overall timestep for the
 simulations.  Therefore, we disable thermal conduction at low
 densities where it is not expected to be important.
 
@@ -401,12 +401,12 @@ a discretized hydrostatic equilibrium equation of the form:
 \label{eq:hse}
 p_i = p_{i-1} + \frac{1}{2} \Delta y (\rho_i + \rho_{i-1}) g
 \end{equation}
-holding the temperature constant in the ghost cells.  This is solved
-together with the equation of state.  The velocity is reflected here.
+and holding the temperature constant in the ghost cells.  This is solved
+together with the equation of state.  The velocity is reflected at this boundary.
 This procedure follows the form described in \citet{ppm-hse}.  The
 left boundary is reflecting and the right boundary is a zero-gradient
 outflow.  The top boundary sets the state to simply the conditions
-in our outer buffer region of the initial model (see below) with the
+in our outer buffer region of the initial model (see below), with the
 normal velocity set to the larger of zero or the velocity at the top
 of the domain (this prevents incoming velocities at the top) and the
 transverse velocities set to zero.
@@ -418,7 +418,7 @@ it is blown out of the atmosphere.  Eventually this material will fall
 back to the top of the atmosphere.  In this paper, we are mostly
 concerned with the behavior of the flame and not any material that is
 violently blown out of the top of the atmosphere, so we apply a sponge
-to this region.  This is similar to what we've done in \cite{xrb3d}.
+to this region.  This is similar to the method we previously used in \cite{xrb3d}.
 The sponge drives the velocity of the material in the low
 density \MarginPar{add mathematical form of sponge} regions at the top
 of the atmosphere to zero.  This sponging helps increase our timestep
@@ -444,10 +444,10 @@ speed is quite slow and would require a prohibitively long integration
 time to see significant evolution of the burning.  We therefore
 consider boosted flames in this first paper, to accelerate the burning
 and allow us to understand the qualitative effects of laterally
-propagating flames.  To boost the flame, while keeping the thickness
+propagating flames.  To boost the flame while keeping the thickness
 the same, we can multiply both the burning rate and the conductivity
 by the same factor.  For our standard calculations, we choose 10 for
-each, to give a flame 10$\times$ faster.  We call this the ``10/10''
+each, to give a 10$\times$ faster flame speed.  We call this the ``10/10''
 flame.  We will also do a simulation with the reactions and
 conductivity both boosted by 5, the ``5/5'' flame.
 
@@ -539,7 +539,7 @@ transition ramp, $T_\star$ is the temperature of the neutron star, and
 $T_\mathrm{hi}$ is the highest temperature in the HSE model---it will
 represent the base of the fuel layer.
 
-The mass fractions use this same profile, switching from a set
+The species mass fractions use this same profile, switching from a set
 describing the underlying star, ${X_k}_\star$, and the set for the
 accreted material, ${X_k}_\mathrm{atm}$, which is used in the
 isentropic and outer regions.  Note, since the profile above is
@@ -560,14 +560,13 @@ $T_\mathrm{lo}$, $\rho_\mathrm{int}$, $H_\star$,
 $\delta_\mathrm{atm}$, ${X_k}_\star$, and ${X_k}_\mathrm{atm}$.  We
 then integrate outwards from the base of the ramp region ($y =
 H_\star$), enforcing the discrete form of hydrostatic equilibrium,
-Eq.~\ref{eq:hse}.  Integrating upwards, we would find $p_i$ and
-$\rho_i$ using a Newton solve together either with the temperature
+Eq.~\ref{eq:hse}.  Integrating upwards, we find $p_i$ and
+$\rho_i$ using a Newton solve together with the equation of state, with either the temperature
 specified, $T_i = T(p_i, \rho_i, \{X_k\}_i)$ (in the isothermal, ramp,
 and buffer layers) or constant entropy, $s_i = s(p_i, \rho_i,
-\{X_k\}_i)$, in the fuel layer.  In each case, using the equation of
-state.  This follows the procedures described in \citet{ppm-hse}.  We
-use the constant temperature for all $y < H_\star +
-3\delta_\mathrm{atm}$.  Above this, we switch to isentropic until the
+\{X_k\}_i)$, in the fuel layer.  This follows the procedures described in \citet{ppm-hse}.  We
+use a constant temperature for all $y < H_\star +
+3\delta_\mathrm{atm}$.  Above this, we switch to an isentropic atmosphere until the
 temperature drops to a floor value, $T_\mathrm{lo}$, at which point we
 again keep the temperature constant.  The integration of the
 atmosphere continues until the density falls to a low density cutoff,
@@ -603,7 +602,7 @@ of the burning layer.
 
 We create two models, a ``cool'' model representing the atmosphere
 ahead of the flame and a ``hot'' (or perturbed) model that will
-initiate the flame by driving the burning.  The parameters we use for
+initiate the flame by driving the burning.  \MarginPar{This has already been said at the start of this section} The parameters we use for
 the model generation are listed in Table~\ref{table:params}. \MarginPar{reference and discuss the figure of initial model here}
 
 We blend the hot and cold models laterally to produce the perturbation
@@ -654,7 +653,7 @@ temperature from the EOS.
 %======================================================================
 \section{Simulations and Results}\label{Sec:results}
 
-Table~\ref{table:sim_names} summarizes the simulations that we ran.
+Table~\ref{table:sim_names} summarizes the simulations that we ran. \MarginPar{This table has different model names to the previous table}
 The majority of them used a reaction rate boosting of $10$ and a
 conductivity boosting of $10$, which should increase the flame speed
 by a factor of $10$.  Most simulations used a resolution of
@@ -665,7 +664,7 @@ $2000~\mbox{Hz}$, which gives a Rossby length of
 L_R = \frac{\sqrt{g H_0}}{\Omega} \sim 3\times 10^4~\mathrm{cm}
 \end{equation}
 using a scale height $H_0 = 10^3~\mathrm{cm}$.  This is about one
-quarter of domain width.  The run at $20~\mbox{cm}$ resolution used
+quarter of the domain width.  The run at $20~\mbox{cm}$ resolution used
 one fewer level of refinement.  The slower rotating case using a
 slightly wider domain to accommodate the expected larger Rossby
 length.  We note that the entire simulation framework for these
@@ -711,7 +710,7 @@ and we'll use the 10/10 run as the reference calculation.
 Figure~\ref{fig:time_series} shows the time evolution of the 10/10
 simulation, focusing on the mean-molecular weight,
 \begin{equation}
-\bar{A} = \left ( \sum_k \frac{X_k}{A_k} \right )^{-1}
+\bar{A} = \left ( \sum_k \frac{X_k}{A_k} \right )^{-1}.
 \end{equation}
 In each frame the buffer of \isot{Ni}{56} that serves as the
 underlying neutron star is seen spanning the bottom of the domain.
@@ -756,7 +755,7 @@ A final feature worth noting is the ash that seems to move along the
 surface at a higher velocity than the flame, via surface gravity
 waves.  The sponging that we perform is likely damping this to some extent, and
 the method by which we initialize the flame may induce a larger
-transient than in nature, nevertheless, this surface ash is intriguing
+transient than in nature. Nevertheless, this surface ash is intriguing
 because it affects the composition of the photosphere ahead of the
 burning front, potentially changing our interpretation of
 observations.  This is something that will be explored more fully in
@@ -773,8 +772,8 @@ the future.
 Our default resolution puts $\sim 80$ zones vertically in the
 ``cool'' \MarginPar{double check} model atmosphere height.  To
 understand the effects of resolution, we also performed a run with one
-fewer level, giving a $20~\mbox{cm}$ resolution overall (this is our
-10/10-lores run).  Figure~\ref{fig:10_10_lowres} shows the fields at
+fewer refinement level, giving a $20~\mbox{cm}$ resolution overall (this is our
+10/10-lores run).  Figure~\ref{fig:10_10_lowres} shows the fields for this run at
 20~ms.  The structure is largely the same as the 10/10 run, with
 largely the same flame shape and position, and the same structure in
 the energy generation rate.  Since we do not have a jump in refinement
@@ -800,7 +799,7 @@ us confidence that we are capturing the flame physics properly.
 \subsection{Effects of our Approximations}
 
 The results above all used a boosting of 10/10.  To see how the
-results are sensitivity to our boosting we ran a simulation with a
+results are sensitive to this boosting, we ran a simulation with a reduced
 boosting of 5/5.  This is shown in Figure~\ref{fig:5_5_overview}.  The
 results look qualitatively the same---a laterally propagating flame
 develops that is lifted off of the bottom of the fuel layer.  The
@@ -818,14 +817,14 @@ are robust to the approximations we make.
 \caption{\label{fig:5_5_overview} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 5/5 simulation at 20~ms.}
 \end{figure}
 
-We can also look at the effect of the network size.
+We also considered the effect of the network size.
 Figure~\ref{fig:network} shows a comparison of the 10/10 boosting run
 with the standard 13-isotope ``aprox13'' network and the reduced
 7-isotope ``iso7'' network.  We see that the flame in the aprox13 case
 is slightly more advanced and has a higher $\bar{A}$ than the iso7
 case.  We see in the next section that these two networks give largely
-the same flame speed.  The reduced network size saves a lot of memory
-which will be important when we transition to 3-d simulations.
+the same flame speed.  The reduced network size saves a lot of memory,
+which will be useful when we transition to 3-d simulations.
 
 \begin{figure}[t]
 \centering
@@ -842,8 +841,8 @@ The final approximation to explore is our choice of rotation rate.
 
 To measure the propagation rate of the burning front, we track the
 location beyond the hottest part of the flame \MarginPar{what does this mean?} where
-$\dot{e}_\mathrm{nuc}$ first drops to less than $0.1 \%$ of
-maximum. Using $0.1 \%$ of the peak value rather than the peak value
+$\dot{e}_\mathrm{nuc}$ first drops to less than $0.1 \%$ of its
+maximum value. Using $0.1 \%$ of the peak value rather than the peak value
 itself helps to mitigate fluctuations caused by localized fluid
 motions, as the reduced value lies in a less turbulent part of the
 burning region. We also average $\dot{e}_\mathrm{nuc}$ over the  \MarginPar{I think we should discuss the averaging first, before we discuss the peak value}
@@ -856,9 +855,9 @@ the flame front.
 
 Table \ref{table:flame_speeds} gives the flame speed measured in each
 multidimensional simulation, as well as laminar speeds obtained from
-any corresponding 1D runs. The 2D flames propagate at speeds about an
+corresponding 1D runs. The 2D flames propagate at speeds about an
 order of magnitude faster than their 1D counterparts. The increase in
-flame speed is likely a product of hydrodynamical effects such as
+flame speed is likely a product of the larger flame surface area and hydrodynamical effects such as
 turbulence, wrinkling, and convective cycles, which bring cooler fuel
 from ahead of the front into the hottest part of the burning region.
 
@@ -881,7 +880,7 @@ Baroclinicity is calculated as
     \boldsymbol{\psi} = \frac{1}{\rho^2} \nablab p \times \nablab \rho,
 \end{equation}
 and shows the misalignment of the local density and pressure gradients
-\citep{Malone2014a}. As we are considering a 2d system, the component of the
+\citep{Malone2014a}. As we are considering a 2d \MarginPar{We've used at least three different ways of writing 2-d/2D/2d so far. These should be changed so we used one style throughout.}system, the component of the
 baroclinicity we consider here (out of the plane) reflects the misalignment
 of the fields in the plane of the simulation. Figure~\ref{fig:baroclinicity}
 shows that the baroclinicity peaks along the flame front. This baroclinicity
@@ -895,25 +894,25 @@ flame.
 $\ln \left(\mathbf{\psi}\right)$ at time $t = 0.02~\mathrm{s}$ for the 10/10 simulation.}
 \end{figure}
 
-We show some phase plots in Figure~\ref{fig:phase_plots}. The phase plot of the
+To further demonstrate the relationships between different properties of the flame, in Figure~\ref{fig:phase_plots} we present some phase plots of the energy generation rate. The phase plot of the
 energy generation rate as a function of
-the $r$- and $z$-velocities shows that energy is preferentially generated in
-regions with negative $r$-velocity. This most likely corresponds to the burning along the underside of the flame front, where fuel has been entrained along the surface of the flame. This is further supported by the phase plot of the energy generation rate as a function of the $r$-velocity
+the $x$- and $y$-velocities shows that energy is preferentially generated in
+regions with negative $x$-velocity. This most likely corresponds to the burning along the underside of the flame front, where fuel has been entrained along the surface of the flame and so is moving in the opposite direction to the direction the flame is propagating in. This is further supported by the phase plot of the energy generation rate as a function of the $x$-velocity
 and the density, which shows that the energy generation rate peaks at
 $\rho \sim 3 \times 10^5~\mathrm{g/cm}^3$, at the base of the flame.
 
 In the first plot, there are ``loops" of
 points of similar $\dot{e}_\mathrm{nuc}$ in the outer edges of the plot.
 These are likely to correspond to the vortices that appear within the flame,
-and show the fluid moving in a circular motion in $u-v$ phase space.
+where the fluid moves in a circular motion in $u-v$ phase space.
 
 \begin{figure}[t]
 \centering
 \plottwo{plots/results/vx_vy_129139}{plots/results/u_rho_129139}
 \caption{\label{fig:phase_plots} Phase plots at time $t = 0.02~\mathrm{s}$.
 \emph{Left}: Phase plot showing the energy generation rate as a function of
-the $r$- and $z$-velocities. The black cross shows the location of $u = v = 0$. \emph{Right}: phase plot showing the energy
-generation rate as a function of the $r$-velocity and the density.}
+the $x$- and $y$-velocities. The black cross shows the location of $u = v = 0$. \emph{Right}: phase plot showing the energy
+generation rate as a function of the $x$-velocity and the density.}
 \end{figure}
 
 Figure~\ref{fig:abar_temp} shows the energy generation rate as a function of the
@@ -943,7 +942,7 @@ could correspond to less common reaction pathways in the reaction network.
 
 We have shown the results of our fully hydrodynamical, multidimensional simulations of flame propagation through the atmosphere of a neutron star. By using the fully compressible hydrodynamics equations, we are able to capture the vertical dynamics of the system. To accurately model the flame propagation, it is necessary to sufficiently resolve the scale height of the atmosphere. It is also important that there is a thin transition between the underlying neutron star and the atmosphere, to ensure that the peak temperature occurs at the correct base density. 
 
-In order to satisfy these requirements whilst allowing the simulations to be computationally feasible, we used several approximations: a higher than normal rotation rate, a boosted flame, a simplified reaction network, and a 2.5D model for the flow. The first two of these were needed to reduce the spatial and temporal scales needed to model. Using the simulation framework developed here, these both can be relaxed in the future, at the cost of more computer time. The same goes for 2.5D
+In order to satisfy these requirements whilst allowing the simulations to be computationally feasible, we used several approximations: a higher than normal rotation rate, a boosted flame, a simplified reaction network, and a 2.5D model for the flow. The first two of these were used to reduce the model's spatial and temporal scales. Using the simulation framework developed here, these both can be relaxed in the future, at the cost of more computer time. The same goes for 2.5D
 vs.\ full 3D---the only difference is computer time, and our future
 calculations will explore the 3D evolution and compare to the 2.5D simulations presented here. In particular,
 in 3D we will be able to explore shear instabilities at the flame front.
@@ -953,26 +952,21 @@ ReacLib rate database~\citep{reaclib}.
 
 \MarginPar{Relate our work to previous work}
 
-In addition to extending our models to 3D and relaxing the
-approximations used in this study, in the future we plan to perform a
-number of additional further studies. These include investigating the
-effects of ignition latitude and different initial models. We also
-plan to model mixed H/He bursts. This will require a different
-reaction network, and perhaps different (more relaxed) resolution
-requirements. A long term goal is to include magnetohydrodynamics in
-our models. Although the magnetic fields of neutron stars exhibiting
-X-ray bursts are relatively weak, with $B \leq 10^8 - 10^9$G
-\citep{mukherjee2015magnetic} (at least compared to e.g. magnetars,
-which have $B\sim 10^{15}$G), it has been found by
-\citet{art-2016-cavecchi-etal} that even weak magnetic fields could
-have a non-negligible effect on the flame propagation, reducing
-confinement due to the Coriolis force and leading to increased flame
-speeds. The effect of magnetic fields on the conductivities and
-anisotropic conduction might also be important.  Ultimately, we wish
-to link our simulations to observed light curves. To do this, we will
-need to explore radiation transport in order to model how the burst
-energy propagates through the outer layers of the neutron star
-atmosphere.
+In addition to extending our models to 3D and relaxing the approximations used in 
+this study, in the future we plan to perform a number of additional further studies. 
+These include investigating the effects of ignition latitude and different initial 
+models. We also plan to model mixed H/He bursts. This will require a
+different reaction network, and perhaps different (more relaxed)
+resolution requirements. A long term goal is to include magnetohydrodynamics in our 
+models. Although the magnetic fields of neutron stars exhibiting X-ray bursts are 
+relatively weak, with $B \lesssim 10^8 - 10^9$G \citep{mukherjee2015magnetic} (at
+ least compared to e.g. magnetars, which have $B\lesssim 10^{15}$G), it has been 
+ found by \citet{art-2016-cavecchi-etal} that even weak magnetic fields could have 
+ a non-negligible effect on the flame propagation, reducing confinement due to the 
+ Coriolis force and leading to increased flame speeds. Ultimately, we wish to link 
+ our simulations to observed light curves. To do this, we will need to explore 
+ radiation transport in order to model how the burst energy propagates through the 
+ outer layers of the neutron star atmosphere. 
 
 
 % Full hydrodynamics models of flame spreading in XRB are possible with certain approximations.
@@ -1011,8 +1005,8 @@ atmosphere.
 % different reaction network, and perhaps different (more relaxed)
 % resolution requirements.
 
-In addition to exploring other aspects of the XRB physics, there are several changes we will pursue to the algorithm used to
-model these XRBs.  First, as shown in \citet{castro-sdc}, we have
+In addition to exploring other aspects of the XRB physics, there are several changes to the algorithm used to
+model these XRBs we will pursue.  First, as shown in \citet{castro-sdc}, we have
 developed a fourth-order (in space and time) method for coupling
 hydrodynamics and reactions that should greatly improve the accuracy
 of the simulations.  We expect that by using this new high-order
@@ -1021,7 +1015,7 @@ still accurately modeling the evolution.  We have also ported
 \castro\ to GPUs, giving an order of magnitude performance boost on
 nodes with both CPUs and GPUs.  The GPU-enabled algorithm will
 increase the performance, allowing us to run bigger domains and/or
-eliminate the boosting used here.
+eliminate the boosting used here. 
 
 % MHD, radiation transport
 
@@ -1062,12 +1056,12 @@ Data System Bibliographic Services.
 \section{Diffusion Tests}
 \label{app:diffusion}
 
-To test our implementation of diffusion we created a unit test in
+To test our implementation of diffusion, we created a unit test in
 \castro\ that just uses the diffusion solver.  This test uses the
 standard Gaussian initial conditions---the diffusion of a Gaussian
 remains Gaussian, with a lower amplitude and wider width.  This is run
 with a constant diffusion coefficent.  The point of this test is to
-demonstrate that the implementation, done in a predictor-corrector
+demonstrate that the implementation done in a predictor-corrector
 form is second-order accurate.
 
 We use a 2-d axisymmetric geometry, with a reflection boundary on the symmetry axis (left)
@@ -1104,7 +1098,7 @@ Table~\ref{table:diffusion} shows the L-inf error against the analytic
 solution for the diffusion test problem.  The tests were run in two
 fashions: no AMR, and AMR with one level of refinement (a jump of
 $2\times$).  In both cases we see second-order convergence of the
-error.  Figure~\ref{fig:diffusion} shows the temperature at the end of
+error.\MarginPar{This would be clearer if there was a third column showing the ratios of the errors?}  Figure~\ref{fig:diffusion} shows the temperature at the end of
 the simulation of the $64\times 128$ base grid plus one level of
 refinement simulation, with the grids shown to illustrate where the
 refinement jump is.
