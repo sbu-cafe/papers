@@ -357,16 +357,16 @@ Finally, we use the thermal conductivities described in
 
 All simulations use adaptive mesh refinement to refine on the
 atmosphere (leaving the space between the top of the atmosphere and
-upper boundary at low resolution).  In addition to the base grid, we
-use up to 3 refinement levels, the first one a factor of 4 finer than
-the previous and the remaining each a factor of 2 finer than the
-previous.  \castro\ subcycles in time, so the finer grids are evolved
-with a finer timestep than the coarse grids.  Occasionally, the
-timestep chosen at the start of a cycle will violate the CFL condition
-during the advancement of the finer grids.  In this case, we restart the
-finer grid evolution with a smaller timestep, subcycling within the
-larger timestep hierarchy.  We use a CFL number of 0.8 for our
-simulations.  
+upper boundary at low resolution). As seen in Figure \ref{fig:grids}, 
+we use up to 3 refinement levels in addition to the base grid, the first
+one a factor of 4 finer than the previous and the remaining each a
+factor of 2 finer than the previous. \castro\ subcycles in time, so the 
+finer grids are evolved with a finer timestep than the coarse grids. 
+Occasionally, the timestep chosen at the start of a cycle will violate
+the CFL condition during the advancement of the finer grids. In this
+case, we restart the finer grid evolution with a smaller timestep,
+subcycling within the larger timestep hierarchy.  We use a CFL number
+of 0.8 for our simulations.  
 % \MarginPar{true for all?} 
 The base grid for our standard
 simulations is $768\times 192$ zones, and the equivalent finest grid
@@ -379,7 +379,18 @@ $2.5\times 10^4~\gcc$), since this is where we expect the flame to
 propagate.  At the start of the simulation, $3.4\%$ of the domain is
 at the finest resolution.  This increases to $7.4\%$ by the end of the
 simulation, because of the increase in the scale height of the atmosphere
-behind the flame.  \MarginPar{add a pic of the grid to show refinement}
+behind the flame.
+
+\begin{figure}[t]
+	\plotone{grids.pdf}
+	\caption{\label{fig:grids} Slice through a simulation showing the four-level
+		grid structure. Note that the boxes shown are not the simulation zones, which
+		span $10~\mathrm{cm}$ at the finest level, but subdomains containing
+		approximately equal numbers of zones that are each managed by a separate
+		MPI process. A coarse base grid extending to the upper boundary is drawn
+		in white, with the green, blue, and black grids showing the jumps in
+		refinement needed to fully resolve the fuel layer and underlying neutron star.}
+\end{figure}
 
 Thermal diffusion is modeled explicitly, using a predictor-corrector
 scheme to achieve second-order accuracy.  A verification test of the
@@ -842,7 +853,7 @@ The final approximation to explore is our choice of rotation rate.
 \subsection{Flame Acceleration}
 
 To measure the propagation rate of the burning front, we track the
-location beyond the hottest part of the flame \MarginPar{what does this mean?} where
+location beyond the hottest part of the flame\MarginPar{what does this mean?} where
 $\dot{e}_\mathrm{nuc}$ first drops to less than $0.1 \%$ of its
 maximum value. Using $0.1 \%$ of the peak value rather than the peak value
 itself helps to mitigate fluctuations caused by localized fluid
@@ -875,7 +886,7 @@ from ahead of the front into the hottest part of the burning region.
 
 \AssignTo{Alice, Don}
 
-Show the phase plots and whatever it was that Don cooked up.
+{\color{red} Show whatever it was that Don cooked up. Also need to discuss the streamline plot.}
 
 Baroclinicity is calculated as
 \begin{equation}
@@ -894,6 +905,12 @@ flame.
 \plotone{plots/results/baroclinicity}
 \caption{\label{fig:baroclinicity} Baroclinicity. This plot shows
 $\ln \left(\mathbf{\psi}\right)$ at time $t = 0.02~\mathrm{s}$ for the 10/10 simulation.}
+\end{figure}
+
+\begin{figure}[t]
+	\centering
+	\plotone{streamlines.pdf}
+	\caption{\label{fig:streamlines} Streamlines showing velocity field at time $t = 0.01~\mathrm{s}$ for the 10/10 simulation.}
 \end{figure}
 
 To further demonstrate the relationships between different properties of the flame, in Figure~\ref{fig:phase_plots} we present some phase plots of the energy generation rate. The phase plot of the
