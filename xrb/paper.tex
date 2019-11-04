@@ -383,13 +383,13 @@ behind the flame.
 
 \begin{figure}[t]
 	\plotone{grids.pdf}
-	\caption{\label{fig:grids} Slice through a simulation showing the four-level
-		grid structure. Note that the boxes shown are not the simulation zones, which
-		span $10~\mathrm{cm}$ at the finest level, but subdomains containing
-		approximately equal numbers of zones that are each managed by a separate
-		MPI process. A coarse base grid extending to the upper boundary is drawn
-		in white, with the green, blue, and black grids showing the jumps in
-		refinement needed to fully resolve the fuel layer and underlying neutron star.}
+	\caption{\label{fig:grids}A slice through part of a 2D simulation showing the four-level
+		grid structure. Note that the boxes shown are not the simulation zones, which span
+		$10~\mathrm{cm}$ at the finest level, but subdomains containing approximately equal
+		numbers of zones that are each managed by a separate MPI process. A coarse base grid
+		extending to the upper boundary is drawn in white, with the green, blue, and black
+		grids showing the jumps in refinement needed to fully resolve the fuel layer and
+		underlying neutron star.}
 \end{figure}
 
 Thermal diffusion is modeled explicitly, using a predictor-corrector
