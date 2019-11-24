@@ -132,12 +132,8 @@
 \author[0000-0003-0439-4556]{Max P.\ Katz}
 \affiliation{NVIDIA Corp}
 
-\author[0000-0001-8092-1974]{Weiqun Zhang}
-\affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
-
-
-\correspondingauthor{Michael Zingale}
-\email{Michael.Zingale@stonybrook.edu}
+\correspondingauthor{Kiran Eiden}
+\email{kiran.eiden@stonybrook.edu}
 
 
 %======================================================================
@@ -222,7 +218,18 @@ burning products vertically throughout the neutron star atmosphere as well
 as the nature of any turbulence the burning front might encounter as it propagates through the atmosphere.
 
 
-\cite{cavecchi:2013,art-2015-cavecchi-etal,art-2016-cavecchi-etal,Cavecchi2017,Cavecchi2019} \MarginPar{need a summary}
+The first vertically resolved simulations of lateral deflagrations
+were obtained by \citet{cavecchi:2013} who showed how the Coriolis
+force creates a geometrical configurations that increases the flame
+speed set by conduction by a factor $\sim ~ L_r / H$, where $L_r$ is the
+Rossby radius and $H$ is the scale height of the burning layer. The
+effect on flame propagation of changing Coriolis confinement across
+the surface was explored in \citet{art-2015-cavecchi-etal}, while \citet{art-2016-cavecchi-etal}
+showed how the magnetic field tension, opposing the Coriolis
+force, can either speed up or slow down the flame by changing the
+flame front orizontal extent. Finally, \citet{Cavecchi2019}
+studied the effects in 3D of the baroclinic instability at the flame
+front, measuring flames up to 10 times faster than in the 2D case.
 
 For deflagrations, we either need to resolve the structure of the
 reaction zone or use a flame model.  Flame models usually assume that
@@ -256,7 +263,7 @@ equations for reacting flow:
 %
 \frac{\partial (\rho \Ub)}{\partial t} &=& - \nabla\cdot (\rho \Ub \Ub) - \nabla p +
     \rho \gb \nonumber \\
-  &&-2 \rho \Omegab\times \Ub - \Omegab \times (\Omegab \times \rb) \\
+  &&-2 \rho \Omegab\times \Ub - \rho \Omegab \times (\Omegab \times \rb) \\
 %
 \frac{\partial (\rho E)}{\partial t} &=& - \nabla \cdot (\rho \Ub E + p\Ub) +
     \nabla \cdot \kth \nabla T + \rho \epsdot +\nonumber\\
@@ -445,8 +452,9 @@ as well.
 The speed and thickness of a laminar helium flame are determined by the
 energy generation rate and conductivity, and scale roughly as 
 \begin{equation}
-v_f \approx \sqrt{k_\mathrm{th} \dot{\epsilon}} \qquad
-\lambda_f \approx \sqrt{\frac{k_\mathrm{th}}{\dot{\epsilon}}}
+\label{eq:flame_scaling}
+v_f \approx \sqrt{\kth \dot{\epsilon}} \qquad
+\lambda_f \approx \sqrt{\frac{\kth}{\dot{\epsilon}}}
 \end{equation}
 \citep{orourke:1979,khokhlov:1993}.
 At the densities we consider in this simulation, the pure He flame
@@ -481,7 +489,7 @@ interactions, directed flows feeding fuel into the flame, ...).
 \plottwo{flame.pdf}{speed.pdf}
 \caption{\label{fig:flame} Time-evolution of the 10$\times$ boosted 1D
 	laminar flame. The left plot shows temperature and nuclear energy
-	generation profiles at 11 different time points, while the right plot
+	generation profiles at 11 different times, while the right plot
 	shows flame propagation speed and flame thickness as functions of time.}
 \end{figure*}
 
@@ -498,15 +506,12 @@ the rest of the atmosphere.
 
 Flame propagation rates from both the 1D laminar flames and full 2D simulations are given in Table \ref{table:flame_speeds}.  \MarginPar{I think we should only report the laminar speeds here and defer the turbulent speeds until the section where we talk about how they are computed}
 
-\begin{deluxetable}{lcc}
-	\tablecaption{\label{table:flame_speeds}Turbulent and laminar flame speeds.}
-	\tablehead{\colhead{run} & \colhead{$s_T$ (km s$^{-1}$)} & \colhead{$s_L$ (km s$^{-1}$)}}
+\begin{deluxetable}{lc}
+	\tablecaption{\label{table:flame_speeds} Laminar flame speeds.}
+	\tablehead{\colhead{run} & \colhead{$s_L$ (km s$^{-1}$)}}
 	\startdata
-	10/10 boost & $9.18 \pm 0.03$  & $1.06 \pm 0.01$ \\
-	5/5 boost & $4.00 \pm 0.01$ & $0.56 \pm 0.01$ \\
-	iso7 network & $7.56 \pm 0.02$ & $-$ \\
-	lowres & $9.33 \pm 0.04$ & $-$ \\
-	1000 Hz & $18.6 \pm 0.16$ & $-$ \\
+	10/10 boost & $1.06 \pm 0.01$ \\
+	5/5 boost & $0.56 \pm 0.01$ \\
 	\enddata
 	%
 \end{deluxetable}
@@ -574,7 +579,7 @@ $\delta_\mathrm{atm}$, ${X_k}_\star$, and ${X_k}_\mathrm{atm}$.  We
 then integrate outwards from the base of the ramp region ($y =
 H_\star$), enforcing the discrete form of hydrostatic equilibrium,
 Eq.~\ref{eq:hse}.  Integrating upwards, we find $p_i$ and
-$\rho_i$ using a Newton solve together with the equation of state, with either the temperature
+$\rho_i$ using a Newton-Raphson solver together with the equation of state, with either the temperature
 specified, $T_i = T(p_i, \rho_i, \{X_k\}_i)$ (in the isothermal, ramp,
 and buffer layers) or constant entropy, $s_i = s(p_i, \rho_i,
 \{X_k\}_i)$, in the fuel layer.  This follows the procedures described in \citet{ppm-hse}.  We
@@ -866,7 +871,20 @@ well fitted by a linear function of time (as seen in Figure
 \ref{fig:flame_speed}), and the resulting slope gives the velocity of
 the flame front.
 
-Table \ref{table:flame_speeds} gives the flame speed measured in each
+\begin{deluxetable}{lc}
+	\tablecaption{\label{table:flame_speeds_multid} Flame speeds measured from 2D calculations.}
+	\tablehead{\colhead{run} & \colhead{$s_\mathrm{front}$ (km s$^{-1}$)}} 
+	\startdata
+	10/10 boost & $9.18 \pm 0.03$ \\
+	5/5 boost & $4.00 \pm 0.01$ \\
+	iso7 network & $7.56 \pm 0.02$ \\
+	lowres & $9.33 \pm 0.04$ \\
+	1000 Hz & $18.6 \pm 0.16$ \\
+	\enddata
+	%
+\end{deluxetable}
+
+Table \ref{table:flame_speeds_multid} gives the flame speed measured in each
 multidimensional simulation, as well as laminar speeds obtained from
 corresponding 1D runs. The 2D flames propagate at speeds about an
 order of magnitude faster than their 1D counterparts. The increase in
@@ -880,7 +898,19 @@ from ahead of the front into the hottest part of the burning region.
 \caption{\label{fig:flame_speed}The position of the burning front for each simulation run as a function of time. The dashed lines show linear least squares fits for $t \gtrsim 6$ ms.}
 \end{figure}
 
-{\color{red} Should say qualitatively what the plot shows}
+As we see in Figure~\ref{fig:flame_speed}, all of the various
+approximations behave as we would expect.  The 1000~Hz run goes 2
+times faster than the 2000~Hz run, as expected by the reduced rossby
+radius \citep{cavecchi:2013}).  The 5/5 boost run is half the speed of
+the 10/10 boost run, also as expected, consistent with the 1D laminar
+flames and behaving as predicted by Eq.~\ref{eq:flame_scaling}.  This
+confirms that the role of the Coriolis force is really to boost the
+laminar flame by the geometrical/hydrodynamical effect expected ($v_f
+= v_l * L_r / H$), similarly to what the 1000 Hz simulation
+said.   
+
+%Seeing the proofs both changing the Coriolis force AND the
+%laminar flame properties I think is very cool.
 
 \subsection{Entrainment, Flow Features}
 
@@ -893,12 +923,17 @@ Baroclinicity is calculated as
     \boldsymbol{\psi} = \frac{1}{\rho^2} \nablab p \times \nablab \rho,
 \end{equation}
 and shows the misalignment of the local density and pressure gradients
-\citep{Malone2014a}. As we are considering a 2d \MarginPar{We've used at least three different ways of writing 2-d/2D/2d so far. These should be changed so we used one style throughout.}system, the component of the
-baroclinicity we consider here (out of the plane) reflects the misalignment
-of the fields in the plane of the simulation. Figure~\ref{fig:baroclinicity}
-shows that the baroclinicity peaks along the flame front. This baroclinicity
-generates vorticity, which in turn entrains material along the surface of the
-flame.
+\citep{Malone2014a}. As we are considering a 2d \MarginPar{We've used
+  at least three different ways of writing 2-d/2D/2d so far. These
+  should be changed so we used one style throughout.}system, the
+component of the baroclinicity we consider here (out of the plane)
+reflects the misalignment of the fields in the plane of the
+simulation. Figure~\ref{fig:baroclinicity} shows that the
+baroclinicity peaks along the flame front. This baroclinicity
+generates vorticity, which in turn entrains material along the surface
+of the flame (see also \citet{cavecchi:2013}). This same vorticity,
+in 3D, should perturb the flame front and further increase flame speed
+\citep{Cavecchi2019}.
 
 \begin{figure}[t]
 \centering
@@ -913,12 +948,19 @@ $\ln \left(\mathbf{\psi}\right)$ at time $t = 0.02~\mathrm{s}$ for the 10/10 sim
 	\caption{\label{fig:streamlines} Streamlines showing velocity field at time $t = 0.01~\mathrm{s}$ for the 10/10 simulation.}
 \end{figure}
 
-To further demonstrate the relationships between different properties of the flame, in Figure~\ref{fig:phase_plots} we present some phase plots of the energy generation rate. The phase plot of the
-energy generation rate as a function of
-the $x$- and $y$-velocities shows that energy is preferentially generated in
-regions with negative $x$-velocity. This most likely corresponds to the burning along the underside of the flame front, where fuel has been entrained along the surface of the flame and so is moving in the opposite direction to the direction the flame is propagating in. This is further supported by the phase plot of the energy generation rate as a function of the $x$-velocity
-and the density, which shows that the energy generation rate peaks at
-$\rho \sim 3 \times 10^5~\mathrm{g/cm}^3$, at the base of the flame.
+To further demonstrate the relationships between different properties
+of the flame, in Figure~\ref{fig:phase_plots} we present some phase
+plots of the energy generation rate. The phase plot of the energy
+generation rate as a function of the $x$- and $y$-velocities shows
+that energy is preferentially generated in regions with negative
+$x$-velocity. This most likely corresponds to the burning along the
+underside of the flame front, where fuel has been entrained along the
+surface of the flame and so is moving in the opposite direction to the
+direction the flame is propagating in. This is further supported by
+the phase plot of the energy generation rate as a function of the
+$x$-velocity and the density, which shows that the energy generation
+rate peaks at $\rho \sim 3 \times 10^5~\mathrm{g/cm}^3$, at the base
+of the flame.  The energy generation rate also depends strongly on density.
 
 In the first plot, there are ``loops" of
 points of similar $\dot{e}_\mathrm{nuc}$ in the outer edges of the plot.
@@ -964,7 +1006,8 @@ We have shown the results of our fully hydrodynamical, multidimensional simulati
 In order to satisfy these requirements whilst allowing the simulations to be computationally feasible, we used several approximations: a higher than normal rotation rate, a boosted flame, a simplified reaction network, and a 2.5D model for the flow. The first two of these were used to reduce the model's spatial and temporal scales. Using the simulation framework developed here, these both can be relaxed in the future, at the cost of more computer time. The same goes for 2.5D
 vs.\ full 3D---the only difference is computer time, and our future
 calculations will explore the 3D evolution and compare to the 2.5D simulations presented here. In particular,
-in 3D we will be able to explore shear instabilities at the flame front.
+in 3D we will be able to explore shear instabilities at the flame front.  We can also capture the 
+baroclinic instability \citep{Cavecchi2019} and the competition between it and shear.
 Larger networks are a straightforward change, and already supported in
 \castro\ using the \pynucastro\ framework~\citep{pynucastro} and JINA
 ReacLib rate database~\citep{reaclib}. 
@@ -1043,16 +1086,18 @@ eliminate the boosting used here.
 \url{http://github.com/AMReX-Astro/Castro}.  The problem setups used
 here are available in the git repo as {\tt flame} and {\tt
   flame\_wave}.  The work at Stony Brook was supported by DOE/Office
-of Nuclear Physics grant DE-FG02-87ER40317.  This research used
-resources of the National Energy Research Scientific Computing Center,
-a DOE Office of Science User Facility supported by the Office of
-Science of the U.~S.\ Department of Energy under Contract
-No.\ DE-AC02-05CH11231.  This research used resources of the Oak Ridge
-Leadership Computing Facility at the Oak Ridge National Laboratory,
-which is supported by the Office of Science of the U.S. Department of
-Energy under Contract No. DE-AC05-00OR22725, awarded through the DOE
-INCITE program.  This research has made use of NASA's Astrophysics
-Data System Bibliographic Services.
+of Nuclear Physics grant DE-FG02-87ER40317.  YC was supported by the
+European Union Horizon 2020 research and innovation program under
+the Marie Sklodowska-Curie Global Fellowship grant agreement No.\
+703916.  This research used resources of the National Energy Research
+Scientific Computing Center, a DOE Office of Science User Facility
+supported by the Office of Science of the U.~S.\ Department of Energy
+under Contract No.\ DE-AC02-05CH11231.  This research used resources
+of the Oak Ridge Leadership Computing Facility at the Oak Ridge
+National Laboratory, which is supported by the Office of Science of
+the U.S. Department of Energy under Contract No. DE-AC05-00OR22725,
+awarded through the DOE INCITE program.  This research has made use of
+NASA's Astrophysics Data System Bibliographic Services.
 
 \facilities{NERSC, OLCF}
 
