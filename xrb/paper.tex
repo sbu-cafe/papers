@@ -215,19 +215,20 @@ subsonic convection.  While these calculations could not support
 the lateral differences needed for flame spreading, they can help
 understand the role that convection plays in distributing the initial
 burning products vertically throughout the neutron star atmosphere as well
-as the nature of any turbulence the burning front might encounter as it propagates through the atmosphere.
+as the nature of any turbulence the burning front might encounter as it propagates
+through the atmosphere.
 
 
 The first vertically resolved simulations of lateral deflagrations
-were obtained by \citet{cavecchi:2013} who showed how the Coriolis
-force creates a geometrical configurations that increases the flame
-speed set by conduction by a factor $\sim ~ L_r / H$, where $L_r$ is the
+were obtained by \citet{cavecchi:2013}, who showed how the Coriolis
+force creates a geometrical configuration that increases the flame
+speed set by conduction by a factor $\sim ~ L_R / H$, where $L_R$ is the
 Rossby radius and $H$ is the scale height of the burning layer. The
-effect on flame propagation of changing Coriolis confinement across
-the surface was explored in \citet{art-2015-cavecchi-etal}, while \citet{art-2016-cavecchi-etal}
-showed how the magnetic field tension, opposing the Coriolis
-force, can either speed up or slow down the flame by changing the
-flame front orizontal extent. Finally, \citet{Cavecchi2019}
+effect of changing Coriolis confinement across the surface on the flame 
+propagation was explored in \citet{art-2015-cavecchi-etal},
+while \citet{art-2016-cavecchi-etal} showed how magnetic field tension,
+opposing the Coriolis force, can either speed up or slow down the flame by
+changing the horizontal extent of the flame front. Finally, \citet{Cavecchi2019}
 studied the effects in 3D of the baroclinic instability at the flame
 front, measuring flames up to 10 times faster than in the 2D case.
 
@@ -274,7 +275,7 @@ the specific total energy, which is related to the specific internal
 energy as $e = E - |\Ub|^2/2$.  Species are described by mass
 fractions, $X_k$ (such that $\sum_k X_k = 1$), and creation rates,
 $\omegadot$, and are related to the total specific energy generation
-rate, $\epsdot$.  The total mass conservation,
+rate, $\epsdot$\MarginPar{Is notation consistent between E, e, epsilondot, and enucdot?}.  The total mass conservation,
 \begin{equation}
 \frac{\partial \rho}{\partial t} = - \nabla\cdot (\rho \Ub)
 \end{equation}
@@ -335,7 +336,7 @@ components, and neglecting the centrifugal force, we have:
 \end{align}
 where we cancel $\partial p/\partial z$ because there are no
 variations in the azimuthal direction.  This allows us to recast the
-$w$-velocity equation as a simple advection equation:
+$w$-velocity equation as a simple advection equation:\MarginPar{In conjunction with total mass conservation?}
 \begin{equation}
 \frac{\partial w}{\partial t} + \Ub \cdot \nabla w = 2\Omega_0 u
 \end{equation}
@@ -347,7 +348,7 @@ simulation plane).  The algorithmic implementation of rotation in
 We use a general stellar equation of state with nuclei (treated as an
 ideal gas), photons, and degenerate/relativistic electrons, as
 described in \cite{timmes_swesty:2000}.  To model reactions, we use a 
-13-isotope alpha chain, derived from the {\tt aprox13}
+13-isotope alpha chain network derived from the {\tt aprox13}
 network~\citep{timmes_aprox13}.  For one of our runs, we use the
 smaller 7-isotope network described in \citet{iso7}.  We integrate the
 network using the VODE integration package~\citep{vode}, and our
@@ -442,15 +443,15 @@ of the atmosphere to zero.  This sponging helps increase our timestep
 as well.
 
 
-
-
 %======================================================================
 % Flame
 %======================================================================
 \section{Flame Properties}\label{Sec:Flame}
 
+{\color{red} We should decide on a notation for 2D and laminar flame speeds.}
+
 The speed and thickness of a laminar helium flame are determined by the
-energy generation rate and conductivity, and scale roughly as 
+energy generation rate and conductivity, and scale roughly as
 \begin{equation}
 \label{eq:flame_scaling}
 v_f \approx \sqrt{\kth \dot{\epsilon}} \qquad
@@ -502,12 +503,11 @@ spatial resolution, $\Delta x$ of $\lambda_f/\Delta x \sim 5$~\citep{SNld}.  The
 conditions represent the bottom of the He layer.  As the density
 decreases with altitude, the flame thickness increases and the flame
 speed decreases, so we will easily resolve the flame structure throughout
-the rest of the atmosphere. 
-
-Flame propagation rates from both the 1D laminar flames and full 2D simulations are given in Table \ref{table:flame_speeds}.  \MarginPar{I think we should only report the laminar speeds here and defer the turbulent speeds until the section where we talk about how they are computed}
+the rest of the atmosphere. Propagation rates of the 1D laminar flames are given
+in Table \ref{table:flame_speeds_1d}.
 
 \begin{deluxetable}{lc}
-	\tablecaption{\label{table:flame_speeds} Laminar flame speeds.}
+	\tablecaption{\label{table:flame_speeds_1d} Laminar flame speeds.}
 	\tablehead{\colhead{run} & \colhead{$s_L$ (km s$^{-1}$)}}
 	\startdata
 	10/10 boost & $1.06 \pm 0.01$ \\
@@ -671,7 +671,7 @@ temperature from the EOS.
 %======================================================================
 \section{Simulations and Results}\label{Sec:results}
 
-Table~\ref{table:sim_names} summarizes the simulations that we ran. \MarginPar{This table has different model names to the previous table}
+Table~\ref{table:sim_names} summarizes the simulations that we ran. \MarginPar{This table has different model names from the flame speed table}
 The majority of them used a reaction rate boosting of $10$ and a
 conductivity boosting of $10$, which should increase the flame speed
 by a factor of $10$.  Most simulations used a resolution of
@@ -761,12 +761,12 @@ burning is mostly concentrated toward the bottom of the layer, as
 expected since the density is greatest there.  We see that the peak of
 the burning has moved off of the symmetry axis, demonstrating that the
 burning front is propagating to the right.  In the temperature plot,
-we see the effect of our refinement criteria focusing only on the
-atmosphere where we are most dense, with an artificial change in the
+we see the effect of our refinement criteria focusing only on the part of
+the atmosphere where we are most dense, with an artificial change in the
 temperature at the refinement boundary due in part to the construction
 of the initial model using the fine grid resolution for HSE. \MarginPar{Remind the reader what this
   was/where they should be looking in the plot to see this temperature
-  drop} As we'll see when the lower resolution case, we do not believe
+  drop} As we will see in the lower resolution case, we do not believe
 that this affects the results.
 
 A final feature worth noting is the ash that seems to move along the
@@ -837,7 +837,7 @@ are robust to the approximations we make.
 
 We also considered the effect of the network size.
 Figure~\ref{fig:network} shows a comparison of the 10/10 boosting run
-with the standard 13-isotope ``aprox13'' network and the reduced
+with the standard 13-isotope ``aprox13'' network and the reduced\MarginPar{We use {\tt tt} instead of quotes for the networks in the numerical approach section.}
 7-isotope ``iso7'' network.  We see that the flame in the aprox13 case
 is slightly more advanced and has a higher $\bar{A}$ than the iso7
 case.  We see in the next section that these two networks give largely
@@ -900,13 +900,13 @@ from ahead of the front into the hottest part of the burning region.
 
 As we see in Figure~\ref{fig:flame_speed}, all of the various
 approximations behave as we would expect.  The 1000~Hz run goes 2
-times faster than the 2000~Hz run, as expected by the reduced rossby
+times faster than the 2000~Hz run, as expected by the reduced Rossby
 radius \citep{cavecchi:2013}).  The 5/5 boost run is half the speed of
 the 10/10 boost run, also as expected, consistent with the 1D laminar
 flames and behaving as predicted by Eq.~\ref{eq:flame_scaling}.  This
 confirms that the role of the Coriolis force is really to boost the
 laminar flame by the geometrical/hydrodynamical effect expected ($v_f
-= v_l * L_r / H$), similarly to what the 1000 Hz simulation
+= v_l * L_R / H$), similarly to what the 1000 Hz simulation
 said.   
 
 %Seeing the proofs both changing the Coriolis force AND the
@@ -931,8 +931,8 @@ reflects the misalignment of the fields in the plane of the
 simulation. Figure~\ref{fig:baroclinicity} shows that the
 baroclinicity peaks along the flame front. This baroclinicity
 generates vorticity, which in turn entrains material along the surface
-of the flame (see also \citet{cavecchi:2013}). This same vorticity,
-in 3D, should perturb the flame front and further increase flame speed
+of the flame (see also \citet{cavecchi:2013}). In 3D, his same vorticity
+should perturb the flame front and further increase the flame speed.
 \citep{Cavecchi2019}.
 
 \begin{figure}[t]
@@ -1124,7 +1124,7 @@ To test our implementation of diffusion, we created a unit test in
 \castro\ that just uses the diffusion solver.  This test uses the
 standard Gaussian initial conditions---the diffusion of a Gaussian
 remains Gaussian, with a lower amplitude and wider width.  This is run
-with a constant diffusion coefficent.  The point of this test is to
+with a constant diffusion coefficient. The point of this test is to
 demonstrate that the implementation done in a predictor-corrector
 form is second-order accurate.
 
