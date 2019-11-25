@@ -126,7 +126,7 @@
 \author[0000-0003-2300-5165]{Donald Willcox}
 \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
 
-\author{Yuri Cavecchi}
+\author[0000-0002-6447-3603]{Yuri Cavecchi}
 \affiliation{Mathematical Sciences and STAG Research Centre, University of Southampton, SO17 1BJ}
 
 \author[0000-0003-0439-4556]{Max P.\ Katz}
@@ -202,7 +202,7 @@ Global multidimensional studies were performed by
 force plays an important role in confining the burning as it spreads
 across the neutron star surface.  These calculations used the
 shallow-water approximation, so the vertical details of the
-atmosphere's structure we not captured.  Their model showed that the
+atmosphere's structure were not captured.  Their model showed that the
 horizontal pressure gradient between the ash and fuel can be important
 in accelerating the burning front.
 
@@ -222,7 +222,7 @@ through the atmosphere.
 The first vertically resolved simulations of lateral deflagrations
 were obtained by \citet{cavecchi:2013}, who showed how the Coriolis
 force creates a geometrical configuration that increases the flame
-speed set by conduction by a factor $\sim ~ L_R / H$, where $L_R$ is the
+speed set by conduction by a factor $\sim L_R / H$, where $L_R$ is the
 Rossby radius and $H$ is the scale height of the burning layer. The
 effect of changing Coriolis confinement across the surface on the flame 
 propagation was explored in \citet{art-2015-cavecchi-etal},
@@ -480,7 +480,7 @@ network.  This flame had a density of $2\times 10^6~\gcc$ and
 temperature of $5\times 10^7$~K.  We observe that this flame speed is
 about $10^5~\cms$, the flame width is about 40~cm, and it
 takes about 3~ms to settle into a sustained flame.  Note that this speed
-is quite small compared to the speed estimated in
+is quite small compared to the speeds of $\sim 10^6~\cms$ estimated in
 \citet{spitkovsky2002}.  We expect a multidimensional flame to
 accelerate due to hydrodynamics interactions (wrinkling, turbulence
 interactions, directed flows feeding fuel into the flame, ...).
@@ -872,7 +872,7 @@ well fitted by a linear function of time (as seen in Figure
 the flame front.
 
 \begin{deluxetable}{lc}
-	\tablecaption{\label{table:flame_speeds_multid} Flame speeds measured from 2D calculations.}
+	\tablecaption{\label{table:flame_speeds_multid} Flame speeds measured in 2D calculations.}
 	\tablehead{\colhead{run} & \colhead{$s_\mathrm{front}$ (km s$^{-1}$)}} 
 	\startdata
 	10/10 boost & $9.18 \pm 0.03$ \\
@@ -886,11 +886,11 @@ the flame front.
 
 Table \ref{table:flame_speeds_multid} gives the flame speed measured in each
 multidimensional simulation, as well as laminar speeds obtained from
-corresponding 1D runs. The 2D flames propagate at speeds about an
-order of magnitude faster than their 1D counterparts. The increase in
-flame speed is likely a product of the larger flame surface area and hydrodynamical effects such as
-turbulence, wrinkling, and convective cycles, which bring cooler fuel
-from ahead of the front into the hottest part of the burning region.
+corresponding 1D runs. {\color{red} Should we include the laminar speeds again for reference?}
+The 2D flames propagate at speeds about an order of magnitude faster than their 1D counterparts. 
+The increase in flame speed is likely a product of the larger flame surface area and
+hydrodynamical effects such as turbulence, wrinkling, and convective cycles, which
+bring cooler fuel from ahead of the front into the hottest part of the burning region.
 
 \begin{figure}[t]
 \centering
