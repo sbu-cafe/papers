@@ -442,9 +442,33 @@ it is blown out of the atmosphere.  Eventually this material will fall
 back to the top of the atmosphere.  In this paper, we are mostly
 concerned with the behavior of the flame and not any material that is
 violently blown out of the top of the atmosphere, so we apply a sponge
-to this region.  This is similar to the method we previously used in \cite{xrb3d}.
+to this region.  This is similar to the method we previously used in \cite{xrb2}, and takes
+the form of a source term to the momentum and energy equations of the form:
+\begin{align}
+{\bf S}_{\rho \Ub} &= \rho \Ub \frac{f}{\Delta t} \\
+S_{\rho E} &= \rho \Ub \cdot {\bf S}_{\rho \Ub}
+\end{align}
+with the sponge forcing $f$ dependent on the density.  We define the sponge
+shape as:
+\begin{equation}
+s = \left \{
+     \begin{array}{cc}
+            0   & \rho > \rho_\mathrm{upper} \\
+            \frac{1}{2}
+                \left [ 1 - \cos \left ( \frac{\pi (\rho - \rho_\mathrm{upper})}{\Delta \rho} \right ) \right ]  & \rho_\mathrm{upper} \ge \rho > \rho_\mathrm{lower} \\
+                     1 & \rho < \rho_\mathrm{lower} 
+             \end{array} \right .
+\end{equation}
+Here $\rho_\mathrm{upper}$ and $\rho_\mathrm{lower}$ are the densities where the sponge transitions to being fully applied.  We take $\rho_\mathrm{upper} = 10^2~\gcc$ and $\rho_\mathrm{lower} = 1~\gcc$, with $\Delta \rho = \rho_\mathrm{upper} - \rho_\mathrm{lower}$.
+The sponge update is done implicitly to get the effective forcing, $f$:
+\begin{equation}
+f = -\left [ 1 - \frac{1}{1 + \alpha s} \right ]
+\end{equation}
+with $\alpha = \Delta t/\tau_\mathrm{sponge}$.  Here
+$\tau_\mathrm{sponge}$ is the timescale over which the sponge acts.
+We take $\tau_\mathrm{sponge} = 10^{-7}~\mathrm{s}$.
 The sponge drives the velocity of the material in the low
-density \MarginPar{add mathematical form of sponge} regions at the top
+density regions at the top
 of the atmosphere to zero.  This sponging helps increase our timestep
 as well.
 
