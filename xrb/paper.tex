@@ -502,16 +502,17 @@ conductivity both boosted by 5, the ``5/5'' flame.
 
 To understand the time and length scales involved in flame
 propagation, we do a 1D simulation of a laminar flame using our
-microphysics.  Figure~\ref{fig:flame} shows the flame properties for a 
+microphysics.  Figure~\ref{fig:flame} shows the flame thermodynamic
+profile and properties for the 10/10 flame using
 % \AssignTo{Kiran and Mike will remake with the 10/10 boosted flame}
-He flame using the standard conductivities and our simple reaction \MarginPar{standard?  this is a boosted flame, right?}
-network.  This flame had a density of $2\times 10^6~\gcc$ and 
-% \MarginPar{double check}
+our conductivities and the {\tt aprox13} reaction network.  This flame
+had a density of $2\times 10^6~\gcc$ and
 temperature of $5\times 10^7$~K.  We observe that this flame speed is
 about $10^5~\cms$, the flame width is about 40~cm, and it
 takes about 3~ms to settle into a sustained flame.  Note that this speed
 is quite small compared to the speeds of $\sim 10^6~\cms$ estimated in
-\citet{spitkovsky2002}.  We expect a multidimensional flame to
+\citet{spitkovsky2002}.  Table~\ref{table:flame_speeds_1d} gives the properties
+of the 10/10 and 5/5 laminar flames.  We expect a multidimensional flame to
 accelerate due to hydrodynamics interactions (wrinkling, turbulence
 interactions, directed flows feeding fuel into the flame, ...).
 
@@ -533,8 +534,7 @@ spatial resolution, $\Delta x$ of $\lambda_f/\Delta x \sim 5$~\citep{SNld}.  The
 conditions represent the bottom of the He layer.  As the density
 decreases with altitude, the flame thickness increases and the flame
 speed decreases, so we will easily resolve the flame structure throughout
-the rest of the atmosphere. Propagation rates of the 1D laminar flames are given
-in Table \ref{table:flame_speeds_1d}.
+the rest of the atmosphere.
 
 \begin{deluxetable}{lc}
 	\tablecaption{\label{table:flame_speeds_1d} Laminar flame speeds.}
@@ -620,6 +620,9 @@ again keep the temperature constant.  The integration of the
 atmosphere continues until the density falls to a low density cutoff,
 $\rho_\mathrm{cutoff}$.  The material above this height is taken to
 have constant density and temperature.
+The choice of factors in front of $\delta_\mathrm{atm}$ were designed
+to make sure the peak $T$ is attained at the desired density
+of the burning layer.
 
 \begin{deluxetable}{lcc}
 \tablecaption{\label{table:params} Initial model parameters.}
@@ -644,15 +647,11 @@ $X_\mathrm{atm}(\isotm{He}{4})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
 \tablenotetext{b}{All other species are taken as 0.}
 \end{deluxetable}
 
-The choice of factors in front of $\delta_\mathrm{atm}$ were designed
-to make sure the peak $T$ is attained at the desired density
-of the burning layer.
 
 We create two models, a ``cool'' model representing the atmosphere
 ahead of the flame and a ``hot'' (or perturbed) model that will
 initiate the flame by driving the burning.  \MarginPar{This has already been said at the start of this section} The parameters we use for
 the model generation are listed in Table~\ref{table:params}. \MarginPar{reference and discuss the figure of initial model here}
-
 We blend the hot and cold models laterally to produce the perturbation
 needed to initiate a localized flame, with the hot model at the
 origin of the axisymmetric geometry.  The blending is done as:
@@ -672,7 +671,7 @@ f(x) = \begin{cases}
 Since the equation of hydrostatic equilibrium is linear and our
 blending is a linear combination of two models in hydrostatic
 equilibrum, the blended model is also in vertical equilibrium initially.  We choose
-$x_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once \MarginPar{double check these numbers}
+$x_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once
 the blended model is constructed, we compute $T(x,y)$ and $(\rho e)(x,y)$
 from the equation of state,
 \begin{align}
@@ -701,7 +700,9 @@ temperature from the EOS.
 %======================================================================
 \section{Simulations and Results}\label{Sec:results}
 
-Table~\ref{table:sim_names} summarizes the simulations that we ran. \MarginPar{This table has different model names from the flame speed table}
+To assess the sensitivity of the flame propagation to the various approximations
+we made, we ran a suite of simulations. 
+Table~\ref{table:sim_names} summarizes these simulations. \MarginPar{This table has different model names from the flame speed table}
 The majority of them used a reaction rate boosting of $10$ and a
 conductivity boosting of $10$, which should increase the flame speed
 by a factor of $10$.  Most simulations used a resolution of
