@@ -106,7 +106,7 @@
 %======================================================================
 % Title
 %======================================================================
-\title{Dynamics of Laterally Propagating Flames in X-ray Bursts}
+\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. I. Burning Front Structure}
 
 \shorttitle{Lateral Flame Dynamics}
 \shortauthors{Eiden et al.}
@@ -141,11 +141,12 @@
 %======================================================================
 \begin{abstract}
 We investigate the structure of laterally-propagating flames through
-the highly-stratified burning layer in an X-ray burst.  Simple \MarginPar{is simple the right word here?} \MarginPar{It might be better to say simulations are performed through a simplified atmosphere?}
-two-dimensional simulations of flame propagation are performed through
-a rotating plane-parallel atmosphere, exploring the structure of the
-flame.  We discuss the approximations needed to capture the length and
-time scales at play in an X-ray burst.  Our studies complement 
+the highly-stratified burning layer in an X-ray burst.
+Two-dimensional hydrodynamics simulations of flame propagation are
+performed through a rotating plane-parallel atmosphere, exploring the
+structure of the flame.  We discuss the approximations needed to
+capture the length and time scales at play in an X-ray burst and
+describe the flame acceleration observed.  Our studies complement
 other multidimensional studies of burning in X-ray bursts.
 \end{abstract}
 
@@ -190,7 +191,7 @@ Nevertheless, significant progress has been made in understanding the
 multidimensional nature of XRBs, through various approximations.
 
 Laterally propagating detonations were modeled by
-\citet{fryxellwoosley82,hedet}. However, since it is difficult to detonate helium at the
+\citet{fryxellwoosley82} and \citet{hedet}. However, since it is difficult to detonate helium at the
 densities found in normal XRBs, and even harder to detonate hydrogen
 because of the waiting times for weak reactions, these would only occur at
 very high densities.  This means that
@@ -270,16 +271,25 @@ equations for reacting flow:
     \nabla \cdot \kth \nabla T + \rho \epsdot +\nonumber\\
   && \rho \Ub \cdot \gb - \rho (\Omegab \cdot \rb)(\Omegab \cdot \Ub) + \rho |\Omegab|^2 (\Ub \cdot \rb)
 \end{eqnarray}
-Here, $\rho$ is the mass density, $\Ub$ is the velocity, $p$ is the pressure and $E$ is
-the specific total energy, which is related to the specific internal
-energy as $e = E - |\Ub|^2/2$.  Species are described by mass
-fractions, $X_k$ (such that $\sum_k X_k = 1$), and creation rates,
-$\omegadot$, and are related to the total specific energy generation
-rate, $\epsdot$\MarginPar{Is notation consistent between E, e, epsilondot, and enucdot?}.  The total mass conservation,
+Here, $\rho$ is the mass density, $\Ub$ is the velocity, $p$ is the
+pressure and $E$ is the specific total energy, which is related to the
+specific internal energy as $e = E - |\Ub|^2/2$.  The forcing in the
+momentum equation includes gravity, described by gravitation
+acceleration $\gb$ and rotational forces described by angular velocity
+$\Omegab$, with $\rb$ the position vector from the origin.
+Species are described by mass fractions, $X_k$ (such that $\sum_k X_k
+= 1$), and creation rates, $\omegadot$, and are related to the total
+specific energy generation rate, $\epsdot$\MarginPar{Is notation
+  consistent between E, e, epsilondot, and enucdot?}.  The total mass
+conservation,
 \begin{equation}
 \frac{\partial \rho}{\partial t} = - \nabla\cdot (\rho \Ub)
 \end{equation}
-implies $\sum_k \omegadot_k = 0$.  \castro\ uses an unsplit piecewise
+implies $\sum_k \omegadot_k = 0$.  An equation of state of the form $p = p(\rho, e, X_k)$ completes the
+thermodynamic description of the system.  Thermal diffusion is 
+described by a thermal conductivity $\kth$ and temperature $T$. 
+
+\castro\ uses an unsplit piecewise
 parabolic method (PPM) with characteristic tracing for solving the
 hydrodynamics~\citep{ppm,millercolella:2002}, generalized to an
 arbitrary equation of state~\citep{zingalekatz}.  Reactions are
@@ -289,13 +299,8 @@ that is overall second-order accurate in space and time.
 library~\citep{amrex_joss} to manage a hierarchy of grids at different
 resolutions.
 
-An equation of state of the form $p = p(\rho, e, X_k)$ completes the
-thermodynamic description of the system.  Finally, $\kth$ is the
-thermal conductivity and $T$ is the temperature.  Diffusion is treated
-explicitly in time. \MarginPar{Have not defined what r is in eqs 1-3, and Omega and g are only defined with respect to eq. 5}
-
-Since the neutron star rotates, we work in a corotating frame, with
-angular velocity $\Omegab$.  Further, for the two-dimensional
+Since the neutron star rotates, we work in a corotating frame, taking
+the angular velocity $\Omegab$ to be constant.  Further, for the two-dimensional
 simulations presented here, we work in axisymmetric coordinates,
 but we advect a third component of velocity, coming out of the
 simulation plane, that participates in the Coriolis force (sometimes
@@ -316,9 +321,10 @@ With these choices, the Coriolis force is:
 We will neglect the centrifugal force---with our plane-parallel
 geometry, this will act only in the lateral direction, and is not
 expected to greatly affect the dynamics.  Carrying the Coriolis force
-allows us to capture the geostrophic balance\MarginPar{ref, Spitkovsky 2002?} that sets
-up via lateral hydrostatic equilibrium.  In the discussions below, we will use the Castro coordinate
-names, $(x, y)$ in our notation.
+allows us to capture the geostrophic balance that sets up via lateral
+hydrostatic equilibrium \citep{spitkovsky2002}.  In the discussions
+below, we will use the Castro coordinate names, $(x, y)$ in our
+notation.
 
 
 Writing the momentum equation in terms of the $u$, $v$, and $w$
