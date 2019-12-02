@@ -1041,34 +1041,53 @@ could correspond to less common reaction pathways in the reaction network.
 
 \section{Discussion}
 
-We have shown the results of our fully hydrodynamical, multidimensional simulations of flame propagation through the atmosphere of a neutron star. By using the fully compressible hydrodynamics equations, we are able to capture the vertical dynamics of the system. To accurately model the flame propagation, it is necessary to sufficiently resolve the scale height of the atmosphere. It is also important that there is a thin transition between the underlying neutron star and the atmosphere, to ensure that the peak temperature occurs at the correct base density. 
+We have shown the results of our fully hydrodynamical,
+multidimensional simulations of flame propagation through the
+atmosphere of a neutron star. By using the fully compressible
+hydrodynamics equations, we are able to capture the vertical dynamics
+of the system. To accurately model the flame propagation, it is
+necessary to sufficiently resolve the scale height of the
+atmosphere. It is also important that there is a thin transition
+between the underlying neutron star and the atmosphere, to ensure that
+the peak temperature occurs at the correct base density.
 
-In order to satisfy these requirements whilst allowing the simulations to be computationally feasible, we used several approximations: a higher than normal rotation rate, a boosted flame, a simplified reaction network, and a 2.5D model for the flow. The first two of these were used to reduce the model's spatial and temporal scales. Using the simulation framework developed here, these both can be relaxed in the future, at the cost of more computer time. The same goes for 2.5D
-vs.\ full 3D---the only difference is computer time, and our future
-calculations will explore the 3D evolution and compare to the 2.5D simulations presented here. In particular,
-in 3D we will be able to explore shear instabilities at the flame front.  We can also capture the 
-baroclinic instability \citep{Cavecchi2019} and the competition between it and shear.
-Larger networks are a straightforward change, and already supported in
-\castro\ using the \pynucastro\ framework~\citep{pynucastro} and JINA
-ReacLib rate database~\citep{reaclib}. 
+In order to satisfy these requirements whilst allowing the simulations
+to be computationally feasible, we used several approximations: a
+higher than normal rotation rate, a boosted flame, a simplified
+reaction network, and a 2D axisymmetric model for the flow. The first two of
+these were used to reduce the model's spatial and temporal
+scales. Using the simulation framework developed here, these both can
+be relaxed in the future, at the cost of more computer time. The same
+goes for 2D axisymmetry vs.\ full 3D---the only difference is computer time, and
+our future calculations will explore the 3D evolution and compare to
+the 2D simulations presented here. In particular, in 3D we will be
+able to explore shear instabilities at the flame front.  We can also
+capture the baroclinic instability \citep{Cavecchi2019} and the
+competition between it and shear.  Larger networks are a
+straightforward change, and already supported in \castro\ using the
+\pynucastro\ framework~\citep{pynucastro} and JINA ReacLib rate
+database~\citep{reaclib}.
 
 \MarginPar{Relate our work to previous work}
 
-In addition to extending our models to 3D and relaxing the approximations used in 
-this study, in the future we plan to perform a number of additional further studies. 
-These include investigating the effects of ignition latitude and different initial 
-models. We also plan to model mixed H/He bursts. This will require a
-different reaction network, and perhaps different (more relaxed)
-resolution requirements. A long term goal is to include magnetohydrodynamics in our 
-models. Although the magnetic fields of neutron stars exhibiting X-ray bursts are 
-relatively weak, with $B \lesssim 10^8 - 10^9$G \citep{mukherjee2015magnetic} (at
- least compared to e.g. magnetars, which have $B\lesssim 10^{15}$G), it has been 
- found by \citet{art-2016-cavecchi-etal} that even weak magnetic fields could have 
- a non-negligible effect on the flame propagation, reducing confinement due to the 
- Coriolis force and leading to increased flame speeds. Ultimately, we wish to link 
- our simulations to observed light curves. To do this, we will need to explore 
- radiation transport in order to model how the burst energy propagates through the 
- outer layers of the neutron star atmosphere. 
+In addition to extending our models to 3D and relaxing the
+approximations used in this study, in the future we plan to perform a
+number of additional further studies.  These include investigating the
+effects of ignition latitude and different initial models. We also
+plan to model mixed H/He bursts. This will require a different
+reaction network, and perhaps different (more relaxed) resolution
+requirements. A long term goal is to include magnetohydrodynamics in
+our models. Although the magnetic fields of neutron stars exhibiting
+X-ray bursts are relatively weak, with $B \lesssim 10^8 - 10^9$G
+\citep{mukherjee2015magnetic} (at least compared to e.g. magnetars,
+which have $B\lesssim 10^{15}$G), it has been found by
+\citet{art-2016-cavecchi-etal} that even weak magnetic fields could
+have a non-negligible effect on the flame propagation, reducing
+confinement due to the Coriolis force and leading to increased flame
+speeds. Ultimately, we wish to link our simulations to observed light
+curves. To do this, we will need to explore radiation transport in
+order to model how the burst energy propagates through the outer
+layers of the neutron star atmosphere.
 
 
 % Full hydrodynamics models of flame spreading in XRB are possible with certain approximations.
@@ -1115,9 +1134,8 @@ of the simulations.  We expect that by using this new high-order
 algorithm we can drop a level of refinement from the simulations while
 still accurately modeling the evolution.  We have also ported
 \castro\ to GPUs, giving an order of magnitude performance boost on
-nodes with both CPUs and GPUs.  The GPU-enabled algorithm will
-increase the performance, allowing us to run bigger domains and/or
-eliminate the boosting used here. 
+nodes with both CPUs and GPUs.  Flames without any boosting are currently running
+using the new GPU-enabled \castro.
 
 % MHD, radiation transport
 
