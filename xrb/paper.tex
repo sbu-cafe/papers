@@ -795,8 +795,8 @@ the atmosphere where we are most dense, with an artificial change in the
 temperature at the refinement boundary due in part to the construction
 of the initial model using the fine grid resolution for HSE. \MarginPar{Remind the reader what this
   was/where they should be looking in the plot to see this temperature
-  drop} As we will see in the lower resolution case, we do not believe
-that this affects the results.
+  drop} As we will see in the lower resolution case, this does not
+affect the results.
 
 A final feature worth noting is the ash that seems to move along the
 surface at a higher velocity than the flame, via surface gravity
@@ -881,8 +881,21 @@ which will be useful when we transition to 3D simulations.
 \end{figure}
 
 
-The final approximation to explore is our choice of rotation rate.
-{\color{red} need to add discussion + plot}
+The final approximation to explore is our choice of rotation rate.  We
+ran a simulation at 1000 Hz for 12.6~ms (shorter than the 20~ms we
+used for the other runs).  We also used a larger domain, $1.8432\times
+10^5~\mathrm{cm} \times 3.072\times 10^4~\mathrm{cm}$ to account for
+the larger Rossby radius.  Figure~\ref{fig:10_10_slow} shows the flame
+structure.  Overall it looks much like the faster rotator.  In the
+next section, we explore the effect of rotation on the flame
+acceleration.
+
+\begin{figure}[t]
+\centering
+\plotone{flame_wave_slow}
+\caption{\label{fig:10_10_slow} Temperature, mean molecular weight, energy generation rate, and out-of-plane velocity for the 10/10-1000 Hz simulation at 12.6~ms.}
+\end{figure}
+
 
 \subsection{Flame Acceleration}
 
