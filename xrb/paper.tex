@@ -488,8 +488,8 @@ s_L \approx \sqrt{\kth \epsdot} \qquad
 \end{equation}
 \citep{orourke:1979,khokhlov:1993}.
 At the densities we consider in this simulation, the pure He flame
-speed is quite slow and would require a prohibitively long integration
-time to see significant evolution of the burning.  We therefore
+speed is quite slow and would require long integration
+times to see significant evolution of the burning.  We therefore
 consider boosted flames in this first paper, to accelerate the burning
 and allow us to understand the qualitative effects of laterally
 propagating flames.  To boost the flame while keeping the thickness
@@ -564,10 +564,10 @@ these initial conditions, we produce two different hydrostatic models,
 a ``hot'' model that will represent the perturbation that drives the
 flame and a ``cool'' model that will represent the state ahead of the
 flame.  These will have different scale heights.  To create these
-models, we break the vertical structure of the atmosphere into 4
-layers: the underlying neutron star, a ramp-up to the base of the
-accreted atmosphere, a fuel layer representing the bulk of the
-atmosphere where the flame will propagate, and an outer, low density,
+models, we break the vertical structure of the atmosphere into four
+layers: (1) the underlying neutron star, (2) a ramp-up to the base of the
+accreted atmosphere, (3) a fuel layer representing the bulk of the
+atmosphere where the flame will propagate, and (4) an outer, low density,
 isothermal buffer above the atmosphere that allows us
 to capture expansion and explosive dynamics.  
 % This is sketched in
@@ -575,7 +575,7 @@ to capture expansion and explosive dynamics.
 
 The temperature profile in the star and ramp region is given as:
 \begin{equation}
-T = T_\star + \frac{1}{2} (T_\mathrm{hi} - T_\star) \left [ 1 + \tanh\left( \frac{\tilde{y}}{2 \delta_\mathrm{atm}} \right ) \right ]
+T(y) = T_\star + \frac{1}{2} (T_\mathrm{hi} - T_\star) \left [ 1 + \tanh\left( \frac{\tilde{y}}{2 \delta_\mathrm{atm}} \right ) \right ]
 \end{equation}
 with
 \begin{equation}
@@ -604,7 +604,7 @@ where $T = T_\mathrm{hi}$ as $\rho_\mathrm{fuel}$.
 
 Creating the model involves specifying $T_\star$, $T_\mathrm{hi}$,
 $T_\mathrm{lo}$, $\rho_\mathrm{int}$, $H_\star$,
-$\delta_\mathrm{atm}$, ${X_k}_\star$, and ${X_k}_\mathrm{atm}$.  We
+$\delta_\mathrm{atm}$, ${X_k}_\star$, ${X_k}_\mathrm{atm}$, and $g$.  We
 then integrate outwards from the base of the ramp region ($y =
 H_\star$), enforcing the discrete form of hydrostatic equilibrium,
 Eq.~\ref{eq:hse}.  Integrating upwards, we find $p_i$ and
@@ -622,6 +622,9 @@ have constant density and temperature.
 The choice of factors in front of $\delta_\mathrm{atm}$ were designed
 to make sure the peak $T$ is attained at the desired density
 of the burning layer.
+The parameters we use for
+the model generation are listed in Table~\ref{table:params} and the 
+initial model profiles are showing in Figure~\ref{fig:initial_models}.
 
 \begin{deluxetable}{lcc}
 \tablecaption{\label{table:params} Initial model parameters.}
@@ -638,6 +641,7 @@ $H_\star$       & \multicolumn{2}{c}{2000~cm} \\
 $\delta_\mathrm{atm}$ & \multicolumn{2}{c}{50~cm} \\
 $X_\star(\isotm{Ni}{56})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
 $X_\mathrm{atm}(\isotm{He}{4})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
+$g$             & \multicolumn{2}{c}{$-1.5\times 10^{14}~\mathrm{cm~s^{-2}}$} \\
 \enddata
 %
 \tablenotetext{a}{This is not an input parameter, but instead is
@@ -647,10 +651,7 @@ $X_\mathrm{atm}(\isotm{He}{4})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
 \end{deluxetable}
 
 
-We create two models, a ``cool'' model representing the atmosphere
-ahead of the flame and a ``hot'' (or perturbed) model that will
-initiate the flame by driving the burning.  \MarginPar{This has already been said at the start of this section} The parameters we use for
-the model generation are listed in Table~\ref{table:params}. \MarginPar{reference and discuss the figure of initial model here}
+
 We blend the hot and cold models laterally to produce the perturbation
 needed to initiate a localized flame, with the hot model at the
 origin of the axisymmetric geometry.  The blending is done as:
@@ -713,7 +714,7 @@ L_R = \frac{\sqrt{g H_0}}{\Omega} \sim 3\times 10^4~\mathrm{cm}
 \end{equation}
 using a scale height $H_0 = 10^3~\mathrm{cm}$.  This is about one
 quarter of the domain width.  The run at $20~\mbox{cm}$ resolution used
-one fewer level of refinement.  The slower rotating case using a
+one fewer level of refinement.  The slower rotating case (1000~Hz)  uses a
 slightly wider domain to accommodate the expected larger Rossby
 length.  We note that the entire simulation framework for these
 calculations is freely available in the \castro\ github
@@ -771,7 +772,7 @@ the surface area of the burning compared with a perfectly vertical
 flame front.  By $20~\mbox{ms}$ the flame has moved out substantially
 and we are beginning to see a gradient in the composition of the ash,
 with the heavier nuclei furthest behind the flame.  The boosting of
-the burning likely artificially increases this effect. \MarginPar{Doesn't the increased flame speed of the 10/10 run vs. the 5/5 run show this?}
+the burning likely artificially increases this effect, as we'll see in the 5/5 case below.
 
 
 % made with time_series.py in flame_wave_boost_10_10_paper with --skip 100
@@ -794,9 +795,7 @@ burning front is propagating to the right.  In the temperature plot,
 we see the effect of our refinement criteria focusing only on the part of
 the atmosphere where we are most dense, with an artificial change in the
 temperature at the refinement boundary due in part to the construction
-of the initial model using the fine grid resolution for HSE. \MarginPar{Remind the reader what this
-  was/where they should be looking in the plot to see this temperature
-  drop} As we will see in the lower resolution case, this does not
+of the initial model using the fine grid resolution for HSE.  As we will see in the lower resolution case, this does not
 affect the results.
 
 A final feature worth noting is the ash that seems to move along the
@@ -818,7 +817,7 @@ the future.
 
 
 Our default resolution puts $\sim 80$ zones vertically in the
-``cool'' \MarginPar{double check} model atmosphere height.  To
+``cool''  model atmosphere height.  To
 understand the effects of resolution, we also performed a run with one
 fewer refinement level, giving a $20~\mbox{cm}$ resolution overall (this is our
 10/10-lowres run).  Figure~\ref{fig:10_10_lowres} shows the fields for this run at
@@ -854,7 +853,7 @@ develops that is lifted off of the bottom of the fuel layer.  The
 flame has not moved out as far as in the 10/10 simulation, simply
 because there is less energy release, but we expect that if we were to
 run this out twice as long, the flame would have advanced to the
-position seen in our 10/10 runs.  The good agreement in the structure
+position seen in our 10/10 runs.  The ash is also not as evolved to as high of an $\bar{A}$.  The good agreement in the structure
 of the flame seen with the lower boosting gives us confidence that the
 overall aspects of the flame structure and acceleration we are seeing
 are robust to the approximations we make.
@@ -882,8 +881,8 @@ which will be useful when we transition to 3D simulations.
 \end{figure}
 
 
-The final approximation to explore is our choice of rotation rate.  We
-ran a simulation at 1000 Hz for 12.6~ms (shorter than the 20~ms we
+The final approximation to explore is our choice of rotation rate.  We ran the 10/10-1000~Hz
+simulation for 12.6~ms (shorter than the 20~ms we
 used for the other runs).  We also used a larger domain, $1.8432\times
 10^5~\mathrm{cm} \times 3.072\times 10^4~\mathrm{cm}$ to account for
 the larger Rossby radius.  Figure~\ref{fig:10_10_slow} shows the flame
@@ -956,14 +955,13 @@ reduction in speed owing to less energetic burning.
 
 \subsection{Entrainment, Flow Features}
 
-{\color{red} Show whatever it was that Don cooked up.}
-
-Baroclinicity is calculated as
+We explore the baroclinic instability by looking at the magnitude of the 
+baroclinicity, calculated as
 \begin{equation}
     \boldsymbol{\psi} = \frac{1}{\rho^2} \nablab p \times \nablab \rho,
 \end{equation}
 and shows the misalignment of the local density and pressure gradients
-\citep{Malone2014a}. As we are considering a 2D system, the
+(we also explored this in \citep{Malone2014a}). As we are considering a 2D system, the
 component of the baroclinicity we consider here (out of the plane)
 reflects the misalignment of the fields in the plane of the
 simulation. Figure~\ref{fig:baroclinicity} shows that the
@@ -1069,14 +1067,13 @@ straightforward change, and already supported in \castro\ using the
 \pynucastro\ framework~\citep{pynucastro} and JINA ReacLib rate
 database~\citep{reaclib}.
 
-\MarginPar{Relate our work to previous work}
 
 In addition to extending our models to 3D and relaxing the
 approximations used in this study, in the future we plan to perform a
 number of additional further studies.  These include investigating the
 effects of ignition latitude and different initial models. We also
 plan to model mixed H/He bursts. This will require a different
-reaction network, and perhaps different (more relaxed) resolution
+reaction network, and perhaps different resolution
 requirements. A long term goal is to include magnetohydrodynamics in
 our models. Although the magnetic fields of neutron stars exhibiting
 X-ray bursts are relatively weak, with $B \lesssim 10^8 - 10^9$G
@@ -1136,7 +1133,7 @@ algorithm we can drop a level of refinement from the simulations while
 still accurately modeling the evolution.  We have also ported
 \castro\ to GPUs, giving an order of magnitude performance boost on
 nodes with both CPUs and GPUs.  Flames without any boosting are currently running
-using the new GPU-enabled \castro.
+using the new GPU-enabled \castro and will be the focus of the next study.
 
 % MHD, radiation transport
 
@@ -1196,7 +1193,7 @@ a spherical problem, and has the form:
 \end{equation}
 where $t_0$ is a small time used to set the initial width of the
 Gaussian, $r$ is the distance from the origin, and $D$ is the
-diffusion coefficient.  $T_1$ is the ambient temperature and $T_2$ is
+diffusion coefficient (see, e.g., \citet{SWE_MYRA09}).  $T_1$ is the ambient temperature and $T_2$ is
 the temperature of the peak of the Gaussian.  We use $D = 1$, $T_1 = 1$, $T_2 = 2$,
 and $t_0 = 0.001$.
 
