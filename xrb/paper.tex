@@ -424,7 +424,7 @@ We use hydrostatic boundary conditions on the lower boundary, using
 a discretized hydrostatic equilibrium equation of the form:
 \begin{equation}
 \label{eq:hse}
-p_i = p_{i-1} + \frac{1}{2} \Delta y (\rho_i + \rho_{i-1}) g
+    p_i = p_{i-1} + \frac{1}{2} \Delta y (\rho_i + \rho_{i-1}) \gb \cdot \hat{\bf y}
 \end{equation}
 and holding the temperature constant in the ghost cells.  This is solved
 together with the equation of state.  The velocity is reflected at this boundary.
@@ -636,12 +636,11 @@ $T_\mathrm{lo}$ & \multicolumn{2}{c}{$8\times 10^6$~K} \\
 $\rho_\mathrm{int}$ & \multicolumn{2}{c}{$3.43\times 10^6~\gcc$} \\
 $\rho_\mathrm{fuel}$\tablenotemark{a} & $2.36\times 10^6~\gcc$ & $1.20\times 10^6~\gcc$ \\
 $\rho_\mathrm{cutoff}$ & \multicolumn{2}{c}{$10^{-4}~\gcc$} \\
-$g$             & \multicolumn{2}{c}{$-1.5\times 10^{14}~\mathrm{cm~s^{-2}}$} \\
 $H_\star$       & \multicolumn{2}{c}{2000~cm} \\
 $\delta_\mathrm{atm}$ & \multicolumn{2}{c}{50~cm} \\
 $X_\star(\isotm{Ni}{56})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
 $X_\mathrm{atm}(\isotm{He}{4})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
-$g$             & \multicolumn{2}{c}{$-1.5\times 10^{14}~\mathrm{cm~s^{-2}}$} \\
+$\gb$             & \multicolumn{2}{c}{$-1.5\times 10^{14}~\mathrm{cm~s^{-2}} \hat{\bf y}$} \\
 \enddata
 %
 \tablenotetext{a}{This is not an input parameter, but instead is
