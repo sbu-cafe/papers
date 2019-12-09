@@ -403,9 +403,9 @@ behind the flame.
 		grid structure. Note that the boxes shown are not the simulation zones, which span
 		$10~\mathrm{cm}$ at the finest level, but subdomains containing approximately equal
         numbers of zones that are distributed across MPI processes. A coarse base grid
-		extending to the upper boundary is drawn in white, with the green, blue, and black
-		grids showing the jumps in refinement needed to fully resolve the fuel layer and
-		underlying neutron star.}
+		extending to the upper boundary is drawn in white, with the magenta, green, and
+		blue grids showing the jumps in refinement needed to fully resolve the fuel layer
+		and underlying neutron star.}
 \end{figure}
 
 Thermal diffusion is modeled explicitly, using a predictor-corrector
@@ -897,10 +897,9 @@ acceleration.
 \end{figure}
 
 
-\subsection{Flame Acceleration}
+\subsection{Flame Propagation}
 
-To measure the propagation \MarginPar{Can we rename this section "Flame Propagation"? The burning front in our simulations seems to move at a constant velocity, and we don't discuss acceleration.}
-rate of the burning front, we first collapse our nuclear
+To measure the propagation rate of the burning front, we first collapse our nuclear
 energy generation rate ($\dot{e}_\mathrm{nuc}$) data at each time into a 1D radial
 profile by averaging over the vertical coordinate. We then take the peak
 $\dot{e}_\mathrm{nuc}$ value across all profiles to provide a fixed reference point.
@@ -943,7 +942,7 @@ All of the various approximations have the expected effects. The flame in the 5/
 boost run propagates at about half the speed of the 10/10 flame. This is consistent
 with the 1D laminar flames, and is the behavior predicted by Eq.~\ref{eq:flame_scaling}. The
 1000~Hz run goes 2 times faster than the 10/10 2000~Hz run, as expected from the
-inverse relation between rotation rate and the ratio of the burning front area to vertical area \citep{cavecchi:2013}.
+inverse relation between rotation rate and the ratio of Rossby length to scale height \citep{cavecchi:2013}.
 This confirms that the role of the Coriolis
 force is to limit the rate of flame spreading by the anticipated geometrical/hydrodynamical
 effect ($s_\mathrm{front} = s_L * L_R / H$). Reducing the resolution had minimal impact on
