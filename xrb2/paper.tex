@@ -160,6 +160,11 @@ We continue to investigate laterally propagating flames in XRBs...
 %======================================================================
 \section{Numerical Approach}\label{Sec:numerics}
 
+We use the simulation framework introduced in \citet{flame_wave1}.
+The main difference is that we no longer boost the flames by adjusting
+the reaction rates and conductivities.  By porting \castro\ to GPUs,
+we are able to run the unboosted flame simulations with fewer
+resources than the boosted simulations used in our earlier paper.
 
 %======================================================================
 % Results
