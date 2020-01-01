@@ -446,7 +446,7 @@ Solve a Crank-Nicolson-type diffusion equation for $\widehat{h}^{n+1,(0)}$, usin
 \end{eqnarray}
 
 {\bf Step 2C:} ({\it Advance thermodynamic variables})\\ \\
-Define $Q_{\rho X_k}^{(0)}$ as the right hand side of (\ref{eq:sdc species 2}) without the $I_{\rho X_k}^{\rm lagged}$ term, and define $Q_{\rho h}^{(0)}$ as the right hand side of (\ref{eq:sdc enthalpy 2}) without the $I_{\rho h}^{\rm lagged}$ term.  Use {\tt VODE} to integrate (\ref{eq:species}) and (\ref{eq:enthalpy}) over $\Delta t$ to advance $(\rho X_k, \rho h)^n$ to $(\rho X_k, \rho h)^{n+1,(0)}$ using the piecewise-constant advection and diffusion source terms:
+Define $Q_{\rho X_k}^{(0)}$ as the right hand side of (\ref{eq:sdc species 2}) without the $I_{\rho X_k}^{\rm lagged}$ term, and define $Q_{\rho h}^{(0)}$ as the right hand side of (\ref{eq:sdc enthalpy 2}) without the $I_{\rho h}^{\rm lagged}$ term.  Use {\tt VODE} \citep{vode} to integrate (\ref{eq:species}) and (\ref{eq:enthalpy}) over $\Delta t$ to advance $(\rho X_k, \rho h)^n$ to $(\rho X_k, \rho h)^{n+1,(0)}$ using the piecewise-constant advection and diffusion source terms:
 \begin{eqnarray}
 \frac{\partial(\rho X_k)}{\partial t} &=& Q_{\rho X_k}^{(0)} + \rho\dot\omega_k\\
 \frac{\partial(\rho h)}{\partial t} &=& Q_{\rho h}^{(0)} + \rho\Hnuc.
