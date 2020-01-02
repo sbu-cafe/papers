@@ -133,9 +133,6 @@
 \author[0000-0003-0439-4556]{Max P.\ Katz}
 \affiliation{NVIDIA Corp}
 
-\author[0000-0001-8092-1974]{Weiqun Zhang}
-\affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
-
 
 \correspondingauthor{Alice Harpole}
 \email{alice.harpolee@stonybrook.edu}
@@ -148,7 +145,7 @@
 We continue to investigate laterally propagating flames in XRBs...
 \end{abstract}
 
-\keywords{convection---hydrodynamics---methods: numerical---stars: neutron---X-rays: bursts}
+\keywords{X-ray bursts (1814), Nucleosynthesis (1131), Hydrodynamical simulations (767), Hydrodynamics (1963), Neutron stars (1108), Open source software (1866), Computational methods (1965)}
 
 %======================================================================
 % Introduction
@@ -161,7 +158,7 @@ We continue to investigate laterally propagating flames in XRBs...
 %======================================================================
 \section{Numerical Approach}\label{Sec:numerics}
 
-We use the simulation framework introduced in \citet{flame_wave1}.
+We use the Castro hydrodynamics code \citep{castro} and the simulation framework introduced in \citet{flame_wave1}.
 The main difference is that we no longer boost the flames by adjusting
 the reaction rates and conductivities.  By porting \castro\ to GPUs,
 we are able to run the unboosted flame simulations with fewer
