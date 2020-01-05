@@ -52,7 +52,8 @@ is a low Mach number hydrodynamics code for modeling the highly
 subsonic stellar convection leading up to explosion and Castro is a
 fully compressible radiation hydrodynamics code that efficiently
 models the explosive phase.  These codes share a common framework
-(adaptive mesh library, microphysics routines).
+(adaptive mesh library, microphysics routines), are written in C++ and Fortran,
+and use MPI+OpenMP or MPI+CUDA.
 
 Advances in our understanding of these events have been made both
 through the development of new algorithms (e.g.\ low-speed solvers) as
@@ -73,7 +74,7 @@ through the accreted fuel layer on a neutron star.  Due to the range
 of length and timescales, various approximations have been used in the
 literature.  Our group started performing two-dimensional
 hydrodynamical simulations of the flame propagating using the NERSC
-Cori and OLCF Titan machines over a year ago.  These calculations were
+Cori and OLCF Titan (on CPUs)  machines over a year ago.  These calculations were
 the first to perform full hydrodynamics in both the lateral and
 vertical directions, allowing us to understand the complex dynamics of
 the flame front with realistic microphysics.  The simulations were
@@ -103,7 +104,10 @@ New architectures bring new programming challenges, and to date we've
 managed to keep pace with these developments.  A key point is that
 funding needs to be provided to aid in preparing codes, not just for
 the science, especially for novel architectures.  NSF should recognize
-this need.  To ensure the largest benefit to the community,
+this need.  The software stack on the next generation machine is as
+important as the hardware.  It should support the popular
+community-supported programming models today and have wide support for
+C/C++ and Fortran.  To ensure the largest benefit to the community,
 application codes for these machines should be Open Source to the
 fullest extend allowed.
 
