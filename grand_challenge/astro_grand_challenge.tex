@@ -1,0 +1,50 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+
+\usepackage{mathpazo}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+
+\rfoot{\footnotesize \em Future Directions in Extreme Scale\\ Computing for Scientific Grand Challenges}
+
+\begin{document}
+
+\begin{center}
+{\Large Challenges in Modeling Astrophysical Thermonuclear Explosions} \\[0.25em]
+Michael Zingale (Stony Brook)
+\end{center}
+
+The end states of stellar evolution result in exotic compact objects:
+white dwarfs, neutron stars, and black holes.  When these remnants are
+in binary systems, interactions with the companion star can lead to a
+variety of different thermonuclear explosions: classical novae, X-ray
+bursts (XRBs), and thermonuclear (Type Ia) supernovae (SN Ia).  These
+explosions are important sites of nucleosynthesis in the galaxy.  XRBs
+allow us to probe the physics of dense nuclear matter, and SN Ia are
+important distant indicators for measuring the expansion history of
+the Universe.  Simulations on these events has been ongoing for
+decades and allow us to understand the physics of the explosion,
+interpret the observations, and test different progenitor models for
+viability.
+
+Modeling these events require multiscale and multiphysics simulations.
+Spatial scales range from the size of the white dwarf or neutron star
+down to the burning or dissipation scale.  Temporary scales range from
+the millions of years (SN Ia) to hours (XRBs) of evolution that
+brought the star to the brink of explosions to the seconds-long
+explosion.  Models must incorporate hydrodynamics, nuclear reactions,
+gravity, magnetic fields, and radiation.
+
+algorithms: hydrodynamics, finite-volume, AMR
+
+new developments: low speed / implicit, integration techniques, coupling
+
+performance: GPUs \& CPUs
+
+Example: XRBs
+
+
+\end{document}
