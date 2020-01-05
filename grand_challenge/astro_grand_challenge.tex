@@ -2,6 +2,7 @@
 
 \usepackage[margin=1in]{geometry}
 
+\usepackage{hyperref}
 \usepackage{mathpazo}
 
 \usepackage{fancyhdr}
@@ -21,30 +22,90 @@ The end states of stellar evolution result in exotic compact objects:
 white dwarfs, neutron stars, and black holes.  When these remnants are
 in binary systems, interactions with the companion star can lead to a
 variety of different thermonuclear explosions: classical novae, X-ray
-bursts (XRBs), and thermonuclear (Type Ia) supernovae (SN Ia).  These
-explosions are important sites of nucleosynthesis in the galaxy.  XRBs
-allow us to probe the physics of dense nuclear matter, and SN Ia are
+bursts (XRBs), and thermonuclear (Type Ia) supernovae (SN Ia).  SN Ia
+and novae are important sites of nucleosynthesis in the galaxy; XRBs
+allow us to probe the physics of dense nuclear matter; and SN Ia are
 important distant indicators for measuring the expansion history of
-the Universe.  Simulations on these events has been ongoing for
-decades and allow us to understand the physics of the explosion,
+the Universe.  Simulations on these events have been ongoing for
+decades and allow us to understand the physics of the explosions,
 interpret the observations, and test different progenitor models for
-viability.
+viability.  Next generation supercomputers will allow us to push these
+simulations to unprecedented realism.
 
-Modeling these events require multiscale and multiphysics simulations.
-Spatial scales range from the size of the white dwarf or neutron star
+Modeling these events requires multiscale and multiphysics simulations.
+Spatial scales range from the size of the compact object
 down to the burning or dissipation scale.  Temporary scales range from
 the millions of years (SN Ia) to hours (XRBs) of evolution that
 brought the star to the brink of explosions to the seconds-long
 explosion.  Models must incorporate hydrodynamics, nuclear reactions,
-gravity, magnetic fields, and radiation.
+gravity, thermal conduction, magnetic fields, and radiation.
 
-algorithms: hydrodynamics, finite-volume, AMR
+While a variety of approximations are used in astrophysics to model
+hydrodynamic flows, for stellar explosions, conservative finite-volume
+methods are the most popular.  Adaptive mesh refinement (AMR) allows
+us to increase the range of lengthscales captures.  Our group has been
+developing the AMReX Astrophysics Suite of open-source AMR
+multiphysics hydrodynamics
+codes\footnote{\url{https://github.com/AMReX-Astro/}} for over a
+decade.  Two codes in particular address stellar explosions: MAESTROeX
+is a low Mach number hydrodynamics code for modeling the highly
+subsonic stellar convection leading up to explosion and Castro is a
+fully compressible radiation hydrodynamics code that efficiently
+models the explosive phase.  These codes share a common framework
+(adaptive mesh library, microphysics routines).
 
-new developments: low speed / implicit, integration techniques, coupling
+Advances in our understanding of these events have been made both
+through the development of new algorithms (e.g.\ low-speed solvers) as
+well as new computer architectures.  Today's supercomputers are
+dominated by GPU accelerators, as will the next generation of
+DOE supercomputers.  Over the past year,
+we've ported the AMReX Astrophysics Suite to GPUs, enabling a large
+performance gain and opening new areas for scientific exploration.  An
+important part of that process is performance portability.  Our path
+allows us to use the exact same compute kernels on CPUs and GPUs,
+eliminating the burden of maintaining redundant code paths for
+different architectures.
 
-performance: GPUs \& CPUs
+To highlight the way that new computer architectures enable new
+science, we focus on our current work on XRBs.  Our interest is in
+modeling the nucleosynthesis as a burning front propagates laterally
+through the accreted fuel layer on a neutron star.  Due to the range
+of length and timescales, various approximations have been used in the
+literature.  Our group started performing two-dimensional
+hydrodynamical simulations of the flame propagating using the NERSC
+Cori and OLCF Titan machines over a year ago.  These calculations were
+the first to perform full hydrodynamics in both the lateral and
+vertical directions, allowing us to understand the complex dynamics of
+the flame front with realistic microphysics.  The simulations were
+challenging, and we needed to make approximations to both the length
+scales (using artificially high neutron star rotation rates to compress
+the lateral scales) and time scales (boosting the flame speed).
+Nevertheless, we were able to complete the first resolved calculations
+of hydrodynamical flames in X-ray bursts.  Taking advantage of GPUs,
+we are now able to eliminate these approximations in our current runs on the
+OLCF Summit machine.  The same code is used,
+but running entirely on the GPUs, it is 5--10$\times$ faster than
+CPUs.  We are on target to perform the first three-dimensional
+simulations this year as well as to explore the more interesting case
+of mixed H/He bursts, which involve more complicated nuclear
+reactions.
 
-Example: XRBs
+The present generation of supercomputers allow us to do simulations
+that were simply not possible with the previous generation.  Future
+computers will give the same boost.  With the next generation
+machines, we will be able to routinely do 3D simulations, cover a
+larger portion of the neutron star surface, increase the size of our
+reaction networks, and couple radiation.These will be the first global
+simulations of burning fronts on neutron stars that capture the
+realistic physics and allow us to connect directly to observations.
+
+New architectures bring new programming challenges, and to date we've
+managed to keep pace with these developments.  A key point is that
+funding needs to be provided to aid in preparing codes, not just for
+the science, especially for novel architectures.  NSF should recognize
+this need.  To ensure the largest benefit to the community,
+application codes for these machines should be Open Source to the
+fullest extend allowed.
 
 
 \end{document}
