@@ -3,7 +3,9 @@
 \usepackage[margin=1in]{geometry}
 
 \usepackage{hyperref}
-\usepackage{mathpazo}
+\usepackage{times}
+
+\usepackage[para]{footmisc}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -25,7 +27,7 @@ variety of different thermonuclear explosions: classical novae, X-ray
 bursts (XRBs), and thermonuclear (Type Ia) supernovae (SN Ia).  SN Ia
 and novae are important sites of nucleosynthesis in the galaxy; XRBs
 allow us to probe the physics of dense nuclear matter; and SN Ia are
-important distant indicators for measuring the expansion history of
+important distance indicators for measuring the expansion history of
 the Universe.  Simulations on these events have been ongoing for
 decades and allow us to understand the physics of the explosions,
 interpret the observations, and test different progenitor models for
@@ -34,25 +36,24 @@ simulations to unprecedented realism.
 
 Modeling these events requires multiscale and multiphysics simulations.
 Spatial scales range from the size of the compact object
-down to the burning or dissipation scale.  Temporary scales range from
+down to the burning or dissipation scale.  Temporal scales range from
 the millions of years (SN Ia) to hours (XRBs) of evolution that
-brought the star to the brink of explosions to the seconds-long
+brought the star to the brink of explosion to the seconds-long
 explosion.  Models must incorporate hydrodynamics, nuclear reactions,
 gravity, thermal conduction, magnetic fields, and radiation.
 
 While a variety of approximations are used in astrophysics to model
 hydrodynamic flows, for stellar explosions, conservative finite-volume
 methods are the most popular.  Adaptive mesh refinement (AMR) allows
-us to increase the range of lengthscales captures.  Our group has been
-developing the AMReX Astrophysics Suite of open-source AMR
+us to increase the range of length scales captured.  Our group develops
+the AMReX Astrophysics Suite of open-source AMR
 multiphysics hydrodynamics
-codes\footnote{\url{https://github.com/AMReX-Astro/}} for over a
-decade.  Two codes in particular address stellar explosions: MAESTROeX
+codes\footnote{\url{https://github.com/AMReX-Astro/}}.  Two codes in particular address stellar explosions: MAESTROeX
 is a low Mach number hydrodynamics code for modeling the highly
 subsonic stellar convection leading up to explosion and Castro is a
 fully compressible radiation hydrodynamics code that efficiently
 models the explosive phase.  These codes share a common framework
-(adaptive mesh library, microphysics routines), are written in C++ and Fortran,
+(AMR library, microphysics routines), are written in C++ and Fortran,
 and use MPI+OpenMP or MPI+CUDA.
 
 Advances in our understanding of these events have been made both
@@ -71,8 +72,8 @@ To highlight the way that new computer architectures enable new
 science, we focus on our current work on XRBs.  Our interest is in
 modeling the nucleosynthesis as a burning front propagates laterally
 through the accreted fuel layer on a neutron star.  Due to the range
-of length and timescales, various approximations have been used in the
-literature.  Our group started performing two-dimensional
+of length and time scales, various approximations have been used in the
+literature.  Our group started performing 2D
 hydrodynamical simulations of the flame propagating using the NERSC
 Cori and OLCF Titan (on CPUs)  machines over a year ago.  These calculations were
 the first to perform full hydrodynamics in both the lateral and
@@ -81,8 +82,7 @@ the flame front with realistic microphysics.  The simulations were
 challenging, and we needed to make approximations to both the length
 scales (using artificially high neutron star rotation rates to compress
 the lateral scales) and time scales (boosting the flame speed).
-Nevertheless, we were able to complete the first resolved calculations
-of hydrodynamical flames in X-ray bursts.  Taking advantage of GPUs,
+  Taking advantage of GPUs,
 we are now able to eliminate these approximations in our current runs on the
 OLCF Summit machine.  The same code is used,
 but running entirely on the GPUs, it is 5--10$\times$ faster than
