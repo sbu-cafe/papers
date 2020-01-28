@@ -25,6 +25,13 @@
 \newcommand{\Advt}[1]{{\left [\mathcal{\tilde{A}} \left(#1\right)\right]}}
 \newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
 
+\newcommand{\Ub}{\mathbf{U}}
+\newcommand{\Fb}{\mathbf{F}}
+
+\newcommand{\ddx}[1]{{\frac{{\partial#1}}{\partial x}}}
+\newcommand{\ddy}[1]{{\frac{{\partial#1}}{\partial y}}}
+\newcommand{\ddz}[1]{{\frac{{\partial#1}}{\partial z}}}
+\newcommand{\omegadot}{\dot{\omega}}
 \newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
 \newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
 \newcommand{\Rbs}[1]{{\bf R} \left ( #1 \right )}
@@ -151,9 +158,57 @@ system as:
 where $\Uc$ is the vector of conserved quantities, $\Advs{\Uc}$ is the
 advective term (the divergence of the hydrodynamic fluxes along with
 hydrodynamic sources), and $\Rbs{\Uc}$ are the reactive source terms.
-The update is done at specific temporal nodes, the number of locations
-of which are picked to give the desired temporal accuracy.  The update
-from one time node $m$ to $m+1$ appears as:
+The conserved state has the form:
+\begin{equation}
+\Uc = (\rho, \rho X_k, \rho u, \rho v, \rho w, \rho E)^\intercal
+\end{equation}
+where $\rho$ is the mass density, $X_k$ are the mass fractions of the
+nuclear species, $\Ub = (u, v, w)$ is the Cartesian velocity vector,
+and $E$ is the total specific energy, related to the specific internal
+energy, $e$, as $E = e + |\Ub|^2/2$.  The advective term takes the form:
+\begin{equation}
+\Advs{\Uc} = -\nabla \cdot \Fb (\Ub) + {\bf H}
+\end{equation}
+where $\Fb(\Ub)$ are the hydrodynamical fluxes:
+\begin{equation}
+\Fb \cdot \hat{\bf x} = \left (\begin{array}{c} \rho u \\ \rho X_k u \\ \rho u^2 + p \\ \rho v u \\ \rho w u \\ (\rho E + p) u  \end{array} \right )
+\quad
+\Fb \cdot \hat{\bf y} = \left (\begin{array}{c} \rho v \\ \rho X_k v \\ \rho u v \\ \rho v^2 + p \\ \rho w v \\ (\rho E + p) v  \end{array} \right )
+\quad
+\Fb \cdot \hat{\bf z} = \left (\begin{array}{c} \rho w \\ \rho X_k w \\ \rho u w \\ \rho v w \\ \rho w^2 + p \\ (\rho E + p) w  \end{array} \right )
+\end{equation}
+Here, $p$ is the pressure, which can be evaluated through our equation
+of state, $p = p(\rho, e, X_k)$.  Note that we do not include
+transport terms in this system, but it is straightforward to add in a
+thermal diffusion flux.  ${\bf H}$ captures any hydrodynamical source
+terms (e.g., gravity).  Finally the reactive sources take the form:
+\begin{equation}
+\Rbs{\Uc} = (0, \rho \omegadot_k, 0, 0, 0, \rho \dot{\epsilon})^\intercal
+\end{equation}
+where $\omegadot_k$ is the creation rate of species $k$ and $\dot{\epsilon}$
+is the specific energy generation rate from reactions.
+
+In the SDC formalism~\cite{dutt:2000,minion:2003}, we start by writing our system in integral form:
+\begin{equation}
+\Uc^{n+1} = \Uc^n + \int_{t^n}^{t^{n+1}} \left [\Advs{\Uc} + \Rbs{\Uc} \right ] dt
+\end{equation}
+We next introduce the idea of iteratively approximating the solution.
+We'll use the superscript $k$ to denote the current iteration and
+$k+1$ for the new iteration.  We rewrite the integral as:
+\begin{align}
+\Uc^{n+1,(k+1)} = \Uc^{n,(k+1)} +
+   &\int_{t^n}^{t^{n+1}} \left \{ \left [ \Advs{\Uc}^{(k+1)} - \Advs{\Uc}^{(k)} \right ]
+   + \left [ \Rbs{\Uc}^{(k+1)} - \Rbs{\Uc}^{(k)} \right ] \right \} dt + \nonumber \\
+  & \int_{t^n}^{t^{n+1}} \left [\Advs{\Uc}^{(k)} + \Rbs{\Uc}^{(k)} \right ] dt
+\end{align}
+For the first integral, we approximate these terms using a first order
+update.  For advection, we simply use the value at the starting time
+(analogous to a forward Euler approximation) and for the reactions, we
+treat them implicitly by using the value at the ending time (analogous
+to a backward Euler approximation).  To gain temporal accuracy, we
+further subdivide the time into $M+1$ nodes, and perform this update
+over all time nodes for each iteration.  Denoting the time nodes with
+the index $m$, the updated from one time node $m$ to $m+1$ appears as:
     \begin{align}
       \label{eq:sdc:general}
       \avg{\Uc}^{{m+1},(k+1)} = \avg{\Uc}^{m,(k+1)}
@@ -161,17 +216,18 @@ from one time node $m$ to $m+1$ appears as:
             &+ \delta t_m \left [ \avg{\Rbs{\Uc}}^{{m+1},(k+1)} - \avg{\Rbs{\Uc}}^{{m+1},(k)} \right ] \nonumber \\
             &+ \int_{t^m}^{t^{m+1}} dt  \left (\avg{\Advs{\Uc}}^{(k)} + \avg{\Rbs{\Uc}}^{(k)}\right)
    \end{align}
-We use a finite-volume formalism, so $\avg{\Uc}$ is the spatial average of the
-conserved state in a zone, $\avg{\Advs{\Uc}}^m$ is the average
-advective term in a zone at time $t^m$, and $\avg{\Rbs{\Uc}}^{m+1}$
-the average of the reactive source at time $t^{m+1}$.  The second
-superscript on each term, $(k)$ or $(k+1)$, is the iteration counter.  This
-update is an implicit equation for the new state,
-$\avg{\Uc}^{{m+1},(k+1)}$.  The last term in the update is an integral
-over the sources constructed from the previous iteration's values at
-each time node.  Each iteration of the SDC method increases the
-temporal order of accuracy by one, up to the order of accuracy with
-which the integral is constructed.  
+where $\delta t_m = t^{m+1} - t^m$ is the time difference between nodes.
+We use a finite-volume formalism, so $\avg{\Uc}$ is the spatial
+average of the conserved state in a zone, $\avg{\Advs{\Uc}}^m$ is the
+average advective term in a zone at time $t^m$, and
+$\avg{\Rbs{\Uc}}^{m+1}$ the average of the reactive source at time
+$t^{m+1}$.  The second superscript on each term, $(k)$ or $(k+1)$, is
+the iteration counter.  This update is an implicit equation for the
+new state, $\avg{\Uc}^{{m+1},(k+1)}$.  The last term in the update is
+an integral over the sources constructed from the previous iteration's
+values at each time node.  Each iteration of the SDC method increases
+the temporal order of accuracy by one, up to the order of accuracy
+with which the integral is constructed.
 
 \castro\ implements both a second-order method (using a trapezoid rule
 for the integral) and fourth-order method in space and time (using a
@@ -233,7 +289,7 @@ which rotation and the lateral pressure gradient balance (the Rossby
 length).  The smallest scale we need to model is dictated by
 accurately capturing the burning---we are interested in both the
 energy release and nucleosynthesis.  Our first set of two-dimensional simulations
-(\cite{astronum:2018}, Eiden et al.\ in preparation) used two physical approximations to
+(\cite{astronum:2018,eiden:2019} used two physical approximations to
 make the problem more tractable.  First, we used a higher rotation
 rate than expected in order to reduce the Rossby length, allowing us
 to model a smaller region of that star.  Second, we artificially

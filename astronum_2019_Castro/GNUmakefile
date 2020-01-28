@@ -1,9 +1,8 @@
 ALL: astronum-castro-2019.pdf
 
 PNGS := $(wildcard *.png)
-PDFS := $(filter-out astronum-castro-2019.pdf,$(wildcard *.pdf))
 
-astronum-castro-2019.pdf: astronum-castro-2019.tex ws.bib $(PNGS) $(PDFS)
+astronum-castro-2019.pdf: astronum-castro-2019.tex ws.bib $(PNGS)
 	pdflatex $<
 	bibtex $(subst .tex,,$<)
 	pdflatex $<

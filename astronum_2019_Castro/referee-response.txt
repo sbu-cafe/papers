@@ -1,0 +1,36 @@
+1. In equation (1), detailed forms about the conserved vector U, the
+advection terms A() and the reaction terms R() may be needed for
+potential readers who are not familiar with radiation hydrodynamics
+simulations.
+
+  We've added the explicit form of each of these terms into the text.
+
+
+2. In equation (2), the dt m term, which is not defined in the
+following paragraph – is that simply t m+1 – t m , or is it the
+advection time scale?
+
+  It is just the difference between time nodes.  I've made that explicit
+  in the text now.
+
+3. Although the details are included in [2], it may be still useful to
+include more details about getting equation (3) from (2) (or provide
+more references of deriving equation 3?), which is the main part of
+the numerical algorithm implemented in the new development.
+
+   A new paragraph has been added motivating this equation along
+   with some references.  The reference to the Castro SDC paper
+   has also been updated.
+
+4. The authors mention in the manuscript that the code achieves
+expected convergence (either second-order or fourth-order) on a wide
+variety of problems. Although the details are included in [2] as well,
+it may be useful for readers to understand the quality of the
+solutions by adding one figure or one table demonstrating the
+convergence of test simulations.
+
+5. Section 4 – is it possible (within the page limit?) to include at
+least one figure to show the results from the test problem described
+in the simulation.
+
+   A reference to the Eiden et al paper has been added.
