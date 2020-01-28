@@ -207,7 +207,9 @@ update.  For advection, we simply use the value at the starting time
 treat them implicitly by using the value at the ending time (analogous
 to a backward Euler approximation).  To gain temporal accuracy, we
 further subdivide the time into $M+1$ nodes, and perform this update
-over all time nodes for each iteration.  Denoting the time nodes with
+over all time nodes for each iteration.  Finally, in \castro\ we use a finite-volume
+discretion, so we'll write the state as $\avg{\Uc}$ to indicate that it is an average over the zone.
+Denoting the time nodes with
 the index $m$, the updated from one time node $m$ to $m+1$ appears as:
     \begin{align}
       \label{eq:sdc:general}
@@ -217,8 +219,7 @@ the index $m$, the updated from one time node $m$ to $m+1$ appears as:
             &+ \int_{t^m}^{t^{m+1}} dt  \left (\avg{\Advs{\Uc}}^{(k)} + \avg{\Rbs{\Uc}}^{(k)}\right)
    \end{align}
 where $\delta t_m = t^{m+1} - t^m$ is the time difference between nodes.
-We use a finite-volume formalism, so $\avg{\Uc}$ is the spatial
-average of the conserved state in a zone, $\avg{\Advs{\Uc}}^m$ is the
+Here, $\avg{\Advs{\Uc}}^m$ is the
 average advective term in a zone at time $t^m$, and
 $\avg{\Rbs{\Uc}}^{m+1}$ the average of the reactive source at time
 $t^{m+1}$.  The second superscript on each term, $(k)$ or $(k+1)$, is
