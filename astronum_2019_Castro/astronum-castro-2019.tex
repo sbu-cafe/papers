@@ -33,6 +33,8 @@
 \newcommand{\ddz}[1]{{\frac{{\partial#1}}{\partial z}}}
 \newcommand{\omegadot}{\dot{\omega}}
 \newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\isotm}[2]{{}^{#2}\mathrm{#1}}
+
 \newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
 \newcommand{\Rbs}[1]{{\bf R} \left ( #1 \right )}
 \newcommand{\Ic}{\bm{\mathcal{I}}}
@@ -235,12 +237,48 @@ for the integral) and fourth-order method in space and time (using a
 Simpsons rule for the integral and the spatial reconstruction of
 \cite{mccorquodalecolella}).  We demonstrated that \castro\ achieves
 the expected convergence on a wide variety of problems in
-\cite{castro:sdc}.  At the moment, the method is limited to single
+\cite{castro:sdc}.  Table~\ref{table:convergence} summaries the
+convergence of the standard unsplit CTU PPM hydrodynamics algorithm
+with Strang splitting and the second- and fourth-order SDC methods on
+a reacting acoustic pulse test problem.
+
+At the moment, the method is limited to single
 levels, but work is underway to extend this methodology to AMR.  For
 problems where burning is important and can dominate the computational
 expense, we hope this new SDC method will become the preferred
 integration technique in the future.
 
+
+\begin{table}[t]
+\renewcommand{\arraystretch}{1.25}
+\centering
+\begin{tabular}{llllll}
+{\bf field} & {$\epsilon_{64 \rightarrow 128}$} & 
+{\bf rate} & {$\epsilon_{128\rightarrow 256}$} & 
+{\bf rate} & {$\epsilon_{256\rightarrow 512}$} \\
+\hline
+\multicolumn{6}{c}{\bf Strang + CTU} \\
+\hline
+ $\rho X(\isotm{C}{12})$     & $1.717 \times 10^{17}$  & 1.945  & $4.458 \times 10^{16}$  & 2.194  & $9.745 \times 10^{15}$  \\
+ $\rho X(\isotm{O}{16})$     & $1.717 \times 10^{14}$  & 1.648  & $5.479 \times 10^{13}$  & 1.898  & $1.471 \times 10^{13}$  \\
+\hline
+\multicolumn{6}{c}{\bf 2nd order SDC} \\
+\hline
+ $\rho X(\isotm{C}{12})$     & $1.042 \times 10^{17}$  & 2.032  & $2.546 \times 10^{16}$  & 2.019  & $6.281 \times 10^{15}$  \\
+ $\rho X(\isotm{O}{16})$     & $1.564 \times 10^{14}$  & 1.935  & $4.090 \times 10^{13}$  & 2.003  & $1.020 \times 10^{13}$  \\
+\hline
+\multicolumn{6}{c}{\bf 4th order SDC} \\
+\hline
+ $\rho X(\isotm{C}{12})$     & $8.789 \times 10^{15}$  & 3.798  & $6.319 \times 10^{14}$  & 3.911  & $4.201 \times 10^{13}$  \\
+ $\rho X(\isotm{O}{16})$     & $1.294 \times 10^{13}$  & 3.765  & $9.518 \times 10^{11}$  & 3.872  & $6.501 \times 10^{10}$  \\
+\hline
+\end{tabular}
+\renewcommand{\arraystretch}{1.0}
+\caption{\label{table:convergence} Convergence of carbon mass density
+  ($\rho X(\isotm{C}{12})$) and oxygen mass density ($\rho
+  X(\isotm{O}{16})$) for the Strang-CTU algorithm and 2nd and 4th
+  order SDC.  Data taken from \cite{castro:sdc}.}
+\end{table}
 
 \section{Performance Portability}
 

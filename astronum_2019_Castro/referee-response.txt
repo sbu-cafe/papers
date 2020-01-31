@@ -29,6 +29,9 @@ it may be useful for readers to understand the quality of the
 solutions by adding one figure or one table demonstrating the
 convergence of test simulations.
 
+   A table was added summarizing the covergence from the main paper
+   showing the results.
+
 5. Section 4 – is it possible (within the page limit?) to include at
 least one figure to show the results from the test problem described
 in the simulation.
