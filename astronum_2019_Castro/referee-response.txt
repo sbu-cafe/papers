@@ -36,4 +36,6 @@ convergence of test simulations.
 least one figure to show the results from the test problem described
 in the simulation.
 
-   A reference to the Eiden et al paper has been added.
+   A reference to the Eiden et al paper has been added and a figure
+   representative of those results was added.
+

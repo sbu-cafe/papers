@@ -240,7 +240,13 @@ the expected convergence on a wide variety of problems in
 \cite{castro:sdc}.  Table~\ref{table:convergence} summaries the
 convergence of the standard unsplit CTU PPM hydrodynamics algorithm
 with Strang splitting and the second- and fourth-order SDC methods on
-a reacting acoustic pulse test problem.
+a reacting acoustic pulse test problem modeling the 3-$\alpha$ and
+$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$ reactions.  We see that
+the Strang CTU method has trouble achieving second order accuracy,
+while the second-order SDC method converges second order.  The
+fourth-order SDC method converges almost fourth order overall.  Full
+details of this problem and more extensive convergence results are
+given in \cite{castro:sdc}.
 
 At the moment, the method is limited to single
 levels, but work is underway to extend this methodology to AMR.  For
@@ -317,6 +323,15 @@ both show excellent weak scaling.
 \end{figure}
 
 \section{Example Application: X-ray bursts}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{flame_wave_smallplt131070_slice}
+\caption{\label{fig:xrb} A snapshot of a 20 cm XRB flame calculation showing
+the mean molecular weight.  The flame is moving from left to right, and we see
+a gradient in the ash behind the flame, as the burning makes heavier nuclei.  
+Calculation from \cite{eiden:2019}.}
+\end{figure}
 
 Both the new SDC method and GPU offloading are important to our
 science goals, in particular the problem of modeling a flame spreading
