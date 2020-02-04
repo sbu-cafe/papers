@@ -216,7 +216,7 @@ number methods, which approximate the hydrodynamics equations to filter
 soundwaves, enabling large timesteps and efficient modeling of
 subsonic convection.  While these calculations could not support
 the lateral differences needed for flame spreading, they can help
-understand the role that convection plays in distributing the initial
+us to understand the role that convection plays in distributing the initial
 burning products vertically throughout the neutron star atmosphere as well
 as the nature of any turbulence the burning front might encounter as it propagates
 through the atmosphere.
@@ -902,7 +902,7 @@ To measure the propagation rate of the burning front, we first collapse our nucl
 energy generation rate ($\dot{e}_\mathrm{nuc}$) data at each time into a 1D radial
 profile by averaging over the vertical coordinate. We then take the peak
 $\dot{e}_\mathrm{nuc}$ value across all profiles to provide a fixed reference point.
-We define the position of the flame front to be the location ahead of hottest part of
+We define the position of the flame front to be the location to the right of hottest part of
 the flame where $\dot{e}_\mathrm{nuc}$ first drops to $< 0.1 \%$ of the global maximum. 
 This corresponds roughly to the leading edge of the burning region. Averaging
 over the vertical coordinate helps to reduce sensitivity to localized fluid motions, as does
@@ -961,7 +961,7 @@ baroclinicity, calculated as
     \boldsymbol{\psi} = \frac{1}{\rho^2} \nablab p \times \nablab \rho,
 \end{equation}
 and shows the misalignment of the local density and pressure gradients
-(we also explored this in \citep{Malone2014a}). As we are considering a 2D system, the
+(we also explored this in \citealt{Malone2014a}). As we are considering a 2D system, the
 component of the baroclinicity we consider here (out of the plane)
 reflects the misalignment of the fields in the plane of the
 simulation. Figure~\ref{fig:baroclinicity} shows that the
