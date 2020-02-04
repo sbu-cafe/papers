@@ -584,7 +584,9 @@ with
 Here, $\delta_\mathrm{atm}$ is a characteristic width of the
 transition ramp, $T_\star$ is the temperature of the neutron star, and
 $T_\mathrm{hi}$ is the highest temperature in the HSE model---it will
-represent the base of the fuel layer.
+represent the base of the fuel layer. We also define a floor temperature,
+$T_\mathrm{lo}$, which the atmosphere reaches and is held constant at in
+the outer, isothermal layer.
 
 The species mass fractions use this same profile, switching from a set
 describing the underlying star, ${X_k}_\star$, and the set for the
@@ -614,7 +616,7 @@ and buffer layers) or constant entropy, $s_i = s(p_i, \rho_i,
 \{X_k\}_i)$, in the fuel layer.  This follows the procedures described in \citet{ppm-hse}.  We
 use a constant temperature for all $y < H_\star +
 3\delta_\mathrm{atm}$.  Above this, we switch to an isentropic atmosphere until the
-temperature drops to a floor value, $T_\mathrm{lo}$, at which point we
+temperature drops to $T_\mathrm{lo}$, at which point we
 again keep the temperature constant.  The integration of the
 atmosphere continues until the density falls to a low density cutoff,
 $\rho_\mathrm{cutoff}$.  The material above this height is taken to
