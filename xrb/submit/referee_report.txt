@@ -1,0 +1,24 @@
+- It would be very helpful if the authors described in detail how their study and results compare
+  with and compliment those previous studies (series of papers by Cavecchi et al.):
+  
+    We've added a paragraph to the introduction describing the approximations made by Cavecchi et
+    al. and how our study compares in those areas.
+    
+- p. 2: "they can help understand" sounds a bit strange:
+
+    We've changed it to "they can help us to understand".
+    
+- p. 8: T_{lo} does not seem to be explicitly defined:
+
+    We've added a sentence describing T_{lo} to the paragraph after eq. 19.
+    
+- p. 13: ...ahead of the hottest part of the flame...:
+
+    We've changed "ahead" to "to the right".
+    
+- The description of the coordinate system is a bit confusing:
+
+    **Still need to address this**
+    
+We also have some additional data (out to 12.6 ms) from the 1000 Hz run that wasn't included when
+calculating the flame speed. We've updated the flame speed plot and table to include the new data. 
