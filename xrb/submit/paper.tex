@@ -235,6 +235,18 @@ changing the horizontal extent of the flame front. Finally, \citet{Cavecchi2019}
 studied the effects in 3D of the baroclinic instability at the flame
 front, measuring flames up to 10 times faster than in the 2D case.
 
+However, the computational expense of the problem necessitated several approximations
+to make this set of simulations \citep{cavecchi:2013, art-2015-cavecchi-etal, art-2016-cavecchi-etal, Cavecchi2019}
+tractable. The first was the assumption of vertical hydrostatic equilibrium, which allowed them
+to filter out vertically propagating sound waves that would otherwise have limited the
+timestep. Although this enabled them to reach the simulation times (on the order of seconds) needed
+to capture the rise of the burst, they could not model vortical fluid motions driven by effects such
+as turbulence and convection. These can facilitate mixing and help to accelerate the propagation of
+the flame front. They also include only the triple-$\alpha$ process in their implementation of
+nuclear burning, neglecting the other reaction chains at play in a pure He burst. Our simulations
+relax the assumption of vertical hydrostatic equilibrium and implement a more complete set
+of nuclear reactions.
+
 For deflagrations, we either need to resolve the structure of the
 reaction zone or use a flame model.  Flame models usually assume that
 the flame structure is thin compared to the size of the system (see,
