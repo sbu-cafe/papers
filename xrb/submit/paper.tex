@@ -247,8 +247,8 @@ included only the triple-$\alpha$ process in their implementation of nuclear bur
 and use a fixed, constant opacity across the entire domain for each simulation run (although
 they explore the dependence of the flame propagation speed on this opacity value).
 Our simulations relax the assumption of vertical hydrostatic equilibrium, and implement
-a more complete set of nuclear reactions and opacities. However, this comes at the expense
-of a different set of approximations.
+a more complete set of nuclear reactions and opacities. However, as discussed later, this
+comes at the expense of a different set of approximations.
 
 For deflagrations, we either need to resolve the structure of the
 reaction zone or use a flame model.  Flame models usually assume that
@@ -966,6 +966,15 @@ the flame speed -- the low resolution line is right on top of the fit for the st
 in Figure \ref{fig:flame_speed}, with their slopes differing by only a few percent. Using a
 smaller network also produces similar behavior to the standard run, although there is a small
 reduction in speed owing to less energetic burning.
+
+\citet{cavecchi:2013} ran simulations at rotation rates of $450$ Hz exploring a range of opacities.
+Accounting for the boosting, we would expect to see our 10/10 flame propagate at $\sim 2.25$ times
+the speed of these $450$ Hz runs, but instead the speeds range from $4.5$ to $7$ times those reported in
+\citet{cavecchi:2013}. The additional boost may come from cyclic fluid motions that would have been
+disallowed in the $450$ Hz runs by the enforcement of vertical hydrostatic equilibrium (we already saw
+that hydrodynamic effects can accelerate the burning front in our comparison with the 1D flames). The
+inclusion of reaction chains beyond may also increase energy generation and consequently the
+propagation speed.
 
 %Seeing the proofs both changing the Coriolis force AND the
 %laminar flame properties I think is very cool.
