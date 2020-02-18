@@ -589,11 +589,11 @@ to capture expansion and explosive dynamics.
 
 The temperature profile in the star and ramp region is given as:
 \begin{equation}
-T(y) = T_\star + \frac{1}{2} (T_\mathrm{hi} - T_\star) \left [ 1 + \tanh\left( \frac{\tilde{y}}{2 \delta_\mathrm{atm}} \right ) \right ]
+T(z) = T_\star + \frac{1}{2} (T_\mathrm{hi} - T_\star) \left [ 1 + \tanh\left( \frac{\tilde{z}}{2 \delta_\mathrm{atm}} \right ) \right ]
 \end{equation}
 with
 \begin{equation}
-\tilde{y} = y - H_\star - \frac{3}{2} \delta_\mathrm{atm}
+\tilde{z} = z - H_\star - \frac{3}{2} \delta_\mathrm{atm}
 \end{equation}
 Here, $\delta_\mathrm{atm}$ is a characteristic width of the
 transition ramp, $T_\star$ is the temperature of the neutron star, and
@@ -609,7 +609,7 @@ isentropic and outer regions.  Note, since the profile above is
 linear in $X$, if the initial mass fractions sum to one, then the blended
 mass fractions in the ramp region also sum to one.
 
-We specify the density, $\rho_\mathrm{int} = \rho(y = H_\star)$ as the
+We specify the density, $\rho_\mathrm{int} = \rho(z = H_\star)$ as the
 starting point for the integration of hydrostatic equilibrium.  This
 is just below the ramp-up region---this ensures that regardless of
 what the peak temperature ($T_\mathrm{hi}$) is, the state beneath the
@@ -620,27 +620,27 @@ where $T = T_\mathrm{hi}$ as $\rho_\mathrm{fuel}$.
 
 Creating the model involves specifying $T_\star$, $T_\mathrm{hi}$,
 $T_\mathrm{lo}$, $\rho_\mathrm{int}$, $H_\star$,
-$\delta_\mathrm{atm}$, ${X_k}_\star$, ${X_k}_\mathrm{atm}$, and $g$.  We
-then integrate outwards from the base of the ramp region ($y =
+$\delta_\mathrm{atm}$, ${X_k}_\star$, ${X_k}_\mathrm{atm}$, and $g$.
+We then integrate outwards from the base of the ramp region ($z =
 H_\star$), enforcing the discrete form of hydrostatic equilibrium,
-Eq.~\ref{eq:hse}.  Integrating upwards, we find $p_i$ and
-$\rho_i$ using a Newton-Raphson solver together with the equation of state, with either the temperature
-specified, $T_i = T(p_i, \rho_i, \{X_k\}_i)$ (in the isothermal, ramp,
-and buffer layers) or constant entropy, $s_i = s(p_i, \rho_i,
-\{X_k\}_i)$, in the fuel layer.  This follows the procedures described in \citet{ppm-hse}.  We
-use a constant temperature for all $y < H_\star +
-3\delta_\mathrm{atm}$.  Above this, we switch to an isentropic atmosphere until the
-temperature drops to \deleted{a floor value, }$T_\mathrm{lo}$, at which point we
-again keep the temperature constant.  The integration of the
-atmosphere continues until the density falls to a low density cutoff,
-$\rho_\mathrm{cutoff}$.  The material above this height is taken to
-have constant density and temperature.
-The choice of factors in front of $\delta_\mathrm{atm}$ were designed
-to make sure the peak $T$ is attained at the desired density
-of the burning layer.
-The parameters we use for
-the model generation are listed in Table~\ref{table:params} and the 
-initial model profiles are showing in Figure~\ref{fig:initial_models}.
+Eq.~\ref{eq:hse}.  Integrating upwards, we find $p_i$ and $\rho_i$
+using a Newton-Raphson solver together with the equation of state,
+with either the temperature specified, $T_i = T(p_i, \rho_i,
+\{X_k\}_i)$ (in the isothermal, ramp, and buffer layers) or constant
+entropy, $s_i = s(p_i, \rho_i, \{X_k\}_i)$, in the fuel layer.  This
+follows the procedures described in \citet{ppm-hse}.  We use a
+constant temperature for all $z < H_\star + 3\delta_\mathrm{atm}$.
+Above this, we switch to an isentropic atmosphere until the
+temperature drops to \deleted{a floor value, }$T_\mathrm{lo}$, at
+which point we again keep the temperature constant.  The integration
+of the atmosphere continues until the density falls to a low density
+cutoff, $\rho_\mathrm{cutoff}$.  The material above this height is
+taken to have constant density and temperature.  The choice of factors
+in front of $\delta_\mathrm{atm}$ were designed to make sure the peak
+$T$ is attained at the desired density of the burning layer.  The
+parameters we use for the model generation are listed in
+Table~\ref{table:params} and the initial model profiles are showing in
+Figure~\ref{fig:initial_models}.
 
 \begin{deluxetable}{lcc}
 \tablecaption{\label{table:params} Initial model parameters.}
@@ -656,7 +656,7 @@ $H_\star$       & \multicolumn{2}{c}{2000~cm} \\
 $\delta_\mathrm{atm}$ & \multicolumn{2}{c}{50~cm} \\
 $X_\star(\isotm{Ni}{56})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
 $X_\mathrm{atm}(\isotm{He}{4})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
-$\gb$             & \multicolumn{2}{c}{$-1.5\times 10^{14}~\mathrm{cm~s^{-2}} \hat{\bf y}$} \\
+$\gb$             & \multicolumn{2}{c}{$-1.5\times 10^{14}~\mathrm{cm~s^{-2}} \hat{\bf z}$} \\
 \enddata
 %
 \tablenotetext{a}{This is not an input parameter, but instead is
@@ -671,27 +671,27 @@ We blend the hot and cold models laterally to produce the perturbation
 needed to initiate a localized flame, with the hot model at the
 origin of the axisymmetric geometry.  The blending is done as:
 \begin{align}
-p(x,y) &= f(x) p_\mathrm{hot}(y) + [1-f(x)] p_\mathrm{cool}(y) \\
-\rho(x,y) &= f(x) \rho_\mathrm{hot}(y) + [1-f(x)] \rho_\mathrm{cool}(y) \\
-X_k(x,y) &= f(x) {X_k}_\mathrm{hot}(y) + [1-f(x)] {X_k}_\mathrm{cool}(y)
+p(r,z) &= f(r) p_\mathrm{hot}(z) + [1-f(r)] p_\mathrm{cool}(z) \\
+\rho(r,z) &= f(r) \rho_\mathrm{hot}(z) + [1-f(r)] \rho_\mathrm{cool}(z) \\
+X_k(r,z) &= f(r) {X_k}_\mathrm{hot}(z) + [1-f(r)] {X_k}_\mathrm{cool}(z)
 \end{align}
 with
 \begin{equation}
-f(x) = \begin{cases}
-     1 & x < x_\mathrm{pert} \\
-   1 - \frac{x - x_\mathrm{pert}}{\delta_\mathrm{blend}} & x_\mathrm{pert} \le x \le x_\mathrm{pert} + \delta_\mathrm{blend} \\
-     0 & x > x_\mathrm{pert} + \delta_\mathrm{blend}
+f(r) = \begin{cases}
+     1 & r < r_\mathrm{pert} \\
+   1 - \frac{r - r_\mathrm{pert}}{\delta_\mathrm{blend}} & r_\mathrm{pert} \le r \le r_\mathrm{pert} + \delta_\mathrm{blend} \\
+     0 & r > r_\mathrm{pert} + \delta_\mathrm{blend}
 \end{cases}
 \end{equation}
 Since the equation of hydrostatic equilibrium is linear and our
 blending is a linear combination of two models in hydrostatic
 equilibrum, the blended model is also in vertical equilibrium initially.  We choose
-$x_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once
-the blended model is constructed, we compute $T(x,y)$ and $(\rho e)(x,y)$
+$r_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once
+the blended model is constructed, we compute $T(r,z)$ and $(\rho e)(r,z)$
 from the equation of state,
 \begin{align}
-  T(x,y) &= T(\rho(x,y), p(x,y), X_k(x,y)) \\
-  (\rho e)(x,y) &= \rho(x, y) \cdot e(\rho(x,y), p(x,y), X_k(x,y)) 
+  T(r,z) &= T(\rho(r,z), p(r,z), X_k(r,z)) \\
+  (\rho e)(r,z) &= \rho(r, z) \cdot e(\rho(r,z), p(r,z), X_k(r,z)) 
 \end{align}
 
 \begin{figure}[t]
