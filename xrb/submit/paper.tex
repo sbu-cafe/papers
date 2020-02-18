@@ -1,5 +1,5 @@
 %\documentclass[12pt, preprint]{aastex}
-\documentclass[preprint,times,tighten]{aastex63}
+\documentclass[trackchanges,preprint,times,tighten]{aastex63}
 
 \usepackage{epsf,color,amsmath}
 \usepackage{multirow}
@@ -216,11 +216,10 @@ number methods, which approximate the hydrodynamics equations to filter
 soundwaves, enabling large timesteps and efficient modeling of
 subsonic convection.  While these calculations could not support
 the lateral differences needed for flame spreading, they can help
-us to understand the role that convection plays in distributing the initial
+\added{us to} understand the role that convection plays in distributing the initial
 burning products vertically throughout the neutron star atmosphere as well
 as the nature of any turbulence the burning front might encounter as it propagates
 through the atmosphere.
-
 
 The first vertically resolved simulations of lateral deflagrations
 were obtained by \citet{cavecchi:2013}, who showed how the Coriolis
@@ -235,7 +234,7 @@ changing the horizontal extent of the flame front. Finally, \citet{Cavecchi2019}
 studied the effects in 3D of the baroclinic instability at the flame
 front, measuring flames up to 10 times faster than in the 2D case.
 
-The computational expense of the problem necessitated several approximations
+\added{The computational expense of the problem necessitated several approximations
 to make this set of simulations \citep{cavecchi:2013, art-2015-cavecchi-etal, art-2016-cavecchi-etal, Cavecchi2019}
 tractable. The first was the assumption of vertical hydrostatic equilibrium, which
 allowed them to filter out vertically propagating sound waves that would otherwise
@@ -248,7 +247,7 @@ and use a fixed, constant opacity across the entire domain for each simulation r
 they explore the dependence of the flame propagation speed on this opacity value).
 Our simulations relax the assumption of vertical hydrostatic equilibrium, and implement
 a more complete set of nuclear reactions and opacities. However, as discussed later, this
-comes at the expense of a different set of approximations.
+comes at the expense of a different set of approximations.}
 
 For deflagrations, we either need to resolve the structure of the
 reaction zone or use a flame model.  Flame models usually assume that
@@ -599,9 +598,9 @@ with
 Here, $\delta_\mathrm{atm}$ is a characteristic width of the
 transition ramp, $T_\star$ is the temperature of the neutron star, and
 $T_\mathrm{hi}$ is the highest temperature in the HSE model---it will
-represent the base of the fuel layer. We also define a floor temperature,
+represent the base of the fuel layer. \added{We also define a floor temperature,
 $T_\mathrm{lo}$, which the atmosphere reaches and is held constant at in
-the outer, isothermal layer.
+the outer, isothermal layer.}
 
 The species mass fractions use this same profile, switching from a set
 describing the underlying star, ${X_k}_\star$, and the set for the
@@ -631,7 +630,7 @@ and buffer layers) or constant entropy, $s_i = s(p_i, \rho_i,
 \{X_k\}_i)$, in the fuel layer.  This follows the procedures described in \citet{ppm-hse}.  We
 use a constant temperature for all $y < H_\star +
 3\delta_\mathrm{atm}$.  Above this, we switch to an isentropic atmosphere until the
-temperature drops to $T_\mathrm{lo}$, at which point we
+temperature drops to \deleted{a floor value, }$T_\mathrm{lo}$, at which point we
 again keep the temperature constant.  The integration of the
 atmosphere continues until the density falls to a low density cutoff,
 $\rho_\mathrm{cutoff}$.  The material above this height is taken to
@@ -919,7 +918,7 @@ To measure the propagation rate of the burning front, we first collapse our nucl
 energy generation rate ($\dot{e}_\mathrm{nuc}$) data at each time into a 1D radial
 profile by averaging over the vertical coordinate. We then take the peak
 $\dot{e}_\mathrm{nuc}$ value across all profiles to provide a fixed reference point.
-We define the position of the flame front to be the location to the right of hottest part of
+We define the position of the flame front to be the location \replaced{ahead}{to the right} of hottest part of
 the flame where $\dot{e}_\mathrm{nuc}$ first drops to $< 0.1 \%$ of the global maximum. 
 This corresponds roughly to the leading edge of the burning region. Averaging
 over the vertical coordinate helps to reduce sensitivity to localized fluid motions, as does
@@ -929,7 +928,7 @@ transient period spanning $\sim 3$ ms. The position data here are well fitted by
 function of time, and the resulting slope gives the velocity of the flame front.
 
 \begin{deluxetable}{lc}
-	\tablecaption{\label{table:flame_speeds_multid} Flame speeds measured in 2D calculations.}
+	\tablecaption{\label{table:flame_speeds_multid} Flame speeds measured in 2D calculations.\explain{Updated last entry with some additional data.}}
 	\tablehead{\colhead{run} & \colhead{$s_\mathrm{front}$ (km s$^{-1}$)}} 
 	\startdata
 	10/10 & $9.18 \pm 0.03$ \\
@@ -951,22 +950,24 @@ burning region.
 \begin{figure}[t]
 \centering
 \plotone{speedplot_all.pdf}
-\caption{\label{fig:flame_speed}The position of the burning front for each simulation run as a function of time. The dashed lines show linear least squares fits for $t \gtrsim 6$ ms.}
+\caption{\label{fig:flame_speed}The position of the burning front for each simulation run as a function of time. The dashed lines show linear least squares fits for $t \gtrsim 6$ ms. \explain{We've updated this with an additional ms of data from the 1000 Hz run.}}
 \end{figure}
 
 All of the various approximations have the expected effects. The flame in the 5/5
 boost run propagates at about half the speed of the 10/10 flame. This is consistent
 with the 1D laminar flames, and is the behavior predicted by Eq.~\ref{eq:flame_scaling}. The
-1000~Hz run goes nearly 2 times faster than the 10/10 2000~Hz run, as expected from the
-inverse relation between rotation rate and the ratio of burning front area to scale height \citep{cavecchi:2013}.
+1000~Hz run goes \added{nearly} 2 times faster than the 10/10 2000~Hz run, as expected from the
+inverse relation between rotation rate and the ratio of burning front area to scale height
+\replaced{\citep{cavecchi:2013}}{(and as observed in \citealt{cavecchi:2013})}.
 This confirms that the role of the Coriolis
 force is to limit the rate of flame spreading by the anticipated geometrical/hydrodynamical
-effect ($s_\mathrm{front} = s_L * L_R / H$). Reducing the resolution had minimal impact on
-the flame speed -- the low resolution line is right on top of the fit for the standard run
-in Figure \ref{fig:flame_speed}, with their slopes differing by only a few percent. Using a
+effect ($s_\mathrm{front} = s_L * L_R / H$). Reducing the resolution
+had minimal impact on the flame speed -- the low resolution line is right on top of the fit for the
+standard run in Figure \ref{fig:flame_speed}, with their slopes differing by only a few percent. Using a
 smaller network also produces similar behavior to the standard run, although there is a small
 reduction in speed owing to less energetic burning.
 
+\added{
 \citet{cavecchi:2013} ran simulations at rotation rates of $450$ Hz exploring a range of opacities.
 Accounting for the boosting, we would expect to see our 10/10 flame propagate at $\sim 2.25$ times
 the speed of these $450$ Hz runs, but instead the speeds range from $4.5$ to $7$ times those reported in
@@ -974,7 +975,7 @@ the speed of these $450$ Hz runs, but instead the speeds range from $4.5$ to $7$
 disallowed in the $450$ Hz runs by the enforcement of vertical hydrostatic equilibrium (we already saw
 that hydrodynamic effects can accelerate the burning front in our comparison with the 1D flames). The
 inclusion of reaction chains beyond may also increase energy generation and consequently the
-propagation speed.
+propagation speed.}
 
 %Seeing the proofs both changing the Coriolis force AND the
 %laminar flame properties I think is very cool.
