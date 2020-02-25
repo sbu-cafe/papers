@@ -434,7 +434,7 @@ We use hydrostatic boundary conditions on the lower boundary, using
 a discretized hydrostatic equilibrium equation of the form:
 \begin{equation}
 \label{eq:hse}
-    p_i = p_{i-1} + \frac{1}{2} \Delta y (\rho_i + \rho_{i-1}) \gb \cdot \hat{\bf y}
+    p_i = p_{i-1} + \frac{1}{2} \Delta z (\rho_i + \rho_{i-1}) \gb \cdot \hat{\bf z}
 \end{equation}
 and holding the temperature constant in the ghost cells.  This is solved
 together with the equation of state.  The velocity is reflected at this boundary.
