@@ -422,9 +422,9 @@ scheme to achieve second-order accuracy.  A verification test of the
 diffusion scheme is shown in Appendix~\ref{app:diffusion}.  The
 explicit thermal diffusion requires a timestep limiter of the form:
 \begin{equation}
-\Delta t_\mathrm{diff} \le \frac{1}{2} \frac{\Delta x^2}{\mathcal{D}}
+\Delta t_\mathrm{diff} \le \frac{1}{2} \frac{h^2}{\mathcal{D}}
 \end{equation}
-where $\mathcal{D} = \kth/(\rho c_v)$ is the thermal diffusivity.  The
+where $\mathcal{D} = \kth/(\rho c_v)$ is the thermal diffusivity and $h$ is the width of a cell (either $\Delta r$ or $\Delta z$).  The
 diffusivity increases rapidly at the top of the atmosphere, causing
 these low density regions to determine the overall timestep for the
 simulations.  Therefore, we disable thermal conduction at low
