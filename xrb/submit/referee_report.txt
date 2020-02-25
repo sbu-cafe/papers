@@ -20,10 +20,8 @@
     
 - The description of the coordinate system is a bit confusing:
 
-    **Still need to address this**
-
-    We've changed the notation in the initial model section to use (r, z) instead of (x, y) to
-    be consistent with the rest of the paper.
+    We've changed the notation in the numerical approach and initial model sections to use (r, z)
+    instead of (x, y) to be consistent with the rest of the paper.
     
 We also have some additional data (out to 12.6 ms) from the 1000 Hz run that wasn't included when
 calculating the flame speed. We've updated the flame speed plot and table to include the new data. 
