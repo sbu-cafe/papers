@@ -319,43 +319,39 @@ the angular velocity $\Omegab$ to be constant.  Further, for the two-dimensional
 simulations presented here, we work in axisymmetric coordinates,
 but we advect a third component of velocity, coming out of the
 simulation plane, that participates in the Coriolis force (sometimes
-described as a 2.5D simulation).  We will take the
-\castro\ $x$-coordinate to be the cylindrical radial coordinate with
-corresponding velocity $u$, the \castro\ $y$-coordinate to be the
+described as a 2.5D simulation).  We will take $r$ to be the cylindrical
+radial coordinate with corresponding velocity $u$, $z$ to be the
 cylindrical vertical coordinate with corresponding velocity $v$, and the
-\castro\ $z$-coordinate to be the cylindrical azimuthal coordinate,
-with corresponding velocity $w$.  A righthanded coordinate system has
-positive $w$ pointing out of the page.  We will take $\Omegab =
-\Omega_0 \hat{\bf y}$ for the angular rotation rate, and $\gb = -g
-\hat{\bf y}$ for the gravitational acceleration, with $g$ constant.
-With these choices, the Coriolis force is:
+$\theta$ to be the cylindrical azimuthal coordinate with corresponding velocity
+$w$. As $r$ and $z$ define the simulation plane, we adopt the nonstandard ordering
+($r$, $z$, $\theta$), for which a righthanded coordinate system has positive $w$
+pointing out of the page.  We will take $\Omegab = \Omega_0 \hat{\bf z}$ for the
+angular rotation rate, and $\gb = -g \hat{\bf z}$ for the gravitational acceleration,
+with $g$ constant. With these choices, the Coriolis force is:
 \begin{equation}
 -2\rho \Omegab \times \Ub =
-   -2\rho \left ( \Omega_0 w \hat{x} - \Omega_0 u \hat{z} \right )
+   -2\rho \left ( \Omega_0 w \hat{\bf r} - \Omega_0 u \hat{\boldsymbol{\theta}} \right )
 \end{equation}
 We will neglect the centrifugal force---with our plane-parallel
 geometry, this will act only in the lateral direction, and is not
 expected to greatly affect the dynamics.  Carrying the Coriolis force
 allows us to capture the geostrophic balance that sets up via lateral
-hydrostatic equilibrium \citep{spitkovsky2002}.  In the discussions
-below, we will use the Castro coordinate names, $(x, y)$ in our
-notation.
-
+hydrostatic equilibrium \citep{spitkovsky2002}.
 
 Writing the momentum equation in terms of the $u$, $v$, and $w$
 components, and neglecting the centrifugal force, we have:
 \begin{align}
 \frac{\partial (\rho u)}{\partial t} + \nabla \cdot (\rho u \Ub) +
-     \frac{\partial p}{\partial x} &= -2\rho \Omega_0 w  \\
+     \frac{\partial p}{\partial r} &= -2\rho \Omega_0 w  \\
 %
 \frac{\partial (\rho v)}{\partial t} + \nabla \cdot (\rho v \Ub) +
-     \frac{\partial p}{\partial y} &= -\rho g \\
+     \frac{\partial p}{\partial z} &= -\rho g \\
 %
 \frac{\partial (\rho w)}{\partial t} + \nabla \cdot (\rho w \Ub) +
-     \cancelto{0}{\frac{\partial p}{\partial z}} &=
+     \frac{1}{r}\cancelto{0}{\frac{\partial p}{\partial \theta}} &=
     2\rho \Omega_0 u
 \end{align}
-where we cancel $\partial p/\partial z$ because there are no
+where we cancel $\partial p/\partial \theta$ because there are no
 variations in the azimuthal direction.  This allows us to recast the
 $w$-velocity equation as a simple advection equation:
 \begin{equation}
