@@ -272,6 +272,9 @@ us to build a picture of the dynamics of X-ray bursts.
 %======================================================================
 \section{Numerical Approach}\label{Sec:numerics}
 
+\explain{We've updated the equations in this section to use cylindrical
+coordinates.}
+
 All simulations are performed with the \castro\ hydrodynamics
 code~(\citealt{castro}; see also \citealt{astronum:2017} for a recent
 description).  We evolve the system of fully compressible Euler
@@ -323,8 +326,8 @@ described as a 2.5D simulation).  We will take $r$ to be the cylindrical
 radial coordinate with corresponding velocity $u$, $z$ to be the
 cylindrical vertical coordinate with corresponding velocity $v$, and the
 $\theta$ to be the cylindrical azimuthal coordinate with corresponding velocity
-$w$. As $r$ and $z$ define the simulation plane, we adopt the nonstandard ordering
-($r$, $z$, $\theta$), for which a righthanded coordinate system has positive $w$
+$w$. \added{As $r$ and $z$ define the simulation plane, we adopt the nonstandard ordering
+($r$, $z$, $\theta$)}, for which a righthanded coordinate system has positive $w$
 pointing out of the page.  We will take $\Omegab = \Omega_0 \hat{\bf z}$ for the
 angular rotation rate, and $\gb = -g \hat{\bf z}$ for the gravitational acceleration,
 with $g$ constant. With these choices, the Coriolis force is:
@@ -559,6 +562,8 @@ the rest of the atmosphere.
 % Initial Model
 %======================================================================
 \section{Initial Model}\label{Sec:inital_model}
+\explain{We've updated the equations in this section to use cylindrical
+coordinates.}
 
 % \begin{figure}[t]
 % \centering
@@ -970,7 +975,7 @@ the speed of these $450$ Hz runs, but instead the speeds range from $4.5$ to $7$
 \citet{cavecchi:2013}. The additional boost may come from cyclic fluid motions that would have been
 disallowed in the $450$ Hz runs by the enforcement of vertical hydrostatic equilibrium (we already saw
 that hydrodynamic effects can accelerate the burning front in our comparison with the 1D flames). The
-inclusion of reaction chains beyond may also increase energy generation and consequently the
+inclusion of reaction chains beyond triple-$\alpha$ may also increase energy generation and consequently the
 propagation speed.}
 
 %Seeing the proofs both changing the Coriolis force AND the

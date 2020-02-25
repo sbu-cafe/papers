@@ -11,7 +11,7 @@ comment on each below.
   
     We've added a paragraph to the introduction describing the
     approximations made by Cavecchi et al. and how our study compares
-    in those areas. We also added a paragraph to the flame speed
+    in those areas. We added another paragraph to the flame speed
     section comparing our results to those in Cavecchi et al. 2013. We
     also discuss the high baroclinicity along the flame front and
     mention that this was seen in YC's papers.
