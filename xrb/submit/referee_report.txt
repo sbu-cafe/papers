@@ -38,8 +38,11 @@ comment on each below.
     macro since it did not work in math mode, but all the equations
     were updated.
     
-One additional change:
+A few additional changes:
 
 We also have some additional data (out to 12.6 ms) from the 1000 Hz
 run that wasn't included when calculating the flame speed. We've
 updated the flame speed plot and table to include the new data.
+
+Added some clarifying remarks on the timescale for the iso7 run
+and the uncertainties in the front velocities.
