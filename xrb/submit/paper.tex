@@ -236,15 +236,15 @@ front, measuring flames up to 10 times faster than in the 2D case.
 
 \added{The computational expense of the problem necessitated several approximations
 to make the simulations of \citet{cavecchi:2013, art-2015-cavecchi-etal, art-2016-cavecchi-etal}
-and \citet{Cavecchi2019} tractable. The first was the assumption of vertical hydrostatic equilibrium,
-which allowed them to filter out vertically propagating sound waves that would otherwise
-have limited the timestep. This enabled them to reach the simulation times (on the
-order of seconds) needed to capture the rise of the burst, but they could not model
-vortical fluid motions driven by effects such as turbulence and convection. These can
-facilitate mixing and help to accelerate the propagation of the flame front. They also
-included only the triple-$\alpha$ process in their implementation of nuclear burning,
-and use a fixed, constant opacity across the entire domain for each simulation run (although
-they explore the dependence of the flame propagation speed on this opacity value).
+and \citet{Cavecchi2019} tractable. The first of these approximations was the assumption of
+vertical hydrostatic equilibrium, which allowed them to use a less refined grid and filter out
+vertically propagating sound waves that would otherwise have limited the timestep. This
+enabled them to reach the simulation times (on the order of seconds) needed to capture the rise
+of the burst, but they could not fully resolve vortical fluid motions driven by effects such as
+turbulence and convection. These can facilitate mixing and help to accelerate the propagation of
+the flame front. They also included only the triple-$\alpha$ process in their implementation of
+nuclear burning, and used a fixed, constant opacity across the entire domain for each simulation
+run (although they explored the dependence of the flame propagation speed on this opacity value).
 Our simulations relax the assumption of vertical hydrostatic equilibrium, and implement
 a more complete set of nuclear reactions and opacities. However, as discussed later, this
 comes at the expense of a different set of approximations.}
@@ -973,7 +973,7 @@ reduction in speed owing to less energetic burning.
 Accounting for the boosting, we would expect to see our 10/10 flame propagate at $\sim 2.25$ times
 the speed of these $450$ Hz runs, but instead the speeds range from $4.5$ to $7$ times those reported in
 \citet{cavecchi:2013}. The additional boost may come from cyclic fluid motions that would have been
-disallowed in the $450$ Hz runs by the enforcement of vertical hydrostatic equilibrium (we already saw
+underresolved in the $450$ Hz runs due to the enforcement of vertical hydrostatic equilibrium (we already saw
 that hydrodynamic effects can accelerate the burning front in our comparison with the 1D flames). The
 inclusion of reaction chains beyond triple-$\alpha$ may also increase energy generation and consequently the
 propagation speed.}
