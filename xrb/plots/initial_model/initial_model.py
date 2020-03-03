@@ -32,7 +32,7 @@ def initial_model():
     plt.plot(cool_data[:,0], cool_data[:,1], color="C0")
     plt.plot(hot_data[:,0], hot_data[:,1], color="C0", ls="--")
 
-    plt.xlabel(r"y (cm)")
+    plt.xlabel(r"z (cm)")
     plt.ylabel(r"density (g cm$^{-3}$)", color="C0")
 
     plt.xlim(r_min, r_max)
@@ -58,7 +58,7 @@ def initial_model():
     plt.axis(labelcolor="C1")
     plt.ylabel(r"temperature (K)", color="C1")
 
-    plt.xlabel(r"y (cm)")
+    plt.xlabel(r"z (cm)")
 
     plt.xlim(r_min, r_max)
     plt.ylim(8.e6, 2.e9)

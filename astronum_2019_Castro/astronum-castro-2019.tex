@@ -258,32 +258,32 @@ integration technique in the future.
 \begin{table}[t]
 \renewcommand{\arraystretch}{1.25}
 \centering
-\begin{tabular}{llllll}
-{\bf field} & {$\epsilon_{64 \rightarrow 128}$} & 
-{\bf rate} & {$\epsilon_{128\rightarrow 256}$} & 
-{\bf rate} & {$\epsilon_{256\rightarrow 512}$} \\
+\begin{tabular}{lcc}
+{\bf field} & {$\log_2 \frac{\epsilon_{64 \rightarrow 128}}{\epsilon_{128\rightarrow 256}}$} &
+{$\log_2 \frac{\epsilon_{128\rightarrow 256}}{\epsilon_{256\rightarrow 512}}$} \\[0.5em]
 \hline
-\multicolumn{6}{c}{\bf Strang + CTU} \\
+\multicolumn{3}{c}{\bf Strang + CTU} \\
 \hline
- $\rho X(\isotm{C}{12})$     & $1.717 \times 10^{17}$  & 1.945  & $4.458 \times 10^{16}$  & 2.194  & $9.745 \times 10^{15}$  \\
- $\rho X(\isotm{O}{16})$     & $1.717 \times 10^{14}$  & 1.648  & $5.479 \times 10^{13}$  & 1.898  & $1.471 \times 10^{13}$  \\
+ $\rho X(\isotm{C}{12})$     & 1.945  & 2.194  \\
+ $\rho X(\isotm{O}{16})$     & 1.648  & 1.898  \\
 \hline
-\multicolumn{6}{c}{\bf 2nd order SDC} \\
+\multicolumn{3}{c}{\bf 2nd order SDC} \\
 \hline
- $\rho X(\isotm{C}{12})$     & $1.042 \times 10^{17}$  & 2.032  & $2.546 \times 10^{16}$  & 2.019  & $6.281 \times 10^{15}$  \\
- $\rho X(\isotm{O}{16})$     & $1.564 \times 10^{14}$  & 1.935  & $4.090 \times 10^{13}$  & 2.003  & $1.020 \times 10^{13}$  \\
+ $\rho X(\isotm{C}{12})$     & 2.032  & 2.019  \\
+ $\rho X(\isotm{O}{16})$     & 1.935  & 2.003  \\
 \hline
-\multicolumn{6}{c}{\bf 4th order SDC} \\
+\multicolumn{3}{c}{\bf 4th order SDC} \\
 \hline
- $\rho X(\isotm{C}{12})$     & $8.789 \times 10^{15}$  & 3.798  & $6.319 \times 10^{14}$  & 3.911  & $4.201 \times 10^{13}$  \\
- $\rho X(\isotm{O}{16})$     & $1.294 \times 10^{13}$  & 3.765  & $9.518 \times 10^{11}$  & 3.872  & $6.501 \times 10^{10}$  \\
+ $\rho X(\isotm{C}{12})$     & 3.798  & 3.911  \\
+ $\rho X(\isotm{O}{16})$     & 3.765  & 3.872  \\
 \hline
 \end{tabular}
 \renewcommand{\arraystretch}{1.0}
 \caption{\label{table:convergence} Convergence of carbon mass density
   ($\rho X(\isotm{C}{12})$) and oxygen mass density ($\rho
   X(\isotm{O}{16})$) for the Strang-CTU algorithm and 2nd and 4th
-  order SDC.  Data taken from \cite{castro:sdc}.}
+  order SDC for a simple reacting acoustic pulse.  Here $\epsilon_{64\rightarrow 128}$ is the norm of the 
+  difference between a $64^2$ and $128^2$ simulation, and similar for the other $\epsilon$s.  The convergence rate is the $\log_2$ of the ratio of errors between different resolutions.  Data taken from \cite{castro:sdc}.}
 \end{table}
 
 \section{Performance Portability}

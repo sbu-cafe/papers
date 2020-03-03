@@ -1,5 +1,5 @@
 %\documentclass[12pt, preprint]{aastex}
-\documentclass[preprint,times,tighten]{aastex63}
+\documentclass[trackchanges,preprint,times,tighten]{aastex63}
 
 \usepackage{epsf,color,amsmath}
 \usepackage{multirow}
@@ -216,11 +216,10 @@ number methods, which approximate the hydrodynamics equations to filter
 soundwaves, enabling large timesteps and efficient modeling of
 subsonic convection.  While these calculations could not support
 the lateral differences needed for flame spreading, they can help
-us to understand the role that convection plays in distributing the initial
+\added{us to} understand the role that convection plays in distributing the initial
 burning products vertically throughout the neutron star atmosphere as well
 as the nature of any turbulence the burning front might encounter as it propagates
 through the atmosphere.
-
 
 The first vertically resolved simulations of lateral deflagrations
 were obtained by \citet{cavecchi:2013}, who showed how the Coriolis
@@ -234,6 +233,21 @@ opposing the Coriolis force, can either speed up or slow down the flame by
 changing the horizontal extent of the flame front. Finally, \citet{Cavecchi2019}
 studied the effects in 3D of the baroclinic instability at the flame
 front, measuring flames up to 10 times faster than in the 2D case.
+
+\added{The computational expense of the problem necessitated several approximations
+to make the simulations of \citet{cavecchi:2013, art-2015-cavecchi-etal, art-2016-cavecchi-etal}
+and \citet{Cavecchi2019} tractable. The first of these approximations was the assumption of
+vertical hydrostatic equilibrium, which allowed them to use a less refined grid and filter out
+vertically propagating sound waves that would otherwise have limited the timestep. This
+enabled them to reach the simulation times (on the order of seconds) needed to capture the rise
+of the burst, but they could not fully resolve vortical fluid motions driven by effects such as
+turbulence and convection. These can facilitate mixing and help to accelerate the propagation of
+the flame front. They also included only the triple-$\alpha$ process in their implementation of
+nuclear burning, and used a fixed, constant opacity across the entire domain for each simulation
+run (although they explored the dependence of the flame propagation speed on this opacity value).
+Our simulations relax the assumption of vertical hydrostatic equilibrium, and implement
+a more complete set of nuclear reactions and opacities. However, as discussed later, this
+comes at the expense of a different set of approximations.}
 
 For deflagrations, we either need to resolve the structure of the
 reaction zone or use a flame model.  Flame models usually assume that
@@ -257,6 +271,9 @@ us to build a picture of the dynamics of X-ray bursts.
 % Numerical Approach
 %======================================================================
 \section{Numerical Approach}\label{Sec:numerics}
+
+\explain{We've updated the equations in this section to use cylindrical
+coordinates.}
 
 All simulations are performed with the \castro\ hydrodynamics
 code~(\citealt{castro}; see also \citealt{astronum:2017} for a recent
@@ -305,43 +322,39 @@ the angular velocity $\Omegab$ to be constant.  Further, for the two-dimensional
 simulations presented here, we work in axisymmetric coordinates,
 but we advect a third component of velocity, coming out of the
 simulation plane, that participates in the Coriolis force (sometimes
-described as a 2.5D simulation).  We will take the
-\castro\ $x$-coordinate to be the cylindrical radial coordinate with
-corresponding velocity $u$, the \castro\ $y$-coordinate to be the
+described as a 2.5D simulation).  We will take $r$ to be the cylindrical
+radial coordinate with corresponding velocity $u$, $z$ to be the
 cylindrical vertical coordinate with corresponding velocity $v$, and the
-\castro\ $z$-coordinate to be the cylindrical azimuthal coordinate,
-with corresponding velocity $w$.  A righthanded coordinate system has
-positive $w$ pointing out of the page.  We will take $\Omegab =
-\Omega_0 \hat{\bf y}$ for the angular rotation rate, and $\gb = -g
-\hat{\bf y}$ for the gravitational acceleration, with $g$ constant.
-With these choices, the Coriolis force is:
+$\theta$ to be the cylindrical azimuthal coordinate with corresponding velocity
+$w$. \added{As $r$ and $z$ define the simulation plane, we adopt the nonstandard ordering
+($r$, $z$, $\theta$)}, for which a righthanded coordinate system has positive $w$
+pointing out of the page.  We will take $\Omegab = \Omega_0 \hat{\bf z}$ for the
+angular rotation rate, and $\gb = -g \hat{\bf z}$ for the gravitational acceleration,
+with $g$ constant. With these choices, the Coriolis force is:
 \begin{equation}
 -2\rho \Omegab \times \Ub =
-   -2\rho \left ( \Omega_0 w \hat{x} - \Omega_0 u \hat{z} \right )
+   -2\rho \left ( \Omega_0 w \hat{\bf r} - \Omega_0 u \hat{\boldsymbol{\theta}} \right )
 \end{equation}
 We will neglect the centrifugal force---with our plane-parallel
 geometry, this will act only in the lateral direction, and is not
 expected to greatly affect the dynamics.  Carrying the Coriolis force
 allows us to capture the geostrophic balance that sets up via lateral
-hydrostatic equilibrium \citep{spitkovsky2002}.  In the discussions
-below, we will use the Castro coordinate names, $(x, y)$ in our
-notation.
-
+hydrostatic equilibrium \citep{spitkovsky2002}.
 
 Writing the momentum equation in terms of the $u$, $v$, and $w$
 components, and neglecting the centrifugal force, we have:
 \begin{align}
 \frac{\partial (\rho u)}{\partial t} + \nabla \cdot (\rho u \Ub) +
-     \frac{\partial p}{\partial x} &= -2\rho \Omega_0 w  \\
+     \frac{\partial p}{\partial r} &= -2\rho \Omega_0 w  \\
 %
 \frac{\partial (\rho v)}{\partial t} + \nabla \cdot (\rho v \Ub) +
-     \frac{\partial p}{\partial y} &= -\rho g \\
+     \frac{\partial p}{\partial z} &= -\rho g \\
 %
 \frac{\partial (\rho w)}{\partial t} + \nabla \cdot (\rho w \Ub) +
-     \cancelto{0}{\frac{\partial p}{\partial z}} &=
+     \frac{1}{r}\cancelto{0}{\frac{\partial p}{\partial \theta}} &=
     2\rho \Omega_0 u
 \end{align}
-where we cancel $\partial p/\partial z$ because there are no
+where we cancel $\partial p/\partial \theta$ because there are no
 variations in the azimuthal direction.  This allows us to recast the
 $w$-velocity equation as a simple advection equation:
 \begin{equation}
@@ -412,9 +425,9 @@ scheme to achieve second-order accuracy.  A verification test of the
 diffusion scheme is shown in Appendix~\ref{app:diffusion}.  The
 explicit thermal diffusion requires a timestep limiter of the form:
 \begin{equation}
-\Delta t_\mathrm{diff} \le \frac{1}{2} \frac{\Delta x^2}{\mathcal{D}}
+\Delta t_\mathrm{diff} \le \frac{1}{2} \frac{h^2}{\mathcal{D}}
 \end{equation}
-where $\mathcal{D} = \kth/(\rho c_v)$ is the thermal diffusivity.  The
+where $\mathcal{D} = \kth/(\rho c_v)$ is the thermal diffusivity and $h$ is the width of a cell (either $\Delta r$ or $\Delta z$).  The
 diffusivity increases rapidly at the top of the atmosphere, causing
 these low density regions to determine the overall timestep for the
 simulations.  Therefore, we disable thermal conduction at low
@@ -424,7 +437,7 @@ We use hydrostatic boundary conditions on the lower boundary, using
 a discretized hydrostatic equilibrium equation of the form:
 \begin{equation}
 \label{eq:hse}
-    p_i = p_{i-1} + \frac{1}{2} \Delta y (\rho_i + \rho_{i-1}) \gb \cdot \hat{\bf y}
+    p_i = p_{i-1} + \frac{1}{2} \Delta z (\rho_i + \rho_{i-1}) \gb \cdot \hat{\bf z}
 \end{equation}
 and holding the temperature constant in the ghost cells.  This is solved
 together with the equation of state.  The velocity is reflected at this boundary.
@@ -549,6 +562,8 @@ the rest of the atmosphere.
 % Initial Model
 %======================================================================
 \section{Initial Model}\label{Sec:inital_model}
+\explain{We've updated the equations in this section to use cylindrical
+coordinates.}
 
 % \begin{figure}[t]
 % \centering
@@ -575,18 +590,18 @@ to capture expansion and explosive dynamics.
 
 The temperature profile in the star and ramp region is given as:
 \begin{equation}
-T(y) = T_\star + \frac{1}{2} (T_\mathrm{hi} - T_\star) \left [ 1 + \tanh\left( \frac{\tilde{y}}{2 \delta_\mathrm{atm}} \right ) \right ]
+T(z) = T_\star + \frac{1}{2} (T_\mathrm{hi} - T_\star) \left [ 1 + \tanh\left( \frac{\tilde{z}}{2 \delta_\mathrm{atm}} \right ) \right ]
 \end{equation}
 with
 \begin{equation}
-\tilde{y} = y - H_\star - \frac{3}{2} \delta_\mathrm{atm}
+\tilde{z} = z - H_\star - \frac{3}{2} \delta_\mathrm{atm}
 \end{equation}
 Here, $\delta_\mathrm{atm}$ is a characteristic width of the
 transition ramp, $T_\star$ is the temperature of the neutron star, and
 $T_\mathrm{hi}$ is the highest temperature in the HSE model---it will
-represent the base of the fuel layer. We also define a floor temperature,
+represent the base of the fuel layer. \added{We also define a floor temperature,
 $T_\mathrm{lo}$, which the atmosphere reaches and is held constant at in
-the outer, isothermal layer.
+the outer, isothermal layer.}
 
 The species mass fractions use this same profile, switching from a set
 describing the underlying star, ${X_k}_\star$, and the set for the
@@ -595,7 +610,7 @@ isentropic and outer regions.  Note, since the profile above is
 linear in $X$, if the initial mass fractions sum to one, then the blended
 mass fractions in the ramp region also sum to one.
 
-We specify the density, $\rho_\mathrm{int} = \rho(y = H_\star)$ as the
+We specify the density, $\rho_\mathrm{int} = \rho(z = H_\star)$ as the
 starting point for the integration of hydrostatic equilibrium.  This
 is just below the ramp-up region---this ensures that regardless of
 what the peak temperature ($T_\mathrm{hi}$) is, the state beneath the
@@ -606,27 +621,27 @@ where $T = T_\mathrm{hi}$ as $\rho_\mathrm{fuel}$.
 
 Creating the model involves specifying $T_\star$, $T_\mathrm{hi}$,
 $T_\mathrm{lo}$, $\rho_\mathrm{int}$, $H_\star$,
-$\delta_\mathrm{atm}$, ${X_k}_\star$, ${X_k}_\mathrm{atm}$, and $g$.  We
-then integrate outwards from the base of the ramp region ($y =
+$\delta_\mathrm{atm}$, ${X_k}_\star$, ${X_k}_\mathrm{atm}$, and $g$.
+We then integrate outwards from the base of the ramp region ($z =
 H_\star$), enforcing the discrete form of hydrostatic equilibrium,
-Eq.~\ref{eq:hse}.  Integrating upwards, we find $p_i$ and
-$\rho_i$ using a Newton-Raphson solver together with the equation of state, with either the temperature
-specified, $T_i = T(p_i, \rho_i, \{X_k\}_i)$ (in the isothermal, ramp,
-and buffer layers) or constant entropy, $s_i = s(p_i, \rho_i,
-\{X_k\}_i)$, in the fuel layer.  This follows the procedures described in \citet{ppm-hse}.  We
-use a constant temperature for all $y < H_\star +
-3\delta_\mathrm{atm}$.  Above this, we switch to an isentropic atmosphere until the
-temperature drops to $T_\mathrm{lo}$, at which point we
-again keep the temperature constant.  The integration of the
-atmosphere continues until the density falls to a low density cutoff,
-$\rho_\mathrm{cutoff}$.  The material above this height is taken to
-have constant density and temperature.
-The choice of factors in front of $\delta_\mathrm{atm}$ were designed
-to make sure the peak $T$ is attained at the desired density
-of the burning layer.
-The parameters we use for
-the model generation are listed in Table~\ref{table:params} and the 
-initial model profiles are showing in Figure~\ref{fig:initial_models}.
+Eq.~\ref{eq:hse}.  Integrating upwards, we find $p_i$ and $\rho_i$
+using a Newton-Raphson solver together with the equation of state,
+with either the temperature specified, $T_i = T(p_i, \rho_i,
+\{X_k\}_i)$ (in the neutron star, ramp, and isothermal buffer layers) or constant
+entropy, $s_i = s(p_i, \rho_i, \{X_k\}_i)$, in the fuel layer.  This
+follows the procedures described in \citet{ppm-hse}.  We use a
+constant temperature for all $z < H_\star + 3\delta_\mathrm{atm}$.
+Above this, we switch to an isentropic atmosphere until the
+temperature drops to \deleted{a floor value, }$T_\mathrm{lo}$, at
+which point we again keep the temperature constant.  The integration
+of the atmosphere continues until the density falls to a low density
+cutoff, $\rho_\mathrm{cutoff}$.  The material above this height is
+taken to have constant density and temperature.  The choice of factors
+in front of $\delta_\mathrm{atm}$ were designed to make sure the peak
+$T$ is attained at the desired density of the burning layer.  The
+parameters we use for the model generation are listed in
+Table~\ref{table:params} and the initial model profiles are showing in
+Figure~\ref{fig:initial_models}.
 
 \begin{deluxetable}{lcc}
 \tablecaption{\label{table:params} Initial model parameters.}
@@ -642,7 +657,7 @@ $H_\star$       & \multicolumn{2}{c}{2000~cm} \\
 $\delta_\mathrm{atm}$ & \multicolumn{2}{c}{50~cm} \\
 $X_\star(\isotm{Ni}{56})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
 $X_\mathrm{atm}(\isotm{He}{4})\tablenotemark{b}$ & \multicolumn{2}{c}{1.0} \\
-$\gb$             & \multicolumn{2}{c}{$-1.5\times 10^{14}~\mathrm{cm~s^{-2}} \hat{\bf y}$} \\
+$\gb$             & \multicolumn{2}{c}{$-1.5\times 10^{14}~\mathrm{cm~s^{-2}} \hat{\bf z}$} \\
 \enddata
 %
 \tablenotetext{a}{This is not an input parameter, but instead is
@@ -657,27 +672,27 @@ We blend the hot and cold models laterally to produce the perturbation
 needed to initiate a localized flame, with the hot model at the
 origin of the axisymmetric geometry.  The blending is done as:
 \begin{align}
-p(x,y) &= f(x) p_\mathrm{hot}(y) + [1-f(x)] p_\mathrm{cool}(y) \\
-\rho(x,y) &= f(x) \rho_\mathrm{hot}(y) + [1-f(x)] \rho_\mathrm{cool}(y) \\
-X_k(x,y) &= f(x) {X_k}_\mathrm{hot}(y) + [1-f(x)] {X_k}_\mathrm{cool}(y)
+p(r,z) &= f(r) p_\mathrm{hot}(z) + [1-f(r)] p_\mathrm{cool}(z) \\
+\rho(r,z) &= f(r) \rho_\mathrm{hot}(z) + [1-f(r)] \rho_\mathrm{cool}(z) \\
+X_k(r,z) &= f(r) {X_k}_\mathrm{hot}(z) + [1-f(r)] {X_k}_\mathrm{cool}(z)
 \end{align}
 with
 \begin{equation}
-f(x) = \begin{cases}
-     1 & x < x_\mathrm{pert} \\
-   1 - \frac{x - x_\mathrm{pert}}{\delta_\mathrm{blend}} & x_\mathrm{pert} \le x \le x_\mathrm{pert} + \delta_\mathrm{blend} \\
-     0 & x > x_\mathrm{pert} + \delta_\mathrm{blend}
+f(r) = \begin{cases}
+     1 & r < r_\mathrm{pert} \\
+   1 - \frac{r - r_\mathrm{pert}}{\delta_\mathrm{blend}} & r_\mathrm{pert} \le r \le r_\mathrm{pert} + \delta_\mathrm{blend} \\
+     0 & r > r_\mathrm{pert} + \delta_\mathrm{blend}
 \end{cases}
 \end{equation}
 Since the equation of hydrostatic equilibrium is linear and our
 blending is a linear combination of two models in hydrostatic
 equilibrum, the blended model is also in vertical equilibrium initially.  We choose
-$x_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once
-the blended model is constructed, we compute $T(x,y)$ and $(\rho e)(x,y)$
+$r_\mathrm{pert} = 1.024\times 10^4$~cm and $\delta_\mathrm{blend} = 2048$~cm.  Once
+the blended model is constructed, we compute $T(r,z)$ and $(\rho e)(r,z)$
 from the equation of state,
 \begin{align}
-  T(x,y) &= T(\rho(x,y), p(x,y), X_k(x,y)) \\
-  (\rho e)(x,y) &= \rho(x, y) \cdot e(\rho(x,y), p(x,y), X_k(x,y)) 
+  T(r,z) &= T(\rho(r,z), p(r,z), X_k(r,z)) \\
+  (\rho e)(r,z) &= \rho(r, z) \cdot e(\rho(r,z), p(r,z), X_k(r,z)) 
 \end{align}
 
 \begin{figure}[t]
@@ -871,8 +886,11 @@ with the standard 13-isotope {\tt aprox13} network and the reduced
 7-isotope {\tt iso7} network.  We see that the flame in the {\tt aprox13}
 case is slightly more advanced and has a higher $\bar{A}$ than the {\tt iso7}
 case.  We see in the next section that these two networks give largely
-the same flame speed.  The reduced network size saves a lot of memory,
-which will be useful when we transition to 3D simulations.
+the same flame speed. \added{We only ran the simulation with the {\tt iso7}
+reaction network out to 15~ms, and we observe this was sufficient to establish
+a steady flame speed for comparison to our 10/10 simulation with the {\tt aprox13}
+network.} The reduced network size saves a lot of memory, which will be useful when we
+transition to 3D simulations.
 
 \begin{figure}[t]
 \centering
@@ -904,7 +922,7 @@ To measure the propagation rate of the burning front, we first collapse our nucl
 energy generation rate ($\dot{e}_\mathrm{nuc}$) data at each time into a 1D radial
 profile by averaging over the vertical coordinate. We then take the peak
 $\dot{e}_\mathrm{nuc}$ value across all profiles to provide a fixed reference point.
-We define the position of the flame front to be the location to the right of hottest part of
+We define the position of the flame front to be the location \replaced{ahead}{to the right} of hottest part of
 the flame where $\dot{e}_\mathrm{nuc}$ first drops to $< 0.1 \%$ of the global maximum. 
 This corresponds roughly to the leading edge of the burning region. Averaging
 over the vertical coordinate helps to reduce sensitivity to localized fluid motions, as does
@@ -914,7 +932,7 @@ transient period spanning $\sim 3$ ms. The position data here are well fitted by
 function of time, and the resulting slope gives the velocity of the flame front.
 
 \begin{deluxetable}{lc}
-	\tablecaption{\label{table:flame_speeds_multid} Flame speeds measured in 2D calculations.}
+	\tablecaption{\label{table:flame_speeds_multid} Flame speeds measured in 2D calculations.\explain{Updated last entry with some additional data.}}
 	\tablehead{\colhead{run} & \colhead{$s_\mathrm{front}$ (km s$^{-1}$)}} 
 	\startdata
 	10/10 & $9.18 \pm 0.03$ \\
@@ -927,30 +945,42 @@ function of time, and the resulting slope gives the velocity of the flame front.
 \end{deluxetable}
 
 Table \ref{table:flame_speeds_multid} gives the flame speed measured in each multidimensional
-simulation. The 2D flames propagate at speeds about an order of magnitude faster than their 1D
-counterparts (Table \ref{table:flame_speeds_1d}). The increase in flame speed is likely a product
-of the larger flame surface area and hydrodynamical effects such as turbulence, wrinkling, and
-convective cycles, which bring cooler fuel from ahead of the front into the hottest part of the
-burning region.
+simulation. \added{Uncertainties in the velocities are the standard errors of the slopes returned by the
+least-squares fits, assuming uncertainties in front position on the order of the coarse grid size.}
+The 2D flames propagate at speeds about an order of magnitude faster than their 1D counterparts
+(Table \ref{table:flame_speeds_1d}). The increase in flame speed is likely a product of the larger
+flame surface area and hydrodynamical effects such as turbulence, wrinkling, and convective cycles,
+which bring cooler fuel from ahead of the front into the hottest part of the burning region.
 
 \begin{figure}[t]
 \centering
 \plotone{speedplot_all.pdf}
-\caption{\label{fig:flame_speed}The position of the burning front for each simulation run as a function of time. The dashed lines show linear least squares fits for $t \gtrsim 6$ ms.}
+\caption{\label{fig:flame_speed}The position of the burning front for each simulation run as a function of time. The dashed lines show linear least squares fits for $t \gtrsim 6$ ms. \explain{We've updated this with an additional ms of data from the 1000 Hz run.}}
 \end{figure}
 
 All of the various approximations have the expected effects. The flame in the 5/5
 boost run propagates at about half the speed of the 10/10 flame. This is consistent
 with the 1D laminar flames, and is the behavior predicted by Eq.~\ref{eq:flame_scaling}. The
 1000~Hz run goes nearly 2 times faster than the 10/10 2000~Hz run, as expected from the
-inverse relation between rotation rate and the ratio of burning front area to scale height \citep{cavecchi:2013}.
+inverse relation between rotation rate and the ratio of burning front area to scale height
+\replaced{\citep{cavecchi:2013}}{(and as observed in \citealt{cavecchi:2013})}.
 This confirms that the role of the Coriolis
 force is to limit the rate of flame spreading by the anticipated geometrical/hydrodynamical
-effect ($s_\mathrm{front} = s_L * L_R / H$). Reducing the resolution had minimal impact on
-the flame speed -- the low resolution line is right on top of the fit for the standard run
-in Figure \ref{fig:flame_speed}, with their slopes differing by only a few percent. Using a
+effect ($s_\mathrm{front} = s_L * L_R / H$). Reducing the resolution
+had minimal impact on the flame speed -- the low resolution line is right on top of the fit for the
+standard run in Figure \ref{fig:flame_speed}, with their slopes differing by only a few percent. Using a
 smaller network also produces similar behavior to the standard run, although there is a small
 reduction in speed owing to less energetic burning.
+
+\added{
+\citet{cavecchi:2013} ran simulations at rotation rates of $450$ Hz exploring a range of opacities.
+Accounting for the boosting, we would expect to see our 10/10 flame propagate at $\sim 2.25$ times
+the speed of these $450$ Hz runs, but instead the speeds range from $4.5$ to $7$ times those reported in
+\citet{cavecchi:2013}. The additional boost may come from cyclic fluid motions that would have been
+underresolved in the $450$ Hz runs due to the enforcement of vertical hydrostatic equilibrium (we already saw
+that hydrodynamic effects can accelerate the burning front in our comparison with the 1D flames). The
+inclusion of reaction chains beyond triple-$\alpha$ may also increase energy generation and consequently the
+propagation speed.}
 
 %Seeing the proofs both changing the Coriolis force AND the
 %laminar flame properties I think is very cool.
@@ -969,7 +999,7 @@ reflects the misalignment of the fields in the plane of the
 simulation. Figure~\ref{fig:baroclinicity} shows that the
 baroclinicity peaks along the flame front. This baroclinicity
 generates vorticity, which in turn entrains material along the surface
-of the flame (see also \citealt{cavecchi:2013}). In 3D, this same vorticity
+of the flame (as seen in \citealt{cavecchi:2013}). In 3D, this same vorticity
 should perturb the flame front and further increase the flame speed
 \citep{Cavecchi2019}.
 
@@ -1078,9 +1108,9 @@ plan to model mixed H/He bursts. This will require a different
 reaction network, and perhaps different resolution
 requirements. A long term goal is to include magnetohydrodynamics in
 our models. Although the magnetic fields of neutron stars exhibiting
-X-ray bursts are relatively weak, with $B \lesssim 10^8 - 10^9$G
+X-ray bursts are relatively weak, with $B \lesssim 10^8 - 10^9~$G
 \citep{mukherjee2015magnetic} (at least compared to e.g. magnetars,
-which have $B\lesssim 10^{15}$G), it has been found by
+which have $B\lesssim 10^{15}~$G), it has been found by
 \citet{art-2016-cavecchi-etal} that even weak magnetic fields could
 have a non-negligible effect on the flame propagation, reducing
 confinement due to the Coriolis force and leading to increased flame
@@ -1135,7 +1165,7 @@ algorithm we can drop a level of refinement from the simulations while
 still accurately modeling the evolution.  We have also ported
 \castro\ to GPUs, giving an order of magnitude performance boost on
 nodes with both CPUs and GPUs.  Flames without any boosting are currently running
-using the new GPU-enabled \castro and will be the focus of the next study.
+using the new GPU-enabled \castro\ and will be the focus of the next study.
 
 % MHD, radiation transport
 

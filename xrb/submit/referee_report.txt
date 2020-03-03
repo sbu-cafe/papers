@@ -1,0 +1,48 @@
+Dear Dr. Timmes,
+
+We thank the referee for their review and comments.  We have addressed
+all of the comments in the referee's report in the manuscript.  We
+comment on each below.
+
+
+- It would be very helpful if the authors described in detail how
+  their study and results compare with and compliment those previous
+  studies (series of papers by Cavecchi et al.):
+  
+    We've added a paragraph to the introduction describing the
+    approximations made by Cavecchi et al. and how our study compares
+    in those areas. We added another paragraph to the flame speed
+    section comparing our results to those in Cavecchi et al. 2013. We
+    also discuss the high baroclinicity along the flame front and
+    mention that this was seen in YC's papers.
+    
+- p. 2: "they can help understand" sounds a bit strange:
+
+    We've changed it to "they can help us to understand".
+    
+- p. 8: T_{lo} does not seem to be explicitly defined:
+
+    We've added a sentence describing T_{lo} to the paragraph after eq. 19.
+    
+- p. 13: ...ahead of the hottest part of the flame...:
+
+    We've changed "ahead" to "to the right".
+    
+- The description of the coordinate system is a bit confusing:
+
+    We've changed the notation in the numerical approach and initial
+    model sections to use (r, z) instead of (x, y) to be consistent
+    with the rest of the paper.  
+
+    Note: we did not mark the equations with the AASTeX "\replace{}"
+    macro since it did not work in math mode, but all the equations
+    were updated.
+    
+A few additional changes:
+
+We also have some additional data (out to 12.6 ms) from the 1000 Hz
+run that wasn't included when calculating the flame speed. We've
+updated the flame speed plot and table to include the new data.
+
+Added some clarifying remarks on the timescale for the iso7 run
+and the uncertainties in the front velocities.
