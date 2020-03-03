@@ -1,0 +1,24 @@
+We thank the referee for their response and suggestions for modifications to the paper. We have outlined our changes below.
+
+1. "Modelling and modelled with two l's are the British spellings. Not sure if consistent US spelling is desired, but if so, they should be changed throughout."
+
+As the lead author is British and this is being submitted to a British-owned journal, British spellings have been used throughout. We leave it up to the editors to decide whether they wish for British or American spelling to be used. 
+
+2. "The introduction should include a few references to standard reviews of the field and to the MAESTROeX code description [I guess it's currently ref 22] in order to guide the reader looking for background."
+
+We have added references to the introduction section and a reference to the MAESTROeX JOSS paper. 
+
+3. "In equation 3 I'd spell out the Lagrangian derivative D/Dt for consistency with equations 1 and 2, which do not use that notation.  Alternatively, I suppose you could explicitly define it, and maybe use it throughout in that case."
+
+We have added the definition of the Lagrangian derivative used in equation 3.
+
+4. "It might be worth defining \dot{omega_k} as the "production or destruction rate", since presumably the sum over k of the rates must be zero."
+
+We prefer using the term production rate as this indicates that positive values describe species creation, and negative values describe species destruction.
+
+5. "In section 5, two alternative methods of defining the pressure in rotating stars are described.  Some conclusion should be drawn about whether both methods or only one (if either) will be pursued going forward."
+
+In section 5, we say that we are currently exploring all the methods described in the section. In the last paragraph, we describe how for the case of rotating stars we will most likely be using one of the simpler techniques, however for modelling X-ray bursts on neutron stars a more complex approach that properly captures the rotationally-induced deformation of thestar may be required. 
+
+
+In addition to these modifications, we have updated some references to reflect the fact that they have now been published (instead of citing the arXiv preprints).
