@@ -886,10 +886,10 @@ with the standard 13-isotope {\tt aprox13} network and the reduced
 7-isotope {\tt iso7} network.  We see that the flame in the {\tt aprox13}
 case is slightly more advanced and has a higher $\bar{A}$ than the {\tt iso7}
 case.  We see in the next section that these two networks give largely
-the same flame speed.  We only ran the simulation with the {\tt iso7}
-reaction network to 15~ms, and we observe this was sufficient to establish
+the same flame speed. \added{We only ran the simulation with the {\tt iso7}
+reaction network out to 15~ms, and we observe this was sufficient to establish
 a steady flame speed for comparison to our 10/10 simulation with the {\tt aprox13}
-network. The reduced network size saves a lot of memory, which will be useful when we
+network.} The reduced network size saves a lot of memory, which will be useful when we
 transition to 3D simulations.
 
 \begin{figure}[t]
@@ -945,11 +945,12 @@ function of time, and the resulting slope gives the velocity of the flame front.
 \end{deluxetable}
 
 Table \ref{table:flame_speeds_multid} gives the flame speed measured in each multidimensional
-simulation. The 2D flames propagate at speeds about an order of magnitude faster than their 1D
-counterparts (Table \ref{table:flame_speeds_1d}). The increase in flame speed is likely a product
-of the larger flame surface area and hydrodynamical effects such as turbulence, wrinkling, and
-convective cycles, which bring cooler fuel from ahead of the front into the hottest part of the
-burning region.
+simulation. \added{Uncertainties in the velocities are the standard errors of the slopes returned by the
+least-squares fits, assuming uncertainties in front position on the order of the coarse grid size.}
+The 2D flames propagate at speeds about an order of magnitude faster than their 1D counterparts
+(Table \ref{table:flame_speeds_1d}). The increase in flame speed is likely a product of the larger
+flame surface area and hydrodynamical effects such as turbulence, wrinkling, and convective cycles,
+which bring cooler fuel from ahead of the front into the hottest part of the burning region.
 
 \begin{figure}[t]
 \centering
