@@ -90,7 +90,7 @@
 \title{So you've decided to detonate helium}
 
 \shorttitle{Detonations and NSE}
-\shortauthors{Zingale et al.}
+\shortauthors{}
 
 %% \author[0000-0001-8401-030X]{M.~Zingale}
 %% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University, 
@@ -284,7 +284,7 @@ the energy generation or abundance changes over a timestep.
 \castro\ has the ability to reject a timestep if it detects a failure
 and retry with smaller timesteps (subcycling to make up the original
 required timestep).  Among the conditions that can trigger this are
-density failing below zero during advection, the VODE integration
+density failing below zero during advection, the ODE integration
 failing to converge in the implicit solve, or violation of one of the
 timestep limiters during the step.  At the moment, this retry
 mechanism only works with the CTU hydrodynamics + Strang splitting.
@@ -296,11 +296,18 @@ of methods has the most difficulty in integrating the detonation.
 A variation on Strang splitting called (re-)balanced splitting was
 developed in \citet{speth:2013}.
 
+\subsection{Spectral Deferred Corrections}
 
-\subsection{SDC Method}
+The basic idea of spectral deferred corrections is break the timestep
+into a number of temporal nodes and use low order difference methods
+in a correction equation that, upon iteration, achieves a high-order
+solution coupling the different physics together.
+
+
+\subsection{Simplified-SDC Method}
 
 A second-order accurate time integration method using a simple
-deferred correction strategy was shown in \citep{nonaka:2016}.  A
+deferred correction strategy was shown in \citep{SDC-old}.  A
 version of this was also implemented in the \maestro\ low-Mach number
 hydrodynamics code some time ago.  A compressible version, for use in
 \castro\ is slightly different due to the need to do some operations
@@ -503,7 +510,14 @@ with
 \end{equation}
 
 
-\section{Detonations}
+
+\section{Simulations}
+
+\subsection{Flames}
+
+ECSNe flames
+
+\subsection{Detonations}
 
 Our focus here is modeling helium detonations.  Previously, we
 showed~\cite{katzzingale:2019} that accurate modeling the ignition of
@@ -561,6 +575,11 @@ Something about expense?  We can just compare CPU time.
 
 
 
+\subsection{Hydro and Gravity}
+
+Merging stars
+
+
 \section{Summary}
 
 We presented a simple spectral deferred corrections scheme for coupling 
@@ -575,7 +594,7 @@ Brook was supported by DOE/Office of Nuclear Physics grant
 DE-FG02-87ER40317.  
 
 
-\software{\amrex\ (\url{https://github.com/AMReX-Codes/amrex}),
+\software{\amrex\ \citep{amrex_joss},
           \castro\ \citep{castro},
           GNU Compiler Collection (\url{https://gcc.gnu.org/}),
           Linux (\url{https://www.kernel.org}),
@@ -594,7 +613,7 @@ To solve the reaction system implicitly, the ODE solver needs the Jacobian,
 $\partial \Rb/\partial \Uc$.  We follow the method of \cite{castro_sdc}
 and factor this into two pieces,
 \begin{equation}
-{\bf J} = \partial \Rb/\partial {\bf w } \partial {\bf w}/\partial \Uc
+{\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc}
 \end{equation}.
 
 Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
