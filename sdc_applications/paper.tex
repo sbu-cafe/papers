@@ -616,24 +616,31 @@ and factor this into two pieces,
 {\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc}
 \end{equation}.
 
+Even though it has no reactive sources, we include $\rho$ in our conservative state
+for the purposes of computing the Jacobian (we denote the conserved state used for the
+Jacobian $\Uc^\prime$.  
 Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
 \begin{equation}
-\Uc = \left ( \begin{array}{c} \rho X_\alpha \\ \rho X_\beta \\ \rho E \\ \rho e \end{array} \right )
+\Uc^\prime = \left ( \begin{array}{c} \rho \\ \rho X_\alpha \\ \rho X_\beta \\ \rho E \\ \rho e \end{array} \right )
 \end{equation}
 We take the intermediate state to be ${\bf w} = (\rho, X_\alpha, X_\beta,
-T)^\intercal$.  
+K, T)^\intercal$, where $K$ is the kinetic energy:
+\begin{equation}
+K = \frac{1}{2} |\Ub|^2
+\end{equation}
 
-The Jacobian transformation $\partial \Uc/\partial {\bf w}$ is:
+The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
 \begin{equation}
 \frac{\partial \Uc}{\partial {\bf w}} = \left (
-   \begin{array}{cccc}
-       X_\alpha & \rho & 0 & 0\\
-       X_\beta & 0 & \rho & 0 \\
+   \begin{array}{ccccc}
+       1 & 0 & 0 & 0 & 0 \\
+       X_\alpha & \rho & 0 & 0 & 0 \\
+       X_\beta & 0 & \rho & 0 & 0  \\
        \rho e_\rho  + e + K &
-                 \rho  e_{X_\alpha} & \rho e_{X_\beta} &
+                 \rho  e_{X_\alpha} & \rho e_{X_\beta} & \rho &
                  \rho e_T \\
        \rho e_\rho  + e  &
-                 \rho  e_{X_\alpha} & \rho e_{X_\beta} &
+                 \rho  e_{X_\alpha} & \rho e_{X_\beta} & 0 &
                  \rho e_T
      \end{array}\right)
 \end{equation}
@@ -648,37 +655,38 @@ and write the kinetic energy as $K = |\Ub|^2/2$.  We get the inverse
 
 \begin{equation}
 \renewcommand{\arraystretch}{1.5}
-\frac{\partial {\bf w}}{\partial \Uc} = \left (
-  \begin{array}{cccc}
-   0  & 0  &  \frac{1}{K} & -\frac{1}{K} \\
-   \frac{1}{\rho} & 0 & - \frac{X_\alpha}{\rho K} & \frac{X_\alpha}{\rho K} \\
-   0 & \frac{1}{\rho} &  - \frac{X_\beta}{\rho K} & \frac{X_\beta}{\rho K} \\
-   -\frac{e_{X_\alpha}}{\rho e_T} & -\frac{e_{X_\beta}}{\rho e_T} & 
-   \frac{\sum_k X_{k} e_{X_k} - \rho e_\rho - e }{\rho e_T K}  &
-   -\frac{\sum_k X_{k} e_{X_k} - \rho e_\rho - e - K}{ \rho e_T K}  \\
+\frac{\partial {\bf w}}{\partial \Uc^\prime} = \left (
+  \begin{array}{ccccc}
+   1  & 0 & 0 & 0 & 0 \\
+   - \frac{X_\alpha}{\rho} & \frac{1}{\rho} & 0 & 0 & 0 \\
+   - \frac{X_\beta}{\rho} & 0 & \frac{1}{\rho} & 0 & 0 \\
+   - \frac{K}{\rho} & 0 & 0 & \frac{1}{\rho} & -\frac{1}{\rho} \\
+   \frac{\sum_k X_{k} e_{X_k} - \rho e_\rho - e}{ \rho e_T} &
+    -\frac{e_{X_\alpha}}{\rho e_T} & -\frac{e_{X_\beta}}{\rho e_T} & 0 & \frac{1}{\rho e_T} \\
    \end{array}\right)
 \renewcommand{\arraystretch}{1}
 \end{equation}
 
 The reaction vector is
 \begin{equation}
-\Rb = \left (  \begin{array}{c} \rho \omegadot_\alpha \\ \rho \omegadot_\beta \\ \rho \Sdot \\ \rho \Sdot \end{array} \right )
+\Rb(\Uc^\prime) = \left (  \begin{array}{c} 0 \\ \rho \omegadot_\alpha \\ \rho \omegadot_\beta \\ \rho \Sdot \\ \rho \Sdot \end{array} \right )
 \end{equation}
 and the Jacobian is computed as $\partial \Rb/\partial {\bf w}$:
 \begin{equation}
 \frac{\partial \Rb}{\partial {\bf w}} = \left (
-  \begin{array}{cccc}
+  \begin{array}{ccccc}
+     0 & 0 & 0 & 0 & 0 \\
      \omegadot_\alpha + \rho \frac{\partial \omegadot_\alpha}{\partial \rho} &
      \rho \frac{\partial \omegadot_\alpha}{\partial X_\alpha} &
-     \rho \frac{\partial \omegadot_\alpha}{\partial X_\beta} & \rho \frac{\partial \omegadot_\alpha}{\partial T} \\
+     \rho \frac{\partial \omegadot_\alpha}{\partial X_\beta} & 0 & \rho \frac{\partial \omegadot_\alpha}{\partial T} \\
       %
      \omegadot_\beta + \rho \frac{\partial \omegadot_\beta}{\partial \rho} &
      \rho \frac{\partial \omegadot_\beta}{\partial X_\alpha} &
-     \rho \frac{\partial \omegadot_\beta}{\partial X_\beta} & \rho \frac{\partial \omegadot_\beta}{\partial T} \\
+     \rho \frac{\partial \omegadot_\beta}{\partial X_\beta} & 0 &  \rho \frac{\partial \omegadot_\beta}{\partial T} \\
      %
-     \Sdot + \rho \frac{\partial \Sdot}{\partial \rho} & \rho \frac{\partial \Sdot}{\partial X_\alpha} & \rho \frac{\partial \Sdot}{\partial X_\beta} & \rho \frac{\partial \Sdot}{\partial T} \\
+     \Sdot + \rho \frac{\partial \Sdot}{\partial \rho} & \rho \frac{\partial \Sdot}{\partial X_\alpha} & \rho \frac{\partial \Sdot}{\partial X_\beta} & 0 & \rho \frac{\partial \Sdot}{\partial T} \\
      %
-     \Sdot + \rho \frac{\partial \Sdot}{\partial \rho} & \rho \frac{\partial \Sdot}{\partial X_\alpha} & \rho \frac{\partial \Sdot}{\partial X_\beta} & \rho \frac{\partial \Sdot}{\partial T} \\
+     \Sdot + \rho \frac{\partial \Sdot}{\partial \rho} & \rho \frac{\partial \Sdot}{\partial X_\alpha} & \rho \frac{\partial \Sdot}{\partial X_\beta} & 0 & \rho \frac{\partial \Sdot}{\partial T} \\
   \end{array}
   \right )
 \end{equation}
