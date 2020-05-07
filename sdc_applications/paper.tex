@@ -513,9 +513,19 @@ with
 
 \section{Simulations}
 
+\subsection{Reaction Convergence}
+
+
 \subsection{Flames}
 
 ECSNe flames
+
+aprox13 flames
+
+simplified-SDC takes 3x more timesteps than Strang
+
+look at number of right hand side calls
+
 
 \subsection{Detonations}
 
@@ -574,10 +584,29 @@ Difference densities?
 Something about expense?  We can just compare CPU time.
 
 
+\subsection{Massive Star}
+
+
+we need to look at the number of RHS calls spatially
+
+also need to look at tolerances in the burner
+
+analytic Jacobian run is much faster
+
+what does Strang run do
+
+\subsection{X-ray bursts}
+
+crashed with too many subcycles.  Need to rerun with new Jacobian
+
 
 \subsection{Hydro and Gravity}
 
 Merging stars
+
+it doesn't run more than a few steps with simplified SDC
+
+has a small density error and too many subcycles after ~ 128 steps
 
 
 \section{Summary}
