@@ -106,7 +106,7 @@
 %======================================================================
 % Title
 %======================================================================
-\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. II. Realistic Burning}
+\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. II. Realistic Burning \& Rotation}
 
 \shorttitle{Lateral Flame Dynamics II}
 \shortauthors{Harpole et al.}
@@ -143,6 +143,8 @@
 %======================================================================
 \begin{abstract}
 We continue to investigate laterally propagating flames in XRBs...
+
+
 \end{abstract}
 
 \keywords{X-ray bursts (1814), Nucleosynthesis (1131), Hydrodynamical simulations (767), Hydrodynamics (1963), Neutron stars (1108), Open source software (1866), Computational methods (1965)}
@@ -151,6 +153,15 @@ We continue to investigate laterally propagating flames in XRBs...
 % Introduction
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
+
+Unlike our previous paper, all runs are now conducted without artificially boosting the speed of the flame in order to reduce the computational cost. This is possible because of the work done to offload the code to GPUs, where it runs significantly faster. We can therefore run the tests without any boosting. 
+
+
+We investigate the effect of rotation rate on the flame. With the exception of (citation to the weird 11 Hz flame), most observations of XRBs come from sources with rotation rates of 200-600Hz \MarginPar{check whether this is true for XRBs or just burst oscillations}. There are a number of factors that could explain this lack of observations below 200 Hz. It could be that there is some physical process which inhibits the flame ignition and/or spread at lower rotation rates. It could be that burst oscillations at lower rotation rates are smaller in amplitude and therefore more difficult to detect. It could be that it's not got anything to do with the flame at all, but that neutron stars in accreting low mass X-ray binaries rarely have rotation rates below 200 Hz \MarginPar{look into this?}. 
+
+Insert some stuff here about previous work on rotation 
+
+In the following sections, we conduct a series of simulations at various rotation rates to investigate its effect on the flame. We find that at lower rotation rates, the flame itself becomes harder to ignite. We discuss the implications that this may have for burst physics and observations. 
 
 
 %======================================================================
@@ -179,9 +190,11 @@ vertical profiles of the atmosphere behind the flame---how does it compare to is
 
 what is the composition on the photosphere across the flame
 
-different latitudes
-
 different initial models?
+
+different rotation rates 
+
+look at flame speed, shape of flame, amount of mixing (e.g. it looks like slower rotation rates have less mixed flames as the hurricane is less strong.)
 
 
 \acknowledgements \castro\ is open-source and freely available at
