@@ -209,6 +209,31 @@ different rotation rates
 
 look at flame speed, shape of flame, amount of mixing (e.g. it looks like slower rotation rates have less mixed flames as the hurricane is less strong.)
 
+Looking at the phase plots Figures~\ref{fig:urho}-\ref{fig:abar}, we see:
+\begin{itemize}
+    \item From the $u$-$\rho$ and $u$-$v$ plots, we see that the burning occurs in a region of high density where the fluid is moving in a circular motion. From the previous plots (see: streamlines?), this most likely corresponds to the leading edge of the flame. This feature is not (yet?) developed in the 250~Hz flame. (will this ever develop, or will it just fizzle out completely?)
+    \item From the $\bar{A}$-$\rho$ plots in Figure \ref{fig:abar}, we can see that as the rotation rate increases, so does the peak temperature. We believe that the tracks in the plot correspond to reaction pathways in the reaction network. In the 1000~Hz plot, these tracks are somewhat disrupted, possibly due to the more vigorous mixing of the vortex at the flame front. (if this continues or if the rotation was cranked even higher, would the reactions get so disrupted that the burning is snuffed out, similar to what happens in combustion when the turbulent vortices become so small they penetrate the reaction zone and completely disrupt it).
+\end{itemize}
+
+\begin{figure}[t]
+    \centering
+    \plotone{urho_plot_0_1}
+    \caption{\label{fig:urho}Phase plot of the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs.}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \plotone{uv_plot_0_1}
+    \caption{\label{fig:uv}Phase plot of the horizontal $x$-velocity $u$, vertical $y$-velocity and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs.}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \plotone{abar_plot_0_1}
+    \caption{\label{fig:abar}Phase plot of the mean molecular weight $\bar{A}$, temperature $T$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs.}
+\end{figure}
+    
+
 
 \acknowledgements \castro\ is open-source and freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The problem setups used
