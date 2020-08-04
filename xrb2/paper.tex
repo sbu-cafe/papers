@@ -41,6 +41,7 @@
 \newcommand{\dt}{\Delta\ t}
 
 \newcommand{\omegadot}{\dot{\omega}}
+\newcommand{\enucdot}{\dot{e}_{nuc}}
 
 \newcommand{\Hext}{H_{\rm ext}}
 \newcommand{\Hnuc}{H_{\rm nuc}}
@@ -208,6 +209,12 @@ different initial models?
 different rotation rates 
 
 look at flame speed, shape of flame, amount of mixing (e.g. it looks like slower rotation rates have less mixed flames as the hurricane is less strong.)
+
+\begin{figure}[t]
+	\centering
+	\plottwo{speeds_1_100th_max.pdf}{speeds_1_1000th_max.pdf}
+	\caption{Plots of flame front position vs.\ time for the 500 Hz and 1000 Hz runs. The left-hand plot shows the results when tracking the $\frac{1}{100} \max[\enucdot]$ contour, while the right-hand plot shows the results for the $\frac{1}{1000} \max[\enucdot]$ contour.}
+\end{figure}
 
 Looking at the phase plots in Figures~\ref{fig:urho}-\ref{fig:abar}, we see:
 \begin{itemize}
