@@ -1,4 +1,4 @@
-\documentclass[times,modern]{aastex62}
+\documentclass[times,modern]{aastex63}
 
 % these lines seem necessary for pdflatex to get the paper size right
 \pdfpagewidth 8.5in
@@ -512,102 +512,6 @@ with
 
 
 \section{Simulations}
-
-\subsection{Reaction Convergence}
-
-
-\subsection{Flames}
-
-ECSNe flames
-
-aprox13 flames
-
-simplified-SDC takes 3x more timesteps than Strang
-
-look at number of right hand side calls
-
-
-\subsection{Detonations}
-
-Our focus here is modeling helium detonations.  Previously, we
-showed~\cite{katzzingale:2019} that accurate modeling the ignition of
-a detonations requires a resolution such that $\tau_s < \tau_e$, where
-$\tau_s = \Delta x/c_s$ is the sound crossing time of a zone and
-$\tau_e = e/\dot{e}$ is the nuclear energy injection timescale.  For
-the detonations explored here, we will work in that regime.
-
-Helium detonations can be important in different models of Type Ia
-supernova.  In the double detonation model for Type Ia supernovae, a
-helium detonation is used to trigger a carbon detonation in the
-underlying white dwarf.  White dwarf collisions or mergers can have
-helium detonations if there is a thin layer of helium on the surface
-of the white dwarfs.  We will model two densities, $2\times
-10^6~\gcc$, e.g., as used in \citet{glasner:2018} for double
-detonation models, and $10^7~\gcc$ to see the effects at higher
-densities.
-
-Effect of number of SDC iterations
-
-Effect of timestep
-
-Effect of resolution
-
-Difference densities?
-
-\begin{figure}[t]
-\centering
-\plotone{strang_timestep}
-\caption{\label{strang_timestep} Effect of timestep size on the detonation using Strang splitting.}
-\end{figure}
-
-
-\begin{figure}[t]
-\centering
-\plotone{sdc_iters}
-\caption{\label{sdc_iters} Effect of number of SDC iterations detonation.}
-\end{figure}
-
-
-\begin{figure}[t]
-\centering
-\plotone{sdc_timestep}
-\caption{\label{sdc_timestep} Effect of timestep size on the detonation using the SDC method.}
-\end{figure}
-
-
-\begin{figure}[t]
-\centering
-\plotone{strang_sdc_compare}
-\caption{\label{strang_vs_sdc} Comparison of Strang and SDC on the detonation problem.}
-\end{figure}
-
-Something about expense?  We can just compare CPU time.
-
-
-\subsection{Massive Star}
-
-
-we need to look at the number of RHS calls spatially
-
-also need to look at tolerances in the burner
-
-analytic Jacobian run is much faster
-
-what does Strang run do
-
-\subsection{X-ray bursts}
-
-crashed with too many subcycles.  Need to rerun with new Jacobian
-
-
-\subsection{Hydro and Gravity}
-
-Merging stars
-
-it doesn't run more than a few steps with simplified SDC
-
-has a small density error and too many subcycles after ~ 128 steps
-
 
 \section{Summary}
 
