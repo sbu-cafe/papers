@@ -1,0 +1,733 @@
+\documentclass[times,modern]{aastex62}
+
+% these lines seem necessary for pdflatex to get the paper size right
+\pdfpagewidth 8.5in
+\pdfpageheight 11.0in
+
+\usepackage[T1]{fontenc}
+\usepackage{epsf,color,amsmath}
+
+\usepackage{cancel}
+
+\newcommand{\sfrac}[2]{\mathchoice%
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}} {#1\!/#2}}
+
+
+\newcommand{\castro}{{\sf Castro}}
+\newcommand{\maestro}{{\sf Maestro}}
+\newcommand{\flash}{{\sf Flash}}
+\newcommand{\amrex}{{\sf AMReX}}
+
+\newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\isotm}[2]{{}^{#2}\mathrm{#1}}
+
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\cms}{\mathrm{cm~s^{-1} }}
+
+\newcommand{\nablab}{{\mathbf{\nabla}}}
+\newcommand{\Ub}{\mathbf{U}}
+\newcommand{\gb}{\mathbf{g}}
+\newcommand{\omegadot}{\dot{\omega}}
+\newcommand{\Sdot}{\dot{S}}
+\newcommand{\ddx}[1]{{\frac{{\partial#1}}{\partial x}}}
+\newcommand{\ddt}[1]{{\frac{{\partial#1}}{\partial t}}}
+\newcommand{\odt}[1]{{\frac{{d#1}}{dt}}}
+\newcommand{\divg}[1]{{\nablab \cdot \left (#1\right)}}
+\newcommand{\inp}{{\mathrm{input}}}
+\newcommand{\dedr}{\left . {\partial{}e}/{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedrd}{\left . \frac{\partial{}e}{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedX}{\left . {\partial{}e}/{\partial{}X_k} \right |_{\rho, T}}
+\newcommand{\dedXd}{\left . \frac{\partial{}e}{\partial{}X_k} \right |_{\rho, T, X_{j,j\ne k}}}
+\newcommand{\dedT}{\left . {\partial{}e}/{\partial{}T} \right |_{\rho,X_k}}
+\newcommand{\dedTd}{\left . \frac{\partial{}e}{\partial{}T} \right |_{\rho,X_k}}
+
+\newcommand{\Ic}{{\boldsymbol{\mathcal{I}}}}
+\newcommand{\smax}{{s_\mathrm{max}}}
+\newcommand{\kth}{k_\mathrm{th}}
+\usepackage{bm}
+
+\newcommand{\Uc}{{\,\bm{\mathcal{U}}}}
+\newcommand{\Fb}{\mathbf{F}}
+\newcommand{\Sc}{\mathbf{S}}
+
+\newcommand{\xv}{{(x)}}
+\newcommand{\yv}{{(y)}}
+\newcommand{\zv}{{(z)}}
+
+\newcommand{\ex}{{\bf e}_x}
+\newcommand{\ey}{{\bf e}_y}
+\newcommand{\ez}{{\bf e}_z}
+
+\newcommand{\Ab}{{\bf A}}
+\newcommand{\Sq}{{\bf S}_\qb}
+\newcommand{\Sqhydro}{{\Sq^{\mathrm{hydro}}}}
+\newcommand{\qb}{{\bf q}}
+
+\newcommand{\Shydro}{{{\bf H}}}
+\newcommand{\Hb}{{\bf H}}
+\newcommand{\Rb}{{\bf R}}
+\newcommand{\Rq}{{\bf R}}
+\newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
+\newcommand{\Advt}[1]{{\left [\boldsymbol{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
+\newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
+
+\newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
+
+\setlength{\marginparwidth}{0.75in}
+\newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
+
+\begin{document}
+%======================================================================
+% Title
+%======================================================================
+%\title{A Simple Spectral Deferred Correction Method to Couple Nuclear Burning and Hydrodynamics for Detonations}
+
+\title{So you've decided to detonate helium}
+
+\shorttitle{Detonations and NSE}
+\shortauthors{}
+
+%% \author[0000-0001-8401-030X]{M.~Zingale}
+%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University, 
+%%        Stony Brook, NY 11794-3800}
+
+%% \author[0000-0003-0439-4556]{M.~P.~Katz}
+%% \affiliation{Nvidia Corp}
+
+%% \author[0000-0002-5749-334X]{J.~B.~Bell}
+%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+%% \author[0000-0003-1791-0265]{A.~J.~Nonaka}
+%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+%% \author[0000-0001-8092-1974]{W.~Zhang}
+%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+%% \correspondingauthor{Michael Zingale}
+%% \email{michael.zingale@stonybrook.edu}
+
+
+%======================================================================
+% Abstract and Keywords
+%======================================================================
+\begin{abstract}
+Helium detonations can be challenging to model because of the
+difficulty in accurately coupling hydrodynamics and reactions.  This
+is particularly acute in the ash of the detonation where nuclear
+statistical equilibrium is established.  We look a several different
+methods of coupling explicit hydrodynamics and stiff reaction sources,
+applied to detonations which reach NSE conditions.  This is all done
+in the framework of the \castro\ hydrodynamics code, and all algorithm
+implementations are freely available.
+\end{abstract}
+
+\keywords{hydrodynamics---methods: numerical}
+
+%======================================================================
+% Introduction
+%======================================================================
+\section{Introduction}\label{Sec:Introduction}
+
+Reactive flow can be challenging to model when the timescale for
+changes in the nuclear abundances due to reactions is comparable to
+the hydrodynamical timescales.  Traditional methods of coupling
+hydrodynamics and reactions used in astrophysics use operator
+splitting---each physical process acts on the output of the previous
+process.  This makes it easy to add physics in a modular way to a
+simulation code, but competition between physical processes can cause
+the coupling to breakdown.  In general, the error in the splitting
+controlled by the timestep.
+
+A particular difficult phase of evolution to model is the nuclear
+statistic equilibrium that sets in with helium burning for
+temperatures in excess of $4\times 10^9~\mathrm{K}$.  Physically, the
+forward and reverse rates should balance leading to an equilibrium.
+With operator splitting, an NSE region will have a large positive flow
+through the network in a zone in one step followed by a large negative
+flow over the next timestep, as the code struggles to produce an
+equilibrium.  This large change in abundances (and large alternately
+positive and negative energy generation rates) can be a challenge for
+a code.  The easiest way to improve the coupling is to cut the
+timestep, but this makes simulations prohibitively expensive.
+Sometimes the burning is simply halted on a zone-by-zone basis when
+NSE conditions are reached (e.g., as in \citealt{hedet}).
+Alternately, at high temperatures, a reaction network can be replaced
+with a table of NSE abundances and the zone's composition set through
+table look-ups\MarginPar{example? GCD?}.
+
+In this paper, we look at some different approaches to coupling
+hydrodynamics and reactions, using a helium detonation that attains
+NSE as our testbed.  We use the \castro\ hydrodynamics code for all of
+our numerical experiments, and all of the code to reproduce the results
+in this paper are in the \castro\ github repository.
+
+\section{Numerical Methodology}
+
+
+We solve the Euler equations for compressible, reacting flow.  We'll focus on
+one-dimensional flow, and the system appears as:
+\begin{equation}
+\frac{\partial \Uc_t}{\partial t}  + \frac{\partial \Fb^\xv (\Uc)}{\partial x} = \Sc(\Uc)
+\end{equation}
+where $\Uc = (\rho, (\rho X_k), (\rho u), (\rho E))^\intercal$ are
+the conserved fluid quantities: mass density, $\rho$, velocity, $u$,
+specific total energy, $E$, and nuclear
+species mass fractions, $X_k$.  The specific total energy relates to
+the specific internal energy as $E = e + u^2/2$.  The
+corresponding fluxes are
+\begin{equation}
+\Fb^\xv (\Uc) = \left ( \begin{array}{c}
+   \rho u \\ \rho X_k u \\ \rho u u + p \\  \rho u E + u p
+   \end{array} \right )
+\end{equation}
+Here the pressure, $p$, enters, and is found via the equation of state,
+\begin{equation}
+p = p(\rho, X_k, e)
+\end{equation}
+
+Finally, $\Sc(\Uc)$ are the source terms, which we decompose into
+hydrodynamical sources, $\Hb$ (like gravity), and reactive sources,
+$\Rb$,
+\begin{equation}
+  \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc)
+\end{equation}
+In this paper, we will not consider any hydrodynamical sources, but we
+will carry the term $\Hb$ around for completeness.  The reactive
+sources take the form:
+\begin{equation}
+  \Rb(\Uc) = \left ( \begin{array}{c}
+     0 \\ \rho \omegadot_k \\ 0 \\ \rho \dot{S}
+  \end{array} \right )
+\end{equation}
+where $\omegadot_k$ is the creation rate for species $k$ and $\dot{S}$
+is the energy generation rate per unit mass.
+
+Sometimes it is preferable to work with the primitive variables,  $\qb
+= (\rho, X_k, u, p, (\rho e))^\intercal$.  Here, the system appears
+as:
+\begin{equation}
+\qb_t + \Ab^\xv(\qb) \qb_x  = \Sq
+\end{equation}
+with the matrix $\Ab^\xv$ giving the coefficients of the spatial derivatives
+of the primitive variables:
+\begin{equation}
+\Ab^\xv(\qb) = \left ( \begin{array}{ccccc}
+    u & 0 & \rho & 0 & 0 \\
+    0 & u & 0    & 0 & 0 \\
+    0 & 0 & u    & 1/\rho & 0 \\
+    0 & 0 & \Gamma_1 p & u & 0 \\
+    0 & 0 & \rho h & 0 & u
+  \end{array} \right )
+\end{equation}
+where $\Gamma_1$ is an adiabatic index, $\Gamma_1 = d\log p/d\log\rho
+|_s$.  Note, the primitive state has two thermodynamic quantities, $p$
+and $(\rho e)$, to more efficiently handle the general equation of
+state in the Riemann solver, as described in \citet{castro}, but
+alternate formulations are possible \citep{colellaglaz:1985}.
+The source term vector, $\Sq$, can again be decomposed into hydrodynamic
+sources (now in terms of the primitive variables) and reaction terms,
+\begin{equation}
+  \Sq = \Sqhydro + \Rb(q)
+\end{equation}
+with
+\begin{equation}
+\Rb(q) = \left ( \begin{array}{c}
+     0 \\
+     \omegadot_k \\
+     0 \\
+     \Gamma_1 p \sigma \Sdot \\
+     \rho \Sdot
+   \end{array} \right )
+\end{equation}
+where
+\begin{equation}
+\sigma \equiv \frac{\partial p/\partial T |_\rho}{\rho c_p \partial p/\partial \rho |_T}
+\end{equation}
+and $c_p$ is the specific heat at constant pressure, $c_p = \partial
+h/\partial T |_p$.  A derivation of this source for the pressure
+equation can be found in \cite{ABNZ:III}.  We note that this source is
+algebraically identical to that shown in Eq.~25 of \cite{castro}.
+
+
+
+We use the \castro\ hydrodynamics code~\cite{castro}, together with
+the corner transport upwind piecewise parabolic method
+hydrodynamics~\citep{millercolella:2002}.  This is a finite-volume
+method that uses characteristic tracing to predict a time-centered
+flux through the interfaces of the grid zones.  For pure
+hydrodynamics, these time-centered fluxes result in second-order
+accurate time integration.  With reactions, we want to couple
+hydrodynamics and the reaction sources to second order.  Nuclear
+reaction sources are stiff, and need to be integrated using implicit
+methods for stabilty.  Operator splitting is traditionally employed
+here, and our goal in this paper is to look at several different
+approaches for splitting.
+
+We describe several time-integration techniques for coupling
+hydrodynamics and reactions in the next sections.
+
+
+\subsection{Strang Splitting}
+
+
+\subsection{Timestep Limiters and Retry Mechanism}
+
+In addition to the standard CFL timestep limiter for explicit
+hydrodynamics, \castro\ can also enforcing timestep limiters based on
+the energy generation or abundance changes over a timestep.
+
+\castro\ has the ability to reject a timestep if it detects a failure
+and retry with smaller timesteps (subcycling to make up the original
+required timestep).  Among the conditions that can trigger this are
+density failing below zero during advection, the ODE integration
+failing to converge in the implicit solve, or violation of one of the
+timestep limiters during the step.  At the moment, this retry
+mechanism only works with the CTU hydrodynamics + Strang splitting.
+We enable it here, since, as will be shown shortly, this combination
+of methods has the most difficulty in integrating the detonation.
+
+\subsection{Balanced Splitting}
+
+A variation on Strang splitting called (re-)balanced splitting was
+developed in \citet{speth:2013}.
+
+\subsection{Spectral Deferred Corrections}
+
+The basic idea of spectral deferred corrections is break the timestep
+into a number of temporal nodes and use low order difference methods
+in a correction equation that, upon iteration, achieves a high-order
+solution coupling the different physics together.
+
+
+\subsection{Simplified-SDC Method}
+
+A second-order accurate time integration method using a simple
+deferred correction strategy was shown in \citep{SDC-old}.  A
+version of this was also implemented in the \maestro\ low-Mach number
+hydrodynamics code some time ago.  A compressible version, for use in
+\castro\ is slightly different due to the need to do some operations
+on the conserved variable state and some on the primitive variable
+state.  We describe the application of this to the equations of
+compressible hydrodynamics below:
+
+\begin{itemize}
+
+\item {\em Initialization}
+
+  \begin{itemize}
+  \item Set the first iterate of the primitive-variable reactive source terms from the
+    last step:
+    \begin{equation}
+      \Ic^{n+1/2,(0)}_{\qb} = \Ic^{n-1/2,(\smax)}_{\qb}
+    \end{equation}
+  %% \item Solve the Poisson problem for the initial gravitational potential:
+  %%   \begin{equation}
+  %%     \nabla^2 \Phi^n = 4\pi G \rho^n
+  %%   \end{equation}
+
+  %% \item Set the first guess at the new time potential as
+  %%   $\Phi^{n+1,(0)} = \Phi^n$.
+
+  \end{itemize}
+
+\item {\em Iterate}
+
+  Iterate from $k = 1, \ldots, \smax$.  For second-order accuracy,
+  $\smax = 2$ is sufficient.
+
+  \begin{itemize}
+  \item {\em Create the Advective Update Term}
+
+    \begin{itemize}
+    \item convert $\Uc \rightarrow \qb$.  This is an algebraic transformation,
+      but will require the EOS.
+
+    \item predict $\qb$ to the interfaces at $n+1/2$ using the CTU PPM
+      method.  The source terms, $\Sq$, used in the prediction are:
+      \begin{equation}
+        \Sq = \Sqhydro^{n+1/2} + \Ic_\qb^{n+1/2,(k-1)}
+      \end{equation}
+      Here we use the iteratively lagged integrals of the primitive variable
+      terms accounting only for reactions, $\Ic_\qb^{n+1/2,(k-1)}$, as the
+      reactive source.  Any hydrodynamic source terms are time-centered
+      using the previous iteration:
+      \begin{equation}
+        \Sqhydro^{n+1/2} = \frac{1}{2} \left ( \Sqhydro^n + \Sqhydro^{n+1,(k-1)} \right )
+      \end{equation}
+
+    \item solve the Riemann problem at each interface to get a unique
+      conserved state on each interface, $\Uc^{n+1/2}_{i+1/2}$
+
+    \item construct the advective update terms, first ignoring the hydrodynamics sources:
+      $\Advt{\Uc}^{n+1/2}_{i,j,k}$, e.g., as:
+      \begin{align}
+        \Advt{\Uc}^{n+1/2,(k)}_{i,j,k} =
+          &- \frac{\Fb^\xv(\Uc^{n+1/2}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2}_{i-1/2})}{\Delta x} 
+      \end{align}
+    Now the conservative hydrodynamics source terms are computed by first updating to the
+    new state with advection only\footnote{For a source like gravity, this update can be done first for $\rho$ and then define the new momentum source using $\rho^{\star\star}$ and likewise for energy}, as:
+    \begin{equation}
+      \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)}
+    \end{equation}
+    %% first updating the density to the new state with advection only as:
+    %% \begin{equation}
+    %%   \rho^{\star\star} = \rho^n + \Delta t \Advt{\rho}^{n+1/2,(k)}
+    %% \end{equation}
+    %% then constructing the momentum source term:
+    %% \begin{equation}
+    %%   {\bf S}_{\rho\Ub}^{n+1/2} = \frac{1}{2} (\rho^n \gb^n + \rho^{\star\star} \gb^{n+1,(k-1)})
+    %% \end{equation}
+    %% Then updating the momentum with only advection as:
+    %% \begin{equation}
+    %%   (\rho \Ub)^{\star\star} = (\rho \Ub)^n + \Delta t \Advt{\rho\Ub}^{n+1/2,(k)} + \Delta t {\bf S}_{\rho\Ub}^{n+1/2}
+    %% \end{equation}
+    %% and finally constructing the energy source:
+    %% \begin{equation}
+    %%   S_{\rho E}^{n+1/2} = \frac{1}{2} \left [ (\rho\Ub)^n \cdot \gb^n + (\rho\Ub)^{\star\star} \cdot \gb^{n+1,(k-1)}
+    %%     \right ]
+    %% \end{equation}
+
+    The final advective update term is then:
+    \begin{equation}
+      \Adv{\Uc}^{n+1/2,(k)}_{i,j,k} = \Advt{\Uc}^{n+1/2,(k)}_{i,j,k} + \Shydro^{n+1/2}
+    \end{equation}
+    with
+    \begin{equation}
+      \Shydro^{n+1/2} = \left ( \begin{array}{c}
+                     0 \\ 0 \\
+                    {\bf S}_{\rho\Ub}^{n+1/2} \cdot \ex \\
+                    S_{\rho E}^{n+1/2} \end{array} \right )
+    \end{equation}
+
+    \MarginPar{if $\Shydro$ depended on the outcome of the burn, we might need to do things differently here}
+
+    \end{itemize}
+
+  \item {\em Update the System Using a Method of Lines Integration}
+
+    \begin{itemize}
+    \item Define the hydro source terms---these will be time-centered,
+      but piecewise-constant in time throughout the integration.
+
+    \item With the spatial discretization done, our system appears as a
+      system of ODEs: \MarginPar{what is the right form of acceleration
+        here? should we do piecewise linear in time?}
+      \begin{equation}
+        \left . \odt{\Uc} \right |_{i,j,k} = \Adv{\Uc}^{n+1/2,(k)}_{i,j,k} + \Rb(\Uc)
+      \end{equation}
+
+      As we are integrating this system we need to get the
+      temperature, $T$, for the rate evaluations.  We construct this
+      by subtracting the kinetic energy from the total energy to get
+      the specific internal energy, $e$, and then calling the equation
+      of state.
+
+      Note that our advection terms are piecewise constant \MarginPar{need to think about this more}
+      approximations, so when we integrate our system, their
+      contributions will be linear in time.  Since $(\rho X_k)$ sees a
+      linear advective term, $\rho$ does as well.  $(\rho \Ub)$ and
+      $(\rho E)$ will also have linear contributions in time from
+      advection.  We can see that the internal energy will also have a
+      linear contribution by recognizing that the kinetic energy term,
+      $K = (\rho |\Ub|^2)/\rho$ is linear in time.
+      Since the reactions don't affect $\rho$ and $(\rho \Ub)$, we can
+      algebraically update these using this piecewise linear behavior:
+      \begin{align}
+        \rho(t) &= \rho^n + \Adv{\rho}^{n+1/2,(k)} \, t \\
+        (\rho \Ub)(t) &= (\rho \Ub)^n + \Adv{(\rho \Ub)}^{n+1/2,(k)} \, t
+      \end{align}
+      At the end of the integration, our new state is $\Uc^{n+1,(k)}$.
+
+    \end{itemize}
+
+  \item {\em Compute the Reactive Source Terms.}
+
+    We now seek the $\Ic$'s that capture the effect of just the
+    reaction sources on the state variables for the next iteration.
+    For the conserved quantities, these would simply be: \MarginPar{fix signs on A}
+    \begin{equation}
+      \Ic^{(k)}_{\Uc} = \frac{\Uc^{n+1,(k)} - \Uc^n}{\Delta t} - \Adv{\Uc}^{n+1/2,(k)}
+    \end{equation}
+    However, for our primitive variables, which are used in the
+    prediction, we need to construct the required source terms more
+    carefully.  We want:
+    \begin{equation}
+      \label{eq:Iq}
+      \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^n}{\Delta t} - \Adv{\qb}^{n+1/2,(k)}
+    \end{equation}
+    but we need the advective update for $\qb$, which we have not
+    constructed.  Additionally, we cannot simply use the equation of
+    state on $\Ic^{(k)}_{\Uc}$ since this is a time-derivative and
+    does not represent a well-defined state in itself.  Instead, we
+    derive $\Ic^{(k)}_{\qb}$ via a multi-step process.  We first find
+    the conservative state as if it were updated only with advection:
+    \begin{equation}
+      \Uc^\star = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2,(k)}
+    \end{equation}
+    and then construct the corresponding primitive variable state via an algebraic transform,
+    $\Uc^\star \rightarrow \qb^\star$.
+    This allows us to define the advective update for $\qb$ as:
+    \begin{equation}
+      \Adv{\qb}^{n+1/2,(k)} = \frac{\qb^\star - \qb^n}{\Delta t}
+    \end{equation}
+    Defining the primitive state corresponding to the fully-updated
+    conserved state via an algebraic transform, $\Uc^{n+1,(k)}
+    \rightarrow \qb^{n+1,(k)}$, we can construct $\Ic^{(k)}_{\qb}$ as given
+    in Eq.~\ref{eq:Iq}.
+    Putting all of this together, we see:
+    \begin{equation}
+      \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^\star}{\Delta t}
+    \end{equation}
+
+
+
+  %% \item {\em Solve for the New Gravitational Potential.}
+
+  %%   We solve
+  %%   \begin{equation}
+  %%     \nabla^2 \Phi^{n+1,(k)} = 4\pi G \rho^{n+1,(k)}
+  %%   \end{equation}
+
+  \end{itemize}
+
+\end{itemize}
+
+\subsection{Old Primitive Stuff}
+
+
+and our primitive system as:
+\begin{equation}
+\qb_t = \Advs{\qb} + \Rb(\qb)
+\end{equation}
+with
+\begin{equation}
+\Advs{\qb} = -\Ab^\xv(\qb) \qb_x - \Ab^\yv(\qb) \qb_y - \Ab^\zv(\qb) \qb_z + \Sqhydro
+\end{equation}
+
+
+
+\section{Simulations}
+
+\subsection{Reaction Convergence}
+
+
+\subsection{Flames}
+
+ECSNe flames
+
+aprox13 flames
+
+simplified-SDC takes 3x more timesteps than Strang
+
+look at number of right hand side calls
+
+
+\subsection{Detonations}
+
+Our focus here is modeling helium detonations.  Previously, we
+showed~\cite{katzzingale:2019} that accurate modeling the ignition of
+a detonations requires a resolution such that $\tau_s < \tau_e$, where
+$\tau_s = \Delta x/c_s$ is the sound crossing time of a zone and
+$\tau_e = e/\dot{e}$ is the nuclear energy injection timescale.  For
+the detonations explored here, we will work in that regime.
+
+Helium detonations can be important in different models of Type Ia
+supernova.  In the double detonation model for Type Ia supernovae, a
+helium detonation is used to trigger a carbon detonation in the
+underlying white dwarf.  White dwarf collisions or mergers can have
+helium detonations if there is a thin layer of helium on the surface
+of the white dwarfs.  We will model two densities, $2\times
+10^6~\gcc$, e.g., as used in \citet{glasner:2018} for double
+detonation models, and $10^7~\gcc$ to see the effects at higher
+densities.
+
+Effect of number of SDC iterations
+
+Effect of timestep
+
+Effect of resolution
+
+Difference densities?
+
+\begin{figure}[t]
+\centering
+\plotone{strang_timestep}
+\caption{\label{strang_timestep} Effect of timestep size on the detonation using Strang splitting.}
+\end{figure}
+
+
+\begin{figure}[t]
+\centering
+\plotone{sdc_iters}
+\caption{\label{sdc_iters} Effect of number of SDC iterations detonation.}
+\end{figure}
+
+
+\begin{figure}[t]
+\centering
+\plotone{sdc_timestep}
+\caption{\label{sdc_timestep} Effect of timestep size on the detonation using the SDC method.}
+\end{figure}
+
+
+\begin{figure}[t]
+\centering
+\plotone{strang_sdc_compare}
+\caption{\label{strang_vs_sdc} Comparison of Strang and SDC on the detonation problem.}
+\end{figure}
+
+Something about expense?  We can just compare CPU time.
+
+
+\subsection{Massive Star}
+
+
+we need to look at the number of RHS calls spatially
+
+also need to look at tolerances in the burner
+
+analytic Jacobian run is much faster
+
+what does Strang run do
+
+\subsection{X-ray bursts}
+
+crashed with too many subcycles.  Need to rerun with new Jacobian
+
+
+\subsection{Hydro and Gravity}
+
+Merging stars
+
+it doesn't run more than a few steps with simplified SDC
+
+has a small density error and too many subcycles after ~ 128 steps
+
+
+\section{Summary}
+
+We presented a simple spectral deferred corrections scheme for coupling 
+hydrodynamics and reactions.  
+
+
+
+\acknowledgements \castro\ is freely available at
+\url{http://github.com/AMReX-Astro/Castro}.  All of the code and problem
+setups used here are available in the git repo.  The work at Stony
+Brook was supported by DOE/Office of Nuclear Physics grant
+DE-FG02-87ER40317.  
+
+
+\software{\amrex\ \citep{amrex_joss},
+          \castro\ \citep{castro},
+          GNU Compiler Collection (\url{https://gcc.gnu.org/}),
+          Linux (\url{https://www.kernel.org}),
+          matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
+          NumPy \citep{numpy,numpy2},
+          python (\url{https://www.python.org/})
+         }
+
+
+
+\appendix
+
+\section{Jacobian}
+
+To solve the reaction system implicitly, the ODE solver needs the Jacobian,
+$\partial \Rb/\partial \Uc$.  We follow the method of \cite{castro_sdc}
+and factor this into two pieces,
+\begin{equation}
+{\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc}
+\end{equation}.
+
+Even though it has no reactive sources, we include $\rho$ in our conservative state
+for the purposes of computing the Jacobian (we denote the conserved state used for the
+Jacobian $\Uc^\prime$.  
+Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
+\begin{equation}
+\Uc^\prime = \left ( \begin{array}{c} \rho \\ \rho X_\alpha \\ \rho X_\beta \\ \rho E \\ \rho e \end{array} \right )
+\end{equation}
+We take the intermediate state to be ${\bf w} = (\rho, X_\alpha, X_\beta,
+K, T)^\intercal$, where $K$ is the kinetic energy:
+\begin{equation}
+K = \frac{1}{2} |\Ub|^2
+\end{equation}
+
+The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
+\begin{equation}
+\frac{\partial \Uc}{\partial {\bf w}} = \left (
+   \begin{array}{ccccc}
+       1 & 0 & 0 & 0 & 0 \\
+       X_\alpha & \rho & 0 & 0 & 0 \\
+       X_\beta & 0 & \rho & 0 & 0  \\
+       \rho e_\rho  + e + K &
+                 \rho  e_{X_\alpha} & \rho e_{X_\beta} & \rho &
+                 \rho e_T \\
+       \rho e_\rho  + e  &
+                 \rho  e_{X_\alpha} & \rho e_{X_\beta} & 0 &
+                 \rho e_T
+     \end{array}\right)
+\end{equation}
+where we use the following notation for compactness:
+\begin{equation}
+e_\rho = \dedrd \qquad 
+e_T = \dedTd \qquad
+e_{X_k} = \dedXd 
+\end{equation}
+and write the kinetic energy as $K = |\Ub|^2/2$.  We get the inverse
+(computed via SymPy, see the included Jupyter notebook) is:
+
+\begin{equation}
+\renewcommand{\arraystretch}{1.5}
+\frac{\partial {\bf w}}{\partial \Uc^\prime} = \left (
+  \begin{array}{ccccc}
+   1  & 0 & 0 & 0 & 0 \\
+   - \frac{X_\alpha}{\rho} & \frac{1}{\rho} & 0 & 0 & 0 \\
+   - \frac{X_\beta}{\rho} & 0 & \frac{1}{\rho} & 0 & 0 \\
+   - \frac{K}{\rho} & 0 & 0 & \frac{1}{\rho} & -\frac{1}{\rho} \\
+   \frac{\sum_k X_{k} e_{X_k} - \rho e_\rho - e}{ \rho e_T} &
+    -\frac{e_{X_\alpha}}{\rho e_T} & -\frac{e_{X_\beta}}{\rho e_T} & 0 & \frac{1}{\rho e_T} \\
+   \end{array}\right)
+\renewcommand{\arraystretch}{1}
+\end{equation}
+
+The reaction vector is
+\begin{equation}
+\Rb(\Uc^\prime) = \left (  \begin{array}{c} 0 \\ \rho \omegadot_\alpha \\ \rho \omegadot_\beta \\ \rho \Sdot \\ \rho \Sdot \end{array} \right )
+\end{equation}
+and the Jacobian is computed as $\partial \Rb/\partial {\bf w}$:
+\begin{equation}
+\frac{\partial \Rb}{\partial {\bf w}} = \left (
+  \begin{array}{ccccc}
+     0 & 0 & 0 & 0 & 0 \\
+     \omegadot_\alpha + \rho \frac{\partial \omegadot_\alpha}{\partial \rho} &
+     \rho \frac{\partial \omegadot_\alpha}{\partial X_\alpha} &
+     \rho \frac{\partial \omegadot_\alpha}{\partial X_\beta} & 0 & \rho \frac{\partial \omegadot_\alpha}{\partial T} \\
+      %
+     \omegadot_\beta + \rho \frac{\partial \omegadot_\beta}{\partial \rho} &
+     \rho \frac{\partial \omegadot_\beta}{\partial X_\alpha} &
+     \rho \frac{\partial \omegadot_\beta}{\partial X_\beta} & 0 &  \rho \frac{\partial \omegadot_\beta}{\partial T} \\
+     %
+     \Sdot + \rho \frac{\partial \Sdot}{\partial \rho} & \rho \frac{\partial \Sdot}{\partial X_\alpha} & \rho \frac{\partial \Sdot}{\partial X_\beta} & 0 & \rho \frac{\partial \Sdot}{\partial T} \\
+     %
+     \Sdot + \rho \frac{\partial \Sdot}{\partial \rho} & \rho \frac{\partial \Sdot}{\partial X_\alpha} & \rho \frac{\partial \Sdot}{\partial X_\beta} & 0 & \rho \frac{\partial \Sdot}{\partial T} \\
+  \end{array}
+  \right )
+\end{equation}
+
+
+
+%======================================================================
+% References
+%======================================================================
+
+\bibliographystyle{aasjournal}
+\bibliography{ws}
+
+\end{document}
+
