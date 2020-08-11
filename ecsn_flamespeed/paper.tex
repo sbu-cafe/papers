@@ -1,0 +1,244 @@
+%\documentclass[12pt, preprint]{aastex}
+\documentclass[preprint,times,tighten]{aastex63}
+
+\usepackage{epsf,color,amsmath}
+
+\usepackage{cancel}
+
+\newcommand{\sfrac}[2]{\mathchoice%
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}} {#1\!/#2}}
+
+\newcommand{\myhalf}{\sfrac{1}{2}}
+\newcommand{\nph}{{n+\myhalf}}
+\newcommand{\nmh}{{n-\myhalf}}
+
+\newcommand{\inp}{\mathrm{in}}
+\newcommand{\outp}{\mathrm{out}}
+
+% boldsymbol means bold italic
+\newcommand{\eb}{{\bf{e}}}
+\newcommand{\Ub}{{\bf{U}}}
+\newcommand{\xb}{{\bf{x}}}
+\newcommand{\kb}{{\bf{k}}}
+\newcommand{\Vb}{{\bf{V}}_n}
+\newcommand{\Vbhat}{{\bf{\widehat{V}}}_n}
+\newcommand{\Omegab}{{\bf{\Omega}}}
+\newcommand{\gb}{{\bf{g}}}
+\newcommand{\rb}{{\bf{r}}}
+
+\newcommand{\pb}{p_\mathrm{base}}
+\newcommand{\epsdot}{\dot{\epsilon}}
+\newcommand{\qburn}{q_\mathrm{burn}}
+\newcommand{\rt}{\tilde{r}_0}
+
+
+\newcommand{\nablab}{\mathbf{\nabla}}
+\newcommand{\dt}{\Delta\ t}
+
+\newcommand{\omegadot}{\dot{\omega}}
+
+\newcommand{\Hext}{H_{\rm ext}}
+\newcommand{\Hnuc}{H_{\rm nuc}}
+\newcommand{\kth}{k_{\rm th}}
+
+\newcommand{\Gammaonebar}{\overline{\Gamma}_1}
+\newcommand{\Sbar}{\overline{S}}
+
+\newcommand{\etarho}{\eta_\rho}
+\newcommand{\etarhoh}{\eta_{\rho~h}}
+
+\newcommand{\Ubt}{\widetilde{\Ub}}
+\newcommand{\wt}{\widetilde{w}}
+
+\newcommand{\He}{$^4$He}
+\newcommand{\C}{$^{12}$C}
+\newcommand{\Fe}{$^{56}$Fe}
+
+\newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\isotm}[2]{{}^{#2}\mathrm{#1}}
+
+\newcommand{\maestro}{{\sf MAESTRO}}
+\newcommand{\castro}{{\sf Castro}}
+\newcommand{\amrex}{{\sf AMReX}}
+\newcommand{\pynucastro}{{\sf pynucastro}}
+
+\newcommand{\avg}[1]{\overline{#1}}
+\newcommand{\avgtwod}[1]{\langle~#1 \rangle}
+\newcommand{\rms}[2]{\left(\delta#1\right)_{r_{#2}}}
+\newcommand{\mymax}[1]{\left(#1\right)_{\rm max}}
+
+\newcommand{\Tb}{\ensuremath{T_\mathrm{base}}}
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\cms}{\mathrm{cm~s^{-1} }}
+
+\newcommand{\half}{\frac{1}{2}}
+
+\setlength{\marginparwidth}{0.5in}
+
+\newcommand{\MarginPar}[1]{
+    \marginpar{\vskip-\baselineskip%
+               \raggedright%
+               \tiny\sffamily%
+               {\color{red}\hrule%
+               \smallskip%
+               #1\par%
+               \smallskip%
+               \hrule}}%
+}
+
+\newcommand{\AssignTo}[1]{
+    \marginpar{\vskip-\baselineskip%
+               \raggedright%
+               \tiny\sffamily%
+               {\color{blue}\hrule%
+               \smallskip%
+               #1\par%
+               \smallskip%
+               \hrule}}%
+}
+
+\begin{document}
+%======================================================================
+% Title
+%======================================================================
+\title{Effect of numerical methods on Laminar Flame Speeds}
+
+\shorttitle{ECSN Flame Speeds}
+%% \shortauthors{Short Authors}
+
+%% \author[ORCiD]{Name}
+%% \affiliation{Affiliation}
+
+%% \author[ORCiD]{Name}
+%% \affiliation{Affiliation}
+
+%% \author[ORCiD]{Name}
+%% \affiliation{Affiliation}
+
+%% \author[ORCiD]{Name}
+%% \affiliation{Affiliation}
+
+%% \correspondingauthor{}
+%% \email{}
+
+
+%======================================================================
+% Abstract and Keywords
+%======================================================================
+\begin{abstract}
+\end{abstract}
+
+\keywords{}
+
+%======================================================================
+% Introduction
+%======================================================================
+\section{Introduction}\label{Sec:Introduction}
+In astrophysical explosions, there are two types of burning that can occur, detonation and deflagration. The former is a supersonic blast, that travels faster than the speed of sound in a material. The latter however, is subsonic, which means the sound waves propogate ahead of the material flow. If the sound speed is much faster than the velocity of the fluid, this is known as a low Mach number flow. When this is the case, sound waves carry very little energy in this regime and to a good aproximation, can be filtered out from the simulation. This allows us to greatly increase the CFL condition, taking much longer time steps than were possible before when we had to model the sound waves as well. This type of modeling is extremely important in astrophysical regimes like convection and core collapse supernovae.
+
+When a degenerate oxygen-neon core reaches a central density of $\approx 10^{10} \frac{g}{cm^3}$, the star is dense enough to facilitate electron capture onto $^{20}Ne$ leading to a deflagration wave that propogates away from the core of the star. As the flame propogates outwards, there is a competition between nuclear energy release from the deflagration wave and nuclear energy capture by the electron capture onto $^{20}Ne$ behind the wave. This will either result in an explosion, a supernovae, or an implosion, forming a neutron star.  \citep{1991ApJ...367L..19N} \citep{Zha_2019}
+
+
+As shown in \cite{Schwab_2020} our goal is to produce tabulated laminar flame speed calculations for core collapse supernovae. Previously this was done in MESA \citep{MESA}, a 1D stellar evolution code. In this paper, we use MAESTROeX \citep{MAESTROeX}, a low Mach number stellar hydrodyamic code to produce the tabulated values. In particular, we will explore the low Mach number approximation and it's effects on flame speed, as well as spectral deferred corrections (SDC) versus traditional strang splitting. In addition, we will be running these simulations in 2D, which can bring in additional effects such as turbuluence not accounted for in a 1D model.
+
+%======================================================================
+% Numerical Approach
+%======================================================================
+\section{Numerical Approach}\label{Sec:numerics}
+The simulations in this paper were all run using the open source code MAESTROeX, a compressible fluid dynamics code for low Mach number reacting flow. MAESTROeX evolves the following set of equations which are, conservation of mass, momentum, and energy and a constraint on the velocity.
+
+\begin{equation}
+  \frac{\partial\left(\rho X_{k}\right)}{\partial t}=-\nabla \cdot\left(\rho X_{k} \mathbf{U}\right)+\rho \dot{\omega}_{k}
+\end{equation}
+
+\begin{equation}
+  \frac{\partial \mathbf{U}}{\partial t}=-\mathbf{U} \cdot \nabla \mathbf{U}-\frac{\beta_{0}}{\rho} \nabla\left(\frac{\pi}{\beta_{0}}\right)-\frac{\rho-\rho_{0}}{\rho} g \mathbf{e}_{r}
+\end{equation}
+
+\begin{equation}
+  \frac{\partial(\rho h)}{\partial t}=-\nabla \cdot(\rho h \mathbf{U})+\frac{D p_{0}}{D t}+\rho H_{\mathrm{nuc}}
+\end{equation}
+
+\begin{equation}
+  \frac{\partial \rho}{\partial t}=-\nabla \cdot(\rho \mathbf{U})
+\end{equation}
+
+where $\rho$ is mass density, $\mathbf{U}$ is fluid velocity, $h$ is specific enthalpy, $H_{\mathrm{nuc}}$ is the energy released per time per unit mass, $X_k$ is the mass fraction for species $k$, and $\dot{\omega}_{k}$ is the associated production rate of species $k$. For more about MAESTROeX and the low Mach number hydrodynamic assumptions, please see \cite{MAESTROeX}.
+
+MAESTROeX solves these equations using adaptive mesh refinement (AMR), block-structured, Cartesian grid finite-volume, made possible by being built on AMReX \citep{amrex_joss}. MAESTROeX uses an explicit Godunov integration scheme for advection, VODE \citep{vode} ODE solver reactions.
+
+Spectral Deferred Corrections (SDC) is an iterative scheme, like Strang splitting, used to integrate the thermodynamic variables in MAESTROeX. In \cite{SDC-old} SDC is shown to be more accurate and faster for low Mach number reacting flow. In Strang splitting, MAESTROeX first evolves reactions for one half a time step, then advects a full time step, then finishing evolving reactions for the final time step. SDC actually incoporates advective terms into the system of ODEs we are integrating with reactions, which over the course of a full timestep has proven to be faster and more accurate. 
+
+
+%======================================================================
+% Results
+%======================================================================
+\section{Simulations and Results}\label{Sec:results}
+\begin{enumerate}
+
+  \item Get reverse rates working with pynucastro for a full comparison. This is needed for temperatures $> 10^{10} K$
+  \item Past work:
+  \item First step is to reproduce \cite{TW92} laminar flame speeds.    \cite{Schwab_2020} does this is both CO and ONe mixtures. This would probably be good to do as well.
+  \item Along the same lines, \cite{Schwab_2020} showed flame speed had a strong dependence on $Y_e$ and isotope number and provided a fitting function.
+  \item It'd be interesting to verify all of that but then be able to show how some of these new? methods come in to play:
+  \item SDC vs strang
+  \item Low mach hydro
+  \item Multidimensional Effects?
+  \item What can we say about these methods and how they work and how do they effect flame speed?
+\end{enumerate}
+
+\section{Conclusion}
+
+\section{Convergence Studies}\label{Sec:results}
+
+We'll want to run some convergence studies to show things are behaving well and that our tabulated values do indeed converge when we increase resolution.
+
+
+%Not sure which of the below to exclude / include.
+\acknowledgements MAESTROeX is open-source and freely available at
+\url{http://github.com/AMReX-Astro/MAESTROeX}.  The problem setups used
+here are available in the git repo under {\tt MAESTROeX/Exec/science/flame}.
+The work at Stony Brook was supported by DOE/Office
+of Nuclear Physics grant DE-FG02-87ER40317.  This research used
+resources of the National Energy Research Scientific Computing Center,
+a DOE Office of Science User Facility supported by the Office of
+Science of the U.~S.\ Department of Energy under Contract
+No.\ DE-AC02-05CH11231.  This research used resources of the Oak Ridge
+Leadership Computing Facility at the Oak Ridge National Laboratory,
+which is supported by the Office of Science of the U.S. Department of
+Energy under Contract No. DE-AC05-00OR22725, awarded through the DOE
+INCITE program.  We thank NVIDIA Corporation for the donation of a
+Titan X and Titan V GPU through their academic grant program.  This
+research has made use of NASA's Astrophysics Data System Bibliographic
+Services.
+
+\facilities{NERSC}
+
+\software{AMReX \citep{amrex_joss},
+          MAESTROeX \citep{MAESTROeX_joss},
+          pynucastro \citep{pynucastro}
+          GCC (\url{https://gcc.gnu.org/}),
+          linux (\url{https://www.kernel.org/}),
+          matplotlib (\citealt{Hunter:2007}, \url{http://matplotlib.org/}),
+          NumPy \citep{numpy,numpy2},
+          python (\url{https://www.python.org/}),
+          valgrind \citep{valgrind},
+          VODE \citep{vode},
+          yt \citep{yt}}
+
+
+
+%======================================================================
+% References
+%======================================================================
+
+\bibliographystyle{aasjournal}
+\bibliography{ws}
+
+
+\end{document}
