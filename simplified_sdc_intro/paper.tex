@@ -114,14 +114,15 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-Helium detonations can be challenging to model because of the
-difficulty in accurately coupling hydrodynamics and reactions.  This
-is particularly acute in the ash of the detonation where nuclear
-statistical equilibrium is established.  We look a several different
-methods of coupling explicit hydrodynamics and stiff reaction sources,
-applied to detonations which reach NSE conditions.  This is all done
-in the framework of the \castro\ hydrodynamics code, and all algorithm
-implementations are freely available.
+Reacting astrophysical flows can be challenging to model because of
+the difficulty in accurately coupling hydrodynamics and reactions.
+This can be particularly acute at high temperatures where nuclear
+statistical equilibrium is established.  We develop a simplified
+approach to spectral deferred corrections coupling of explicit
+hydrodynamics and stiff reaction sources and apply it to some example
+problems.  This is all done in the framework of the
+\castro\ hydrodynamics code, and all algorithm implementations are
+freely available.
 \end{abstract}
 
 \keywords{hydrodynamics---methods: numerical}
@@ -156,11 +157,18 @@ Sometimes the burning is simply halted on a zone-by-zone basis when
 NSE conditions are reached (e.g., as in \citealt{hedet}).
 Alternately, at high temperatures, a reaction network can be replaced
 with a table of NSE abundances and the zone's composition set through
-table look-ups\MarginPar{example? GCD?}.
+table look-ups (e.g.\ \citealt{ma:2013}) \MarginPar{need more here}
 
-In this paper, we look at some different approaches to coupling
-hydrodynamics and reactions, using a helium detonation that attains
-NSE as our testbed.  We use the \castro\ hydrodynamics code for all of
+
+In \cite{castro_sdc}, we developed second- and fourth-order accurate
+methods in space and time for coupling hydrodynamics and nuclear
+reaction networks and demonstrated the method of a variety of test
+problems.  The approach her is considerably simpler, reusing the main
+CTU hydrodynamics construction and a largely similar ODE integration
+scheme, making this method easier to add to existing simulation codes.
+However, it is restricted to second-order accuracy overall.  We term this
+algorithm the ``simplified SDC method''.
+We use the \castro\ hydrodynamics code for all of
 our numerical experiments, and all of the code to reproduce the results
 in this paper are in the \castro\ github repository.
 
@@ -168,12 +176,19 @@ in this paper are in the \castro\ github repository.
 
 
 We solve the Euler equations for compressible, reacting flow.  We'll focus on
-one-dimensional flow, and the system appears as:
+one-dimensional flow for this description, and the system appears as:
 \begin{equation}
 \frac{\partial \Uc_t}{\partial t}  + \frac{\partial \Fb^\xv (\Uc)}{\partial x} = \Sc(\Uc)
 \end{equation}
-where $\Uc = (\rho, (\rho X_k), (\rho u), (\rho E))^\intercal$ are
-the conserved fluid quantities: mass density, $\rho$, velocity, $u$,
+where
+\begin{equation}
+\Uc = \left ( \begin{array}{c}
+           \rho \\
+           \rho X_k \\
+           \rho u \\
+           \rho E \end{array}\right )
+\end{equation}
+are the conserved fluid quantities: mass density, $\rho$, velocity, $u$,
 specific total energy, $E$, and nuclear
 species mass fractions, $X_k$.  The specific total energy relates to
 the specific internal energy as $E = e + u^2/2$.  The
@@ -188,14 +203,14 @@ Here the pressure, $p$, enters, and is found via the equation of state,
 p = p(\rho, X_k, e)
 \end{equation}
 
+
 Finally, $\Sc(\Uc)$ are the source terms, which we decompose into
 hydrodynamical sources, $\Hb$ (like gravity), and reactive sources,
 $\Rb$,
 \begin{equation}
   \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc)
 \end{equation}
-In this paper, we will not consider any hydrodynamical sources, but we
-will carry the term $\Hb$ around for completeness.  The reactive
+ The reactive
 sources take the form:
 \begin{equation}
   \Rb(\Uc) = \left ( \begin{array}{c}
@@ -263,14 +278,54 @@ accurate time integration.  With reactions, we want to couple
 hydrodynamics and the reaction sources to second order.  Nuclear
 reaction sources are stiff, and need to be integrated using implicit
 methods for stabilty.  Operator splitting is traditionally employed
-here, and our goal in this paper is to look at several different
-approaches for splitting.
+here, and we compare to it in this paper.
 
-We describe several time-integration techniques for coupling
-hydrodynamics and reactions in the next sections.
 
 
 \subsection{Strang Splitting}
+
+In Strang splitting, we first evolve the system without advection
+through $\Delta t/2$, then do the advective update without reactions
+through $\Delta t$, and finally do the last reactive update through $\Delta t/2$.
+
+In the absence of advective terms, our system appears as:
+\begin{align}
+\odt{\rho} & = 0 \\
+\odt{(\rho X_k)} &= \rho \omegadot_k \\
+\odt{(\rho u)} &= 0 \\
+\odt{(\rho E)} &= \rho \Sdot 
+\end{align}
+Ww can write the energy equation as:
+\begin{equation}
+\odt{(\rho E)} = \odt{(\rho e)} + \odt{K} = \rho \Sdot
+\end{equation}
+where $K$ is the kinetic energy, $K = |u|^2/2$.  Since the velocity is
+unchanged by reactions, this means that
+\begin{equation}
+\odt{(\rho e)} = \rho \odt{e} = \rho \Sdot
+\end{equation}
+The reaction rates are typically expressed as $\omegadot_k(\rho, T,
+X_k)$, if we evolve this system.  This requires an EOS inversion each
+time we need to evaluate the reactive terms.
+
+Normally we want to integrate temperature temperature.  We can write the 
+energy equation as:
+\begin{equation}
+\rho \odt{e} = \rho \left [ \underbrace{\left . \frac{\partial e}{\partial T} \right |_\rho}_{c_v}
+                            \odt{T} +
+                            \left . \frac{\partial e}{\partial \rho} \right |_T
+                            \cancelto{0}{\odt{\rho}} \;\; \right ] = \rho \Sdot
+\end{equation}
+reducing to
+\begin{equation}
+\odt{T} = \frac{1}{c_v} \Sdot
+\end{equation}
+We can alternately derive this from an enthalpy equation, which is the correct
+formulation when we are at constant pressure, and we get the same temperature
+equation but with $c_v$ replaced by $c_p$.
+Technically this requires an EOS call to get $c_x$, but if the
+specific heat varies slowly, we can freeze it during the reaction
+solve.
 
 
 \subsection{Timestep Limiters and Retry Mechanism}
@@ -278,6 +333,8 @@ hydrodynamics and reactions in the next sections.
 In addition to the standard CFL timestep limiter for explicit
 hydrodynamics, \castro\ can also enforcing timestep limiters based on
 the energy generation or abundance changes over a timestep.
+
+write these out
 
 \castro\ has the ability to reject a timestep if it detects a failure
 and retry with smaller timesteps (subcycling to make up the original
@@ -289,7 +346,6 @@ mechanism only works with the CTU hydrodynamics + Strang splitting.
 We enable it here, since, as will be shown shortly, this combination
 of methods has the most difficulty in integrating the detonation.
 
-\subsection{Balanced Splitting}
 
 A variation on Strang splitting called (re-)balanced splitting was
 developed in \citet{speth:2013}.
@@ -437,7 +493,7 @@ compressible hydrodynamics below:
       algebraically update these using this piecewise linear behavior:
       \begin{align}
         \rho(t) &= \rho^n + \Adv{\rho}^{n+1/2,(k)} \, t \\
-        (\rho \Ub)(t) &= (\rho \Ub)^n + \Adv{(\rho \Ub)}^{n+1/2,(k)} \, t
+        (\rho \Ub)(t) &= (\rho \Ub)^n + \Adv{\rho \Ub}^{n+1/2,(k)} \, t
       \end{align}
       At the end of the integration, our new state is $\Uc^{n+1,(k)}$.
 
@@ -495,18 +551,9 @@ compressible hydrodynamics below:
 
 \end{itemize}
 
-\subsection{Old Primitive Stuff}
 
 
-and our primitive system as:
-\begin{equation}
-\qb_t = \Advs{\qb} + \Rb(\qb)
-\end{equation}
-with
-\begin{equation}
-\Advs{\qb} = -\Ab^\xv(\qb) \qb_x - \Ab^\yv(\qb) \qb_y - \Ab^\zv(\qb) \qb_z + \Sqhydro
-\end{equation}
-
+\subsection{Nuclear Statistical Equilibrium}
 
 
 \section{Simulations}
