@@ -118,11 +118,14 @@ Reacting astrophysical flows can be challenging to model because of
 the difficulty in accurately coupling hydrodynamics and reactions.
 This can be particularly acute at high temperatures where nuclear
 statistical equilibrium is established.  We develop a simplified
-approach to spectral deferred corrections coupling of explicit
-hydrodynamics and stiff reaction sources and apply it to some example
-problems.  This is all done in the framework of the
-\castro\ hydrodynamics code, and all algorithm implementations are
-freely available.
+approach to spectral deferred corrections (SDC) coupling of explicit
+hydrodynamics and stiff reaction sources as an alternative to operator
+splitting or the more comprehensive SDC approach we demonstrated
+previously.  We apply the new method some example problems and show
+how to modify it to work with a hybrid network consisting of a
+reaction ODE system and a table for nuclear statistical equilibrium.
+This is all done in the framework of the \castro\ hydrodynamics code,
+and all algorithm implementations are freely available.
 \end{abstract}
 
 \keywords{hydrodynamics---methods: numerical}
@@ -159,24 +162,26 @@ Alternately, at high temperatures, a reaction network can be replaced
 with a table of NSE abundances and the zone's composition set through
 table look-ups (e.g.\ \citealt{ma:2013}) \MarginPar{need more here}
 
-
 In \cite{castro_sdc}, we developed second- and fourth-order accurate
 methods in space and time for coupling hydrodynamics and nuclear
-reaction networks and demonstrated the method of a variety of test
-problems.  The approach her is considerably simpler, reusing the main
+reaction networks based on spectral deferred corrections (SDC)
+methods, and demonstrated the method of a variety of test problems.
+The approach presented here is considerably simpler, reusing the main
 CTU hydrodynamics construction and a largely similar ODE integration
 scheme, making this method easier to add to existing simulation codes.
-However, it is restricted to second-order accuracy overall.  We term this
-algorithm the ``simplified SDC method''.
-We use the \castro\ hydrodynamics code for all of
-our numerical experiments, and all of the code to reproduce the results
-in this paper are in the \castro\ github repository.
+However, it is restricted to second-order accuracy overall.  We term
+this algorithm the ``simplified SDC method''.  We use the
+\castro\ hydrodynamics code \cite{castro} for all of our numerical
+experiments, and all of the code to reproduce the results in this
+paper are in the \castro\ github
+repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 
 \section{Numerical Methodology}
 
 
-We solve the Euler equations for compressible, reacting flow.  We'll focus on
-one-dimensional flow for this description, and the system appears as:
+We solve the Euler equations for compressible, reacting flow.  We'll
+focus on one-dimensional flow for this description, and the system
+appears as:
 \begin{equation}
 \frac{\partial \Uc_t}{\partial t}  + \frac{\partial \Fb^\xv (\Uc)}{\partial x} = \Sc(\Uc)
 \end{equation}
@@ -204,7 +209,7 @@ p = p(\rho, X_k, e)
 \end{equation}
 
 
-Finally, $\Sc(\Uc)$ are the source terms, which we decompose into
+We decompose the source terms, $\Sc(\Uc)$, into
 hydrodynamical sources, $\Hb$ (like gravity), and reactive sources,
 $\Rb$,
 \begin{equation}
@@ -220,8 +225,17 @@ sources take the form:
 where $\omegadot_k$ is the creation rate for species $k$ and $\dot{S}$
 is the energy generation rate per unit mass.
 
-Sometimes it is preferable to work with the primitive variables,  $\qb
-= (\rho, X_k, u, p, (\rho e))^\intercal$.  Here, the system appears
+Sometimes it is preferable to work with the primitive variables,
+\begin{equation}
+\qb = \left ( \begin{array}{c}
+  \rho \\
+  X_k \\
+  u \\
+  p \\
+  (\rho e) \\
+\end{array} \right )
+\end{equation}
+Here, the system appears
 as:
 \begin{equation}
 \qb_t + \Ab^\xv(\qb) \qb_x  = \Sq
@@ -288,14 +302,15 @@ In Strang splitting, we first evolve the system without advection
 through $\Delta t/2$, then do the advective update without reactions
 through $\Delta t$, and finally do the last reactive update through $\Delta t/2$.
 
-In the absence of advective terms, our system appears as:
+In the absence of advective terms, our reaction system appears as just
+$d\Uc/dt = \Rb(\Uc)$, or:
 \begin{align}
 \odt{\rho} & = 0 \\
 \odt{(\rho X_k)} &= \rho \omegadot_k \\
 \odt{(\rho u)} &= 0 \\
 \odt{(\rho E)} &= \rho \Sdot 
 \end{align}
-Ww can write the energy equation as:
+We can write the energy equation as:
 \begin{equation}
 \odt{(\rho E)} = \odt{(\rho e)} + \odt{K} = \rho \Sdot
 \end{equation}
@@ -305,7 +320,7 @@ unchanged by reactions, this means that
 \odt{(\rho e)} = \rho \odt{e} = \rho \Sdot
 \end{equation}
 The reaction rates are typically expressed as $\omegadot_k(\rho, T,
-X_k)$, if we evolve this system.  This requires an EOS inversion each
+X_k)$, when we evolve this system.  This requires an EOS inversion to get $T$ from $e$ each
 time we need to evaluate the reactive terms.
 
 Normally we want to integrate temperature temperature.  We can write the 
@@ -318,21 +333,44 @@ energy equation as:
 \end{equation}
 reducing to
 \begin{equation}
+\label{eq:strang:T}
 \odt{T} = \frac{1}{c_v} \Sdot
 \end{equation}
-We can alternately derive this from an enthalpy equation, which is the correct
-formulation when we are at constant pressure, and we get the same temperature
-equation but with $c_v$ replaced by $c_p$.
+We can alternately derive this from an enthalpy equation, which is the
+correct formulation when we are at constant pressure, and we get the
+same temperature equation but with $c_v$ replaced by $c_p$.
 Technically this requires an EOS call to get $c_x$, but if the
 specific heat varies slowly, we can freeze it during the reaction
-solve.
+solve or use a Taylor expansion in $T$ to capture slow evolution.
+
+We also typically integrate mass fraction itself, instead of partial
+densities:
+\begin{equation}
+\label{eq:strang:X}
+\odt{X_k} = \omegadot_k
+\end{equation}
+The system of equations \ref{eq:strang:T} and \ref{eq:strang:X} are
+solved using an implicit ODE solver designed for stiff systems of
+equations.  We use VODE~\citep{vode}.  
+
+With Strang splitting, the state can drift significantly off of the
+smooth solution to the coupled reactive hydrodynamics equations, as
+shown graphically in \cite{astronum:2018} using an earlier version of
+the present algorithm.
+
+A variation on Strang splitting called (re-)balanced splitting was
+developed in \citet{speth:2013}.
 
 
 \subsection{Timestep Limiters and Retry Mechanism}
 
-In addition to the standard CFL timestep limiter for explicit
-hydrodynamics, \castro\ can also enforcing timestep limiters based on
-the energy generation or abundance changes over a timestep.
+Since this method is based off of the CTU hydrodynamics scheme, it
+benefits from the larger timestep that method can take (when done with
+full corner coupling) as compared to a method-of-lines approach (see
+\citealt{ppmunsplit}).  In addition to the standard CFL timestep
+limiter for explicit hydrodynamics, \castro\ can also enforcing
+timestep limiters based on the energy generation or abundance changes
+over a timestep.
 
 write these out
 
@@ -347,8 +385,6 @@ We enable it here, since, as will be shown shortly, this combination
 of methods has the most difficulty in integrating the detonation.
 
 
-A variation on Strang splitting called (re-)balanced splitting was
-developed in \citet{speth:2013}.
 
 \subsection{Spectral Deferred Corrections}
 
