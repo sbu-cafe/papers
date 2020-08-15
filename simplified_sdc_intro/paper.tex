@@ -91,7 +91,7 @@
 \shortauthors{}
 
 %% \author[0000-0001-8401-030X]{M.~Zingale}
-%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University, 
+%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
 %%        Stony Brook, NY 11794-3800}
 
 %% \author[0000-0003-0439-4556]{M.~P.~Katz}
@@ -308,7 +308,7 @@ $d\Uc/dt = \Rb(\Uc)$, or:
 \odt{\rho} & = 0 \\
 \odt{(\rho X_k)} &= \rho \omegadot_k \\
 \odt{(\rho u)} &= 0 \\
-\odt{(\rho E)} &= \rho \Sdot 
+\odt{(\rho E)} &= \rho \Sdot
 \end{align}
 We can write the energy equation as:
 \begin{equation}
@@ -323,7 +323,7 @@ The reaction rates are typically expressed as $\omegadot_k(\rho, T,
 X_k)$, when we evolve this system.  This requires an EOS inversion to get $T$ from $e$ each
 time we need to evaluate the reactive terms.
 
-Normally we want to integrate temperature temperature.  We can write the 
+Normally we want to integrate temperature temperature.  We can write the
 energy equation as:
 \begin{equation}
 \rho \odt{e} = \rho \left [ \underbrace{\left . \frac{\partial e}{\partial T} \right |_\rho}_{c_v}
@@ -351,7 +351,7 @@ densities:
 \end{equation}
 The system of equations \ref{eq:strang:T} and \ref{eq:strang:X} are
 solved using an implicit ODE solver designed for stiff systems of
-equations.  We use VODE~\citep{vode}.  
+equations.  We use VODE~\citep{vode}.
 
 With Strang splitting, the state can drift significantly off of the
 smooth solution to the coupled reactive hydrodynamics equations, as
@@ -368,52 +368,73 @@ Since this method is based off of the CTU hydrodynamics scheme, it
 benefits from the larger timestep that method can take (when done with
 full corner coupling) as compared to a method-of-lines approach (see
 \citealt{ppmunsplit}).  In addition to the standard CFL timestep
-limiter for explicit hydrodynamics, \castro\ can also enforcing
+limiter for explicit hydrodynamics, \castro\ can also enforce
 timestep limiters based on the energy generation or abundance changes
-over a timestep.
-
-write these out
+over a timestep:
+\begin{align}
+\label{eq:dt:nuce}
+\Delta t &\le \mathtt{dtnuc\_e}\, \min_{i,j,k} \left\{\frac{e_{i,j,k}}{\dot{e}_{i,j,k}}\right\} \\
+%
+\label{eq:dt:nucX}
+\Delta t &\le \mathtt{dtnuc\_X}\, \min_{i,j,k} \left\{\min_n\frac{X^n_{i,j,k}}{\dot{X}^n_{i,j,k}}\right\}
+\end{align}
+where $\mathtt{dtnuc\_e}$ and $\mathtt{dtnuc\_X}$ are runtime parameters
+used to control the allowed change.
 
 \castro\ has the ability to reject a timestep if it detects a failure
 and retry with smaller timesteps (subcycling to make up the original
 required timestep).  Among the conditions that can trigger this are
 density failing below zero during advection, the ODE integration
 failing to converge in the implicit solve, or violation of one of the
-timestep limiters during the step.  At the moment, this retry
-mechanism only works with the CTU hydrodynamics + Strang splitting.
-We enable it here, since, as will be shown shortly, this combination
-of methods has the most difficulty in integrating the detonation.
-
+timestep limiters during the step.  This means that equations
+\ref{eq:dt:nuce} and \ref{eq:dt:nucX} are not reactive, but instead
+guaranteed to be met throughout the simulation, because the step is
+rejected if they are violated.  The retry mechanism in \castro\ works
+with both the Strang and simplified-SDC integration scheme.
 
 
 \subsection{Spectral Deferred Corrections}
 
-The basic idea of spectral deferred corrections is break the timestep
-into a number of temporal nodes and use low order difference methods
-in a correction equation that, upon iteration, achieves a high-order
-solution coupling the different physics together.
+The basic idea of spectral deferred corrections is to express the
+update as an integral and divide the time-update into a number of
+discrete time nodes.  The integral is then approximated using a
+quadrature rule over these time nodes and low order approximations are
+used to update the state from one time node to the next.  The method
+uses iteration to successively improve the solution and the ultimate
+accuracy is determined by the quadrature method used to evaluate the
+integral, which is done using an iteratively-lagged solution.
 
-
-\subsection{Simplified-SDC Method}
-
-A second-order accurate time integration method using a simple
-deferred correction strategy was shown in \citep{SDC-old}.  A
+We start by writing our update as:
+\begin{equation}
+\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt
+\end{equation}
+For the simplified SDC method we explore here, we will make the
+advective term piecewise constant in time, using the value at the
+midpoint in time, to achieve second-order accuracy, giving us:
+\begin{equation}
+\label{eq:integral:simplesdc}
+\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left \{ \Adv{\Uc}^{n+1/2} + \Rb(\Uc) \right \} dt
+\end{equation}
+This is the approach first shown in \citep{SDC-old}.  A
 version of this was also implemented in the \maestro\ low-Mach number
 hydrodynamics code some time ago.  A compressible version, for use in
 \castro\ is slightly different due to the need to do some operations
 on the conserved variable state and some on the primitive variable
 state.  We describe the application of this to the equations of
-compressible hydrodynamics below:
+compressible hydrodynamics below.
 
 \begin{itemize}
 
 \item {\em Initialization}
 
   \begin{itemize}
-  \item Set the first iterate of the primitive-variable reactive source terms from the
-    last step:
+  \item We need an approximation to how much the reactions alone
+    changed the primitive variable state over the timestep, which we
+    will denote $\Ic_q$.  Since we do not have any information about
+    the current timestep in the first iteration,
+    we use the value from the last iteration of the previous timestep:
     \begin{equation}
-      \Ic^{n+1/2,(0)}_{\qb} = \Ic^{n-1/2,(\smax)}_{\qb}
+      \Ic^{n+1/2,(-1)}_{\qb} = \Ic^{n-1/2,(\smax-1)}_{\qb}
     \end{equation}
   %% \item Solve the Poisson problem for the initial gravitational potential:
   %%   \begin{equation}
@@ -427,11 +448,13 @@ compressible hydrodynamics below:
 
 \item {\em Iterate}
 
-  Iterate from $k = 1, \ldots, \smax$.  For second-order accuracy,
-  $\smax = 2$ is sufficient.
+  Iterate from $k = 0, \ldots, \smax-1$.  For second-order accuracy,
+  $\smax = 2$ is sufficient.  In addition to denoting the time-level
+  with a superscript (like $n$ or $n+1$), we'll use a second subscript
+  in parentheses to keep track of the iteration.
 
   \begin{itemize}
-  \item {\em Create the Advective Update Term}
+  \item {\em Create the advective update term, $\Adv{\Uc}^{n+1/2,(k)}$}
 
     \begin{itemize}
     \item convert $\Uc \rightarrow \qb$.  This is an algebraic transformation,
@@ -444,20 +467,22 @@ compressible hydrodynamics below:
       \end{equation}
       Here we use the iteratively lagged integrals of the primitive variable
       terms accounting only for reactions, $\Ic_\qb^{n+1/2,(k-1)}$, as the
-      reactive source.  Any hydrodynamic source terms are time-centered
+      reactive source.  This is in contrast to Strang-splitting, where no
+      explicit reactive source terms are seen by the hydrodynamics update.
+      Any hydrodynamic source terms are time-centered
       using the previous iteration:
       \begin{equation}
         \Sqhydro^{n+1/2} = \frac{1}{2} \left ( \Sqhydro^n + \Sqhydro^{n+1,(k-1)} \right )
       \end{equation}
 
     \item solve the Riemann problem at each interface to get a unique
-      conserved state on each interface, $\Uc^{n+1/2}_{i+1/2}$
+      conserved state on each interface, $\Uc^{n+1/2,(k)}_{i+1/2}$
 
     \item construct the advective update terms, first ignoring the hydrodynamics sources:
-      $\Advt{\Uc}^{n+1/2}_{i,j,k}$, e.g., as:
+      $\Advt{\Uc}^{n+1/2,(k)}_{i,j,k}$, e.g., as:
       \begin{align}
         \Advt{\Uc}^{n+1/2,(k)}_{i,j,k} =
-          &- \frac{\Fb^\xv(\Uc^{n+1/2}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2}_{i-1/2})}{\Delta x} 
+          &- \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
       \end{align}
     Now the conservative hydrodynamics source terms are computed by first updating to the
     new state with advection only\footnote{For a source like gravity, this update can be done first for $\rho$ and then define the new momentum source using $\rho^{\star\star}$ and likewise for energy}, as:
@@ -500,40 +525,46 @@ compressible hydrodynamics below:
 
   \item {\em Update the System Using a Method of Lines Integration}
 
-    \begin{itemize}
-    \item Define the hydro source terms---these will be time-centered,
-      but piecewise-constant in time throughout the integration.
+    We update the state by doing the integral in equation
+    \ref{eq:integral:simplesdc}.  Since we are approximating the
+    advective term as piecewise constant in time, we can simply use an
+    ODE integrator to integrate this, just as we do with the reaction
+    system in Strang splitting.  The difference here being that we are
+    integrating the conserved variables and the state sees the effect
+    of advection as we integrate the reactions.  The ODE form of this
+    is
+    \begin{equation}
+      \odt{\Uc} = \Adv{\Uc}^{n+1,(k)} + \Rb(\Uc)
+    \end{equation}
 
-    \item With the spatial discretization done, our system appears as a
-      system of ODEs: \MarginPar{what is the right form of acceleration
-        here? should we do piecewise linear in time?}
-      \begin{equation}
-        \left . \odt{\Uc} \right |_{i,j,k} = \Adv{\Uc}^{n+1/2,(k)}_{i,j,k} + \Rb(\Uc)
-      \end{equation}
+    As we are integrating this system we need to get the
+    temperature, $T$, for the rate evaluations.  We construct this
+    by subtracting the kinetic energy from the total energy to get
+    the specific internal energy, $e$, and then calling the equation
+    of state.
 
-      As we are integrating this system we need to get the
-      temperature, $T$, for the rate evaluations.  We construct this
-      by subtracting the kinetic energy from the total energy to get
-      the specific internal energy, $e$, and then calling the equation
-      of state.
+    Our integrator also needs the Jacobian of the system, in terms of
+    the conserved variables.  This is different than the form of the
+    Jacobian usually used in reaction networks.  We describe the form
+    of the Jacobian in appendix \ref{sec:app:jacobian}.
 
-      Note that our advection terms are piecewise constant \MarginPar{need to think about this more}
-      approximations, so when we integrate our system, their
-      contributions will be linear in time.  Since $(\rho X_k)$ sees a
-      linear advective term, $\rho$ does as well.  $(\rho \Ub)$ and
-      $(\rho E)$ will also have linear contributions in time from
-      advection.  We can see that the internal energy will also have a
-      linear contribution by recognizing that the kinetic energy term,
-      $K = (\rho |\Ub|^2)/\rho$ is linear in time.
-      Since the reactions don't affect $\rho$ and $(\rho \Ub)$, we can
-      algebraically update these using this piecewise linear behavior:
-      \begin{align}
-        \rho(t) &= \rho^n + \Adv{\rho}^{n+1/2,(k)} \, t \\
-        (\rho \Ub)(t) &= (\rho \Ub)^n + \Adv{\rho \Ub}^{n+1/2,(k)} \, t
-      \end{align}
-      At the end of the integration, our new state is $\Uc^{n+1,(k)}$.
+    Note that our advection terms are piecewise constant \MarginPar{need to think about this more}
+    approximations, so when we integrate our system, their
+    contributions will be linear in time.  Since $(\rho X_k)$ sees a
+    linear advective term, $\rho$ does as well.  $(\rho \Ub)$ and
+    $(\rho E)$ will also have linear contributions in time from
+    advection.  We can see that the internal energy will also have a
+    linear contribution by recognizing that the kinetic energy term,
+    $K = (\rho |\Ub|^2)/\rho$ is linear in time.
+    Since the reactions don't affect $\rho$ and $(\rho \Ub)$, we can
+    algebraically update these using this piecewise linear behavior:
+    \begin{align}
+      \rho(t) &= \rho^n + \Adv{\rho}^{n+1/2,(k)} \, t \\
+      (\rho \Ub)(t) &= (\rho \Ub)^n + \Adv{\rho \Ub}^{n+1/2,(k)} \, t
+    \end{align}
 
-    \end{itemize}
+    At the end of this integration, we have the state at the next iteration,
+    $\Uc^{n+1,(k+1)}$
 
   \item {\em Compute the Reactive Source Terms.}
 
@@ -589,15 +620,118 @@ compressible hydrodynamics below:
 
 
 
-\subsection{Nuclear Statistical Equilibrium}
+\section{Nuclear Statistical Equilibrium}
 
+For this study we will use the 19 isotope ``aprox19'' network together
+with a table that gives the NSE abundances in regions where the system
+is in NSE.  The table provides:
+\begin{align*}
+Y_e &= \sum_k \frac{Z_k X_k}{A_k} \\
+\bar{A} &= \left [ \sum_k \frac{X_k}{A_k} \right ]^{-1} \\
+\frac{B}{A} &= \sum_k \frac{B_k X_k}{A_k}
+\end{align*}
+where $B_k$ is the binding energy of nucleus $k$.  In our simulations,
+we store these 3 quantities as auxiliary data that is carried along
+with the rest of the fluid state in each zone.
+
+For Strang split coupling of hydro and reactions, $DX_k/Dt = 0$,
+and our evolution equations are:
+\begin{align*}
+\frac{DY_e}{Dt} &= \sum_k \frac{Z_k}{A_k} \frac{DX_k}{Dt} = 0 \\
+\frac{D}{Dt} \frac{1}{\bar{A}} &= - \frac{1}{\bar{A}^2} \frac{D\bar{A}}{Dt} = \sum_k \frac{1}{A_k} \frac{DX_k}{Dt} = 0 \rightarrow \frac{D\bar{A}}{Dt} = 0 \\
+\frac{D}{Dt} \left (\frac{B}{A} \right ) &= \sum_k \frac{B_k}{A_k} \frac{DX_k}{Dt} = 0
+\end{align*}
+Therefore each of these auxillar equations obeys an advection
+equation in the hydro part of the advancement.  In the SDC algorithm,
+there will be a reactive source (an $\Ic_q$) for each of these that is
+computed in the same manner as above.
+
+The NSE table was generated using a 125 nuclei reaction network and is
+the same as described in \cite{ma:2013}.  The compositional quantities
+it carries, $\bar{A}$ and $Y_e$ and not representable from the 19
+isotopes we carry in the main network. For this reason, when we are
+using the NSE network, we always take the composition quantities in
+the EOS directly from the auxiliary state in each zone instead of
+using the $X_k$ directly. Our equation of state needs $\bar{Z}$ in addition
+to the auxiliary quantities, which is is easily computed as
+\begin{equation}
+\bar{Z} = \bar{A} Y_e
+\end{equation}
+
+For Strang splitting, the basic flow of using the aprox19 + NSE network
+is as follows:
+\begin{itemize}
+\item initialize the problem, including $X_k$
+
+\item fill the initial aux data with $Y_e$, $\bar{A}$, and $(B/A)$.
+
+\item in hydro, update these quantities simply via advection
+
+\item for the reactive update:
+
+  \begin{itemize}
+  \item check if NSE applies (see below)
+
+  \item if we are in an NSE region:
+
+    \begin{itemize}
+    \item use $\rho$, $T$, and $Y_e$ to call the table. This
+      returns: $dY_e/dt$, $(B/A)_{\rm out}$, and $\bar{A}_{\rm out}$.
+
+    \item update $Y_e$:
+    \begin{equation}
+      (Y_e)_{\rm out} = (Y_e)_{\rm in} - \Delta t \frac{dY_e}{dt}
+    \end{equation}
+
+  \item update the auxiliary state value of $\bar{A}$ to be simply
+    $\bar{A}_{\rm out}$ from the table.
+
+  \item compute the energy generation rate, $\Sdot$ as:
+    \begin{equation}
+      \Sdot = \eta \left [ \left ( \frac{B}{A} \right )_{\rm out} -
+        \left ( \frac{B}{A} \right )_{\rm in} \right ] N_A \frac{1}{\Delta t}
+    \end{equation}
+    where $\eta$ is an inertia term < 1 to prevent the energy changing
+    too much in one set.
+
+  \item set the auxiliary state value of $(B/A)$ as:
+    \begin{equation}
+      \left (\frac{B}{A}\right )_{\rm out} = \left (\frac{B}{A}\right )_{\rm in} + \eta \left [ \left ( \frac{B}{A}\right )_{\rm out} - \left (\frac{B}{A} \right )_{\rm in} \right]
+    \end{equation}
+
+  \item update the mass fractions, $X_k$, using the values from the table
+    \end{itemize}
+
+  \item if we are not in NSE:
+
+    \begin{itemize}
+    \item integrate the aprox19 network as usual
+    \item update the aux quantities at the end of the burn
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+We use the following conditions to determine if we are in NSE:
+\begin{itemize}
+\item $\rho > \rho_\mathrm{nse}$
+\item $T > T_\mathrm{nse}$
+\item $X(\isotm{C}{12}) < A_\mathrm{nse}$
+\item $X(\isotm{He}{4}) + X(\isotm{Cr}{48}) + X(\isotm{Fe}{52}) + X(\isotm{Fe}{54}) + X(\isotm{Ni}{56}) > B_\mathrm{nse}$
+\end{itemize}
 
 \section{Simulations}
 
+\subsection{Reacting convergence test problem}
+
+\cite{castro_sdc} introduced a test problem for measuring convergence
+of a reacting hydrodynamic algorithm.  We run that same test here with the
+simplified SDC algorithm.
+
+
 \section{Summary}
 
-We presented a simple spectral deferred corrections scheme for coupling 
-hydrodynamics and reactions.  
+We presented a simple spectral deferred corrections scheme for coupling
+hydrodynamics and reactions.
 
 
 
@@ -627,6 +761,8 @@ Number DE-SC0017955.
 
 \section{Jacobian}
 
+\label{sec:app:jacobian}
+
 To solve the reaction system implicitly, the ODE solver needs the Jacobian,
 $\partial \Rb/\partial \Uc$.  We follow the method of \cite{castro_sdc}
 and factor this into two pieces,
@@ -636,7 +772,7 @@ and factor this into two pieces,
 
 Even though it has no reactive sources, we include $\rho$ in our conservative state
 for the purposes of computing the Jacobian (we denote the conserved state used for the
-Jacobian $\Uc^\prime$.  
+Jacobian $\Uc^\prime$.
 Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
 \begin{equation}
 \Uc^\prime = \left ( \begin{array}{c} \rho \\ \rho X_\alpha \\ \rho X_\beta \\ \rho E \\ \rho e \end{array} \right )
@@ -664,9 +800,9 @@ The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
 \end{equation}
 where we use the following notation for compactness:
 \begin{equation}
-e_\rho = \dedrd \qquad 
+e_\rho = \dedrd \qquad
 e_T = \dedTd \qquad
-e_{X_k} = \dedXd 
+e_{X_k} = \dedXd
 \end{equation}
 and write the kinetic energy as $K = |\Ub|^2/2$.  We get the inverse
 (computed via SymPy, see the included Jupyter notebook) is:
@@ -719,4 +855,3 @@ and the Jacobian is computed as $\partial \Rb/\partial {\bf w}$:
 \bibliography{ws}
 
 \end{document}
-
