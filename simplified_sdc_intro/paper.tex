@@ -625,22 +625,22 @@ compressible hydrodynamics below.
 For this study we will use the 19 isotope ``aprox19'' network together
 with a table that gives the NSE abundances in regions where the system
 is in NSE.  The table provides:
-\begin{align*}
+\begin{align}
 Y_e &= \sum_k \frac{Z_k X_k}{A_k} \\
 \bar{A} &= \left [ \sum_k \frac{X_k}{A_k} \right ]^{-1} \\
 \frac{B}{A} &= \sum_k \frac{B_k X_k}{A_k}
-\end{align*}
+\end{align}
 where $B_k$ is the binding energy of nucleus $k$.  In our simulations,
 we store these 3 quantities as auxiliary data that is carried along
 with the rest of the fluid state in each zone.
 
 For Strang split coupling of hydro and reactions, $DX_k/Dt = 0$,
 and our evolution equations are:
-\begin{align*}
+\begin{align}
 \frac{DY_e}{Dt} &= \sum_k \frac{Z_k}{A_k} \frac{DX_k}{Dt} = 0 \\
 \frac{D}{Dt} \frac{1}{\bar{A}} &= - \frac{1}{\bar{A}^2} \frac{D\bar{A}}{Dt} = \sum_k \frac{1}{A_k} \frac{DX_k}{Dt} = 0 \rightarrow \frac{D\bar{A}}{Dt} = 0 \\
 \frac{D}{Dt} \left (\frac{B}{A} \right ) &= \sum_k \frac{B_k}{A_k} \frac{DX_k}{Dt} = 0
-\end{align*}
+\end{align}
 Therefore each of these auxillar equations obeys an advection
 equation in the hydro part of the advancement.  In the SDC algorithm,
 there will be a reactive source (an $\Ic_q$) for each of these that is
@@ -661,30 +661,42 @@ to the auxiliary quantities, which is is easily computed as
 For Strang splitting, the basic flow of using the aprox19 + NSE network
 is as follows:
 \begin{itemize}
-\item initialize the problem, including $X_k$
+\item {\em Initialize the problem}
 
-\item fill the initial aux data with $Y_e$, $\bar{A}$, and $(B/A)$.
+  In addition to initializing the mass fractions, $X_k$, we also fill
+  the auxiliary composition data, $Y_e$, $\bar{A}$, and $(B/A)$, using
+  these $X_k$.
 
-\item in hydro, update these quantities simply via advection
+\item {\em Hydrodynamics update}
 
-\item for the reactive update:
+  The hydrodynamics update proceeds as normal, but with an advection
+  equation for each of the auxiliary composition variables:
+  \begin{align}
+    \ddt{(\rho Y_e)} + \ddx{(\rho Y_e u)} &= 0 \\
+    \ddt{(\rho \bar{A})} + \ddx{(\rho \bar{A} u)} &= 0 \\
+    \ddt{[\rho (B/A)]} + \ddx{[\rho (B/A) u]} &= 0 
+  \end{align}
+
+
+\item {\em Reactive update}
 
   \begin{itemize}
-  \item check if NSE applies (see below)
-
-  \item if we are in an NSE region:
+  \item For a zone that is in NSE:
 
     \begin{itemize}
     \item use $\rho$, $T$, and $Y_e$ to call the table. This
-      returns: $dY_e/dt$, $(B/A)_{\rm out}$, and $\bar{A}_{\rm out}$.
+      returns: $dY_e/dt$, $(B/A)_{\rm out}$, $\bar{A}_{\rm out}$,
+      and the $(X_k)_{\rm out}$ from the NSE network grouped into the 19 isotopes
+      we carry as part of aprox19.
 
     \item update $Y_e$:
     \begin{equation}
-      (Y_e)_{\rm out} = (Y_e)_{\rm in} - \Delta t \frac{dY_e}{dt}
+      (Y_e)_{\rm out} = (Y_e)_{\rm in} + \Delta t \frac{dY_e}{dt}
     \end{equation}
 
   \item update the auxiliary state value of $\bar{A}$ to be simply
-    $\bar{A}_{\rm out}$ from the table.
+    $\bar{A}_{\rm out}$ from the table and the mass fractions
+    $X_k$ to be the $(X_k)_{\rm out}$ returned from the table.
 
   \item compute the energy generation rate, $\Sdot$ as:
     \begin{equation}
@@ -699,10 +711,9 @@ is as follows:
       \left (\frac{B}{A}\right )_{\rm out} = \left (\frac{B}{A}\right )_{\rm in} + \eta \left [ \left ( \frac{B}{A}\right )_{\rm out} - \left (\frac{B}{A} \right )_{\rm in} \right]
     \end{equation}
 
-  \item update the mass fractions, $X_k$, using the values from the table
     \end{itemize}
 
-  \item if we are not in NSE:
+  \item For zones not in NSE:
 
     \begin{itemize}
     \item integrate the aprox19 network as usual
@@ -712,12 +723,13 @@ is as follows:
 \end{itemize}
 
 We use the following conditions to determine if we are in NSE:
-\begin{itemize}
-\item $\rho > \rho_\mathrm{nse}$
-\item $T > T_\mathrm{nse}$
-\item $X(\isotm{C}{12}) < A_\mathrm{nse}$
-\item $X(\isotm{He}{4}) + X(\isotm{Cr}{48}) + X(\isotm{Fe}{52}) + X(\isotm{Fe}{54}) + X(\isotm{Ni}{56}) > B_\mathrm{nse}$
-\end{itemize}
+\begin{align}
+\rho &> \rho_\mathrm{nse} \\
+T &> T_\mathrm{nse} \\
+X(\isotm{C}{12}) &< A_\mathrm{nse} \\
+X(\isotm{He}{4}) + \sum_{k \in {\rm Fe-group}} X_k &> B_\mathrm{nse} 
+\end{align}
+where the Fe-group nuclei are \isot{Cr}{48}, \isot{Fe}{52}, \isot{Fe}{54}, and \isot{Ni}{56}.
 
 \section{Simulations}
 
