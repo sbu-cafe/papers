@@ -373,13 +373,13 @@ timestep limiters based on the energy generation or abundance changes
 over a timestep:
 \begin{align}
 \label{eq:dt:nuce}
-\Delta t &\le \mathtt{dtnuc\_e}\, \min_{i,j,k} \left\{\frac{e_{i,j,k}}{\dot{e}_{i,j,k}}\right\} \\
+\Delta t &\le f_e\, \min_{i} \left\{\frac{e_{i}}{\dot{e}_{i}}\right\} \\
 %
 \label{eq:dt:nucX}
-\Delta t &\le \mathtt{dtnuc\_X}\, \min_{i,j,k} \left\{\min_n\frac{X^n_{i,j,k}}{\dot{X}^n_{i,j,k}}\right\}
+\Delta t &\le f_X\, \min_{i} \left\{\min_{k,X_k > \epsilon_X}\frac{{X_k}_{i}}{{\omegadot_{k,i}}}\right\}
 \end{align}
-where $\mathtt{dtnuc\_e}$ and $\mathtt{dtnuc\_X}$ are runtime parameters
-used to control the allowed change.
+where $i$ is the zone index and $f_e$ and $f_X$ are runtime parameters
+used to control the allowed change, and only species for which $X_k > \epsilon_X$ are considered.
 
 \castro\ has the ability to reject a timestep if it detects a failure
 and retry with smaller timesteps (subcycling to make up the original
@@ -479,9 +479,9 @@ compressible hydrodynamics below.
       conserved state on each interface, $\Uc^{n+1/2,(k)}_{i+1/2}$
 
     \item construct the advective update terms, first ignoring the hydrodynamics sources:
-      $\Advt{\Uc}^{n+1/2,(k)}_{i,j,k}$, e.g., as:
+      $\Advt{\Uc}^{n+1/2,(k)}_{i}$, e.g., as:
       \begin{align}
-        \Advt{\Uc}^{n+1/2,(k)}_{i,j,k} =
+        \Advt{\Uc}^{n+1/2,(k)}_{i} =
           &- \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
       \end{align}
     Now the conservative hydrodynamics source terms are computed by first updating to the
@@ -509,7 +509,7 @@ compressible hydrodynamics below.
 
     The final advective update term is then:
     \begin{equation}
-      \Adv{\Uc}^{n+1/2,(k)}_{i,j,k} = \Advt{\Uc}^{n+1/2,(k)}_{i,j,k} + \Shydro^{n+1/2}
+      \Adv{\Uc}^{n+1/2,(k)}_{i} = \Advt{\Uc}^{n+1/2,(k)}_{i} + \Shydro^{n+1/2}
     \end{equation}
     with
     \begin{equation}
@@ -620,11 +620,25 @@ compressible hydrodynamics below.
 
 
 
-\section{Nuclear Statistical Equilibrium}
+\section{Reaction Networks and Nuclear Statistical Equilibrium}
 
-For this study we will use the 19 isotope ``aprox19'' network together
-with a table that gives the NSE abundances in regions where the system
-is in NSE.  The table provides:
+For this study we will use the 19 nuceli network containing
+\isot{H}{1}, \isot{He}{3}, \isot{He}{4}, \isot{C}{12}, \isot{N}{14},
+\isot{O}{16}, \isot{Ne}{20}, \isot{Mg}{24}, \isot{Si}{28},
+\isot{S}{32}, \isot{Ar}{36}, \isot{Ca}{40}, \isot{Ti}{44},
+\isot{Cr}{48}, \isot{Fe}{52}, \isot{Fe}{54}, \isot{Ni}{56}, protons
+(from photodisintegration), and neutrons.  This is based on the
+``aprox19'' network from \cite{aprox19} and originally described in
+\cite{Kepler}.  We combine this with a table that gives the nuclear
+statistical equilibrium (NSE) abundances in regions where the system
+is in NSE.  The NSE table was generated using a 127 nuclei reaction
+network and is the same as described in \cite{ma:2013}.  In our
+simulations, we carry all 19 isotopes in the main network in each zone
+and advect them in the hydrodynamics portion of the algorithm.  The
+composition of the larger 127 nuclei network is mapped into the 19
+isotopes we carry according to table~\ref{table:nuclei}.
+
+The NSE table provides:
 \begin{align}
 Y_e &= \sum_k \frac{Z_k X_k}{A_k} \\
 \bar{A} &= \left [ \sum_k \frac{X_k}{A_k} \right ]^{-1} \\
@@ -646,8 +660,7 @@ equation in the hydro part of the advancement.  In the SDC algorithm,
 there will be a reactive source (an $\Ic_q$) for each of these that is
 computed in the same manner as above.
 
-The NSE table was generated using a 125 nuclei reaction network and is
-the same as described in \cite{ma:2013}.  The compositional quantities
+ The compositional quantities
 it carries, $\bar{A}$ and $Y_e$ and not representable from the 19
 isotopes we carry in the main network. For this reason, when we are
 using the NSE network, we always take the composition quantities in
@@ -739,6 +752,15 @@ where the Fe-group nuclei are \isot{Cr}{48}, \isot{Fe}{52}, \isot{Fe}{54}, and \
 of a reacting hydrodynamic algorithm.  We run that same test here with the
 simplified SDC algorithm.
 
+
+\subsection{Detonation}
+
+The purpose here is to look at what timestep is taken when we use the nuclear burning limiters.
+Run with aprox19 only, Strang and SDC, then aprox19 + NSE, Strang and NSE.
+
+\subsection{Massive Star}
+
+Play around with the threshold where NSE kicks in
 
 \section{Summary}
 
