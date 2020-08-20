@@ -189,14 +189,24 @@ Things to show:
 \begin{figure}[t]
 \centering
 \plotone{time_series_500}
-\caption{Time series of the 500 Hz run showing $\bar{A}$.}
+\caption{\label{fig:time_series_500} Time series of the 500 Hz run showing $\bar{A}$.}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \plotone{time_series_1000}
-\caption{Time series of the 1000 Hz run showing $\bar{A}$.}
+\caption{\label{fig:time_series_1000} Time series of the 1000 Hz run showing $\bar{A}$.}
 \end{figure}
+
+Figures~\ref{fig:time_series_500} and \ref{fig:time_series_1000} show
+time series of the mean molecular weight for the 500~Hz and 1000~Hz
+runs.  Compared to those in \cite{flame_wave1}, ashes behind the flame
+do not reach as high atomic weights.  This is not surprising, since
+those early runs boosted the reaction rates.  Comparing these two new
+runs, we see that the burning is much more evolved for the higher
+rotation rate.  We believe that this is because the rotation confines
+the initial perturbation and subsequent expansion from the burning
+better, allowing the reactions to progress further.
 
 lateral profiles of X vs distance behind the flame
 
@@ -204,16 +214,18 @@ vertical profiles of the atmosphere behind the flame---how does it compare to is
 
 what is the composition on the photosphere across the flame
 
-different initial models?
-
 different rotation rates 
 
-look at flame speed, shape of flame, amount of mixing (e.g. it looks like slower rotation rates have less mixed flames as the hurricane is less strong.)
+shape of flame, amount of mixing (e.g. it looks like slower rotation rates have less mixed flames as the hurricane is less strong.)
+
+
+Figure~\ref{fig:flame_speeds} shows the position of the flame as a
+function of time.  Defining the position is difficult, so we \MarginPar{need explanation here}
 
 \begin{figure}[t]
 	\centering
 	\plottwo{speeds_1_100th_max.pdf}{speeds_1_1000th_max.pdf}
-	\caption{Plots of flame front position vs.\ time for the 500 Hz and 1000 Hz runs. The left-hand plot shows the results when tracking the $\frac{1}{100} \max[\enucdot]$ contour, while the right-hand plot shows the results for the $\frac{1}{1000} \max[\enucdot]$ contour.}
+	\caption{\label{fig:flame_speeds} Plots of flame front position vs.\ time for the 500 Hz and 1000 Hz runs. The left-hand plot shows the results when tracking the $\frac{1}{100} \max[\enucdot]$ contour, while the right-hand plot shows the results for the $\frac{1}{1000} \max[\enucdot]$ contour.}
 \end{figure}
 
 Looking at the phase plots in Figures~\ref{fig:urho}-\ref{fig:abar}, we see:
