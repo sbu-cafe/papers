@@ -159,8 +159,10 @@ Unlike our previous paper, all runs are now conducted without artificially boost
 
 
 We investigate the effect of rotation rate on the flame. With the exception of (citation to the weird 11 Hz flame), most observations of XRBs come from sources with rotation rates of 200-600Hz \citep{bilous:2019,galloway:2020} \MarginPar{check whether this is true for XRBs or just burst oscillations}. There are a number of factors that could explain this lack of observations below 200 Hz. It could be that there is some physical process which inhibits the flame ignition and/or spread at lower rotation rates. It could be that burst oscillations at lower rotation rates are smaller in amplitude and therefore more difficult to detect. It could be that it's not got anything to do with the flame at all, but that neutron stars in accreting low mass X-ray binaries rarely have rotation rates below 200 Hz \MarginPar{look into this?}. 
+ 
+Previous studies have found that rotation can have a significant affect on the flame's propagation. As the rotation rate increases, the Coriolis force whips the spreading flame up into a hurricane-like structure \citep{spitkovsky2002,cavecchi:2013}. The stronger Coriolis force leads to greater confinement of the hot accreted matter, leading to easier ignition of the flame \citep{art-2015-cavecchi-etal}. 
 
-Insert some stuff here about previous work on rotation 
+Previous work has predicted that crustal heating is stronger a lower accretion rates and weaker at higher accretion rates, due to the effect of neutrino losses \citep{Cumming2006,johnston:2019}. In our models, we keep the crust at a constant temperature, so by increasing this temperature we can effectively increase the crustal heating and mimic the effects of lower accretion rates. A shallow heating mechanism of as yet unknown origin has been found necessary to reproduce observed properties of XRBs \citep{Deibel2015,Turlione2015,Keek2017}.
 
 In the following sections, we conduct a series of simulations at various rotation rates to investigate its effect on the flame. We find that at lower rotation rates, the flame itself becomes harder to ignite. We discuss the implications that this may have for burst physics and observations. 
 
@@ -280,6 +282,7 @@ System Bibliographic Services.
 \software{AMReX \citep{amrex_joss},
           Castro \citep{castro},
           GCC (\url{https://gcc.gnu.org/}),
+          Jupyter \citep{Kluyver2016},
           linux (\url{https://www.kernel.org/}),
           matplotlib (\citealt{Hunter:2007}, \url{http://matplotlib.org/}),
           NumPy \citep{numpy,numpy2},
