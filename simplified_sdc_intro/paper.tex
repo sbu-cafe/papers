@@ -648,14 +648,14 @@ where $B_k$ is the binding energy of nucleus $k$.  In our simulations,
 we store these 3 quantities as auxiliary data that is carried along
 with the rest of the fluid state in each zone.
 
-For Strang split coupling of hydro and reactions, $DX_k/Dt = 0$,
 and our evolution equations are:
 \begin{align}
-\frac{DY_e}{Dt} &= \sum_k \frac{Z_k}{A_k} \frac{DX_k}{Dt} = 0 \\
-\frac{D}{Dt} \frac{1}{\bar{A}} &= - \frac{1}{\bar{A}^2} \frac{D\bar{A}}{Dt} = \sum_k \frac{1}{A_k} \frac{DX_k}{Dt} = 0 \rightarrow \frac{D\bar{A}}{Dt} = 0 \\
-\frac{D}{Dt} \left (\frac{B}{A} \right ) &= \sum_k \frac{B_k}{A_k} \frac{DX_k}{Dt} = 0
+\frac{DY_e}{Dt} &= \sum_k \frac{Z_k}{A_k} \frac{DX_k}{Dt} = \sum_k \frac{Z_k}{A_k} \omegadot_k \\
+\frac{D\bar{A}}{Dt} &= -\bar{A}^2 \sum_k \frac{1}{A_k} \frac{DX_k}{Dt} = -\bar{A}^2 \sum_k \frac{1}{A_k} \omegadot_k \\
+\frac{D}{Dt} \left (\frac{B}{A} \right ) &= \sum_k \frac{B_k}{A_k} \frac{DX_k}{Dt} = \sum_k \frac{B_k}{A_k} \omegadot_k
 \end{align}
-Therefore each of these auxillar equations obeys an advection
+For Strang split coupling of hydro and reactions, $DX_k/Dt = 0$,
+Therefore each of these auxillary equations obeys an advection
 equation in the hydro part of the advancement.  In the SDC algorithm,
 there will be a reactive source (an $\Ic_q$) for each of these that is
 computed in the same manner as above.
@@ -676,9 +676,14 @@ is as follows:
 \begin{itemize}
 \item {\em Initialize the problem}
 
-  In addition to initializing the mass fractions, $X_k$, we also fill
-  the auxiliary composition data, $Y_e$, $\bar{A}$, and $(B/A)$, using
-  these $X_k$.
+  We initializing the mass fractions, $X_k$, and then compute the
+  electron fraction, $Y_e$, from them.  For the two other composition
+  quantities we carry, $\bar{A}$, and $(B/A)$, we need values that are
+  consistent with the value of $Y_e$ and the nuclei stored in the NSE
+  table.  Therefore, if the thermodynamic conditions put us in NSE
+  (using the conditions defined below), then we get $\bar{A}$ and
+  $(B/A)$ from the NSE table.  Otherwise, we compute these directly
+  from $X_k$.  $X_k$.
 
 \item {\em Hydrodynamics update}
 
@@ -753,6 +758,12 @@ of a reacting hydrodynamic algorithm.  We run that same test here with the
 simplified SDC algorithm.
 
 Also explore: PLM vs PPM, 1 vs. 2 vs. 3 iterations
+
+\subsection{NSE convergence test problem}
+
+To test the coupling of the NSE table to the hydrodynamics, we run a
+similar problem as above, except with the thermodynamic conditions
+appropriate for the matter to be in NSE.
 
 \subsection{Detonation}
 
