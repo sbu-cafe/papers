@@ -199,24 +199,40 @@ where
 \Uc = \left ( \begin{array}{c}
            \rho \\
            \rho X_k \\
+           \rho \alpha_l \\
            \rho u \\
            \rho E \end{array}\right )
 \end{equation}
-are the conserved fluid quantities: mass density, $\rho$, velocity, $u$,
-specific total energy, $E$, and nuclear
-species mass fractions, $X_k$.  The specific total energy relates to
-the specific internal energy as $E = e + u^2/2$.  The
-corresponding fluxes are
+are the conserved fluid quantities: mass density, $\rho$, velocity,
+$u$, specific total energy, $E$, and nuclear species mass fractions,
+$X_k$, and auxiliary composition variables, $a_l$.  The mass fractions
+are constrained to sum to 1, $\sum_k X_k = 1$, but no such constraint
+exists on the auxiliary variables.  The specific total energy relates
+to the specific internal energy as $E = e + u^2/2$.  The corresponding
+fluxes are
 \begin{equation}
 \Fb^\xv (\Uc) = \left ( \begin{array}{c}
-   \rho u \\ \rho X_k u \\ \rho u u + p \\  \rho u E + u p
+   \rho u \\
+   \rho X_k u \\
+   \rho \alpha_l u \\
+   \rho u u + p \\
+   \rho u E + u p
    \end{array} \right )
 \end{equation}
-Here the pressure, $p$, enters, and is found via the equation of state,
+Here the pressure, $p$, enters, and is found via the equation of state.  For a system
+where the composition is completely specified by the mass fractions, $X_k$, the equation
+of state would take the form:
 \begin{equation}
 p = p(\rho, X_k, e)
 \end{equation}
-
+However, as we'll see shortly, when we use the NSE table, we are using
+the results of a much larger network then can be represented by the
+mass fractions, and in this case, we rely on the auxiliary composition
+variables, $\alpha_l$, to describe the state of the composition, and
+our EOS has the form:
+\begin{equation}
+p = p(\rho, \alpha_l, e)
+\end{equation}
 
 We decompose the source terms, $\Sc(\Uc)$, into
 hydrodynamical sources, $\Hb$ (like gravity), and reactive sources,
@@ -228,7 +244,11 @@ $\Rb$,
 sources take the form:
 \begin{equation}
   \Rb(\Uc) = \left ( \begin{array}{c}
-     0 \\ \rho \omegadot_k \\ 0 \\ \rho \dot{S}
+     0 \\
+     \rho \omegadot(X_k) \\
+     \rho \omegadot(\alpha_l) \\
+     0 \\
+     \rho \dot{S}
   \end{array} \right )
 \end{equation}
 where $\omegadot_k$ is the creation rate for species $k$ and $\dot{S}$
@@ -239,6 +259,7 @@ Sometimes it is preferable to work with the primitive variables,
 \qb = \left ( \begin{array}{c}
   \rho \\
   X_k \\
+  \alpha_l \\
   u \\
   p \\
   (\rho e) \\
@@ -252,12 +273,13 @@ as:
 with the matrix $\Ab^\xv$ giving the coefficients of the spatial derivatives
 of the primitive variables:
 \begin{equation}
-\Ab^\xv(\qb) = \left ( \begin{array}{ccccc}
-    u & 0 & \rho & 0 & 0 \\
-    0 & u & 0    & 0 & 0 \\
-    0 & 0 & u    & 1/\rho & 0 \\
-    0 & 0 & \Gamma_1 p & u & 0 \\
-    0 & 0 & \rho h & 0 & u
+\Ab^\xv(\qb) = \left ( \begin{array}{cccccc}
+    u & 0 & 0 & \rho & 0 & 0 \\
+    0 & u & 0 & 0    & 0 & 0 \\
+    0 & 0 & u & 0    & 0 & 0 \\
+    0 & 0 & 0 & u    & 1/\rho & 0 \\
+    0 & 0 & 0 & \Gamma_1 p & u & 0 \\
+    0 & 0 & 0 & \rho h & 0 & u
   \end{array} \right )
 \end{equation}
 where $\Gamma_1$ is an adiabatic index, $\Gamma_1 = d\log p/d\log\rho
