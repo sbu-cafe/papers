@@ -239,7 +239,11 @@ $\Rb$,
 sources take the form:
 \begin{equation}
   \Rb(\Uc) = \left ( \begin{array}{c}
-     0 \\ \rho \omegadot_k \\ 0 \\ \rho \dot{S}
+     0 \\
+     \rho \omegadot(X_k) \\
+     \rho \omegadot(\alpha_l) \\
+     0 \\
+     \rho \dot{S}
   \end{array} \right )
 \end{equation}
 where $\omegadot_k$ is the creation rate for species $k$ and $\dot{S}$
@@ -250,6 +254,7 @@ Sometimes it is preferable to work with the primitive variables,
 \qb = \left ( \begin{array}{c}
   \rho \\
   X_k \\
+  \alpha_l \\
   u \\
   p \\
   (\rho e) \\
@@ -263,12 +268,13 @@ as:
 with the matrix $\Ab^\xv$ giving the coefficients of the spatial derivatives
 of the primitive variables:
 \begin{equation}
-\Ab^\xv(\qb) = \left ( \begin{array}{ccccc}
-    u & 0 & \rho & 0 & 0 \\
-    0 & u & 0    & 0 & 0 \\
-    0 & 0 & u    & 1/\rho & 0 \\
-    0 & 0 & \Gamma_1 p & u & 0 \\
-    0 & 0 & \rho h & 0 & u
+\Ab^\xv(\qb) = \left ( \begin{array}{cccccc}
+    u & 0 & 0 & \rho & 0 & 0 \\
+    0 & u & 0 & 0    & 0 & 0 \\
+    0 & 0 & u & 0    & 0 & 0 \\
+    0 & 0 & 0 & u    & 1/\rho & 0 \\
+    0 & 0 & 0 & \Gamma_1 p & u & 0 \\
+    0 & 0 & 0 & \rho h & 0 & u
   \end{array} \right )
 \end{equation}
 where $\Gamma_1$ is an adiabatic index, $\Gamma_1 = d\log p/d\log\rho
