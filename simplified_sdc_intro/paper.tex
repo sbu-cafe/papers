@@ -79,6 +79,11 @@
 
 \newcommand{\nse}[1]{{\mathrm{NSE}( #1 )}}
 
+\newcommand{\rhonse}{{\rho_\mathrm{nse}}}
+\newcommand{\tnse}{{T_\mathrm{nse}}}
+\newcommand{\Anse}{{A_\mathrm{nse}}}
+\newcommand{\Bnse}{{B_\mathrm{nse}}}
+
 \newcommand{\out}{{\rm out}}
 \newcommand{\inp}{{\rm in}}
 
@@ -431,6 +436,8 @@ compressible hydrodynamics below.
 
 \item {\em Initialization}
 
+\label{sec:initialization}
+
   \begin{itemize}
   \item We need an approximation to how much the reactions alone
     changed the primitive variable state over the timestep, which we
@@ -698,15 +705,19 @@ $X_k$.
 
 \subsection{NSE condition}
 
-We use the following conditions to determine if we are in NSE:
+We treat a zone as being in NSE if the density and temperature exceed
+some threshold and the composition is mainly $\alpha$ and Fe-group
+nuclei, where the Fe-group nuclei are \isot{Cr}{48}, \isot{Fe}{52},
+\isot{Fe}{54}, and \isot{Ni}{56}.  The full condition is:
 \begin{align}
-\rho &> \rho_\mathrm{nse} \\
-T &> T_\mathrm{nse} \\
-X(\isotm{C}{12}) &< A_\mathrm{nse} \\
-X(\isotm{He}{4}) + \sum_{k \in {\rm Fe-group}} X_k &> B_\mathrm{nse} 
+\rho &> \rhonse \\
+T &> \tnse \\
+X(\isotm{C}{12}) &< \Anse \\
+X(\isotm{He}{4}) + \sum_{k \in \mathrm{Fe-group}} X_k &> \Bnse
 \end{align}
-where the Fe-group nuclei are \isot{Cr}{48}, \isot{Fe}{52}, \isot{Fe}{54}, and \isot{Ni}{56}.
-
+Typical values are $\rhonse = 3\times 10^8~\gcc$, $T_\mathrm{nse} =
+3\times 10^9~\mathrm{K}$, and $\Anse = 0.12$ and $\Bnse=
+0.88$---these are the values used in \citet{ma:2013}.
 
 \subsection{Strang-split algorithm for NSE}
 
@@ -799,6 +810,26 @@ is as follows:
 
 \subsection{SDC-NSE Coupling}
 
+With SDC evolution, when we are in NSE, we need to do the advective
+and reactive updates together.  With the tabulated NSE reaction
+values, we get instantaneous values of the reaction sources, but the only
+time derivative we have is for $Y_e$.  We will
+use a basic predictor-corrector update:
+\begin{equation}
+\Uc^\star = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2} + \Delta t \Rb (\Uc^n)
+\end{equation}
+where $\Rb(\Uc^n)$ is the reaction source vector evaluated by calling the NSE
+table with the time-level $n$ state.
+In particular, this will also operate on the auxiliary composition variables,
+including $Y_e$:
+\begin{equation}
+(\rho Y_e)^\star = (\rho Y_e)^n + \Delta t \Adv{\rho Y_e}^{n+1/2} + \Delta t \rho (dY_e/dt)^n
+\end{equation}
+From this, we get $\rho^\star$, $(Y_e)^\star$, $(X_k)^\star$, and
+$e^\star$.  In order call the get the temperature, we need to call the
+EOS which requires $\bar{A}^\star$.  Since we cannot use the NSE table
+without the temperature, we need to 
+
 
 \section{Simulations}
 
@@ -814,7 +845,37 @@ Also explore: PLM vs PPM, 1 vs. 2 vs. 3 iterations
 
 To test the coupling of the NSE table to the hydrodynamics, we run a
 similar problem as above, except with the thermodynamic conditions
-appropriate for the matter to be in NSE.
+appropriate for the matter to be in NSE.  The initial conditions are:
+\begin{align}
+\rho &= \rho_0 \\
+T &= T_0 \left [ 1 + (\delta T) e^{-(r/\lambda)^2} \cos^6(\pi r/L) \right ] \\
+Y_e &= (Y_e)_0 \left [ 1 + (\delta Y_e) e^{-(r/\lambda)^2} \cos^6(\pi r/L) \right ] 
+\end{align}
+where $r$ is the distance from the center of the domain and the
+remaining parameters are listed in Table~\ref{table:nse}.  This has
+$Y_e$ varying between $[0.47, 0.5]$ initially\MarginPar{check}.  The mass fractions
+and remaining composition variables are then initialized from the NSE table, as described in section~\ref{sec:initialization}.
+
+The domain has a size $[0, L]^2$, and the timestep is fixed as:
+\begin{equation}
+\Delta t = 5\times 10^{-4} \left ( \frac{128}{N} \right )~\mathrm{s}
+\end{equation}
+where $N$ is the number of zones in each direction.
+
+\begin{deluxetable}{lcc}
+\tablecaption{\label{table:nse} NSE convergence test problem.}
+\tablehead{\colhead{parameter} & \colhead{value}}
+\startdata
+$\rho_0$ & $5\times 10^8~\gcc$ \\
+$T_0$    & $4\times 10^9~\mathrm{K}$ \\
+$(\delta T)$ & $0.2$ \\
+$(Y_e)_0$   & $0.5$ \\
+$(\delta Y_e)$ & $-0.05$ \\
+$\lambda$   & $2\times 10^7~\mathrm{cm}$ \\
+$L$         & $10^8~\mathrm{cm}$ \\
+\enddata
+\end{deluxetable}
+
 
 \subsection{Detonation}
 
