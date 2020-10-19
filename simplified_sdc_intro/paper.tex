@@ -251,7 +251,8 @@ sources take the form:
      \rho \dot{S}
   \end{array} \right )
 \end{equation}
-where $\omegadot_k$ is the creation rate for species $k$ and $\dot{S}$
+where $\omegadot(X_k)$ is the creation rate for species $k$, $\omegadot(\alpha_l)$ is the creation rate for
+auxiliary composition variable $l$, and $\dot{S}$
 is the energy generation rate per unit mass.
 
 Sometimes it is preferable to work with the primitive variables,
@@ -294,9 +295,11 @@ sources (now in terms of the primitive variables) and reaction terms,
 \end{equation}
 with
 \begin{equation}
+\label{eq:prim_sources}
 \Rb(q) = \left ( \begin{array}{c}
      0 \\
-     \omegadot_k \\
+     \omegadot(X_k) \\
+     \omegadot(\alpha_l) \\
      0 \\
      \Gamma_1 p \sigma \Sdot \\
      \rho \Sdot
@@ -337,7 +340,8 @@ In the absence of advective terms, our reaction system appears as just
 $d\Uc/dt = \Rb(\Uc)$, or:
 \begin{align}
 \odt{\rho} & = 0 \\
-\odt{(\rho X_k)} &= \rho \omegadot_k \\
+\odt{(\rho X_k)} &= \rho \omegadot(X_k) \\
+\odt{(\rho \alpha_l)} &= \rho \omegadot(\alpha_l) \\
 \odt{(\rho u)} &= 0 \\
 \odt{(\rho E)} &= \rho \Sdot
 \end{align}
@@ -404,10 +408,10 @@ timestep limiters based on the energy generation or abundance changes
 over a timestep:
 \begin{align}
 \label{eq:dt:nuce}
-\Delta t &\le f_e\, \min_{i} \left\{\frac{e_{i}}{\dot{e}_{i}}\right\} \\
+\Delta t &\le f_e\, \min_{i} \left\{\frac{e_{i}}{\dot{S}_{i}}\right\} \\
 %
 \label{eq:dt:nucX}
-\Delta t &\le f_X\, \min_{i} \left\{\min_{k,X_k > \epsilon_X}\frac{{X_k}_{i}}{{\omegadot_{k,i}}}\right\}
+\Delta t &\le f_X\, \min_{i} \left\{\min_{k,X_k > \epsilon_X}\frac{{X_k}_{i}}{{\omegadot(X_k)_i}}\right\}
 \end{align}
 where $i$ is the zone index and $f_e$ and $f_X$ are runtime parameters
 used to control the allowed change, and only species for which $X_k > \epsilon_X$ are considered.
@@ -420,8 +424,12 @@ failing to converge in the implicit solve, or violation of one of the
 timestep limiters during the step.  This means that equations
 \ref{eq:dt:nuce} and \ref{eq:dt:nucX} are not reactive, but instead
 guaranteed to be met throughout the simulation, because the step is
-rejected if they are violated.  The retry mechanism in \castro\ works
-with both the Strang and simplified-SDC integration scheme.
+rejected if they are violated.  This contrasts to similar approaches
+used in other codes where conditions \ref{eq:dt:nuce} and
+\ref{eq:dt:nucX} are used to restrict the next timestep size, but the
+update over the current step is kept, which already violated the
+constraints. \MarginPar{would be nice to have a reference here} The retry mechanism in \castro\ works with both the
+Strang and simplified-SDC integration scheme.
 
 
 \subsection{Spectral Deferred Corrections}
@@ -615,7 +623,8 @@ compressible hydrodynamics below.
       \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^n}{\Delta t} - \Adv{\qb}^{n+1/2,(k)}
     \end{equation}
     but we need the advective update for $\qb$, which we have not
-    constructed.  Additionally, we cannot simply use the equation of
+    constructed.  We note that $\Ic^{(k)}_\qb$ is an approximation to the integral of 
+    Eq.~\ref{eq:prim_sources} over the timestep.  Additionally, we cannot simply use the equation of
     state on $\Ic^{(k)}_{\Uc}$ since this is a time-derivative and
     does not represent a well-defined state in itself.  Instead, we
     derive $\Ic^{(k)}_{\qb}$ via a multi-step process.  We first find
