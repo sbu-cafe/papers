@@ -492,7 +492,9 @@ compressible hydrodynamics below.
   Iterate from $k = 0, \ldots, \smax-1$.  For second-order accuracy,
   $\smax = 2$ is sufficient.  In addition to denoting the time-level
   with a superscript (like $n$ or $n+1$), we'll use a second subscript
-  in parentheses to keep track of the iteration.
+  in parentheses to keep track of the iteration.  A single iteration
+  starts with $\Uc^n$ and results in the new time-level state for that
+  iteration, $\Uc^{n+1,(k)}$.
 
   \begin{itemize}
   \item {\em Create the advective update term, $\Adv{\Uc}^{n+1/2,(k)}$}
@@ -555,7 +557,7 @@ compressible hydrodynamics below.
     with
     \begin{equation}
       \Shydro^{n+1/2} = \left ( \begin{array}{c}
-                     0 \\ 0 \\
+                     0 \\ 0 \\ 0 \\
                     {\bf S}_{\rho\Ub}^{n+1/2} \cdot \ex \\
                     S_{\rho E}^{n+1/2} \end{array} \right )
     \end{equation}
@@ -575,8 +577,9 @@ compressible hydrodynamics below.
     of advection as we integrate the reactions.  The ODE form of this
     is
     \begin{equation}
-      \odt{\Uc} = \Adv{\Uc}^{n+1,(k)} + \Rb(\Uc)
+      \odt{\Uc} = \Adv{\Uc}^{n+1/2,(k)} + \Rb(\Uc)
     \end{equation}
+    This integration begins with $\Uc^n$ and results in $\Uc^{n+1,(k)}$.
 
     As we are integrating this system we need to get the
     temperature, $T$, for the rate evaluations.  We construct this
@@ -603,9 +606,6 @@ compressible hydrodynamics below.
       \rho(t) &= \rho^n + \Adv{\rho}^{n+1/2,(k)} \, t \\
       (\rho \Ub)(t) &= (\rho \Ub)^n + \Adv{\rho \Ub}^{n+1/2,(k)} \, t
     \end{align}
-
-    At the end of this integration, we have the state at the next iteration,
-    $\Uc^{n+1,(k+1)}$
 
   \item {\em Compute the Reactive Source Terms.}
 
