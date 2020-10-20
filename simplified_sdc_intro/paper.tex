@@ -46,6 +46,7 @@
 \newcommand{\dedTd}{\left . \frac{\partial{}e}{\partial{}T} \right |_{\rho,X_k}}
 
 \newcommand{\Ic}{{\boldsymbol{\mathcal{I}}}}
+\newcommand{\Ics}{{\mathcal{I}}}
 \newcommand{\smax}{{s_\mathrm{max}}}
 \newcommand{\kth}{k_\mathrm{th}}
 \usepackage{bm}
@@ -849,18 +850,54 @@ use a basic predictor-corrector update:
 \begin{equation}
 \Uc^\star = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2} + \Delta t \Rb (\Uc^n)
 \end{equation}
-where $\Rb(\Uc^n)$ is the reaction source vector evaluated by calling the NSE
-table with the time-level $n$ state.
-In particular, this will also operate on the auxiliary composition variables,
-including $Y_e$:
+Calling the NSE table on the starting state gives use:
+\begin{equation}
+\nse{\rho^n, T^n, (Y_e)^n} \rightarrow \bar{A}^n, (X_k)^n, (B/A)^n, (dY_e/dt)^n
+\end{equation}
+To get the reactive source, we need to use the iteratively-lagged information
+from $\Ic_q^{n+1/2,(k-1)}$:
+\begin{equation}
+\Rb(\Uc^n) \approx \left (\begin{array}{c}
+  0 \\
+  \rho^n \Ics_q(\omegadot(X_k)) \\
+  \rho^n \Ics_q(\omegadot(\alpha_l)) \\
+  0 \\
+  \Ics_q(\rho e) 
+\end{array}
+\right )
+\end{equation}
+Since we have $(dY_e/dt)^n$ from the table, we replace the source for $Y_e$ in the above
+$\Rb(\Uc^n)$ as:
+\begin{equation}
+R(\rho Y_e) = \rho (dY_e/dt)^n
+\end{equation}
+which gives an update for the electron fraction as:
 \begin{equation}
 (\rho Y_e)^\star = (\rho Y_e)^n + \Delta t \Adv{\rho Y_e}^{n+1/2} + \Delta t \rho (dY_e/dt)^n
 \end{equation}
-From this, we get $\rho^\star$, $(Y_e)^\star$, $(X_k)^\star$, and
-$e^\star$.  In order call the get the temperature, we need to call the
-EOS which requires $\bar{A}^\star$.  Since we cannot use the NSE table
-without the temperature, we need to 
-
+From this prediction, we get $\rho^\star$, $\alpha_l^\star$, and
+$e^\star$, which allows us to call the EOS and get an updated
+temperature, $T^\star$.
+We can then again call the NSE table:
+\begin{equation}
+\nse{\rho^\star, T^\star, (Y_e)^\star} \rightarrow \bar{A}^{n+1,(k)}, (X_k)^{n+1,(k)}, (B/A)^{n+1,(k)}, (dY_e/dt)
+\end{equation}
+where we use the outputs to define the new values of the composition variables.
+Since the density and momenta don't have reactive sources, we just use the $\Uc^\star$ state
+as their new values:
+\begin{align}
+\rho^{n+1,(k)} &= \rho^\star \\
+(\rho u)^{n+1,(k)} &= (\rho u)^\star
+\end{align}
+We then compute the energy release as
+\begin{equation}
+       (\rho \Sdot)^{n+1/2} = \left [ \rho^{n+1,(k)} \left ( \frac{B}{A} \right )^{n+1,(k)} -
+                            \rho^n \left ( \frac{B}{A} \right )^n \right ] N_A \frac{1}{\Delta t}
+\end{equation}\MarginPar{is this right?}
+and then do the final update of the total energy:
+\begin{equation}
+(\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Adv{\rho E}^{n+1/2} + (\rho \Sdot)^{n+1/2}
+\end{equation}
 
 \section{Simulations}
 
