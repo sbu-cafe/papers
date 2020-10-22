@@ -145,10 +145,10 @@ simulation code, but competition between physical processes can cause
 the coupling to breakdown.  In general, the error in the splitting
 controlled by the timestep.
 
-A particular difficult phase of evolution to model is the nuclear
-statistic equilibrium that sets in with helium burning for
+A particularly difficult phase of evolution to model is the nuclear
+statistical equilibrium that sets in with helium burning for
 temperatures in excess of $4\times 10^9~\mathrm{K}$.  Physically, the
-forward and reverse rates should balance leading to an equilibrium.
+forward and reverse rates of reaction should balance leading to an equilibrium.
 With operator splitting, an NSE region will have a large positive flow
 through the network in a zone in one step followed by a large negative
 flow over the next timestep, as the code struggles to produce an
@@ -165,7 +165,7 @@ table look-ups (e.g.\ \citealt{ma:2013}) \MarginPar{need more here}
 In \cite{castro_sdc}, we developed second- and fourth-order accurate
 methods in space and time for coupling hydrodynamics and nuclear
 reaction networks based on spectral deferred corrections (SDC)
-methods, and demonstrated the method of a variety of test problems.
+methods, and demonstrated the method in a variety of test problems.
 The approach presented here is considerably simpler, reusing the main
 CTU hydrodynamics construction and a largely similar ODE integration
 scheme, making this method easier to add to existing simulation codes.
@@ -173,7 +173,7 @@ However, it is restricted to second-order accuracy overall.  We term
 this algorithm the ``simplified SDC method''.  We use the
 \castro\ hydrodynamics code \cite{castro} for all of our numerical
 experiments, and all of the code to reproduce the results in this
-paper are in the \castro\ github
+paper is in the \castro\ github
 repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 
 \section{Numerical Methodology}
@@ -283,7 +283,7 @@ algebraically identical to that shown in Eq.~25 of \cite{castro}.
 
 
 We use the \castro\ hydrodynamics code~\cite{castro}, together with
-the corner transport upwind piecewise parabolic method
+corner transport upwind piecewise parabolic method
 hydrodynamics~\citep{millercolella:2002}.  This is a finite-volume
 method that uses characteristic tracing to predict a time-centered
 flux through the interfaces of the grid zones.  For pure
@@ -323,7 +323,7 @@ The reaction rates are typically expressed as $\omegadot_k(\rho, T,
 X_k)$, when we evolve this system.  This requires an EOS inversion to get $T$ from $e$ each
 time we need to evaluate the reactive terms.
 
-Normally we want to integrate temperature temperature.  We can write the
+Normally we want to integrate the temperature.  We can write the
 energy equation as:
 \begin{equation}
 \rho \odt{e} = \rho \left [ \underbrace{\left . \frac{\partial e}{\partial T} \right |_\rho}_{c_v}
@@ -384,7 +384,7 @@ used to control the allowed change, and only species for which $X_k > \epsilon_X
 \castro\ has the ability to reject a timestep if it detects a failure
 and retry with smaller timesteps (subcycling to make up the original
 required timestep).  Among the conditions that can trigger this are
-density failing below zero during advection, the ODE integration
+density falling below zero during advection, the ODE integration
 failing to converge in the implicit solve, or violation of one of the
 timestep limiters during the step.  This means that equations
 \ref{eq:dt:nuce} and \ref{eq:dt:nucX} are not reactive, but instead
@@ -417,7 +417,7 @@ midpoint in time, to achieve second-order accuracy, giving us:
 \end{equation}
 This is the approach first shown in \citep{SDC-old}.  A
 version of this was also implemented in the \maestro\ low-Mach number
-hydrodynamics code some time ago.  A compressible version, for use in
+hydrodynamics code some time ago.  The compressible version for use in
 \castro\ is slightly different due to the need to do some operations
 on the conserved variable state and some on the primitive variable
 state.  We describe the application of this to the equations of
@@ -428,7 +428,7 @@ compressible hydrodynamics below.
 \item {\em Initialization}
 
   \begin{itemize}
-  \item We need an approximation to how much the reactions alone
+  \item We need an approximation of how much the reactions alone
     changed the primitive variable state over the timestep, which we
     will denote $\Ic_q$.  Since we do not have any information about
     the current timestep in the first iteration,
@@ -622,7 +622,7 @@ compressible hydrodynamics below.
 
 \section{Reaction Networks and Nuclear Statistical Equilibrium}
 
-For this study we will use the 19 nuceli network containing
+For this study we will use the 19 nuclei network containing
 \isot{H}{1}, \isot{He}{3}, \isot{He}{4}, \isot{C}{12}, \isot{N}{14},
 \isot{O}{16}, \isot{Ne}{20}, \isot{Mg}{24}, \isot{Si}{28},
 \isot{S}{32}, \isot{Ar}{36}, \isot{Ca}{40}, \isot{Ti}{44},
@@ -655,13 +655,13 @@ and our evolution equations are:
 \frac{D}{Dt} \frac{1}{\bar{A}} &= - \frac{1}{\bar{A}^2} \frac{D\bar{A}}{Dt} = \sum_k \frac{1}{A_k} \frac{DX_k}{Dt} = 0 \rightarrow \frac{D\bar{A}}{Dt} = 0 \\
 \frac{D}{Dt} \left (\frac{B}{A} \right ) &= \sum_k \frac{B_k}{A_k} \frac{DX_k}{Dt} = 0
 \end{align}
-Therefore each of these auxillar equations obeys an advection
+Therefore each of these auxiliary equations obeys an advection
 equation in the hydro part of the advancement.  In the SDC algorithm,
 there will be a reactive source (an $\Ic_q$) for each of these that is
 computed in the same manner as above.
 
  The compositional quantities
-it carries, $\bar{A}$ and $Y_e$ and not representable from the 19
+it carries, $\bar{A}$ and $Y_e$, are not representable from the 19
 isotopes we carry in the main network. For this reason, when we are
 using the NSE network, we always take the composition quantities in
 the EOS directly from the auxiliary state in each zone instead of
@@ -801,7 +801,8 @@ Nuclear Security Administration.
           Linux (\url{https://www.kernel.org}),
           matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
           NumPy \citep{numpy,numpy2},
-          python (\url{https://www.python.org/})
+          python (\url{https://www.python.org/}), 
+          SymPy \citep{sympy}
          }
 
 
@@ -816,12 +817,12 @@ To solve the reaction system implicitly, the ODE solver needs the Jacobian,
 $\partial \Rb/\partial \Uc$.  We follow the method of \cite{castro_sdc}
 and factor this into two pieces,
 \begin{equation}
-{\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc}
-\end{equation}.
+{\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc}.
+\end{equation}
 
 Even though it has no reactive sources, we include $\rho$ in our conservative state
 for the purposes of computing the Jacobian (we denote the conserved state used for the
-Jacobian $\Uc^\prime$.
+Jacobian $\Uc^\prime$).
 Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
 \begin{equation}
 \Uc^\prime = \left ( \begin{array}{c} \rho \\ \rho X_\alpha \\ \rho X_\beta \\ \rho E \\ \rho e \end{array} \right )
