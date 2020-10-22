@@ -529,9 +529,9 @@ compressible hydrodynamics below.
           &- \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
       \end{align}
     Now the conservative hydrodynamics source terms are computed by first updating to the
-    new state with advection only\footnote{For a source like gravity, this update can be done first for $\rho$ and then define the new momentum source using $\rho^{\star\star}$ and likewise for energy}, as:
+    new state with advection and the old-time source term applied for the full $\Delta t$ as:
     \begin{equation}
-      \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)}
+      \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)} + \Delta t \Hb(\Uc^n)
     \end{equation}
     %% first updating the density to the new state with advection only as:
     %% \begin{equation}
@@ -550,18 +550,22 @@ compressible hydrodynamics below.
     %%   S_{\rho E}^{n+1/2} = \frac{1}{2} \left [ (\rho\Ub)^n \cdot \gb^n + (\rho\Ub)^{\star\star} \cdot \gb^{n+1,(k-1)}
     %%     \right ]
     %% \end{equation}
+    We then evaluate the source terms with $\Uc^{\star\star}$ and
+    correct the advective term so that we have a time-centered
+    source: \MarginPar{are we actually doing this correctly for SDC?}
+    The final advective update term is then\footnote{For a source like gravity, this update can be done first for $\rho$ and then define the new momentum source using $\rho^{\star\star}$ and likewise for energy}:
+    \begin{equation}
+      \Adv{\Uc}^{n+1/2,(k)}_{i} = \Advt{\Uc}^{n+1/2,(k)}_{i} +
+      \frac{\Delta t}{2} \left (\Shydro(\Uc^n) + \Shydro(\Uc^{\star\star}) \right )
+    \end{equation}
 
-    The final advective update term is then:
-    \begin{equation}
-      \Adv{\Uc}^{n+1/2,(k)}_{i} = \Advt{\Uc}^{n+1/2,(k)}_{i} + \Shydro^{n+1/2}
-    \end{equation}
-    with
-    \begin{equation}
-      \Shydro^{n+1/2} = \left ( \begin{array}{c}
-                     0 \\ 0 \\ 0 \\
-                    {\bf S}_{\rho\Ub}^{n+1/2} \cdot \ex \\
-                    S_{\rho E}^{n+1/2} \end{array} \right )
-    \end{equation}
+    %% with
+    %% \begin{equation}
+    %%   \Shydro^{n+1/2} = \left ( \begin{array}{c}
+    %%                  0 \\ 0 \\ 0 \\
+    %%                 {\bf S}_{\rho\Ub}^{n+1/2} \cdot \ex \\
+    %%                 S_{\rho E}^{n+1/2} \end{array} \right )
+    %% \end{equation}
 
     \MarginPar{if $\Shydro$ depended on the outcome of the burn, we might need to do things differently here}
 
