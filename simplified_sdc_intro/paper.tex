@@ -970,7 +970,7 @@ and remaining composition variables are then initialized from the NSE table, as 
 
 The domain has a size $[0, L]^2$, and the timestep is fixed as:
 \begin{equation}
-\Delta t = 5\times 10^{-4} \left ( \frac{128}{N} \right )~\mathrm{s}
+\Delta t = 10^{-3} \left ( \frac{64}{N} \right )~\mathrm{s}
 \end{equation}
 where $N$ is the number of zones in each direction.
 
@@ -988,6 +988,14 @@ $L$         & $10^8~\mathrm{cm}$ \\
 \enddata
 \end{deluxetable}
 
+Figure~\ref{fig:nse_ye} shows the $Y_e$ profile for the Strang evolution case.
+
+\begin{figure}[t]
+\centering
+\plotone{ye_plot}
+\caption{\label{fig:nse_ye} Profile of $Y_e$ through the middle of the domain (slicing along $x$)
+for the $128^2$ Strang method II NSE test simulation.}
+\end{figure}
 
 \begin{deluxetable}{lllllll}
 \tablecaption{\label{table:nse_strang_methodI} Convergence ($L_1$ norm) for the NSE convergence
