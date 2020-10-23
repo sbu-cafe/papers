@@ -74,6 +74,7 @@
 \newcommand{\Rq}{{\bf R}}
 \newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
 \newcommand{\Advt}[1]{{\left [\boldsymbol{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
+\newcommand{\Advss}[1]{{\left [{\mathcal{{A}}} \left(#1\right)\right]}}
 \newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
 
 \newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
@@ -179,11 +180,14 @@ methods, and demonstrated the method of a variety of test problems.
 The approach presented here is considerably simpler, reusing the main
 CTU hydrodynamics construction and a largely similar ODE integration
 scheme, making this method easier to add to existing simulation codes.
-However, it is restricted to second-order accuracy overall.  We term
-this algorithm the ``simplified SDC method''.  We use the
-\castro\ hydrodynamics code \cite{castro} for all of our numerical
-experiments, and all of the code to reproduce the results in this
-paper are in the \castro\ github
+It also extends to adaptive mesh refinement with subcycling in a
+straightforward manner, avoiding the complications described in
+\citep{mccorquodalecolella} needed to fill ghost cells when using
+method-of-lines integration.  However, it is restricted to
+second-order accuracy overall.  We term this algorithm the
+``simplified SDC method''.  We use the \castro\ hydrodynamics code
+\citep{castro} for all of our numerical experiments, and all of the
+code to reproduce the results in this paper are in the \castro\ github
 repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 
 \section{Numerical Methodology}
@@ -292,7 +296,7 @@ alternate formulations are possible \citep{colellaglaz:1985}.
 The source term vector, $\Sq$, can again be decomposed into hydrodynamic
 sources (now in terms of the primitive variables) and reaction terms,
 \begin{equation}
-  \Sq = \Sqhydro + \Rb(q)
+  \Sq = \Sqhydro + \Rb(\qb)
 \end{equation}
 with
 \begin{equation}
@@ -597,19 +601,17 @@ compressible hydrodynamics below.
     Jacobian usually used in reaction networks.  We describe the form
     of the Jacobian in appendix \ref{sec:app:jacobian}.
 
-    Note that our advection terms are piecewise constant \MarginPar{need to think about this more}
-    approximations, so when we integrate our system, their
-    contributions will be linear in time.  Since $(\rho X_k)$ sees a
-    linear advective term, $\rho$ does as well.  $(\rho \Ub)$ and
-    $(\rho E)$ will also have linear contributions in time from
-    advection.  We can see that the internal energy will also have a
-    linear contribution by recognizing that the kinetic energy term,
-    $K = (\rho |\Ub|^2)/\rho$ is linear in time.
-    Since the reactions don't affect $\rho$ and $(\rho \Ub)$, we can
-    algebraically update these using this piecewise linear behavior:
+    Note that our advection terms are piecewise
+    constant \MarginPar{need to think about this more} approximations,
+    so when we integrate our system, their contributions will be
+    linear in time.  Since $(\rho X_k)$ sees a linear advective term,
+    $\rho$ does as well.  $(\rho u)$ will also have linear
+    contributions in time from advection.  Since the reactions don't
+    affect $\rho$ and $(\rho u)$, we can algebraically update these
+    using this piecewise linear behavior:
     \begin{align}
-      \rho(t) &= \rho^n + \Adv{\rho}^{n+1/2,(k)} \, t \\
-      (\rho \Ub)(t) &= (\rho \Ub)^n + \Adv{\rho \Ub}^{n+1/2,(k)} \, t
+      \rho(t) &= \rho^n + \Advss{\rho}^{n+1/2,(k)} \, t \\
+      (\rho u)(t) &= (\rho u)^n + \Advss{\rho u}^{n+1/2,(k)} \, t
     \end{align}
 
   \item {\em Compute the Reactive Source Terms.}
@@ -831,7 +833,7 @@ is as follows:
           \nse{\rho, T, (Y_e)_\out} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
         \end{equation}
         This corrects the composition so that it is consistent with the updated
-        $Y_e$.  We use these values $\bar{A}_\out$, $(X_k)_\out$, and $(B/A)_\out$ to then complete the update, computing the energy as in Eq.~\ref{eq:nse_energy}.
+        $Y_e$.  We use these values $\bar{A}_\out$, $(X_k)_\out$, and $(B/A)_\out$ to then complete the update, computing the energy as in Eq.~\ref{eq:nse_energy}.  \MarginPar{we could imagine looping over the EOS to get an updated T and then the table to get the updated $\bar{A}$, to see if that converges?}
 
       \end{itemize}
 
@@ -877,7 +879,7 @@ R(\rho Y_e) = \rho (dY_e/dt)^n
 \end{equation}
 which gives an update for the electron fraction as:
 \begin{equation}
-(\rho Y_e)^\star = (\rho Y_e)^n + \Delta t \Adv{\rho Y_e}^{n+1/2} + \Delta t \rho (dY_e/dt)^n
+(\rho Y_e)^\star = (\rho Y_e)^n + \Delta t \Advss{\rho Y_e}^{n+1/2} + \Delta t \rho (dY_e/dt)^n
 \end{equation}
 From this prediction, we get $\rho^\star$, $\alpha_l^\star$, and
 $e^\star$, which allows us to call the EOS and get an updated
@@ -900,7 +902,7 @@ We then compute the energy release as
 \end{equation}\MarginPar{is this right?}
 and then do the final update of the total energy:
 \begin{equation}
-(\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Adv{\rho E}^{n+1/2} + (\rho \Sdot)^{n+1/2}
+(\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2} + (\rho \Sdot)^{n+1/2}
 \end{equation}
 
 \section{Simulations}
@@ -1049,8 +1051,10 @@ Play around with the threshold where NSE kicks in
 
 \section{Summary}
 
-We presented a simple spectral deferred corrections scheme for coupling
+We presented a simplified spectral deferred corrections scheme for coupling
 hydrodynamics and reactions.
+
+Future work is to extend this methodology to MHD.
 
 
 
@@ -1101,7 +1105,7 @@ Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
 We take the intermediate state to be ${\bf w} = (\rho, X_\alpha, X_\beta,
 K, T)^\intercal$, where $K$ is the kinetic energy:
 \begin{equation}
-K = \frac{1}{2} |\Ub|^2
+K = \frac{1}{2} u^2
 \end{equation}
 
 The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
@@ -1125,7 +1129,7 @@ e_\rho = \dedrd \qquad
 e_T = \dedTd \qquad
 e_{X_k} = \dedXd
 \end{equation}
-and write the kinetic energy as $K = |\Ub|^2/2$.  We get the inverse
+and write the kinetic energy as $K = u^2/2$.  We get the inverse
 (computed via SymPy, see the included Jupyter notebook) is:
 
 \begin{equation}
