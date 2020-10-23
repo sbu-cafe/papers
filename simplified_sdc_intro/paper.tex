@@ -689,11 +689,14 @@ isotopes we carry according to table~\ref{table:nuclei}.
 
 The NSE table requires:
 \begin{equation}
+  \label{eq:aux:ye}
   Y_e = \sum_k \frac{Z_k X_k}{A_k}
 \end{equation}
 (where $A_k$ and $Z_k$ are the atomic weight and atomic number of nucleus $k$) and provides
 \begin{align}
+\label{eq:aux:abar}
 \bar{A} &= \left [ \sum_k \frac{X_k}{A_k} \right ]^{-1} \\
+\label{eq:aux:bea}
 \left (\frac{B}{A} \right ) &= \sum_k \frac{B_k X_k}{A_k}
 \end{align}
 where $B_k$ is the binding energy of nucleus $k$.  In our simulations,
@@ -840,8 +843,8 @@ is as follows:
       \item For zones not in NSE:
 
     \begin{itemize}
-    \item integrate the aprox19 network as usual
-    \item update the aux quantities at the end of the burn
+    \item Integrate the full reaction network (Eqs.~\ref{eq:strang:T} and \ref{eq:strang:X}) as usual for Strang splitting
+    \item Update the aux quantities at the end of the burn using Eqs.~\ref{eq:aux:ye}, \ref{eq:aux:abar}, and \ref{eq:aux:bea} with the new mass fractions, $X_k$.
     \end{itemize}
   \end{itemize}
 \end{itemize}
