@@ -226,10 +226,10 @@ We decompose the source terms, $\Sc(\Uc)$, into
 hydrodynamical sources, $\Hb$ (like gravity), and reactive sources,
 $\Rb$,
 \begin{equation}
-  \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc)
+  \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc).
 \end{equation}
- The reactive
-sources take the form:
+\MarginPar{What is $\Hb(\Uc)$?}
+ The reactive sources take the form:
 \begin{equation}
   \Rb(\Uc) = \left ( \begin{array}{c}
      0 \\ \rho \omegadot_k \\ 0 \\ \rho \dot{S}
@@ -274,8 +274,7 @@ The source term vector, $\Sq$, can again be decomposed into hydrodynamic
 sources (now in terms of the primitive variables) and reaction terms,
 \begin{equation}
   \Sq = \Sqhydro + \Rb(\qb)
-\end{equation}
-\MarginPar{Do you want to use $\Sc(\qb)$ and $\Hb(\qb)$ to keep notation consistent with the conserved variables, since you are already doing that with $\Rb(\qb)$?}
+\end{equation}\MarginPar{Can we use $\Sc(\qb)$ instead of $\Sq$ and $\Hb(\qb)$ instead of $\Sqhydro$ to keep notation consistent with the conserved variables, since you are already doing that with $\Rb(\qb)$?}
 with
 \begin{equation}
 \Rb(\qb) = \left ( \begin{array}{c}
@@ -421,8 +420,9 @@ integral, which is done using an iteratively-lagged solution.
 
 We start by writing our update as:
 \begin{equation}
-\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt
+\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
 \end{equation}
+where $\Advs{\Uc} =  \frac{\partial \Fb^\xv (\Uc)}{\partial x} + \Hb(\Uc)$.
 For the simplified SDC method we explore here, we will make the
 advective term piecewise constant in time, using the value at the
 midpoint in time, to achieve second-order accuracy, giving us:
@@ -449,8 +449,9 @@ compressible hydrodynamics below.
     the current timestep in the first iteration,
     we use the value from the last iteration of the previous timestep:
     \begin{equation}
-      \Ic^{n+1/2,(-1)}_{\qb} = \Ic^{n-1/2,(\smax-1)}_{\qb}
+      \Ic^{n+1/2,(0)}_{\qb} = \Ic^{n-1/2,(\smax)}_{\qb}
     \end{equation}
+    \MarginPar{changed to 1-based $k$ iteration for aesthetics}
   %% \item Solve the Poisson problem for the initial gravitational potential:
   %%   \begin{equation}
   %%     \nabla^2 \Phi^n = 4\pi G \rho^n
@@ -463,7 +464,7 @@ compressible hydrodynamics below.
 
 \item {\em Iterate}
 
-  Iterate from $k = 0, \ldots, \smax-1$.  For second-order accuracy,
+  Iterate from $k = 1, \ldots, \smax$.  For second-order accuracy,
   $\smax = 2$ is sufficient.  In addition to denoting the time-level
   with a superscript (like $n$ or $n+1$), we'll use a second subscript
   in parentheses to keep track of the iteration.
@@ -475,7 +476,7 @@ compressible hydrodynamics below.
     \item convert $\Uc \rightarrow \qb$.  This is an algebraic transformation,
       but will require the EOS.
 
-    \item predict $\qb$ to the interfaces at $n+1/2$ using the CTU PPM
+    \item predict $\qb$ to the interfaces at $t^{n+1/2}$ using the CTU PPM
       method.  The source terms, $\Sq$, used in the prediction are:
       \begin{equation}
         \Sq = \Sqhydro^{n+1/2} + \Ic_\qb^{n+1/2,(k-1)}
@@ -486,6 +487,7 @@ compressible hydrodynamics below.
       explicit reactive source terms are seen by the hydrodynamics update.
       Any hydrodynamic source terms are time-centered
       using the previous iteration:
+\MarginPar{Formally both $t^n$ or $t^{n+1/2}$ sources give you 2nd-order since they are CTU predictor source terms.  I've never found this type of iteration for this term to amount to any benefit}
       \begin{equation}
         \Sqhydro^{n+1/2} = \frac{1}{2} \left ( \Sqhydro^n + \Sqhydro^{n+1,(k-1)} \right )
       \end{equation}
@@ -493,14 +495,15 @@ compressible hydrodynamics below.
     \item solve the Riemann problem at each interface to get a unique
       conserved state on each interface, $\Uc^{n+1/2,(k)}_{i+1/2}$
 
-    \item construct the advective update terms, first ignoring the hydrodynamics sources:
-      $\Advt{\Uc}^{n+1/2,(k)}_{i}$, e.g., as:
+    \item construct the advective update terms, $\Advt{\Uc}^{n+1/2,(k)}_{i}$,
+      by first ignoring the hydrodynamics sources,
       \begin{align}
         \Advt{\Uc}^{n+1/2,(k)}_{i} =
           &- \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
       \end{align}
     Now the conservative hydrodynamics source terms are computed by first updating to the
     new state with advection only\footnote{For a source like gravity, this update can be done first for $\rho$ and then define the new momentum source using $\rho^{\star\star}$ and likewise for energy}, as:
+\MarginPar{I'm confused what happens with the $\Uc^{\star\star}$ state; I don't see it below.  Is The $\Shydro^{n+1/2}$ used below suppose to be from the $\Uc^{\star\star}$ state?}
     \begin{equation}
       \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)}
     \end{equation}
