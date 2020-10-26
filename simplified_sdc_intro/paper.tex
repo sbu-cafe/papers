@@ -549,10 +549,10 @@ compressible hydrodynamics below.
     ODE integrator to integrate this, just as we do with the reaction
     system in Strang splitting.  The difference here being that we are
     integrating the conserved variables and the state sees the effect
-    of advection as we integrate the reactions.  The ODE form of this
-    is
+    of advection as we integrate the reactions.  So rather than use
+    $d\Uc/dt = \Rb(\Uc)$, the ODE form we use is
     \begin{equation}
-      \odt{\Uc} = \Adv{\Uc}^{n+1,(k)} + \Rb(\Uc)
+      \odt{\Uc} = \Adv{\Uc}^{n+1/2,(k)} + \Rb(\Uc)
     \end{equation}
 
     As we are integrating this system we need to get the
