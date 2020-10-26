@@ -190,9 +190,11 @@ repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 \section{Numerical Methodology}
 
 
-We solve the Euler equations for compressible, reacting flow.  We'll
-focus on one-dimensional flow for this description, and the system
-appears as:
+We solve the Euler equations for compressible, reacting flow.  For ease
+of exposition we describe the one-dimensional case;
+multidimensional extensions are a straightforward modification to
+include the CTU hydrodynamics scheme.
+The system appears as:
 \begin{equation}
 \frac{\partial \Uc_t}{\partial t}  + \frac{\partial \Fb^\xv (\Uc)}{\partial x} = \Sc(\Uc)
 \end{equation}
@@ -262,19 +264,21 @@ of the primitive variables:
     0 & 0 & \rho h & 0 & u
   \end{array} \right )
 \end{equation}
-where $\Gamma_1$ is an adiabatic index, $\Gamma_1 = d\log p/d\log\rho
-|_s$.  Note, the primitive state has two thermodynamic quantities, $p$
+where $\Gamma_1$ is an adiabatic index,
+$\Gamma_1 = d\log p/d\log\rho|_s$ at constant entropy.
+Note, the primitive state has two thermodynamic quantities, $p$
 and $(\rho e)$, to more efficiently handle the general equation of
 state in the Riemann solver, as described in \citet{castro}, but
 alternate formulations are possible \citep{colellaglaz:1985}.
 The source term vector, $\Sq$, can again be decomposed into hydrodynamic
 sources (now in terms of the primitive variables) and reaction terms,
 \begin{equation}
-  \Sq = \Sqhydro + \Rb(q)
+  \Sq = \Sqhydro + \Rb(\qb)
 \end{equation}
+\MarginPar{Do you want to use $\Sc(\qb)$ and $\Hb(\qb)$ to keep notation consistent with the conserved variables, since you are already doing that with $\Rb(\qb)$?}
 with
 \begin{equation}
-\Rb(q) = \left ( \begin{array}{c}
+\Rb(\qb) = \left ( \begin{array}{c}
      0 \\
      \omegadot_k \\
      0 \\
@@ -302,16 +306,16 @@ hydrodynamics, these time-centered fluxes result in second-order
 accurate time integration.  With reactions, we want to couple
 hydrodynamics and the reaction sources to second order.  Nuclear
 reaction sources are stiff, and need to be integrated using implicit
-methods for stabilty.  Operator splitting is traditionally employed
-here, and we compare to it in this paper.
+methods for stabilty.  Operator splitting (e.g., Strang) is traditionally employed
+here, and is used as a benchmark for comparison in this paper.
 
 
 
 \subsection{Strang Splitting}
 
-In Strang splitting, we first evolve the system without advection
-through $\Delta t/2$, then do the advective update without reactions
-through $\Delta t$, and finally do the last reactive update through $\Delta t/2$.
+In Strang splitting, we first integrate the system with reactions terms only (no advection)
+over $\Delta t/2$, then integrate the advection terms only (no reactions) over $\Delta t$,
+and finally integrate the reaction terms only over $\Delta t/2$.
 
 In the absence of advective terms, our reaction system appears as just
 $d\Uc/dt = \Rb(\Uc)$, or:
@@ -325,17 +329,16 @@ We can write the energy equation as:
 \begin{equation}
 \odt{(\rho E)} = \odt{(\rho e)} + \odt{K} = \rho \Sdot
 \end{equation}
-where $K$ is the kinetic energy, $K = |u|^2/2$.  Since the velocity is
-unchanged by reactions, this means that
+where $K$ is the kinetic energy, $K = |u|^2/2$.  Since the density and velocity
+are unchanged by reactions, we consider the following:
 \begin{equation}
 \odt{(\rho e)} = \rho \odt{e} = \rho \Sdot
 \end{equation}
-The reaction rates are typically expressed as $\omegadot_k(\rho, T,
-X_k)$, when we evolve this system.  This requires an EOS inversion to get $T$ from $e$ each
+The reaction rates are typically expressed as $\omegadot_k(\rho, T, X_k)$
+when we evolve this system.  This requires an EOS inversion to get $T$ from $e$ each
 time we need to evaluate the reactive terms.
-
-Normally we want to integrate the temperature.  We can write the
-energy equation as:
+We choose to instead integrate the temperature.
+We can write the energy equation as:
 \begin{equation}
 \rho \odt{e} = \rho \left [ \underbrace{\left . \frac{\partial e}{\partial T} \right |_\rho}_{c_v}
                             \odt{T} +
@@ -360,9 +363,9 @@ densities:
 \label{eq:strang:X}
 \odt{X_k} = \omegadot_k
 \end{equation}
-The system of equations \ref{eq:strang:T} and \ref{eq:strang:X} are
-solved using an implicit ODE solver designed for stiff systems of
-equations.  We use VODE~\citep{vode}.
+We integrate Equations (\ref{eq:strang:T}) and (\ref{eq:strang:X}) using
+an implicit ODE solver designed for stiff systems of
+equations, VODE~\citep{vode}.
 
 With Strang splitting, the state can drift significantly off of the
 smooth solution to the coupled reactive hydrodynamics equations, as
@@ -377,7 +380,8 @@ developed in \citet{speth:2013}.
 
 Since this method is based off of the CTU hydrodynamics scheme, it
 benefits from the larger timestep that method can take (when done with
-full corner coupling) as compared to a method-of-lines approach (see
+full corner coupling, the advective CFL condition is unity)
+as compared to a method-of-lines approach (see
 \citealt{ppmunsplit}).  In addition to the standard CFL timestep
 limiter for explicit hydrodynamics, \castro\ can also enforce
 timestep limiters based on the energy generation or abundance changes
@@ -398,7 +402,7 @@ required timestep).  Among the conditions that can trigger this are
 density falling below zero during advection, the ODE integration
 failing to converge in the implicit solve, or violation of one of the
 timestep limiters during the step.  This means that equations
-\ref{eq:dt:nuce} and \ref{eq:dt:nucX} are not reactive, but instead
+(\ref{eq:dt:nuce}) and (\ref{eq:dt:nucX}) are not reactive, but instead
 guaranteed to be met throughout the simulation, because the step is
 rejected if they are violated.  The retry mechanism in \castro\ works
 with both the Strang and simplified-SDC integration scheme.
@@ -537,7 +541,7 @@ compressible hydrodynamics below.
   \item {\em Update the System Using a Method of Lines Integration}
 
     We update the state by doing the integral in equation
-    \ref{eq:integral:simplesdc}.  Since we are approximating the
+    (\ref{eq:integral:simplesdc}).  Since we are approximating the
     advective term as piecewise constant in time, we can simply use an
     ODE integrator to integrate this, just as we do with the reaction
     system in Strang splitting.  The difference here being that we are
@@ -610,7 +614,7 @@ compressible hydrodynamics below.
     Defining the primitive state corresponding to the fully-updated
     conserved state via an algebraic transform, $\Uc^{n+1,(k)}
     \rightarrow \qb^{n+1,(k)}$, we can construct $\Ic^{(k)}_{\qb}$ as given
-    in Eq.~\ref{eq:Iq}.
+    in Equation (\ref{eq:Iq}).
     Putting all of this together, we see:
     \begin{equation}
       \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^\star}{\Delta t}
@@ -647,7 +651,7 @@ network and is the same as described in \cite{ma:2013}.  In our
 simulations, we carry all 19 isotopes in the main network in each zone
 and advect them in the hydrodynamics portion of the algorithm.  The
 composition of the larger 127 nuclei network is mapped into the 19
-isotopes we carry according to table~\ref{table:nuclei}.
+isotopes we carry according to Table \ref{table:nuclei}.
 
 The NSE table provides:
 \begin{align}
