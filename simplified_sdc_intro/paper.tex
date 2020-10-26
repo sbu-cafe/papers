@@ -96,9 +96,13 @@
 %======================================================================
 % Title
 %======================================================================
-\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
+%\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
+\title{Improved Hydrodynamic/Reaction Coupling for Flows With Nuclear Statistical Equilibrium}
 
-\shorttitle{A Simplified SDC Method}
+%\shorttitle{A Simplified SDC Method}
+\shorttitle{Hydro/Reaction Coupling with NSE}
+
+
 \shortauthors{}
 
 %% \author[0000-0001-8401-030X]{M.~Zingale}
@@ -129,10 +133,10 @@ Reacting astrophysical flows can be challenging to model because of
 the difficulty in accurately coupling hydrodynamics and reactions.
 This can be particularly acute at high temperatures where nuclear
 statistical equilibrium is established.  We develop a simplified
-approach to spectral deferred corrections (SDC) coupling of explicit
+approach based on spectral deferred corrections (SDC) coupling of explicit
 hydrodynamics and stiff reaction sources as an alternative to operator
 splitting or the more comprehensive SDC approach we demonstrated
-previously.  We apply the new method some example problems and show
+previously.  We apply the new method to some example problems and show
 how to modify it to work with a hybrid network consisting of a
 reaction ODE system and a table for nuclear statistical equilibrium.
 This is all done in the framework of the \castro\ hydrodynamics code,
@@ -146,24 +150,24 @@ and all algorithm implementations are freely available.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-Reactive flow can be challenging to model when the timescale for
-changes in the nuclear abundances due to reactions is comparable to
-the hydrodynamical timescales.  Traditional methods of coupling
+Reactive flow can be challenging to model when changes in the
+nuclear abundances due to reactions are integrated over hydrodynamic
+time scales.  Traditional methods of coupling
 hydrodynamics and reactions used in astrophysics use operator
 splitting---each physical process acts on the output of the previous
-process.  This makes it easy to add physics in a modular way to a
+process in alternating fashion.  This makes it easy to add physics in a modular way to a
 simulation code, but competition between physical processes can cause
-the coupling to breakdown.  In general, the error in the splitting
-controlled by the timestep.
+the coupling to breakdown.  These splitting errors can lead to loss of
+accuracy and further time step limitations.
 
-A particular difficult phase of evolution to model is the nuclear
-statistic equilibrium that sets in with helium burning for
+A particularly difficult phase of evolution to model is the nuclear
+statistical equilibrium that sets in with helium burning for
 temperatures in excess of $4\times 10^9~\mathrm{K}$.  Physically, the
-forward and reverse rates should balance leading to an equilibrium.
+forward and reverse rates of reaction should balance leading to an equilibrium.
 With operator splitting, an NSE region will have a large positive flow
 through the network in a zone in one step followed by a large negative
 flow over the next timestep, as the code struggles to produce an
-equilibrium.  This large change in abundances (and large alternately
+equilibrium.  These large changes in abundances (and large alternately
 positive and negative energy generation rates) can be a challenge for
 a code.  The easiest way to improve the coupling is to cut the
 timestep, but this makes simulations prohibitively expensive.
@@ -176,8 +180,11 @@ table look-ups (e.g.\ \citealt{ma:2013}) \MarginPar{need more here}
 In \cite{castro_sdc}, we developed second- and fourth-order accurate
 methods in space and time for coupling hydrodynamics and nuclear
 reaction networks based on spectral deferred corrections (SDC)
-methods, and demonstrated the method of a variety of test problems.
-The approach presented here is considerably simpler, reusing the main
+methods, and demonstrated the method in a variety of test problems.
+The approach presented here is considerably simpler from a temporal
+integration standpoint, but allows is to incorporate modifications
+for regions in nuclear statistical equilibirum.
+Furthermore, we reuse the main
 CTU hydrodynamics construction and a largely similar ODE integration
 scheme, making this method easier to add to existing simulation codes.
 It also extends to adaptive mesh refinement with subcycling in a
@@ -193,9 +200,11 @@ repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 \section{Numerical Methodology}
 
 
-We solve the Euler equations for compressible, reacting flow.  We'll
-focus on one-dimensional flow for this description, and the system
-appears as:
+We solve the Euler equations for compressible, reacting flow.  For ease
+of exposition we describe the one-dimensional case;
+multidimensional extensions are a straightforward modification to
+include the CTU hydrodynamics scheme.
+The system appears as:
 \begin{equation}
 \frac{\partial \Uc_t}{\partial t}  + \frac{\partial \Fb^\xv (\Uc)}{\partial x} = \Sc(\Uc)
 \end{equation}
@@ -243,10 +252,10 @@ We decompose the source terms, $\Sc(\Uc)$, into
 hydrodynamical sources, $\Hb$ (like gravity), and reactive sources,
 $\Rb$,
 \begin{equation}
-  \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc)
+  \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc).
 \end{equation}
- The reactive
-sources take the form:
+\MarginPar{Detail out what is $\Hb(\Uc)$?}
+ The reactive sources take the form:
 \begin{equation}
   \Rb(\Uc) = \left ( \begin{array}{c}
      0 \\
@@ -288,13 +297,15 @@ of the primitive variables:
     0 & 0 & 0 & \rho h & 0 & u
   \end{array} \right )
 \end{equation}
-where $\Gamma_1$ is an adiabatic index, $\Gamma_1 = d\log p/d\log\rho
-|_s$.  Note, the primitive state has two thermodynamic quantities, $p$
+where $\Gamma_1$ is an adiabatic index,
+$\Gamma_1 = d\log p/d\log\rho|_s$ at constant entropy.
+Note, the primitive state has two thermodynamic quantities, $p$
 and $(\rho e)$, to more efficiently handle the general equation of
 state in the Riemann solver, as described in \citet{castro}, but
 alternate formulations are possible \citep{colellaglaz:1985}.
 The source term vector, $\Sq$, can again be decomposed into hydrodynamic
 sources (now in terms of the primitive variables) and reaction terms,
+\MarginPar{Can we use $\Sc(\qb)$ instead of $\Sq$ and $\Hb(\qb)$ instead of $\Sqhydro$ to keep notation consistent with the conserved variables, since you are already doing that with $\Rb(\qb)$?}
 \begin{equation}
   \Sq = \Sqhydro + \Rb(\qb)
 \end{equation}
@@ -322,7 +333,7 @@ algebraically identical to that shown in Eq.~25 of \cite{castro}.
 
 
 We use the \castro\ hydrodynamics code~\cite{castro}, together with
-the corner transport upwind piecewise parabolic method
+corner transport upwind piecewise parabolic method
 hydrodynamics~\citep{millercolella:2002}.  This is a finite-volume
 method that uses characteristic tracing to predict a time-centered
 flux through the interfaces of the grid zones.  For pure
@@ -330,16 +341,16 @@ hydrodynamics, these time-centered fluxes result in second-order
 accurate time integration.  With reactions, we want to couple
 hydrodynamics and the reaction sources to second order.  Nuclear
 reaction sources are stiff, and need to be integrated using implicit
-methods for stabilty.  Operator splitting is traditionally employed
-here, and we compare to it in this paper.
+methods for stabilty.  Operator splitting (e.g., Strang) is traditionally employed
+here, and is used as a benchmark for comparison in this paper.
 
 
 
 \subsection{Strang Splitting}
 
-In Strang splitting, we first evolve the system without advection
-through $\Delta t/2$, then do the advective update without reactions
-through $\Delta t$, and finally do the last reactive update through $\Delta t/2$.
+In Strang splitting, we first integrate the system with reactions terms only (no advection)
+over $\Delta t/2$, then integrate the advection terms only (no reactions) over $\Delta t$,
+and finally integrate the reaction terms only over $\Delta t/2$.
 
 In the absence of advective terms, our reaction system appears as just
 $d\Uc/dt = \Rb(\Uc)$, or:
@@ -354,17 +365,16 @@ We can write the energy equation as:
 \begin{equation}
 \odt{(\rho E)} = \odt{(\rho e)} + \odt{K} = \rho \Sdot
 \end{equation}
-where $K$ is the kinetic energy, $K = |u|^2/2$.  Since the velocity is
-unchanged by reactions, this means that
+where $K$ is the kinetic energy, $K = |u|^2/2$.  Since the density and velocity
+are unchanged by reactions, we consider the following:
 \begin{equation}
 \odt{(\rho e)} = \rho \odt{e} = \rho \Sdot
 \end{equation}
-The reaction rates are typically expressed as $\omegadot_k(\rho, T,
-X_k)$, when we evolve this system.  This requires an EOS inversion to get $T$ from $e$ each
+The reaction rates are typically expressed as $\omegadot_k(\rho, T, X_k)$
+when we evolve this system.  This requires an EOS inversion to get $T$ from $e$ each
 time we need to evaluate the reactive terms.
-
-Normally we want to integrate temperature temperature.  We can write the
-energy equation as:
+We choose to instead integrate the temperature.
+We can write the energy equation as:
 \begin{equation}
 \rho \odt{e} = \rho \left [ \underbrace{\left . \frac{\partial e}{\partial T} \right |_\rho}_{c_v}
                             \odt{T} +
@@ -389,9 +399,9 @@ densities:
 \label{eq:strang:X}
 \odt{X_k} = \omegadot_k
 \end{equation}
-The system of equations \ref{eq:strang:T} and \ref{eq:strang:X} are
-solved using an implicit ODE solver designed for stiff systems of
-equations.  We use VODE~\citep{vode}.
+We integrate Equations (\ref{eq:strang:T}) and (\ref{eq:strang:X}) using
+an implicit ODE solver designed for stiff systems of
+equations, VODE~\citep{vode}.
 
 With Strang splitting, the state can drift significantly off of the
 smooth solution to the coupled reactive hydrodynamics equations, as
@@ -406,7 +416,8 @@ developed in \citet{speth:2013}.
 
 Since this method is based off of the CTU hydrodynamics scheme, it
 benefits from the larger timestep that method can take (when done with
-full corner coupling) as compared to a method-of-lines approach (see
+full corner coupling, the advective CFL condition is unity)
+as compared to a method-of-lines approach (see
 \citealt{ppmunsplit}).  In addition to the standard CFL timestep
 limiter for explicit hydrodynamics, \castro\ can also enforce
 timestep limiters based on the energy generation or abundance changes
@@ -424,10 +435,10 @@ used to control the allowed change, and only species for which $X_k > \epsilon_X
 \castro\ has the ability to reject a timestep if it detects a failure
 and retry with smaller timesteps (subcycling to make up the original
 required timestep).  Among the conditions that can trigger this are
-density failing below zero during advection, the ODE integration
+density falling below zero during advection, the ODE integration
 failing to converge in the implicit solve, or violation of one of the
 timestep limiters during the step.  This means that equations
-\ref{eq:dt:nuce} and \ref{eq:dt:nucX} are not reactive, but instead
+(\ref{eq:dt:nuce}) and (\ref{eq:dt:nucX}) are not reactive, but instead
 guaranteed to be met throughout the simulation, because the step is
 rejected if they are violated.  This contrasts to similar approaches
 used in other codes where conditions \ref{eq:dt:nuce} and
@@ -450,8 +461,9 @@ integral, which is done using an iteratively-lagged solution.
 
 We start by writing our update as:
 \begin{equation}
-\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt
+\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
 \end{equation}
+where $\Advs{\Uc} =  \frac{\partial \Fb^\xv (\Uc)}{\partial x} + \Hb(\Uc)$.
 For the simplified SDC method we explore here, we will make the
 advective term piecewise constant in time, using the value at the
 midpoint in time, to achieve second-order accuracy, giving us:
@@ -461,7 +473,7 @@ midpoint in time, to achieve second-order accuracy, giving us:
 \end{equation}
 This is the approach first shown in \citep{SDC-old}.  A
 version of this was also implemented in the \maestro\ low-Mach number
-hydrodynamics code some time ago.  A compressible version, for use in
+hydrodynamics code some time ago.  The compressible version for use in
 \castro\ is slightly different due to the need to do some operations
 on the conserved variable state and some on the primitive variable
 state.  We describe the application of this to the equations of
@@ -474,14 +486,15 @@ compressible hydrodynamics below.
 \label{sec:initialization}
 
   \begin{itemize}
-  \item We need an approximation to how much the reactions alone
+  \item We need an approximation of how much the reactions alone
     changed the primitive variable state over the timestep, which we
     will denote $\Ic_q$.  Since we do not have any information about
     the current timestep in the first iteration,
     we use the value from the last iteration of the previous timestep:
     \begin{equation}
-      \Ic^{n+1/2,(-1)}_{\qb} = \Ic^{n-1/2,(\smax-1)}_{\qb}
+      \Ic^{n+1/2,(0)}_{\qb} = \Ic^{n-1/2,(\smax)}_{\qb}
     \end{equation}
+    \MarginPar{changed to 1-based $k$ iteration for aesthetics?  I can switch it back if you prefer ``-1'' to be the starting point instead of ``0''.}
   %% \item Solve the Poisson problem for the initial gravitational potential:
   %%   \begin{equation}
   %%     \nabla^2 \Phi^n = 4\pi G \rho^n
@@ -494,7 +507,7 @@ compressible hydrodynamics below.
 
 \item {\em Iterate}
 
-  Iterate from $k = 0, \ldots, \smax-1$.  For second-order accuracy,
+  Iterate from $k = 1, \ldots, \smax$.  For second-order accuracy,
   $\smax = 2$ is sufficient.  In addition to denoting the time-level
   with a superscript (like $n$ or $n+1$), we'll use a second subscript
   in parentheses to keep track of the iteration.  A single iteration
@@ -508,7 +521,7 @@ compressible hydrodynamics below.
     \item convert $\Uc \rightarrow \qb$.  This is an algebraic transformation,
       but will require the EOS.
 
-    \item predict $\qb$ to the interfaces at $n+1/2$ using the CTU PPM
+    \item predict $\qb$ to the interfaces at $t^{n+1/2}$ using the CTU PPM
       method.  The source terms, $\Sq$, used in the prediction are:
       \begin{equation}
         \Sq = \Sqhydro^{n+1/2} + \Ic_\qb^{n+1/2,(k-1)}
@@ -519,6 +532,7 @@ compressible hydrodynamics below.
       explicit reactive source terms are seen by the hydrodynamics update.
       Any hydrodynamic source terms are time-centered
       using the previous iteration:
+\MarginPar{Formally both $t^n$ or $t^{n+1/2}$ sources give you 2nd-order since they are CTU predictor source terms.  I've never found this type of iteration for this term to amount to any benefit}
       \begin{equation}
         \Sqhydro^{n+1/2} = \frac{1}{2} \left ( \Sqhydro^n + \Sqhydro^{n+1,(k-1)} \right )
       \end{equation}
@@ -526,14 +540,15 @@ compressible hydrodynamics below.
     \item solve the Riemann problem at each interface to get a unique
       conserved state on each interface, $\Uc^{n+1/2,(k)}_{i+1/2}$
 
-    \item construct the advective update terms, first ignoring the hydrodynamics sources:
-      $\Advt{\Uc}^{n+1/2,(k)}_{i}$, e.g., as:
+    \item construct the advective update terms, $\Advt{\Uc}^{n+1/2,(k)}_{i}$,
+      by first ignoring the hydrodynamics sources,
       \begin{align}
         \Advt{\Uc}^{n+1/2,(k)}_{i} =
           &- \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
       \end{align}
     Now the conservative hydrodynamics source terms are computed by first updating to the
     new state with advection and the old-time source term applied for the full $\Delta t$ as:
+\MarginPar{I'm confused what happens with the $\Uc^{\star\star}$ state; I don't see it below.  Is The $\Shydro^{n+1/2}$ used below suppose to be from the $\Uc^{\star\star}$ state?}
     \begin{equation}
       \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)} + \Delta t \Hb(\Uc^n)
     \end{equation}
@@ -578,13 +593,13 @@ compressible hydrodynamics below.
   \item {\em Update the System Using a Method of Lines Integration}
 
     We update the state by doing the integral in equation
-    \ref{eq:integral:simplesdc}.  Since we are approximating the
+    (\ref{eq:integral:simplesdc}).  Since we are approximating the
     advective term as piecewise constant in time, we can simply use an
     ODE integrator to integrate this, just as we do with the reaction
     system in Strang splitting.  The difference here being that we are
     integrating the conserved variables and the state sees the effect
-    of advection as we integrate the reactions.  The ODE form of this
-    is
+    of advection as we integrate the reactions.  So rather than use
+    $d\Uc/dt = \Rb(\Uc)$, the ODE form we use is
     \begin{equation}
       \odt{\Uc} = \Adv{\Uc}^{n+1/2,(k)} + \Rb(\Uc)
     \end{equation}
@@ -648,7 +663,7 @@ compressible hydrodynamics below.
     Defining the primitive state corresponding to the fully-updated
     conserved state via an algebraic transform, $\Uc^{n+1,(k)}
     \rightarrow \qb^{n+1,(k)}$, we can construct $\Ic^{(k)}_{\qb}$ as given
-    in Eq.~\ref{eq:Iq}.
+    in Equation (\ref{eq:Iq}).
     Putting all of this together, we see:
     \begin{equation}
       \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^\star}{\Delta t}
@@ -671,7 +686,7 @@ compressible hydrodynamics below.
 
 \section{Reaction Networks and Nuclear Statistical Equilibrium}
 
-For this study we will use the 19 nuceli network containing
+For this study we will use the 19 nuclei network containing
 \isot{H}{1}, \isot{He}{3}, \isot{He}{4}, \isot{C}{12}, \isot{N}{14},
 \isot{O}{16}, \isot{Ne}{20}, \isot{Mg}{24}, \isot{Si}{28},
 \isot{S}{32}, \isot{Ar}{36}, \isot{Ca}{40}, \isot{Ti}{44},
@@ -685,7 +700,7 @@ network and is the same as described in \cite{ma:2013}.  In our
 simulations, we carry all 19 isotopes in the main network in each zone
 and advect them in the hydrodynamics portion of the algorithm.  The
 composition of the larger 127 nuclei network is mapped into the 19
-isotopes we carry according to table~\ref{table:nuclei}.
+isotopes we carry according to Table \ref{table:nuclei}.
 
 The NSE table requires:
 \begin{equation}
@@ -716,14 +731,14 @@ We can derive evolution equations for each of these composition quantities as:
 \frac{D}{Dt} \left (\frac{B}{A} \right ) &= \sum_k \frac{B_k}{A_k} \frac{DX_k}{Dt} = \sum_k \frac{B_k}{A_k} \omegadot_k
 \end{align}
 For Strang split coupling of hydro and reactions, $DX_k/Dt = 0$,
-Therefore each of these auxillary equations obeys an advection
+therefore each of these auxillary equations obeys an advection
 equation in the hydro part of the advancement.  In the SDC algorithm,
 there will be a reactive source (an $\Ic_q$) for each of these that is
 computed in the same manner as above.  We note that our NSE table
 provides the evolution of $Y_e$ due to reactions ($DY_e/Dt$) directly.
 
 The compositional quantities
-it carries, $\bar{A}$ and $Y_e$ and not representable from the 19
+it carries, $\bar{A}$ and $Y_e$ are not representable from the 19
 isotopes we carry in the main network. For this reason, when we are
 using the NSE network, we always take the composition quantities in
 the EOS directly from the auxiliary state in each zone instead of
@@ -1109,7 +1124,8 @@ Nuclear Security Administration.
           Linux (\url{https://www.kernel.org}),
           matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
           NumPy \citep{numpy,numpy2},
-          python (\url{https://www.python.org/})
+          python (\url{https://www.python.org/}), 
+          SymPy \citep{sympy}
          }
 
 
@@ -1124,12 +1140,12 @@ To solve the reaction system implicitly, the ODE solver needs the Jacobian,
 $\partial \Rb/\partial \Uc$.  We follow the method of \cite{castro_sdc}
 and factor this into two pieces,
 \begin{equation}
-{\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc}
-\end{equation}.
+{\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc}.
+\end{equation}
 
 Even though it has no reactive sources, we include $\rho$ in our conservative state
 for the purposes of computing the Jacobian (we denote the conserved state used for the
-Jacobian $\Uc^\prime$.
+Jacobian $\Uc^\prime$).
 Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
 \begin{equation}
 \Uc^\prime = \left ( \begin{array}{c} \rho \\ \rho X_\alpha \\ \rho X_\beta \\ \rho E \\ \rho e \end{array} \right )
