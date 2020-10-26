@@ -85,9 +85,13 @@
 %======================================================================
 % Title
 %======================================================================
-\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
+%\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
+\title{Improved Hydrodynamic/Reaction Coupling for Flows With Nuclear Statistical Equilibrium}
 
-\shorttitle{A Simplified SDC Method}
+%\shorttitle{A Simplified SDC Method}
+\shorttitle{Hydro/Reaction Coupling with NSE}
+
+
 \shortauthors{}
 
 %% \author[0000-0001-8401-030X]{M.~Zingale}
@@ -118,10 +122,10 @@ Reacting astrophysical flows can be challenging to model because of
 the difficulty in accurately coupling hydrodynamics and reactions.
 This can be particularly acute at high temperatures where nuclear
 statistical equilibrium is established.  We develop a simplified
-approach to spectral deferred corrections (SDC) coupling of explicit
+approach based on spectral deferred corrections (SDC) coupling of explicit
 hydrodynamics and stiff reaction sources as an alternative to operator
 splitting or the more comprehensive SDC approach we demonstrated
-previously.  We apply the new method some example problems and show
+previously.  We apply the new method to some example problems and show
 how to modify it to work with a hybrid network consisting of a
 reaction ODE system and a table for nuclear statistical equilibrium.
 This is all done in the framework of the \castro\ hydrodynamics code,
@@ -135,15 +139,15 @@ and all algorithm implementations are freely available.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-Reactive flow can be challenging to model when the timescale for
-changes in the nuclear abundances due to reactions is comparable to
-the hydrodynamical timescales.  Traditional methods of coupling
+Reactive flow can be challenging to model when changes in the
+nuclear abundances due to reactions are integrated over hydrodynamic
+time scales.  Traditional methods of coupling
 hydrodynamics and reactions used in astrophysics use operator
 splitting---each physical process acts on the output of the previous
-process.  This makes it easy to add physics in a modular way to a
+process in alternating fashion.  This makes it easy to add physics in a modular way to a
 simulation code, but competition between physical processes can cause
-the coupling to breakdown.  In general, the error in the splitting
-controlled by the timestep.
+the coupling to breakdown.  These splitting errors can lead to loss of
+accuracy and further time step limitations.
 
 A particularly difficult phase of evolution to model is the nuclear
 statistical equilibrium that sets in with helium burning for
@@ -152,7 +156,7 @@ forward and reverse rates of reaction should balance leading to an equilibrium.
 With operator splitting, an NSE region will have a large positive flow
 through the network in a zone in one step followed by a large negative
 flow over the next timestep, as the code struggles to produce an
-equilibrium.  This large change in abundances (and large alternately
+equilibrium.  These large changes in abundances (and large alternately
 positive and negative energy generation rates) can be a challenge for
 a code.  The easiest way to improve the coupling is to cut the
 timestep, but this makes simulations prohibitively expensive.
@@ -166,9 +170,16 @@ In \cite{castro_sdc}, we developed second- and fourth-order accurate
 methods in space and time for coupling hydrodynamics and nuclear
 reaction networks based on spectral deferred corrections (SDC)
 methods, and demonstrated the method in a variety of test problems.
-The approach presented here is considerably simpler, reusing the main
+The approach presented here is considerably simpler from a temporal
+integration standpoint, but allows is to incorporate modifications
+for regions in nuclear statistical equilibirum.
+Furthermore, we reuse the main
 CTU hydrodynamics construction and a largely similar ODE integration
-scheme, making this method easier to add to existing simulation codes.
+scheme from the original Strang split approach,
+making this method easier to add to existing simulation codes.
+Overall, compared to the original Strang split approach, this new
+approach is more computationally efficient, allows for a larger
+time step, and reduces overall integration error.
 However, it is restricted to second-order accuracy overall.  We term
 this algorithm the ``simplified SDC method''.  We use the
 \castro\ hydrodynamics code \cite{castro} for all of our numerical
