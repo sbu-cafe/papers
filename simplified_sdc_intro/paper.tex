@@ -219,7 +219,7 @@ where
 \end{equation}
 are the conserved fluid quantities: mass density, $\rho$, velocity,
 $u$, specific total energy, $E$, and nuclear species mass fractions,
-$X_k$, and auxiliary composition variables, $a_l$.  The mass fractions
+$X_k$, and auxiliary composition variables, $\alpha_l$.  The mass fractions
 are constrained to sum to 1, $\sum_k X_k = 1$, but no such constraint
 exists on the auxiliary variables.  The specific total energy relates
 to the specific internal energy as $E = e + u^2/2$.  The corresponding
@@ -740,11 +740,12 @@ provides the evolution of $Y_e$ due to reactions ($DY_e/Dt$) directly.
 The compositional quantities
 it carries, $\bar{A}$ and $Y_e$ are not representable from the 19
 isotopes we carry in the main network. For this reason, when we are
-using the NSE network, we always take the composition quantities in
+using the NSE network, we always provide these two composition quantities as
+inputs to the EOS rather than using the $X_k$ directly.
 the EOS directly from the auxiliary state in each zone instead of
-using the $X_k$ directly. Our equation of state needs $\bar{Z}$ in addition
+using the $X_k$ directly.
+Our equation of state needs $\bar{Z}$ in addition
 to the auxiliary quantities, which is is easily computed as
-\MarginPar{might be worth spelling out exactly what inputs the NSE EOS needs to make things crystal clear}
 \begin{equation}
 \bar{Z} = \bar{A} Y_e
 \end{equation}
@@ -779,12 +780,15 @@ Typical values are $\rhonse = 3\times 10^8~\gcc$, $T_\mathrm{nse} =
 
 \subsection{Strang-split algorithm for NSE}
 
-For Strang splitting, the basic flow of using the aprox19 + NSE network
-is as follows:
+For Strang splitting, the hydrodynamic and reactive substeps over
+the overall time-advancemenet scheme using the aprox19 + NSE network
+are as follows:
 \begin{itemize}
 
 \item {\em Hydrodynamics update}
-
+  
+  At the beginning of each hydrodynamic update we have an input state,
+  $\Uc_{\rm in}$ that we wish to integrate over $\Delta t$ to obtain $\Uc_{\rm out}$
   The hydrodynamics update proceeds as normal, but with an advection
   equation for each of the auxiliary composition variables:
   \begin{align}
@@ -796,6 +800,9 @@ is as follows:
 
 \item {\em Reactive update}
 
+  At the beginning of each reactive update we have an input state,
+  $\Uc_{\rm in}$ that we wish to integrate over $\Delta t/2$ to obtain $\Uc_{\rm out}$.
+  
   \begin{itemize}
 
     \item For a zone that is in NSE:
@@ -810,7 +817,7 @@ is as follows:
         This is the approach used in \citet{ma:2013}.  We call the table with the 
         input state:
         \begin{equation}
-          \nse{\rho, T, (Y_e)_{\rm in}} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
+          \nse{\rho_{\rm in}, T_{\rm in}, (Y_e)_{\rm in}} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
         \end{equation}
 
         We can now update $Y_e$:
@@ -848,9 +855,11 @@ is as follows:
         \begin{equation}
           (Y_e)_{\rm out} = (Y_e)_{\rm in} + \Delta t \frac{dY_e}{dt}
         \end{equation}
-        and then we use the table again, but with the updated $Y_e$:
+        and then we use the table again, but with the updated $Y_e$
+        (note that $\rho_{\rm out}=\rho_{\rm in}$ in the Strang reaction formulation):
+        \MarginPar{Indicate what $T$ is used.}
         \begin{equation}
-          \nse{\rho, T, (Y_e)_\out} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
+          \nse{\rho_{\rm out}, T_{\rm ???}, (Y_e)_\out} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
         \end{equation}
         This corrects the composition so that it is consistent with the updated
         $Y_e$.  We use these values $\bar{A}_\out$, $(X_k)_\out$, and $(B/A)_\out$ to then complete the update, computing the energy as in Eq.~\ref{eq:nse_energy}.  \MarginPar{we could imagine looping over the EOS to get an updated T and then the table to get the updated $\bar{A}$, to see if that converges?}
