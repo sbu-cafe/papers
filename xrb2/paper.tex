@@ -203,6 +203,19 @@ Things to show:
 \caption{\label{fig:time_series_1000} Time series of the 1000 Hz run showing $\bar{A}$.}
 \end{figure}
 
+
+\begin{deluxetable}{lrrr}
+	\tablecaption{\label{table:500Hz_runs} Temperature properties of the 500~Hz simulations.}
+	\tablehead{\colhead{run} & \colhead{$\delta T$ (K)} & \colhead{$T_\mathrm{hi}$ (K)} & \colhead{$T_\mathrm{star}$ (K)}} 
+	\startdata
+	{\tt flame\_wave\_500}      & $1.2\times 10^9$ & $2\times 10^8$ & $10^8$ \\
+	{\tt flame\_wave\_500\_hot} & $1.2\times 10^9$ & $2\times 10^8$ & $2\times 10^8$ \\
+	{\tt flame\_wave\_500\_3E8} & $1.1\times 10^9$ & $3\times 10^8$ & $3\times 10^8$ \\
+	{\tt flame\_wave\_500\_4E8} & $10^9$ & $4\times 10^8$ & $4\times 10^8$ \\
+	\enddata
+	%
+\end{deluxetable}
+
 Figures~\ref{fig:time_series_500} and \ref{fig:time_series_1000} show
 time series of the mean molecular weight for the 500~Hz and 1000~Hz
 runs.  Compared to those in \cite{flame_wave1}, ashes behind the flame
@@ -258,6 +271,16 @@ Looking at the phase plots in Figures~\ref{fig:urho}-\ref{fig:abar}, we see:
 \end{figure}
     
 
+\subsection{Effect of Temperature Structure}
+
+\begin{figure}[t]
+\centering
+\plotone{compare_500Hz_abar}
+\caption{\label{fig:compare_500Hz_abar} Comparison of $\bar{A}$ for 3 different 500~Hz models with different neutron star temperatures, $T_\star$, and resulting envelope
+structures.  We see that the hottest model has a faster propagating flame.}
+\end{figure}
+
+Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with different initial temperature structures.
 
 \acknowledgements \castro\ is open-source and freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The problem setups used
