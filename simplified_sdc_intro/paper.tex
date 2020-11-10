@@ -97,7 +97,7 @@
 % Title
 %======================================================================
 %\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
-\title{Improved Hydrodynamic/Reaction Coupling for Flows With Nuclear Statistical Equilibrium}
+\title{An Improved Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
 
 %\shorttitle{A Simplified SDC Method}
 \shorttitle{Hydro/Reaction Coupling with NSE}
@@ -633,7 +633,7 @@ compressible hydrodynamics below.
 
     We now seek the $\Ic$'s that capture the effect of just the
     reaction sources on the state variables for the next iteration.
-    For the conserved quantities, these would simply be: \MarginPar{fix signs on A}
+    For the conserved quantities, these would simply be:
     \begin{equation}
       \Ic^{(k)}_{\Uc} = \frac{\Uc^{n+1,(k)} - \Uc^n}{\Delta t} - \Adv{\Uc}^{n+1/2,(k)}
     \end{equation}
@@ -702,7 +702,7 @@ and advect them in the hydrodynamics portion of the algorithm.  The
 composition of the larger 127 nuclei network is mapped into the 19
 isotopes we carry according to Table \ref{table:nuclei}.
 
-The NSE table requires:
+The NSE table requires: \MarginPar{need a statement about how the table was constructed and what NSE means}
 \begin{equation}
   \label{eq:aux:ye}
   Y_e = \sum_k \frac{Z_k X_k}{A_k}
