@@ -463,7 +463,7 @@ We start by writing our update as:
 \begin{equation}
 \Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
 \end{equation}
-where $\Advs{\Uc} =  \frac{\partial \Fb^\xv (\Uc)}{\partial x} + \Hb(\Uc)$.
+where $\Advs{\Uc} =  -{\partial \Fb^\xv (\Uc)}/{\partial x} + \Hb(\Uc)$.
 For the simplified SDC method we explore here, we will make the
 advective term piecewise constant in time, using the value at the
 midpoint in time, to achieve second-order accuracy, giving us:
