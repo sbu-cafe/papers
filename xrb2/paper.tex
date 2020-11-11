@@ -79,6 +79,19 @@
 
 \newcommand{\half}{\frac{1}{2}}
 
+% Approximately proportional to, from StackOverflow
+\def\app#1#2{%
+	\mathrel{%
+		\setbox0=\hbox{$#1\sim$}%
+		\setbox2=\hbox{%
+			\rlap{\hbox{$#1\propto$}}%
+			\lower1.1\ht0\box0%
+		}%
+		\raise0.25\ht2\box2%
+	}%
+}
+\def\appropto{\mathpalette\app\relax}
+
 \setlength{\marginparwidth}{0.5in}
 
 \newcommand{\MarginPar}[1]{
@@ -209,7 +222,8 @@ Things to show:
 	\tablehead{\colhead{run} & \colhead{$\delta T$ (K)} & \colhead{$T_\mathrm{hi}$ (K)} & \colhead{$T_\mathrm{star}$ (K)}} 
 	\startdata
 	{\tt flame\_wave\_500}      & $1.2\times 10^9$ & $2\times 10^8$ & $10^8$ \\
-	{\tt flame\_wave\_500\_hot} & $1.2\times 10^9$ & $2\times 10^8$ & $2\times 10^8$ \\
+	% Do we want the 100 Hz run in here as well, for completeness (and so we have a name to reference)?
+	{\tt flame\_wave\_500\_2E8} & $1.2\times 10^9$ & $2\times 10^8$ & $2\times 10^8$ \\
 	{\tt flame\_wave\_500\_3E8} & $1.1\times 10^9$ & $3\times 10^8$ & $3\times 10^8$ \\
 	{\tt flame\_wave\_500\_4E8} & $10^9$ & $4\times 10^8$ & $4\times 10^8$ \\
 	\enddata
@@ -231,20 +245,80 @@ vertical profiles of the atmosphere behind the flame---how does it compare to is
 
 what is the composition on the photosphere across the flame
 
-different rotation rates 
+different rotation rates. 250 Hz failed to ignite, could indicate that another source of confinement (e.g.\ magnetic fields) would need to take
+over at lower rotation rates to allow a burst to occur, at least for our current initial model. We've seen that increasing rotation rate can
+increase nuclear reaction rate already
 
 shape of flame, amount of mixing (e.g. it looks like slower rotation rates have less mixed flames as the hurricane is less strong.)
 
 Don: look at ratio of enuc to e?
 
-Figure~\ref{fig:flame_speeds} shows the position of the flame as a
-function of time.  Defining the position is difficult, so we \MarginPar{need explanation here}
+\subsection{Flame Propagation}
+
+For the purpose of measuring the flame propagation speed and acceleration, we track the position of each of our flames
+as a function of time. We define the position in terms of a particular $\enucdot$ value, as we did in \citet{flame_wave1}.
+To recapitulate: we first reduce the 2D $\enucdot$ data for each simulation run to a set of 1D radial profiles by averaging
+over the vertical coordinate. After averaging, we take our reference $\enucdot$ value to be some fraction of the global $\enucdot$
+maximum across all of these profiles. Since the flames in our simulations propagate rightward, we then search the region of
+each profile to the right of the local $\enucdot$ maximum for the point where the $\enucdot$ first drops below this reference
+value. This point gives us the location of our flame front.
+
+In \citet{flame_wave1}, we used $0.1\%$ of the global $\enucdot$ maximum for our reference value. For the high temperature
+unboosted flames, however, we found that the $\enucdot$ profiles failed to reach that small a value across the domain at most times,
+which prevented us from getting reliable position measurements. We therefore use $1\%$ of the global $\enucdot$ maximum in this paper
+rather than $0.1\%$. This is still sufficiently small that our measurements are not overly sensitive to turbulence and other local fluid
+motions (the issue with simply tracking the local maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
 
 \begin{figure}[t]
 	\centering
-	\plottwo{speeds_1_100th_max.pdf}{speeds_1_1000th_max.pdf}
-	\caption{\label{fig:flame_speeds} Plots of flame front position vs.\ time for the 500 Hz and 1000 Hz runs. The left-hand plot shows the results when tracking the $\frac{1}{100} \max[\enucdot]$ contour, while the right-hand plot shows the results for the $\frac{1}{1000} \max[\enucdot]$ contour.}
+	\plotone{flame_speeds_rotation.pdf} % Not certain what style we want for the plot here
+	\caption{\label{fig:flame_speeds_1} Plots of flame front position vs.\ time for the 500 Hz and 1000 Hz runs. The dashed lines
+		show quadratic least-squares fits to the data for $t \gtrsim 20~\mathrm{ms}$.}
 \end{figure}
+
+\begin{figure}[t]
+	\centering
+	{\color{red} Placeholder for the flame speed plot that shows temperature dependence}
+	\caption{\label{fig:flame_speeds_2} Plots of flame front position vs.\ time for the three 500 Hz runs with
+		$T_{star} \leq 3 \times 10^8~\mathrm{K}$. The dashed lines show quadratic least-squares fits to the data
+		for $t \gtrsim 20~\mathrm{ms}$.}
+\end{figure}
+
+Figures~\ref{fig:flame_speeds_1} and \ref{fig:flame_speeds_2} give position vs.\ time for our runs, with the former showing dependence
+on rotation rate and the latter on the neutron star temperature. As some of the runs (in particular the $\tt{flame\_wave\_3E8}$ run) exhibit
+significant accelerations, we fit a quadratic curve to each set of data and calculate the acceleration and initial velocity from the fit
+parameters. These results are given in Table~\ref{table:flame_speeds}. We also include the flame speed at $t = 100~\mathrm{ms}$ extrapolated
+from the fit.
+
+We found in \citet{flame_wave1} that the flame speed $s$ obeys:
+\begin{equation}
+	s \appropto L_R (\epsdot)^{\half} \propto \frac{(\epsdot)^{\half}}{\Omega}
+\end{equation}
+where $\epsdot$ is the specific energy generation rate and $L_R$ is the Rossby length. This was consistent with the results of
+\citet{cavecchi:2013}, who noted that the flame speeds in their simulations scaled with the Rossby length. As seen in
+Figure~\ref{fig:flame_speeds_1}, there is no obvious inverse scaling with rotation rate from this set of runs. We observed earlier,
+however, that nuclear reactions progress more quickly at the higher rotation rate. This results in a higher $\enucdot$ --- up to 4
+to 6 times higher near the burning front after the flame ignites --- which may counteract the reduction in flame speed from the
+increased Coriolis confinement. We also observe that 500 Hz run accelerates faster than the 1000 Hz run, which appears to experience a
+small deceleration at early times. This disparity could be due to the 500 Hz flame taking more time to develop
+fully and reach higher burning rates, or a result of the difference in Coriolis force. \MarginPar{Do we have other ideas why?}
+
+% It might be worth plotting peak enucdot as a function of time for each run
+
+{\color{red} Maybe Nicole can talk a bit about the effect of the neutron star temperature here? I have a placeholder for the plot earlier, but
+feel free to move it. What's in this section now is just an initial draft/outline.}
+
+\begin{deluxetable}{lrrr}
+	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each simulation. $s_0$ is the speed at $t = 0~\mathrm{ms}$, and $s_{100}$ is the speed at $t = 100~\mathrm{ms}$.}
+	\tablehead{\colhead{run} & \colhead{$s_0$ (km s$^{-1}$)} & \colhead{$s_{100}$ (km s$^{-1}$)} & \colhead{$a$ (km s$^{-2}$)}} 
+	\startdata
+	{\tt flame\_wave\_500}      & $3.08 \pm 0.01$ & $3.62 \pm 0.02$ & $5.41 \pm 0.19$ \\
+	{\tt flame\_wave\_1000}     & $3.41 \pm 0.01$ & $3.31 \pm 0.02$ & $-1.03 \pm 0.13$ \\
+	{\tt flame\_wave\_500\_2E8} & $3.76 \pm 0.02$ & $\sim 3.93$ & $1.74 \pm 0.17$ \\
+	{\tt flame\_wave\_500\_3E8} & $5.29 \pm 0.10$ & $\sim 41.0$ & $357.4 \pm 1.5$ \\
+	\enddata
+	%
+\end{deluxetable}
 
 Looking at the phase plots in Figures~\ref{fig:urho}-\ref{fig:abar}, we see:
 \begin{itemize}
