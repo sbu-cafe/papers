@@ -344,9 +344,9 @@ To explore the effect of different initial temperature configurations, we run fo
 \caption{\label{fig:compare_500Hz_abar} Comparison of $\bar{A}$ for 3 different 500~Hz models with different neutron star temperatures, $T_\star$, and resulting envelope structures. } %This will be updated to show at 70ms
 \end{figure}
 
-Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with different initial temperature structures. The hottest model, $\tt{flame\_wave\_500\_3E8}$ has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke through the top of the atmosphere.
+Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with different initial temperature structures. The hottest model, $\tt{flame\_wave\_500\_3E8}$, has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke through the top of the atmosphere.
 
-{\color{red} On the subject of things breaking out of the atmosphere, discuss interesting characteristics of the extreme 4E8 run here: maybe include a plot showing abar and temp at 40 ms, and another plot showing the momentum components?}
+{\color{red} On the subject of things breaking out of the atmosphere, discuss interesting characteristics of the extreme 4E8 run here: maybe include a plot showing enuc at 40 ms comapared to one of the cooler runs, and another plot showing the momentum components? Seems like the flame moves very quickly across the domain, and then residual burning after the flame has passed eventually ignites the entire fuel layer. This total ignition can also occur in nature for a neutron star with a lot of dense and hot accreted material.}
 
 \begin{figure}[t]
 	\centering
@@ -356,7 +356,7 @@ Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with di
 		for $t \gtrsim 0.02~\mathrm{s}$.}
 \end{figure}
 
-{\color{red} Discuss flame acceleration here, it's sort of mysterious but could be due to energy released from burning dominating the flame propagation and increasing speed over time, or maybe enhanced mixing/diffusion is pulling in more fuel to burn, or maybe the average fuel layer temp is going up, making it easier for the flame to burn and propagate}
+The method for measuring flame propagation described in Section \ref{ssec:rot_propagation} is applied in Figure \ref{fig:flame_speeds_2} to the three 500 Hz runs with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. As the initial $T_{\mathrm{star}}$ is increased, the flame becomes greatly accelerated. The initial flame velocities and accelerations derived from a quadratic least-squares fit to each of the datasets are provided in Table \ref{table:flame_speeds}. The reason for the acceleration of the flame over time is not entirely clear. It could be that energy released from burning begins to dominate the flame's propagation as it evolves, increasing the flame speed over time. Another possibility is that the increased temperatures lead to enhanced turbulent mixing effects that pull in more fresh fuel for the flame to burn. Yet another possibility is that the higher initial $T_{\mathrm{star}}$ leads to a greater average temperature in the fuel layer over time, making it easier for the flame to burn the fuel and propagate.
 
 \acknowledgements \castro\ is open-source and freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The problem setups used
