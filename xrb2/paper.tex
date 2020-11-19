@@ -358,6 +358,13 @@ Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with di
 
 The method for measuring flame propagation described in Section \ref{ssec:rot_propagation} is applied in Figure \ref{fig:flame_speeds_2} to the three 500 Hz runs with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. As the initial $T_{\mathrm{star}}$ is increased, the flame becomes greatly accelerated. The initial flame velocities and accelerations derived from a quadratic least-squares fit to each of the datasets are provided in Table \ref{table:flame_speeds}. The reason for the acceleration of the flame over time is not entirely clear. It could be that energy released from burning begins to dominate the flame's propagation as it evolves, increasing the flame speed over time. Another possibility is that the increased temperatures lead to enhanced turbulent mixing effects that pull in more fresh fuel for the flame to burn. Yet another possibility is that the higher initial $T_{\mathrm{star}}$ leads to a greater average temperature in the fuel layer over time, making it easier for the flame to burn the fuel and propagate.
 
+Looking at the phase plots in Figures~\ref{fig:urho_hot}-\ref{fig:abar_hot}, we see:
+\begin{itemize}
+    \item The $u$-$\rho$ plot in Figure~\ref{fig:urho_hot} shows that the horizontal velocity when $T_{\rm star} = 3\times10^8$~K is sufficiently greater than for the two cooler runs. This is consistent with the plot of the flame front position, where we saw that the hottest flame was significantly faster at later times than the cooler flames.
+    \item The $u$-$v$ plot in Figure~\ref{fig:uv_hot} further demonstrates this, as again we see that the magnitude of the velocity of the flame for the hottest run is significantly larger. Also of interest in these plots is that the coolest run does not seem to have developed the characteristic vortex structure at the burning front (i.e. where $\dot{e}_{\rm nuc}$ is greatest) that can be clearly seen for the hotter runs.
+    \item The $\overline{A}$-$T$ plot in Figure~\ref{fig:abar_hot} suggests that the actual reactions happening in the hottest run may be different than for the cooler runs. Not only is the flame itself significantly hotter overall, but there is a large causally connected region across a wide range of $\overline{A}$. This indicates that the hotter temperature has facilitated significant burning in reaction pathways that were not favored at the lower temperatures.
+\end{itemize}
+
 \begin{figure}[t]
     \centering
     \plotone{urho_plot_hotter}
@@ -375,6 +382,15 @@ The method for measuring flame propagation described in Section \ref{ssec:rot_pr
     \plotone{abar_plot_hotter}
     \caption{\label{fig:abar_hot}Phase plot of the mean molecular weight $\bar{A}$, temperature $T$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 500~Hz runs with $T_{\rm star}$ of $10^8$~K, $2\times10^8$~K and $3\times10^8$~K.}
 \end{figure}
+
+
+
+%======================================================================
+% Conclusions
+%======================================================================
+\section{Discussion and Conclusions}\label{Sec:conclusions}
+
+tl;dr: faster rotation and/or hotter surface temperature = more burning.
 
 \acknowledgements \castro\ is open-source and freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The problem setups used
