@@ -344,9 +344,21 @@ To explore the effect of different initial temperature configurations, we run fo
 \caption{\label{fig:compare_500Hz_abar} Comparison of $\bar{A}$ for 3 different 500~Hz models with different neutron star temperatures, $T_\star$, and resulting envelope structures. } %This will be updated to show at 70ms
 \end{figure}
 
-Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with different initial temperature structures. The hottest model, $\tt{flame\_wave\_500\_3E8}$, has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke through the top of the atmosphere.
+Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with different initial temperature structures. The hottest of the three models, $\tt{flame\_wave\_500\_3E8}$, has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke through the top of the atmosphere.
 
 {\color{red} On the subject of things breaking out of the atmosphere, discuss interesting characteristics of the extreme 4E8 run here: maybe include a plot showing enuc at 40 ms comapared to one of the cooler runs, and another plot showing the momentum components? Seems like the flame moves very quickly across the domain, and then residual burning after the flame has passed eventually ignites the entire fuel layer. This total ignition can also occur in nature for a neutron star with a lot of dense and hot accreted material.}
+
+\begin{figure}[t]
+	\centering
+	\plotone{multiplot_3x1_time_series_enuc_late.png}
+	\caption{\label{fig:4e8_stacked_enuc} Time series of the 500~Hz run $\tt{flame\_wave\_500\_4E8}$, with $T_{\mathrm{star}} = 4 \times 10^8~\mathrm{K}$, showing $\dot{e}_{nuc}$. This model burns so strongly that it is only run out to 40 ms; the snapshots shown here are at T = 30 ms, 35 ms, and 40 ms.}
+\end{figure}
+
+\begin{figure}[t]
+	\centering
+	\plotone{multiplot_3x1_time_series_abar_late.png}
+	\caption{\label{fig:4e8_stacked_abar} Time series of the 500~Hz run $\tt{flame\_wave\_500\_4E8}$, with $T_{\mathrm{star}} = 4 \times 10^8~\mathrm{K}$, showing $\bar{A}$.}
+\end{figure}
 
 \begin{figure}[t]
 	\centering
