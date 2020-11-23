@@ -235,12 +235,12 @@ In our latest set of runs, we explore a variety of initial rotation rate and tem
 	\tablecaption{\label{table:500Hz_runs} Rotation rate and temperature properties of the simulations.}
 	\tablehead{\colhead{run} & \colhead{Rotation Rate (Hz)} & \colhead{$\delta T$ (K)} & \colhead{$T_\mathrm{hi}$ (K)} & \colhead{$T_\mathrm{star}$ (K)}} 
 	\startdata
-	{\tt flame\_wave\_1000}     & $1000$ & $1.2\times 10^9$ & $2\times 10^8$ & $10^8$ \\
-	{\tt flame\_wave\_500}      & $500$ & $1.2\times 10^9$ & $2\times 10^8$ & $10^8$ \\
-	{\tt flame\_wave\_500\_2E8} & $500$ & $1.2\times 10^9$ & $2\times 10^8$ & $2\times 10^8$ \\
-	{\tt flame\_wave\_500\_3E8} & $500$ & $1.1\times 10^9$ & $3\times 10^8$ & $3\times 10^8$ \\
-	{\tt flame\_wave\_500\_4E8} & $500$ & $10^9$ & $4\times 10^8$ & $4\times 10^8$ \\
-	{\tt flame\_wave\_250}      & $250$ & $1.2\times 10^9$ & $2\times 10^8$ & $10^8$ \\
+	{\tt F1000}     & $1000$ & $1.2\times 10^9$ & $2\times 10^8$ & $10^8$ \\
+	{\tt F500}      & $500$ & $1.2\times 10^9$ & $2\times 10^8$ & $10^8$ \\
+	{\tt F500\_2E8} & $500$ & $1.2\times 10^9$ & $2\times 10^8$ & $2\times 10^8$ \\
+	{\tt F500\_3E8} & $500$ & $1.1\times 10^9$ & $3\times 10^8$ & $3\times 10^8$ \\
+	{\tt F500\_4E8} & $500$ & $10^9$ & $4\times 10^8$ & $4\times 10^8$ \\
+	{\tt F250}      & $250$ & $1.2\times 10^9$ & $2\times 10^8$ & $10^8$ \\
 	\enddata
 \end{deluxetable}
 
@@ -311,15 +311,15 @@ motions (the issue with simply tracking the local maximum), but allows us to avo
 	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each simulation. $s_0$ is the speed at $t = 0$.}
 	\tablehead{\colhead{run} & \colhead{$s_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)}} 
 	\startdata
-	{\tt flame\_wave\_1000}     & $(3.41 \pm 0.01) \times 10^5$ & $(-1.03 \pm 0.13) \times 10^5$ \\
-	{\tt flame\_wave\_500}      & $(3.08 \pm 0.01) \times 10^5$ & $(5.41 \pm 0.19) \times 10^5$ \\
-	{\tt flame\_wave\_500\_2E8} & $(3.76 \pm 0.02) \times 10^5$ & $(1.74 \pm 0.17) \times 10^5$ \\
-	{\tt flame\_wave\_500\_3E8} & $(5.29 \pm 0.10) \times 10^5$ & $(3.57 \pm 0.02) \times 10^7$ \\
+	{\tt F1000}     & $(3.41 \pm 0.01) \times 10^5$ & $(-1.03 \pm 0.13) \times 10^5$ \\
+	{\tt F500}      & $(3.08 \pm 0.01) \times 10^5$ & $(5.41 \pm 0.19) \times 10^5$ \\
+	{\tt F500\_2E8} & $(3.76 \pm 0.02) \times 10^5$ & $(1.74 \pm 0.17) \times 10^5$ \\
+	{\tt F500\_3E8} & $(5.29 \pm 0.10) \times 10^5$ & $(3.57 \pm 0.02) \times 10^7$ \\
 	\enddata
 	%
 \end{deluxetable}
 
-Figure~\ref{fig:flame_speeds_1} gives position vs.\ time for the $\tt{flame\_wave\_500}$ and $\tt{flame\_wave\_1000}$ runs to show the dependence on rotation rate. As some of the hotter 500~Hz runs exhibit significant accelerations, we fit a quadratic curve to each set of data and calculate the acceleration and initial velocity from the fit parameters. These results are given in Table~\ref{table:flame_speeds}.
+Figure~\ref{fig:flame_speeds_1} gives position vs.\ time for the $\tt{F500}$ and $\tt{F1000}$ runs to show the dependence on rotation rate. As some of the hotter 500~Hz runs exhibit significant accelerations, we fit a quadratic curve to each set of data and calculate the acceleration and initial velocity from the fit parameters. These results are given in Table~\ref{table:flame_speeds}.
 
 We found in \citet{flame_wave1} that the flame speed $s$ obeys:
 \begin{equation}
@@ -364,7 +364,7 @@ Looking at the phase plots in Figures~\ref{fig:urho}-\ref{fig:abar}, we see:
 
 \subsection{Effect of Temperature Structure}\label{ssec:temp_structure}
 
-To explore the effect of different initial temperature configurations, we run four simulations fixed at a rotation rate of 500 Hz with temperatures as shown in Table \ref{table:500Hz_runs}. For all the 500 Hz simulations (with the exception of the coolest run, $\tt{flame\_wave\_500}$), we set $T_\mathrm{star}$ = $T_\mathrm{hi}$, scaling $\delta T$ accordingly to maintain a consistent value of $T_\mathrm{hi} + \delta T$. If we let $T_\mathrm{star} < T_\mathrm{hi}$, the cooler neutron star surface might act as a heat sink and siphon away energy that would otherwise go into heating the burning layer.
+To explore the effect of different initial temperature configurations, we run four simulations fixed at a rotation rate of 500 Hz with temperatures as shown in Table \ref{table:500Hz_runs}. For all the 500 Hz simulations (with the exception of the coolest run, $\tt{F500}$), we set $T_\mathrm{star}$ = $T_\mathrm{hi}$, scaling $\delta T$ accordingly to maintain a consistent value of $T_\mathrm{hi} + \delta T$. If we let $T_\mathrm{star} < T_\mathrm{hi}$, the cooler neutron star surface might act as a heat sink and siphon away energy that would otherwise go into heating the burning layer.
 
 \begin{figure}[t]
 \centering
@@ -372,20 +372,20 @@ To explore the effect of different initial temperature configurations, we run fo
 \caption{\label{fig:compare_500Hz_abar} Comparison of $\bar{A}$ for 3 different 500~Hz models with different neutron star temperatures, $T_\star$, and resulting envelope structures. } %This will be updated to show at 70ms
 \end{figure}
 
-Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with different initial temperature structures. The hottest of the three models, $\tt{flame\_wave\_500\_3E8}$, has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke through the top of the atmosphere.
+Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with different initial temperature structures. The hottest of the three models, $\tt{F500\_3E8}$, has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke through the top of the atmosphere.
 
 {\color{red} On the subject of things breaking out of the atmosphere, discuss interesting characteristics of the extreme 4E8 run here: maybe include a plot showing enuc at 40 ms comapared to one of the cooler runs, and another plot showing the momentum components? Seems like the flame moves very quickly across the domain, and then residual burning after the flame has passed eventually ignites the entire fuel layer. This total ignition can also occur in nature for a neutron star with a lot of dense and hot accreted material.}
 
 \begin{figure}[t]
 	\centering
 	\plotone{multiplot_3x1_time_series_enuc_late.png}
-	\caption{\label{fig:4e8_stacked_enuc} Time series of the 500~Hz run $\tt{flame\_wave\_500\_4E8}$, with $T_{\mathrm{star}} = 4 \times 10^8~\mathrm{K}$, showing $\dot{e}_{nuc}$. This model burns so strongly that it is only run out to 40 ms; the snapshots shown here are at T = 30 ms, 35 ms, and 40 ms.}
+	\caption{\label{fig:4e8_stacked_enuc} Time series of the 500~Hz run $\tt{F500\_4E8}$, with $T_{\mathrm{star}} = 4 \times 10^8~\mathrm{K}$, showing $\dot{e}_{nuc}$. This model burns so strongly that it is only run out to 40 ms; the snapshots shown here are at T = 30 ms, 35 ms, and 40 ms.}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
 	\plotone{multiplot_3x1_time_series_abar_late.png}
-	\caption{\label{fig:4e8_stacked_abar} Time series of the 500~Hz run $\tt{flame\_wave\_500\_4E8}$, with $T_{\mathrm{star}} = 4 \times 10^8~\mathrm{K}$, showing $\bar{A}$.}
+	\caption{\label{fig:4e8_stacked_abar} Time series of the 500~Hz run $\tt{F500\_4E8}$, with $T_{\mathrm{star}} = 4 \times 10^8~\mathrm{K}$, showing $\bar{A}$.}
 \end{figure}
 
 \begin{figure}[t]
