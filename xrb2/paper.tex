@@ -189,10 +189,10 @@ In the following sections, we conduct a series of simulations at various rotatio
 \section{Numerical Approach}\label{Sec:numerics}
 \MarginPar{mz}
 
-We use the Castro hydrodynamics code \citep{castro} and the simulation
+We use the Castro hydrodynamics code \citep{castro,castro_joss} and the simulation
 framework introduced in \citet{flame_wave1}.  The main difference is
 that we no longer boost the flames by adjusting the reaction rates and
-conductivities.  By porting \castro\ to GPUs \citep{castro:sc20}, we
+conductivities.  By porting \castro\ to GPUs \citep{sc20_gpu}, we
 are able to run the unboosted flame simulations with fewer resources
 than the boosted simulations used in our earlier paper.  For these
 axisymmetric simulations, we adding a missing geometric source terms
@@ -208,7 +208,7 @@ two models laterally to create a hot region near the origin of
 coordinates and a smooth transition to the cooler region at larger
 radii.  In the calculations presented here, we explore the structure
 of the initial models by varying some of the parameters, in particular, the temperature
-of the neutron star and at the base of the fuel layer. \MarginPar{add plot showing models}
+of the neutron star and at the base of the fuel layer.
 
 \begin{figure}[t]
 \centering
