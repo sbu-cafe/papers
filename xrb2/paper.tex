@@ -202,7 +202,7 @@ term is a small correction, but was missing from our earlier
 simulations.
 
 The initial model is setup in the same fashion as described in
-\citet{flame_wave}.  In particular, we create a ``hot'' and ``cool''
+\citet{flame_wave1}.  In particular, we create a ``hot'' and ``cool''
 hydrostatic model representing the ash and fuel states and blend the
 two models laterally to create a hot region near the origin of
 coordinates and a smooth transition to the cooler region at larger
@@ -262,7 +262,7 @@ Things to show:
 
 
 Figures~\ref{fig:time_series_500} and \ref{fig:time_series_1000} show
-time series of the mean molecular weight for the 500~Hz and 1000~Hz
+time series of the mean molecular weight ($\bar{A}$) for the 500~Hz and 1000~Hz
 runs.  Compared to those in \cite{flame_wave1}, ashes behind the flame
 do not reach as high atomic weights.  This is not surprising, since
 those early runs boosted the reaction rates.  Comparing these two new
@@ -287,7 +287,7 @@ Don: look at ratio of enuc to e?
 \subsection{Effect of Rotation Rate on Flame Propagation}\label{ssec:rot_propagation}
 
 For the purpose of measuring the flame propagation speed and acceleration, we track the position of each of our flames
-as a function of time. We define the position in terms of a particular $\enucdot$ value, as we did in \citet{flame_wave1}.
+as a function of time. We define the position in terms of a particular energy generation rate ($\enucdot$) value, as we did in \citet{flame_wave1}.
 To recapitulate: we first reduce the 2D $\enucdot$ data for each simulation run to a set of 1D radial profiles by averaging
 over the vertical coordinate. After averaging, we take our reference $\enucdot$ value to be some fraction of the global $\enucdot$
 maximum across all of these profiles. Since the flames in our simulations propagate rightward, we then search the region of
@@ -362,7 +362,7 @@ Looking at the phase plots in Figures~\ref{fig:urho}-\ref{fig:abar}, we see:
 \end{figure}
     
 
-\subsection{Effect of Temperature Structure}\label{ssec:temp_structure}
+\subsection{Effect of Temperature on Flame Structure}\label{ssec:temp_structure}
 
 To explore the effect of different initial temperature configurations, we run four simulations fixed at a rotation rate of 500 Hz with temperatures as shown in Table \ref{table:500Hz_runs}. For all the 500 Hz simulations (with the exception of the coolest run, $\tt{F500}$), we set $T_\mathrm{star}$ = $T_\mathrm{hi}$, scaling $\delta T$ accordingly to maintain a consistent value of $T_\mathrm{hi} + \delta T$. If we let $T_\mathrm{star} < T_\mathrm{hi}$, the cooler neutron star surface might act as a heat sink and siphon away energy that would otherwise go into heating the burning layer.
 
@@ -372,31 +372,24 @@ To explore the effect of different initial temperature configurations, we run fo
 \caption{\label{fig:compare_500Hz_abar} Comparison of $\bar{A}$ for 3 different 500~Hz models with different neutron star temperatures, $T_\star$, and resulting envelope structures. } %This will be updated to show at 70ms
 \end{figure}
 
-Figure~\ref{fig:compare_500Hz_abar} shows 3 different 500 Hz simulations with different initial temperature structures. The hottest of the three models, $\tt{F500\_3E8}$, has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke through the top of the atmosphere.
+Figure~\ref{fig:compare_500Hz_abar} shows three 500 Hz simulations with different initial temperature structures. The hottest of the three models, $\tt{F500\_3E8}$, has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke out of the flame front and rose through the atmosphere.
 
-{\color{red} On the subject of things breaking out of the atmosphere, discuss interesting characteristics of the extreme 4E8 run here: maybe include a plot showing enuc at 40 ms comapared to one of the cooler runs, and another plot showing the momentum components? Seems like the flame moves very quickly across the domain, and then residual burning after the flame has passed eventually ignites the entire fuel layer. This total ignition can also occur in nature for a neutron star with a lot of dense and hot accreted material.}
+In contrast to the models with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$, $\tt{F500\_4E8}$ is so hot that the organized flame front structure is lost. The fuel layer essentially simmers in place, rather than forming a flame; this effect can occur in nature, for neutron stars with very high accretion rates. \MarginPar{NF: I remember Alice mentioning this a long time ago, but is there anything I can cite to support it?}. This model burns so strongly that it is only run out to $40$ ms. Due to the lack of a clear burning front, we neglect to analyze the flame propagation speed and acceleration for this run. After an initial period of burning moves across the domain, residual burning continues and eventually ignites the entire fuel layer at late times, as shown in Figures \ref{fig:4e8_stacked_enuc} and \ref{fig:4e8_stacked_abar} for three snapshots taken in the last ten seconds of the simulation. In Figure~\ref{fig:4e8_stacked_enuc}, $\enucdot$ reaches values of $10^{18} - 10^{20}~\frac{\mathrm{erg}}{\mathrm{g} \cdot \mathrm{s}}$ across the domain and at heights up to $\sim 0.5\times 10^4$ cm. There is still significant burning occuring even higher, with $\enucdot$ reaching $\sim 10^{15}~\frac{\mathrm{erg}}{\mathrm{g} \cdot \mathrm{s}}$ at heights up to $\sim 0.8\times 10^4$ cm. For comparison, the next hottest run ($\tt{F500\_3E8}$) only reaches maximum $\enucdot$ values of $10^{18}~\frac{\mathrm{erg}}{\mathrm{g} \cdot \mathrm{s}}$ and a maximum height of $\sim 0.5\times 10^4$ cm, even at the latest timesteps ($\sim 70~\mathrm{ms}$, when the flame is most developed). Significant $\enucdot$ values for $\tt{F500\_3E8}$ are confined to the flame front, rather than spanning the entire domain.
+\MarginPar{NF: should I include a plot for this or is it ok to just say it?}. 
+Figure~\ref{fig:4e8_stacked_abar} plots $\bar{A}$ for $\tt{F500\_4E8}$, and similarly shows burning that extends across the domain and high into the atmosphere and fuel layer, lacking the charactersitic flame structure shown in $\bar{A}$ plots for the lower temperature $500$ Hz runs (see Figure~\ref{fig:compare_500Hz_abar}). A distinct mass of material - resembling a more dramatic version of that shown in Figure~\ref{fig:compare_500Hz_abar} - appears to have broken out of the atmosphere near the axis of symmetry. %Can also add a note here about how high abar values are reached across the domain, maybe don or alice can help give a more detailed analysis of abar. Maybe I could also segue into Alice's phase plots
+
 
 \begin{figure}[t]
 	\centering
-	\plotone{multiplot_3x1_time_series_enuc_late.png}
+	\plotone{compare_500Hz_enuc_4e8.pdf}
 	\caption{\label{fig:4e8_stacked_enuc} Time series of the 500~Hz run $\tt{F500\_4E8}$, with $T_{\mathrm{star}} = 4 \times 10^8~\mathrm{K}$, showing $\dot{e}_{nuc}$. This model burns so strongly that it is only run out to 40 ms; the snapshots shown here are at T = 30 ms, 35 ms, and 40 ms.}
 \end{figure}
 
 \begin{figure}[t]
 	\centering
-	\plotone{multiplot_3x1_time_series_abar_late.png}
+	\plotone{compare_500Hz_abar_4e8.pdf}
 	\caption{\label{fig:4e8_stacked_abar} Time series of the 500~Hz run $\tt{F500\_4E8}$, with $T_{\mathrm{star}} = 4 \times 10^8~\mathrm{K}$, showing $\bar{A}$.}
 \end{figure}
-
-\begin{figure}[t]
-	\centering
-	\plotone{500Hz_stacked_enuc1_2order.pdf}
-	\caption{\label{fig:flame_speeds_2} Flame front position vs.\ time for the three 500 Hz runs with
-		$T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. The dashed lines show quadratic least-squares fits to the data
-		for $t \gtrsim 0.02~\mathrm{s}$.}
-\end{figure}
-
-The method for measuring flame propagation described in Section \ref{ssec:rot_propagation} is applied in Figure \ref{fig:flame_speeds_2} to the three 500 Hz runs with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. As the initial $T_{\mathrm{star}}$ is increased, the flame becomes greatly accelerated. The initial flame velocities and accelerations derived from a quadratic least-squares fit to each of the datasets are provided in Table \ref{table:flame_speeds}. The reason for the acceleration of the flame over time is not entirely clear. It could be that energy released from burning begins to dominate the flame's propagation as it evolves, increasing the flame speed over time. Another possibility is that the increased temperatures lead to enhanced turbulent mixing effects that pull in more fresh fuel for the flame to burn. Yet another possibility is that the higher initial $T_{\mathrm{star}}$ leads to a greater average temperature in the fuel layer over time, making it easier for the flame to burn the fuel and propagate.
 
 Looking at the phase plots in Figures~\ref{fig:urho_hot}-\ref{fig:abar_hot}, we see:
 \begin{itemize}
@@ -423,6 +416,18 @@ Looking at the phase plots in Figures~\ref{fig:urho_hot}-\ref{fig:abar_hot}, we 
     \caption{\label{fig:abar_hot}Phase plot of the mean molecular weight $\bar{A}$, temperature $T$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 500~Hz runs with $T_{\rm star}$ of $10^8$~K, $2\times10^8$~K and $3\times10^8$~K.}
 \end{figure}
 
+\subsection{Effect of Temperature on Flame Propagation}\label{ssec:temp_prop}
+
+The method for measuring flame propagation described in Section \ref{ssec:rot_propagation} is applied in Figure \ref{fig:flame_speeds_2} to the three 500 Hz runs with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. As the initial $T_{\mathrm{star}}$ is increased, the flame becomes greatly accelerated. The initial flame velocities and accelerations derived from a quadratic least-squares fit to each of the datasets are provided in Table \ref{table:flame_speeds}. The reason for the acceleration of the flame over time is not entirely clear. It could be that energy released from burning begins to dominate the flame's propagation as it evolves, increasing the flame speed over time. Another possibility is that the increased temperatures lead to enhanced turbulent mixing effects that pull in more fresh fuel for the flame to burn. Yet another possibility is that the higher initial $T_{\mathrm{star}}$ leads to a greater average temperature in the fuel layer over time, making it easier for the flame to burn the fuel and propagate.
+
+
+\begin{figure}[t]
+	\centering
+	\plotone{500Hz_stacked_enuc1_2order.pdf}
+	\caption{\label{fig:flame_speeds_2} Flame front position vs.\ time for the three 500 Hz runs with
+		$T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. The dashed lines show quadratic least-squares fits to the data
+		for $t \gtrsim 0.02~\mathrm{s}$. Note that, due to its rapid acceleration, $\tt{F500\_3E8}$ (orange) is only run out to $\sim 70~\mathrm{ms}$ to avoid surpassing the domain boundary.}
+\end{figure}
 
 
 %======================================================================
