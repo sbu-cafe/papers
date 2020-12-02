@@ -308,7 +308,7 @@ motions (the issue with simply tracking the local maximum), but allows us to avo
 \end{figure}
 
 \begin{deluxetable}{lrrr}
-	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each simulation. $s_0$ is the speed at $t = 0$.}
+	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each simulation. $s_0$ is the speed at $t = 0$. The initial flame velocities and accelerations are derived from a quadratic least-squares fit to each of the datasets for times $t \gtrsim 0.02~\mathrm{s}$.}
 	\tablehead{\colhead{run} & \colhead{$s_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)}} 
 	\startdata
 	{\tt F1000}     & $(3.41 \pm 0.01) \times 10^5$ & $(-1.03 \pm 0.13) \times 10^5$ \\
@@ -319,7 +319,7 @@ motions (the issue with simply tracking the local maximum), but allows us to avo
 	%
 \end{deluxetable}
 
-Figure~\ref{fig:flame_speeds_1} gives position vs.\ time for the $\tt{F500}$ and $\tt{F1000}$ runs to show the dependence on rotation rate. As some of the hotter 500~Hz runs exhibit significant accelerations, we fit a quadratic curve to each set of data and calculate the acceleration and initial velocity from the fit parameters. These results are given in Table~\ref{table:flame_speeds}\MarginPar{How is the acceleration calculated for this table? I.e. Specifically, at what time / over what time window is it calculated?}.
+Figure~\ref{fig:flame_speeds_1} gives position vs.\ time for the $\tt{F500}$ and $\tt{F1000}$ runs to show the dependence on rotation rate. As some of the hotter 500~Hz runs exhibit significant accelerations, we fit a quadratic curve to each set of data and calculate the acceleration and initial velocity from the fit parameters. These results are given in Table~\ref{table:flame_speeds}\MarginPar{How is the acceleration calculated for this table? I.e. Specifically, at what time / over what time window is it calculated?} \MarginPar{NF: I will update the error estimates}.
 
 We found in \citet{flame_wave1} that the flame speed $s$ obeys:
 \begin{equation}
@@ -426,7 +426,7 @@ The method for measuring flame propagation described in Section \ref{ssec:rot_pr
 	\plotone{500Hz_stacked_enuc1_2order.pdf}
 	\caption{\label{fig:flame_speeds_2} Flame front position vs.\ time for the three 500 Hz runs with
 		$T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. The dashed lines show quadratic least-squares fits to the data
-		for $t \gtrsim 0.02~\mathrm{s}$. Note that, due to its rapid acceleration, $\tt{F500\_3E8}$ (orange) is only run out to $\sim 70~\mathrm{ms}$ to avoid surpassing the domain boundary.}
+		for $t \gtrsim 0.02~\mathrm{s}$. Note that, due to its rapid acceleration, $\tt{F500\_3E8}$ (orange) is only run out to $\sim 0.07~\mathrm{s}$ to avoid surpassing the domain boundary.}
 \end{figure}
 
 
