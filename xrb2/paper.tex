@@ -235,17 +235,30 @@ In the following sections, we conduct a series of simulations at various rotatio
 \section{Numerical Approach}\label{Sec:numerics}
 \MarginPar{mz}
 
-We use the Castro hydrodynamics code \citep{castro,castro_joss} and the simulation
-framework introduced in \citet{flame_wave1}.  The main difference is
-that we no longer boost the flames by adjusting the reaction rates and
-conductivities.  By porting \castro\ to GPUs \citep{sc20_gpu}, we
-are able to run the unboosted flame simulations with fewer resources
-than the boosted simulations used in our earlier paper.  For these
-axisymmetric simulations, we adding a missing geometric source terms
-from \citet{bernard-champmartin} that captures the effects of the
-divergence of the flux operating on the azimuthal unit vector.  This
-term is a small correction, but was missing from our earlier
-simulations.
+We use the Castro hydrodynamics code \citep{castro,castro_joss} and
+the simulation framework introduced in \citet{flame_wave1}.  The
+current simulations are all performed in a two-dimensional
+axisymmetric geometry.  For these axisymmetric simulations, we add a
+missing geometric source terms from \citet{bernard-champmartin} that
+captures the effects of the divergence of the flux operating on the
+azimuthal unit vector.  This term is a small correction, but was
+missing from our earlier simulations.  The simulations framework
+initializes a fuel layer in hydrostatic equilibrium, laterally
+blending a hot model on the left side of the domain (the coordinate
+origin) and a cool model on the right.  The initial temperature
+gradient between the hot and cool models drives a laterally
+propagating flame through the cool fuel.  In our original set of
+calculations, we artificially boosted the flame speed by adjusting the
+conductivity and reaction rate to produce a flame moving 5--10$\times$
+faster than the nominal laminar flame speed.  We also used high
+rotation rates to reduce the lateral lengthscale at which the Coriolis
+force balances the lateral flame spreading.  For the current
+simulations, we no longer boost the flame speed---the true
+conductivities (taken from \citealt{Timmes00}) and reaction rates are
+used.  We continue to use a 13-isotope $\alpha$-chain to describe the
+helium burning.  The port of \castro\ to GPUs~\citep{sc20_gpu} enables
+us to run these simulations without the previous approximations, while
+continuing to resolve the burning front.
 
 The initial model is setup in the same fashion as described in
 \citet{flame_wave1}.  In particular, we create a ``hot'' and ``cool''
