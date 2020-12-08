@@ -265,30 +265,39 @@ The initial model is setup in the same fashion as described in
 hydrostatic model representing the ash and fuel states and blend the
 two models laterally to create a hot region near the origin of
 coordinates and a smooth transition to the cooler region at larger
-radii.  In the calculations presented here, we explore the structure
-of the initial models by varying some of the parameters, in particular, the temperature
-of the neutron star and at the base of the fuel layer.
+radii.  The cool initial characterized by 3 temperatures:
+$T_\mathrm{star}$ is the isothermal temperature of the underlying
+neutron star, $T_\mathrm{hi}$ is the temperature at the base of the
+fuel layer, and $T_\mathrm{lo}$ is the minimum temperature of the
+atmosphere---the atmosphere structure is isentropic as it falls from
+$T_\mathrm{hi}$ down to $T_\mathrm{lo}$.  For the hot model, we
+replace $T_\mathrm{hi}$ with $T_\mathrm{hi} + \delta T$.  In the
+calculations presented here, we explore the structure of the initial
+models by varying these parameters, in particular, the
+temperature of the neutron star and at the base of the fuel layer.
 
 \begin{figure}[t]
 \centering
 \plotone{hot}
-\caption{\label{fig:hot_profiles} Initial temperature and density structure vs.\ height in the ``hot'' state.}
+\caption{\label{fig:hot_profiles} Initial temperature and density
+  structure vs.\ height in the ``hot'' state.}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \plotone{cold}
-\caption{\label{fig:cold_profiles} Initial temperature and density structure vs.\ height in the ``cool'' state.}
+\caption{\label{fig:cool_profiles} Initial temperature and density
+  structure vs.\ height in the ``cool'' state.}
 \end{figure}
 
+For the current simulations, we explore a variety of initial rotation
+rate and temperature conditions for the flame. The main parameters
+describing the models are provided in Table
+\ref{table:500Hz_runs}. Figure~\ref{fig:hot_profiles} shows the
+temperature and density structure for our hot models and
+figure~\ref{fig:cool_profiles} shows the temperature and density
+structure for the cool models.
 
-
-%======================================================================
-% Results
-%======================================================================
-\section{Simulations and Results}\label{Sec:results}
-
-In our latest set of runs, we explore a variety of initial rotation rate and temperature conditions for the flame. The initial conditions are provided in Table \ref{table:500Hz_runs}. 
 
 \begin{deluxetable}{lrrrrr}
 	\tablecaption{\label{table:500Hz_runs} Rotation rate and temperature properties of the simulations.}
@@ -302,6 +311,14 @@ In our latest set of runs, we explore a variety of initial rotation rate and tem
 	{\tt F250}      & $250$ & $1.2\times 10^9$ & $2\times 10^8$ & $10^8$ \\
 	\enddata
 \end{deluxetable}
+
+
+
+%======================================================================
+% Results
+%======================================================================
+\section{Simulations and Results}\label{Sec:results}
+
 
 \subsection{Effect of Rotation Rate on Flame Structure}\label{ssec:rot_structure}
 
