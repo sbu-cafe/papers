@@ -133,13 +133,13 @@
 \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
              Stony Brook, NY 11794-3800}
 
+\author[0000-0001-8921-3624]{Nicole Ford}
+\affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
+
 \author[0000-0001-8401-030X]{Michael Zingale}
 \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
              Stony Brook, NY 11794-3800}
 \affiliation{Center for Computational Astrophysics, Flatiron Institute, New York, NY 10010}
-
-\author[0000-0001-8921-3624]{Nicole Ford}
-\affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
 
 \author[0000-0003-2300-5165]{Donald Willcox}
 \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
@@ -159,7 +159,14 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-We continue to investigate laterally propagating flames in XRBs...
+We continue to investigate laterally propagating flames in XRBs using
+fully compressible hydrodynamics simulations.  In the current study we
+relax the approximations used previously and explore the effect of
+rotation rate and the thermal structure of the neutron star on the
+flame.  We find that higher temperature atmospheres lead to faster
+flames and observe acceleration of the flame front as it propagates
+through the atmosphere.  All of the software used for these
+simulations is freely available.
 
 
 \end{abstract}
@@ -171,7 +178,18 @@ We continue to investigate laterally propagating flames in XRBs...
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-Unlike our previous paper, all runs are now conducted without artificially boosting the speed of the flame in order to reduce the computational cost. This is possible because of the work done to offload the code to GPUs, where it runs significantly faster. We can therefore run the tests without any boosting. 
+Considerable evidence suggests that ignition in an X-ray burst starts
+in a localized region and then spreads across the surface of the
+neutron star~\citep{bhattacharyya:2007,chakraborty:2014}.  We continue
+our study of flame spreading through fully compressible hydrodynamics
+simulations of the flame.  Building on our previous
+paper~\citep{flame_wave1}, we relax the approximations we made
+previously (artificially boosting the speed of the flame in order to
+reduce the computational cost) and explore how the flame properties
+depend on rotation rate and the thermal structure of the neutron
+star. This new set of realistic simulations is possible because of the
+work done to offload our simulation code, \castro~\cite{castro_joss}, to GPUs, where it
+runs significantly faster.
 
 
 We investigate the effect of rotation rate on the flame. With the exception of (citation to the weird 11 Hz flame \citep{altamirano2010discovery}), most observations of XRBs come from sources with rotation rates of 200-600Hz \citep{bilous:2019,galloway:2020} \MarginPar{check whether this is true for XRBs or just burst oscillations}. There are a number of factors that could explain this lack of observations below 200 Hz. It could be that there is some physical process which inhibits the flame ignition and/or spread at lower rotation rates. It could be that burst oscillations at lower rotation rates are smaller in amplitude and therefore more difficult to detect. It could be that it's not got anything to do with the flame at all, but that neutron stars in accreting low mass X-ray binaries rarely have rotation rates below 200 Hz \MarginPar{look into this?}. 
