@@ -324,7 +324,14 @@ We present 6 simulations in total, summarized in
 Table~\ref{table:runs}.  These simulations encompass 3 different
 rotation rates: 250~Hz, 500~Hz, and 1000~Hz, and for the 500~Hz run, 4
 different temperature profiles.  In the following subsections, we look
-at how the flame properties depends on the model parameters.
+at how the flame properties depends on the model parameters.  All
+simulations are run in a domain $1.8432\times 10^5~\mathrm{cm} \times
+3.072\times 10^4~\mathrm{cm}$ with a coarse grid of $1152 \times 192$
+zones and 2 levels of refinment (the first a jump by a factor of $4$
+and the second a jump by a factor of $2$ finer).  This gives a
+fine-grid resolution of $20~\mathrm{cm}$.  The entire atmosphere is
+refined in these simulations, with the refinement tagging on all zones
+with $\rho > 2.5\times 10^4~\gcc$.
 
 \subsection{Effect of Rotation Rate on Flame Structure}\label{ssec:rot_structure}
 
