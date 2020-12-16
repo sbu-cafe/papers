@@ -220,13 +220,13 @@ It is known that crustal heating is stronger at lower
 accretion rates and weaker at higher accretion rates, due to the
 effect of neutrino losses \citep{Cumming2006,johnston:2019}. In our
 models, we keep the crust at a constant temperature, so by increasing
-this temperature we can effectively increase the crustal heating and
-mimic the effects of lower accretion rates. A shallow heating
+this temperature we can effectively increase the crustal heating and/or
+mimic the effects of higher accretion rates. A shallow heating
 mechanism of as yet unknown origin has been found necessary to
 reproduce observed properties of XRBs
 \citep{Deibel2015,Turlione2015,Keek2017}.
 
-In the following sections, we conduct a series of simulations at various rotation rates to investigate its effect on the flame. We find that at lower rotation rates, the flame itself becomes harder to ignite. We discuss the implications that this may have for burst physics and observations. 
+In the following sections, we conduct a series of simulations at various rotation rates and temperatures to investigate their effects on the flame. We find that at lower rotation rates, the flame itself becomes harder to ignite. At higher rotation rates, nuclear burning is enhanced and the flame propagates more quickly. At high temperatures, burning is greatly enhanced and the flame accelerates as it propagates. We discuss the implications that this may have for burst physics and observations. 
 
 
 %======================================================================
@@ -260,7 +260,7 @@ helium burning.  The port of \castro\ to GPUs~\citep{sc20_gpu} enables
 us to run these simulations without the previous approximations, while
 continuing to resolve the burning front.
 
-The initial model is setup in the same fashion as described in
+The initial model is set up in the same fashion as described in
 \citet{flame_wave1}.  In particular, we create a ``hot'' and ``cool''
 hydrostatic model representing the ash and fuel states and blend the
 two models laterally to create a hot region near the origin of
@@ -320,111 +320,39 @@ structure for the cool models.
 \section{Simulations and Results}\label{Sec:results}
 
 
-We present 6 simulations in total, summarized in
-Table~\ref{table:runs}.  These simulations encompass 3 different
-rotation rates: 250~Hz, 500~Hz, and 1000~Hz, and for the 500~Hz run, 4
+We present six simulations in total, summarized in
+Table~\ref{table:runs}.  These simulations encompass three different
+rotation rates: 250~Hz, 500~Hz, and 1000~Hz, and for the 500~Hz run, four
 different temperature profiles.  In the following subsections, we look
-at how the flame properties depends on the model parameters.  All
-simulations are run in a domain $1.8432\times 10^5~\mathrm{cm} \times
+at how the flame properties depend on the model parameters.  All
+simulations are run in a domain of $1.8432\times 10^5~\mathrm{cm} \times
 3.072\times 10^4~\mathrm{cm}$ with a coarse grid of $1152 \times 192$
-zones and 2 levels of refinment (the first a jump by a factor of $4$
-and the second a jump by a factor of $2$ finer).  This gives a
+zones and two levels of refinment (the first a jump by a factor of four
+and the second a jump by a factor of two finer).  This gives a
 fine-grid resolution of $20~\mathrm{cm}$.  The entire atmosphere is
 refined in these simulations, with the refinement tagging on all zones
 with $\rho > 2.5\times 10^4~\gcc$.
 
 \subsection{Effect of Rotation Rate on Flame Structure}\label{ssec:rot_structure}
 
-We run 3 models (F250, F500, and F1000) with the same initial model but differing rotation rates.
+We run three models ({\tt F250}, {\tt F500}, and {\tt F1000}) with the same initial model but differing rotation rates.
 
 \begin{figure}[t]
 \centering
 \plotone{time_series_500}
-\caption{\label{fig:time_series_500} Time series of the 500 Hz run showing $\bar{A}$.}
+\caption{\label{fig:time_series_500} Time series of {\tt F500} showing $\bar{A}$.}
 \end{figure}
+
 
 \begin{figure}[t]
 \centering
 \plotone{time_series_1000}
-\caption{\label{fig:time_series_1000} Time series of the 1000 Hz run showing $\bar{A}$.}
+\caption{\label{fig:time_series_1000} Time series of {\tt F1000} showing $\bar{A}$.}
 \end{figure}
+\MarginPar{update both the abar figures to only show 50 ms and 100 ms snapshots}
 
 
-Figures~\ref{fig:time_series_500} and \ref{fig:time_series_1000} show
-time series of the mean molecular weight ($\bar{A}$) for the 500~Hz and 1000~Hz
-runs.  Compared to those in \cite{flame_wave1}, ashes behind the flame
-do not reach as high atomic weights.  This is not surprising, since
-those early runs boosted the reaction rates.  Comparing these two new
-runs, we see that the burning is much more evolved for the higher
-rotation rate.  We believe that this is because the rotation confines
-the initial perturbation and subsequent expansion from the burning
-better, allowing the reactions to progress further.
-
-MZ: lateral profiles of X vs distance behind the flame; 
-vertical profiles of the atmosphere behind the flame---how does it compare to isentropic?
-
-what is the composition on the photosphere across the flame
-
-different rotation rates. 250 Hz failed to ignite, could indicate that another source of confinement (e.g.\ magnetic fields) would need to take
-over at lower rotation rates to allow a burst to occur, at least for our current initial model. We've seen that increasing rotation rate can
-increase nuclear reaction rate already
-
-shape of flame, amount of mixing (e.g. it looks like slower rotation rates have less mixed flames as the hurricane is less strong.)
-
-Don: look at ratio of enuc to e?
-
-\subsection{Effect of Rotation Rate on Flame Propagation}\label{ssec:rot_propagation}
-
-For the purpose of measuring the flame propagation speed and acceleration, we track the position of each of our flames
-as a function of time. We define the position in terms of a particular energy generation rate ($\enucdot$) value, as we did in \citet{flame_wave1}.
-To recapitulate: we first reduce the 2D $\enucdot$ data for each simulation run to a set of 1D radial profiles by averaging
-over the vertical coordinate. After averaging, we take our reference $\enucdot$ value to be some fraction of the global $\enucdot$
-maximum across all of these profiles. Since the flames in our simulations propagate rightward, we then search the region of
-each profile to the right of the local $\enucdot$ maximum for the point where the $\enucdot$ first drops below this reference
-value. This point gives us the location of our flame front.
-
-In \citet{flame_wave1}, we used $0.1\%$ of the global $\enucdot$ maximum for our reference value. For the high temperature
-unboosted flames, however, we found that the $\enucdot$ profiles failed to reach that small a value across the domain at most times,
-which prevented us from getting reliable position measurements. We therefore use $1\%$ of the global $\enucdot$ maximum in this paper
-rather than $0.1\%$. This is still sufficiently small that our measurements are not overly sensitive to turbulence and other local fluid
-motions (the issue with simply tracking the local maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
-
-\begin{figure}[t]
-	\centering
-	\plotone{flame_speeds_rotation.pdf}
-	\caption{\label{fig:flame_speeds_1} Flame front position vs.\ time for the standard ($10^8~\mathrm{K}$) 500 Hz and 1000 Hz runs. The dashed lines
-		show quadratic least-squares fits to the data for $t \gtrsim 0.02~\mathrm{s}$.}
-\end{figure}
-
-\begin{deluxetable}{lrrr}
-	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each simulation. $s_0$ is the speed at $t = 0$. The initial flame velocities and accelerations are derived from a quadratic least-squares fit to each of the datasets for times $t \gtrsim 0.02~\mathrm{s}$.}
-	\tablehead{\colhead{run} & \colhead{$s_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)}} 
-	\startdata
-	{\tt F1000}     & $(3.41 \pm 0.01) \times 10^5$ & $(-1.03 \pm 0.13) \times 10^5$ \\
-	{\tt F500}      & $(3.08 \pm 0.01) \times 10^5$ & $(5.41 \pm 0.19) \times 10^5$ \\
-	{\tt F500\_2E8} & $(3.76 \pm 0.02) \times 10^5$ & $(1.74 \pm 0.17) \times 10^5$ \\
-	{\tt F500\_3E8} & $(5.29 \pm 0.10) \times 10^5$ & $(3.57 \pm 0.02) \times 10^7$ \\
-	\enddata
-	%
-\end{deluxetable}
-
-Figure~\ref{fig:flame_speeds_1} gives position vs.\ time for the $\tt{F500}$ and $\tt{F1000}$ runs to show the dependence on rotation rate. As some of the hotter 500~Hz runs exhibit significant accelerations, we fit a quadratic curve to each set of data and calculate the acceleration and initial velocity from the fit parameters. These results are given in Table~\ref{table:flame_speeds}\MarginPar{How is the acceleration calculated for this table? I.e. Specifically, at what time / over what time window is it calculated?} \MarginPar{NF: I will update the error estimates}.
-
-We found in \citet{flame_wave1} that the flame speed $s$ obeys:
-\begin{equation}
-	s \appropto L_R (\epsdot)^{\half} \propto \frac{(\epsdot)^{\half}}{\Omega}
-\end{equation}
-where $\epsdot$ is the specific energy generation rate and $L_R$ is the Rossby length. This was consistent with the results of
-\citet{cavecchi:2013}, who noted that the flame speeds in their simulations scaled with the Rossby length. As seen in
-Figure~\ref{fig:flame_speeds_1}, there is no obvious inverse scaling with rotation rate in this set of runs. We observed earlier,
-however, that nuclear reactions progress more quickly at the higher rotation rate. This results in a higher $\enucdot$ --- up to 4
-to 6 times higher near the burning front after the flame ignites --- which may counteract the reduction in flame speed from the
-increased Coriolis confinement. We also observe that the 500 Hz run accelerates faster than the 1000 Hz run, which appears to experience a
-small deceleration at early times. \MarginPar{This is speculation on my part -- does someone else have clear idea why?} This disparity
-may be a direct result of the difference in Coriolis force. It could also be due to the 500 Hz flame taking more time to develop fully
-and reach higher burning rates, resulting in an $\epsdot$ \MarginPar{Is this supposed to be enucdot???}increase over time.
-
-% It might be worth plotting peak enucdot as a function of time for each run
+Figures~\ref{fig:time_series_500} and \ref{fig:time_series_1000} show time series of the mean molecular weight ($\bar{A}$) for the {\tt F500} and {\tt F1000} runs.  Compared to those in \cite{flame_wave1}, ashes behind the flame do not reach as high atomic weights. This is not surprising, since those early runs boosted the reaction rates.  Comparing these two new runs, the burning is much more evolved for the higher rotation rate.  We believe that this is because the increased rotation confines the initial perturbation and subsequent expansion from the burning better, allowing the reactions to progress further. In contrast to {\tt F500} and {\tt F1000}, the lowest rotation run --- {\tt F250} --- failed to ignite. The lack of ignition for {\tt F250} also aligns with the reasoning given above, with the lower rotation in this case potentially leading to insufficient confinement of the burning. In this scenario, another source of confinement (e.g.\ magnetic fields) would need to take over at lower rotation rates to allow a burst to occur, at least for our current initial model. 
 
 Looking at the phase plots in Figures~\ref{fig:urho}-\ref{fig:abar}, we see:
 \begin{itemize}
@@ -449,11 +377,74 @@ Looking at the phase plots in Figures~\ref{fig:urho}-\ref{fig:abar}, we see:
     \plotone{abar_plot_0_1}
     \caption{\label{fig:abar}Phase plot of the mean molecular weight $\bar{A}$, temperature $T$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs.}
 \end{figure}
+
+MZ: lateral profiles of X vs distance behind the flame; 
+vertical profiles of the atmosphere behind the flame---how does it compare to isentropic?
+
+what is the composition on the photosphere across the flame
+
+
+shape of flame, amount of mixing (e.g. it looks like slower rotation rates have less mixed flames as the hurricane is less strong.)
+
+Don: look at ratio of enuc to e?
+
+\subsection{Effect of Rotation Rate on Flame Propagation}\label{ssec:rot_propagation}
+
+For the purpose of measuring the flame propagation speed and acceleration, we track the position of each of our flames
+as a function of time. We define the position in terms of a particular energy generation rate ($\enucdot$) value, as we did in \citet{flame_wave1}.
+To recapitulate: we first reduce the 2D $\enucdot$ data for each simulation run to a set of 1D radial profiles by averaging
+over the vertical coordinate. After averaging, we take our reference $\enucdot$ value to be some fraction of the global $\enucdot$
+maximum across all of these profiles. Since the flames in our simulations propagate rightward, we then search the region of
+each profile to the right of the local $\enucdot$ maximum for the point where the $\enucdot$ first drops below this reference
+value. This point gives us the location of our flame front.
+
+In \citet{flame_wave1}, we used $0.1\%$ of the global $\enucdot$ maximum for our reference value. For the high temperature
+unboosted flames, however, we found that the $\enucdot$ profiles failed to reach that small a value across the domain at most times,
+which prevented us from getting reliable position measurements. We therefore use $1\%$ of the global $\enucdot$ maximum in this paper
+rather than $0.1\%$. This is still sufficiently small that our measurements are not overly sensitive to turbulence and other local fluid
+motions (the issue with simply tracking the local maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
+
+\begin{deluxetable}{lrrr}
+	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each simulation. $s_0$ is the speed at $t = 0$. The initial flame velocities and accelerations are derived from a quadratic least-squares fit to each of the datasets for times $t \gtrsim 0.02~\mathrm{s}$.}
+	\tablehead{\colhead{run} & \colhead{$s_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)}} 
+	\startdata
+	{\tt F1000}     & $(3.41 \pm 0.01) \times 10^5$ & $(-1.03 \pm 0.13) \times 10^5$ \\
+	{\tt F500}      & $(3.08 \pm 0.01) \times 10^5$ & $(5.41 \pm 0.19) \times 10^5$ \\
+	{\tt F500\_2E8} & $(3.76 \pm 0.02) \times 10^5$ & $(1.74 \pm 0.17) \times 10^5$ \\
+	{\tt F500\_3E8} & $(5.29 \pm 0.10) \times 10^5$ & $(3.57 \pm 0.02) \times 10^7$ \\
+	\enddata
+	%
+\end{deluxetable}
+
+\begin{figure}[t]
+	\centering
+	\plotone{flame_speeds_rotation.pdf}
+	\caption{\label{fig:flame_speeds_1} Flame front position vs.\ time for the standard ($10^8~\mathrm{K}$) 500 Hz and 1000 Hz runs. The dashed lines
+		show quadratic least-squares fits to the data for $t \gtrsim 0.02~\mathrm{s}$.}
+\end{figure}
+
+Figure~\ref{fig:flame_speeds_1} gives position vs.\ time for the $\tt{F500}$ and $\tt{F1000}$ runs to show the dependence on rotation rate. As some of the hotter 500~Hz runs exhibit significant accelerations, we fit a quadratic curve to each set of data and calculate the acceleration and initial velocity from the fit parameters. These results are given in Table~\ref{table:flame_speeds}. The initial flame velocities and accelerations are derived from a quadratic least-squares fit to each of the datasets for times $t \gtrsim 0.02~\mathrm{s}$. \MarginPar{How is the acceleration calculated for this table? I.e. Specifically, at what time / over what time window is it calculated?} \MarginPar{NF: I will update the error estimates}.
+
+We found in \citet{flame_wave1} that the flame speed $s$ obeys:
+\begin{equation}
+	s \appropto L_R (\epsdot)^{\half} \propto \frac{(\epsdot)^{\half}}{\Omega}
+\end{equation}
+where $\epsdot$ is the specific energy generation rate and $L_R$ is the Rossby length. This was consistent with the results of
+\citet{cavecchi:2013}, who noted that the flame speeds in their simulations scaled with the Rossby length. As seen in
+Figure~\ref{fig:flame_speeds_1}, there is no obvious inverse scaling with rotation rate in this set of runs. We observed earlier,
+however, that nuclear reactions progress more quickly at the higher rotation rate. This results in a higher $\enucdot$ --- up to four
+to six times higher near the burning front after the flame ignites --- which may counteract the reduction in flame speed from the
+increased Coriolis confinement. We also observe that the 500 Hz run accelerates faster than the 1000 Hz run, which appears to experience a
+small deceleration at early times. \MarginPar{This is speculation on my part -- does someone else have clear idea why?} This disparity
+may be a direct result of the difference in Coriolis force. It could also be due to the 500 Hz flame taking more time to develop fully
+and reach higher burning rates, resulting in an $\epsdot$ \MarginPar{Is this supposed to be enucdot???}increase over time.
+
+% It might be worth plotting peak enucdot as a function of time for each run
     
 
 \subsection{Effect of Temperature on Flame Structure}\label{ssec:temp_structure}
 
-To explore the effect of different initial temperature configurations, we run four simulations fixed at a rotation rate of 500 Hz with temperatures as shown in Table \ref{table:500Hz_runs}. For all the 500 Hz simulations (with the exception of the coolest run, $\tt{F500}$), we set $T_\mathrm{star}$ = $T_\mathrm{hi}$, scaling $\delta T$ accordingly to maintain a consistent value of $T_\mathrm{hi} + \delta T$. If we let $T_\mathrm{star} < T_\mathrm{hi}$, the cooler neutron star surface might act as a heat sink and siphon away energy that would otherwise go into heating the burning layer.
+To explore the effect of different initial temperature configurations, we run four simulations fixed at a rotation rate of 500 Hz with temperatures as shown in Table \ref{table:runs}. For all the 500 Hz simulations (with the exception of the coolest run, $\tt{F500}$), we set $T_\mathrm{star}$ = $T_\mathrm{hi}$, scaling $\delta T$ accordingly to maintain a consistent value of $T_\mathrm{hi} + \delta T$. If we let $T_\mathrm{star} < T_\mathrm{hi}$, the cooler neutron star surface might act as a heat sink and siphon away energy that would otherwise go into heating the burning layer.
 
 \begin{figure}[t]
 \centering
@@ -461,11 +452,11 @@ To explore the effect of different initial temperature configurations, we run fo
 \caption{\label{fig:compare_500Hz_abar} Comparison of $\bar{A}$ for 3 different 500~Hz models with different neutron star temperatures, $T_\star$, and resulting envelope structures.  Each flame is shown at 70~ms.} %This will be updated to show at 70ms
 \end{figure}
 
-Figure~\ref{fig:compare_500Hz_abar} shows three 500 Hz simulations with different initial temperature structures. The hottest of the three models, $\tt{F500\_3E8}$, has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke out of the flame front and rose through the atmosphere.
+Figure~\ref{fig:compare_500Hz_abar} shows three 500 Hz simulations with different initial temperature structures. The hottest of the three models, $\tt{F500\_3E8}$, has a faster propagating flame. It also appears to have a secondary burning region above the neutron star atmosphere layer (the atmosphere edge is located at $\sim 1.2\times 10^4$ cm). It is likely that a small amount of hot material broke out of the flame front and rose through the atmosphere. This effect, however, may be numerical rather than physical, resulting from the boundary conditions imposed at the axis of symmetry for these simulations. 
 
-In contrast to the models with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$, $\tt{F500\_4E8}$ is so hot that the organized flame front structure is lost. The fuel layer essentially simmers in place, rather than forming a flame; this effect can occur in nature, for neutron stars with very high accretion rates \citep{fujimoto1981,bildsten1998thermonuclear,keek2009effect}. \MarginPar{NF: I remember Alice mentioning this a long time ago, but is there anything I can cite to support it?} This model burns so strongly that it is only run out to $40$ ms. Due to the lack of a clear burning front, we neglect to analyze the flame propagation speed and acceleration for this run. After an initial period of burning moves across the domain, residual burning continues and eventually ignites the entire fuel layer at late times, as shown in Figures \ref{fig:4e8_stacked_enuc} and \ref{fig:4e8_stacked_abar} for three snapshots taken in the last ten seconds of the simulation. In Figure~\ref{fig:4e8_stacked_enuc}, $\enucdot$ reaches values of $10^{18} - 10^{20}~\mathrm{erg}\,\mathrm{g}^{-1} \mathrm{s}^{-1}$ across the domain and at heights up to $\sim 0.5\times 10^4$ cm. There is still significant burning occuring even higher, with $\enucdot$ reaching $\sim 10^{15}~\mathrm{erg}\,\mathrm{g}^{-1} \mathrm{s}^{-1}$ at heights up to $\sim 0.8\times 10^4$ cm. For comparison, the next hottest run ($\tt{F500\_3E8}$) only reaches maximum $\enucdot$ values of $10^{18}~\mathrm{erg}\,\mathrm{g}^{-1} \mathrm{s}^{-1}$ and a maximum height of $\sim 0.5\times 10^4$ cm, even at the latest timesteps ($\sim 70~\mathrm{ms}$, when the flame is most developed). Significant $\enucdot$ values for $\tt{F500\_3E8}$ are confined to the flame front, rather than spanning the entire domain.
+In contrast to the models with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$, $\tt{F500\_4E8}$ is so hot that the organized flame front structure is lost. The fuel layer undergoes stable burning and essentially simmers in place, rather than forming a flame; this effect can occur in nature, for neutron stars with accretion that balances the Eddington luminosity \citep{fujimoto1981,bildsten1998thermonuclear,keek2009effect}. This model burns so strongly that it is only run out to $40$ ms. Due to the lack of a clear burning front, we neglect to analyze the flame propagation speed and acceleration for this run. After an initial period of burning moves across the domain, residual burning continues and eventually ignites the entire fuel layer at late times, as shown in Figures \ref{fig:4e8_stacked_enuc} and \ref{fig:4e8_stacked_abar} for three snapshots taken in the last ten seconds of the simulation. In Figure~\ref{fig:4e8_stacked_enuc}, $\enucdot$ reaches values of $10^{18} - 10^{20}~\mathrm{erg}\,\mathrm{g}^{-1} \mathrm{s}^{-1}$ across the domain and at heights up to $\sim 0.5\times 10^4$ cm. There is still significant burning occuring even higher, with $\enucdot$ reaching $\sim 10^{15}~\mathrm{erg}\,\mathrm{g}^{-1} \mathrm{s}^{-1}$ at heights up to $\sim 0.8\times 10^4$ cm. For comparison, the next hottest run ($\tt{F500\_3E8}$) only reaches maximum $\enucdot$ values of $10^{18}~\mathrm{erg}\,\mathrm{g}^{-1} \mathrm{s}^{-1}$ and a maximum height of $\sim 0.5\times 10^4$ cm, even at the latest timesteps ($\sim 70~\mathrm{ms}$, when the flame is most developed). Significant $\enucdot$ values for $\tt{F500\_3E8}$ are confined to the flame front, rather than spanning the entire domain.
 \MarginPar{NF: should I include a plot for this or is it ok to just say it?}. 
-Figure~\ref{fig:4e8_stacked_abar} plots $\bar{A}$ for $\tt{F500\_4E8}$, and similarly shows burning that extends across the domain and high into the atmosphere and fuel layer, lacking the charactersitic flame structure shown in $\bar{A}$ plots for the lower temperature $500$ Hz runs (see Figure~\ref{fig:compare_500Hz_abar}). A distinct mass of material - resembling a more dramatic version of that shown in Figure~\ref{fig:compare_500Hz_abar} - appears to have broken out of the atmosphere near the axis of symmetry. %Can also add a note here about how high abar values are reached across the domain, maybe don or alice can help give a more detailed analysis of abar. Maybe I could also segue into Alice's phase plots
+Figure~\ref{fig:4e8_stacked_abar} plots $\bar{A}$ for $\tt{F500\_4E8}$, and similarly shows burning that extends across the domain and high into the atmosphere and fuel layer, lacking the charactersitic flame structure shown in $\bar{A}$ plots for the lower temperature $500$ Hz runs (see Figure~\ref{fig:compare_500Hz_abar}). A distinct mass of material - resembling a more dramatic version of that shown in Figure~\ref{fig:compare_500Hz_abar} - appears to have broken out of the atmosphere near the axis of symmetry. Again, this may just be a result of the imposed boundary conditions rather than a physical effect. %Can also add a note here about how high abar values are reached across the domain, maybe don or alice can help give a more detailed analysis of abar. Maybe I could also segue into Alice's phase plots
 
 
 \begin{figure}[t]
