@@ -351,6 +351,20 @@ We run three models ({\tt F250}, {\tt F500}, and {\tt F1000}) with the same init
 \end{figure}
 \MarginPar{update both the abar figures to only show 50 ms and 100 ms snapshots}
 
+\begin{figure}[t]
+\centering
+\plotone{time_series_enuc_500}
+\caption{\label{fig:time_series_enuc_500} Time series of {\tt F500} showing $\dot{e}_\mathrm{nuc}$.}
+\end{figure}
+
+
+\begin{figure}[t]
+\centering
+\plotone{time_series_enuc_1000}
+\caption{\label{fig:time_series_enuc_1000} Time series of {\tt F1000} showing $\dot{e}_\mathrm{nuc}$.}
+\end{figure}
+\MarginPar{update both the abar figures to only show 50 ms and 100 ms snapshots}
+
 
 The {\tt F500} and {\tt F1000} runs both qualitatively resemble the flame structure in \citet{flame_wave1} --- a laterally propagating flame that is lifted off of the bottom of the fuel layer --- but they differ in their burning structures. Figures~\ref{fig:time_series_500} and \ref{fig:time_series_1000} show time series of the mean molecular weight ($\bar{A}$) for the {\tt F500} and {\tt F1000} runs.  Compared to those in \cite{flame_wave1}, ashes behind the flame do not reach as high atomic weights. This is not surprising, since those early runs boosted the reaction rates.  Comparing these two new runs, the burning is much more evolved for the higher rotation rate, and the ash is actually able to move ahead of the flame front (visible in the Figure  \ref{fig:time_series_1000} 100 ms snapshot). We believe that this is because the increased rotation confines the initial perturbation and subsequent expansion from the burning better, allowing the reactions to progress further. In contrast to {\tt F500} and {\tt F1000}, the lowest rotation run --- {\tt F250} --- failed to ignite. The lack of ignition for {\tt F250} also aligns with the reasoning given above, with the lower rotation in this case potentially leading to insufficient confinement of the burning. In this scenario, another source of confinement (e.g.\ magnetic fields) would need to take over at lower rotation rates to allow a burst to occur, at least for our current initial model. 
 
