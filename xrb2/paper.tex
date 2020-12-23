@@ -368,24 +368,24 @@ The {\tt F500} and {\tt F1000} runs both qualitatively resemble the flame struct
 
 Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a dense region with circular motion. Figure \ref{fig:urho} compares the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for {\tt F250}, {\tt F500}, and {\tt F1000}. Most of the burning for each of the simulations occurs in a high density region $\rho > 3 \times 10^5 {\rm g/cm^3}$. The fluid in this dense, high energy generation region undergoes vortical motion, shown in the Figure \ref{fig:uv} phase plots comparing $u$, $v$ and $\dot{e}_{\rm nuc}$. From the previous plots (see: streamlines?) \MarginPar{NF: need to add streamline plots?}, this most likely corresponds to the leading edge of the flame where fresh fuel is being entrained. This feature is not developed in the 250~Hz flame; it could potentially develop at later times, or the flame could just fizzle out. 
 
-The mean molecular weight $\bar{A}$ within each of our simulations seems to grow along defined tracks confined to certain temperatures $T$, as shown in the Figure \ref{fig:abar} phase plots. We believe that the tracks in the plot correspond to reaction pathways in the reaction network. Comparing Figure \ref{fig:abar} to \citet{flame_wave1}, these tracks are much more neat and clearly defined. The ''messiness" of the tracks may be dependent on how mixed the flame interior is --- since these new simulations are un-boosted, they may be inherently less mixed than those in \citet{flame_wave1}. {\tt F1000} aligns with this interpretation: its $\bar{A}$ tracks are somewhat disrupted compared to the slower rotation runs, possibly due to the more vigorous mixing of the vortex at the flame front. Comparing the different runs, we also see that as the rotation rate increases, so does the peak temperature. This makes sense if higher rotation leads to a more concentrated, intense vortex near the flame front. It also agrees with our earlier interpretation of the enhanced burning seen in Figure \ref{fig:time_series_1000} for {\tt F1000}. The disruption of reaction pathways with higher rotation rates and mixed flames may have interesting consequences; if the reactions are disrupted enough, it is possible that the burning could be snuffed out. This can occur in combustion scenarios when the turbulent vortices become so small they penetrate the reaction zone and completely disrupt the burning.
+The mean molecular weight $\bar{A}$ within each of our simulations seems to grow along defined tracks confined to certain temperatures $T$, as shown in the Figure \ref{fig:abar} phase plots. We believe that the tracks in the plot correspond to reaction pathways in the reaction network. Comparing Figure \ref{fig:abar} to \citet{flame_wave1}, these tracks are much more neat and clearly defined. The ''messiness" of the tracks may be dependent on how mixed the flame interior is. Since these new simulations are un-boosted, they may be inherently less mixed than those in \citet{flame_wave1}. {\tt F1000} aligns with this interpretation: its $\bar{A}$ tracks are somewhat disrupted compared to the slower rotation runs, possibly due to the more vigorous mixing of the vortex at the flame front. Comparing the different runs, we also see that as the rotation rate increases, so does the peak temperature. This makes sense if higher rotation leads to a more concentrated, intense vortex near the flame front. It also agrees with our earlier interpretation of the enhanced burning seen in Figure \ref{fig:time_series_1000} for {\tt F1000}. The disruption of reaction pathways with higher rotation rates and mixed flames may have interesting consequences; if the reactions are disrupted enough, it is possible that the burning could be snuffed out. This can occur in combustion scenarios when the turbulent vortices become so small they penetrate the reaction zone and completely disrupt the burning.
 
 \begin{figure}[t]
     \centering
     \plotone{urho_plot_0_1}{}
-    \caption{\label{fig:urho}Phase plot of the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs. The slightly lower $\dot{e}_{\rm nuc}$ values along the $u = 0$ axis are most likely a numerical artifact related to the density gradient setup and finite resolution of these simulations.}
+    \caption{\label{fig:urho}Phase plot of the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs at $t = 100$~ms. The slightly lower $\dot{e}_{\rm nuc}$ values along the $u = 0$ axis are most likely a numerical artifact related to the density gradient setup and finite resolution of these simulations.}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \plotone{uv_plot_0_1}
-    \caption{\label{fig:uv}Phase plot of the horizontal $x$-velocity $u$, vertical $y$-velocity $v$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs.}
+    \caption{\label{fig:uv}Phase plot of the horizontal $x$-velocity $u$, vertical $y$-velocity $v$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs at $t = 100$~ms.}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \plotone{abar_plot_0_1}
-    \caption{\label{fig:abar}Phase plot of the mean molecular weight $\bar{A}$, temperature $T$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs.}
+    \caption{\label{fig:abar}Phase plot of the mean molecular weight $\bar{A}$, temperature $T$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and 1000~Hz runs at $t = 100$~ms.}
 \end{figure}
 
 \MarginPar{Mike wants to check vertical profiles of atmosphere behind flame}
@@ -453,7 +453,7 @@ Figure~\ref{fig:compare_500Hz_abar} shows $\bar{A}$ for three 500 Hz simulations
 \begin{figure}[t]
     \centering
     \plotone{abar_plot_hotter}
-    \caption{\label{fig:abar_hot}Phase plot of the mean molecular weight $\bar{A}$, temperature $T$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 500~Hz runs with $T_{\rm star}$ of $10^8$~K, $2\times10^8$~K and $3\times10^8$~K.}
+    \caption{\label{fig:abar_hot}Phase plot of the mean molecular weight $\bar{A}$, temperature $T$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 500~Hz runs with $T_{\rm star}$ of $10^8$~K, $2\times10^8$~K and $3\times10^8$~K at $t = 40$~ms.}
 \end{figure}
 
 Similar to the $\bar{A}$ trends found for different rotation rates in Figure \ref{fig:abar}, the $\bar{A}$-$T$ phase plot in Figure~\ref{fig:abar_hot} suggests that the actual reactions happening in the hottest run may be different than for the cooler runs. Not only is the $\tt{F500\_3E8}$ flame itself significantly hotter overall, but there is a large causally connected region across a wide range of $\bar{A}$. This indicates that the hotter temperature has facilitated significant burning in reaction pathways that were not favored at the lower temperatures. The reaction pathways are also very disrupted for $\tt{F500\_3E8}$ compared to the cooler runs, suggesting that the hotter temperature leads to more turbulent mixing. Compared to the highest rotation rate run, $\tt{F1000}$, $\tt{F500\_3E8}$ reaches a peak temperature roughly $1 \times 10^9~\mathrm{K}$ higher ($\sim 2.7 \times 10^9~\mathrm{K}$ versus $\sim 1.7 \times 10^9~\mathrm{K}$). Though increasing the rotation rate does seem to concentrate the burning and increase the peak temperature, it does not reach the same level as directly increasing the temperature.
@@ -498,13 +498,13 @@ Looking at the phase plots in Figures~\ref{fig:urho_hot}-\ref{fig:abar_hot}, we 
 \begin{figure}[t]
     \centering
     \plotone{urho_plot_hotter}
-    \caption{\label{fig:urho_hot}Phase plot of the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 500~Hz runs with $T_{\rm star}$ of $10^8$~K, $2\times10^8$~K and $3\times10^8$~K.}
+    \caption{\label{fig:urho_hot}Phase plot of the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 500~Hz runs with $T_{\rm star}$ of $10^8$~K, $2\times10^8$~K and $3\times10^8$~K at $t = 40$~ms.}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \plotone{uv_plot_hotter}
-    \caption{\label{fig:uv_hot}Phase plot of the horizontal $x$-velocity $u$, vertical $y$-velocity $v$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 500~Hz runs with $T_{\rm star}$ of $10^8$~K, $2\times10^8$~K and $3\times10^8$~K.}
+    \caption{\label{fig:uv_hot}Phase plot of the horizontal $x$-velocity $u$, vertical $y$-velocity $v$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 500~Hz runs with $T_{\rm star}$ of $10^8$~K, $2\times10^8$~K and $3\times10^8$~K at $t = 40$~ms.}
 \end{figure}
 
 
