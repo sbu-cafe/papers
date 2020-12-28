@@ -394,22 +394,29 @@ The mean molecular weight $\bar{A}$ within each of our simulations seems to grow
 
 \subsection{Effect of Rotation Rate on Flame Propagation}\label{ssec:rot_propagation}
 
-For the purpose of measuring the flame propagation speed and acceleration, we track the position of each of our flames
-as a function of time. We define the position in terms of a particular energy generation rate ($\enucdot$) value, as we did in \citet{flame_wave1}.
-To recapitulate: we first reduce the 2D $\enucdot$ data for each simulation run to a set of 1D radial profiles by averaging
-over the vertical coordinate. After averaging, we take our reference $\enucdot$ value to be some fraction of the global $\enucdot$
-maximum across all of these profiles. Since the flames in our simulations propagate rightward, we then search the region of
-each profile to the right of the local $\enucdot$ maximum for the point where the $\enucdot$ first drops below this reference
+For the purpose of measuring the flame propagation speed and acceleration, we track the position of 
+each of our flames as a function of time. We define the position in terms of a particular energy 
+generation rate ($\enucdot$) value, as we did in \citet{flame_wave1}. To recapitulate: we first 
+reduce the 2D $\enucdot$ data for each simulation run to a set of 1D radial profiles by averaging
+over the vertical coordinate. After averaging, we take our reference $\enucdot$ value to be some 
+fraction of the global $\enucdot$ maximum across all of these profiles. Since the flames in our 
+simulations propagate rightward, we then search the region of each profile to the right of the 
+local $\enucdot$ maximum for the point where the $\enucdot$ first drops below this reference
 value. This point gives us the location of our flame front.
 
-In \citet{flame_wave1}, we used $0.1\%$ of the global $\enucdot$ maximum for our reference value. For the high temperature
-unboosted flames, however, we found that the $\enucdot$ profiles failed to reach that small a value across the domain at most times,
-which prevented us from getting reliable position measurements. We therefore use $1\%$ of the global $\enucdot$ maximum in this paper
-rather than $0.1\%$. This is still sufficiently small that our measurements are not overly sensitive to turbulence and other local fluid
-motions (the issue with simply tracking the local maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
+In \citet{flame_wave1}, we used $0.1\%$ of the global $\enucdot$ maximum for our reference value. 
+For the high temperature unboosted flames, however, we found that the $\enucdot$ profiles failed to 
+reach that small a value across the domain at most times, which prevented us from getting reliable 
+position measurements. We therefore use $1\%$ of the global $\enucdot$ maximum in this paper
+rather than $0.1\%$. This is still sufficiently small that our measurements are not overly 
+sensitive to turbulence and other local fluid motions (the issue with simply tracking the local 
+maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
 
 \begin{deluxetable}{lrrr}
-	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each simulation. $s_0$ is the speed at $t = 0$. The initial flame velocities and accelerations are derived from a quadratic least-squares fit to each of the datasets for times $t \gtrsim 0.02~\mathrm{s}$.}
+	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each 
+	simulation. $s_0$ is the speed at $t = 0$. The initial flame velocities and accelerations are 
+	derived from a quadratic least-squares fit to each of the datasets for times $t \gtrsim 
+	20~\mathrm{ms}$.}
 	\tablehead{\colhead{run} & \colhead{$s_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)}} 
 	\startdata
 	{\tt F1000}     & $(3.38 \pm 0.11) \times 10^5$ & $(-0.43 \pm 1.57) \times 10^5$ \\
@@ -424,17 +431,41 @@ motions (the issue with simply tracking the local maximum), but allows us to avo
 	\centering
 	\plotone{flame_speeds_rotation.pdf}
 	\caption{\label{fig:flame_speeds_1} Flame front position vs.\ time for the standard ($10^8~\mathrm{K}$) 500 Hz and 1000 Hz runs. The dashed lines
-		show quadratic least-squares fits to the data for $t \gtrsim 0.02~\mathrm{s}$.}
+		show quadratic least-squares fits to the data for $t \gtrsim 20~\mathrm{ms}$.}
 \end{figure}
 
-Figure~\ref{fig:flame_speeds_1} gives position vs.\ time for the $\tt{F500}$ and $\tt{F1000}$ runs (blue and orange, respectively) to show the dependence on rotation rate. As some of the hotter 500~Hz runs exhibit significant accelerations, we fit a quadratic curve to each set of data for times $t \gtrsim 0.02~\mathrm{s}$ and calculate the acceleration and initial velocity from the fit parameters. These results are given in Table~\ref{table:flame_speeds}. \MarginPar{How is the acceleration calculated for this table? I.e. Specifically, at what time / over what time window is it calculated?} \MarginPar{NF: I will update the error estimates}.
+Figure~\ref{fig:flame_speeds_1} gives position vs.\ time for the $\tt{F500}$ and $\tt{F1000}$ runs 
+(blue and orange, respectively) to show the dependence on rotation rate. As some of the hotter 
+500~Hz runs exhibit significant accelerations, we fit a quadratic curve to each set of data for 
+times $t \gtrsim 20~\mathrm{ms}$, with the fit parameters giving the flame acceleration and 
+initial velocity. \MarginPar{KE: Can add an explanation of the averaging method once that's 
+decided.} These results are displayed in Table~\ref{table:flame_speeds}. \MarginPar{NF: I will 
+update the error estimates.}
 
 We found in \citet{flame_wave1} that the flame speed $s$ obeys:
 \begin{equation}
-	\label{eqn:rossby}
-	s \appropto L_R (\epsdot)^{\half} \propto \frac{(\epsdot)^{\half}}{\Omega}
+	\label{eqn:flame_speed_scaling}
+	s \appropto L_R (\enucdot)^{\half} \propto \frac{(\enucdot)^{\half}}{\Omega}
 \end{equation}
-where $\epsdot$ is the specific energy generation rate and $L_R$ is the Rossby length. This was consistent with the results of \citet{cavecchi:2013}, who noted that the flame speeds in their simulations scaled with the Rossby length. As seen in Figure~\ref{fig:flame_speeds_1}, there is no obvious inverse scaling of the flame speed with rotation rate in this set of runs. We observed earlier, however, that nuclear reactions progress more quickly at the higher rotation rate. This results in a higher $\enucdot$ --- up to four to six times higher near the burning front after the flame ignites --- which may counteract the reduction in flame speed from the increased Coriolis confinement. The initial position of $\tt{F1000}$ does appear to be reduced compared to the lower rotation $\tt{F500}$ run. From Equation \ref{eqn:rossby}, increasing the rotation rate from 500 Hz to 1000 Hz should decrease $L_R$ by a factor of two, and the initial position of the flame should be reduced by a similar factor (again, due to greater confinement from the Coriolis force). $L_R$ is not, however, a perfect metric for the flame lengthscale. The scaling described in Equation \ref{eqn:rossby} seems to be more accurate at higher rotation rates (1000 Hz and up), based on \citet{flame_wave1}. We also observe that $\tt{F500}$ accelerates faster than $\tt{F1000}$, which appears to experience a small deceleration at early times. \MarginPar{This is speculation on my part -- does someone else have clear idea why?} This disparity may be a direct result of the difference in Coriolis force. It could also be due to the 500 Hz flame taking more time to develop fully and reach higher burning rates, resulting in an $\epsdot$ \MarginPar{Is this supposed to be enucdot???}increase over time.
+where $\enucdot$ is the specific nuclear energy generation rate and $L_R$ is the Rossby length. 
+This was consistent with the results of \citet{cavecchi:2013}, who noted that the flame speeds in 
+their simulations scaled with the Rossby length. As seen in Figure~\ref{fig:flame_speeds_1}, there 
+is no obvious inverse scaling of the flame speed with rotation rate in this set of runs. We 
+observed earlier, however, that nuclear reactions progress more quickly at the higher rotation 
+rate. This results in a higher $\enucdot$ --- up to four to six times higher near the burning front 
+after the flame ignites --- which may counteract the reduction in flame speed from the increased 
+Coriolis confinement. The initial position of $\tt{F1000}$ does appear to be reduced compared to 
+the lower rotation $\tt{F500}$ run. From Equation \ref{eqn:flame_speed_scaling}, increasing the 
+rotation rate from 500 Hz to 1000 Hz should decrease $L_R$ by a factor of two, and the initial 
+position of the flame should be reduced by a similar factor (again, due to greater confinement from 
+the Coriolis force). $L_R$ is not, however, a perfect metric for the flame lengthscale. The scaling 
+described in Equation \ref{eqn:flame_speed_scaling} seems to be more accurate at higher rotation 
+rates (1000 Hz and up), based on \citet{flame_wave1}. We also observe that $\tt{F500}$ accelerates 
+faster than $\tt{F1000}$, which appears to experience a small deceleration at early times. 
+\MarginPar{KE: This is speculation on my part -- does someone else have clear idea why?} This 
+disparity may be a direct result of the difference in Coriolis force. It could also be due to the 
+500 Hz flame taking more time to develop fully and reach higher burning rates, resulting in an 
+$\enucdot$ increase over time.
 
 % It might be worth plotting peak enucdot as a function of time for each run
 
@@ -488,7 +519,8 @@ The method for measuring flame propagation described in Section \ref{ssec:rot_pr
 	\plotone{500Hz_stacked_enuc1_2order.pdf}
 	\caption{\label{fig:flame_speeds_2} Flame front position vs.\ time for the three 500 Hz runs with
 		$T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. The dashed lines show quadratic least-squares fits to the data
-		for $t \gtrsim 0.02~\mathrm{s}$. Note that, due to its rapid acceleration, $\tt{F500\_3E8}$ (orange) is only run out to $\sim 0.07~\mathrm{s}$ to avoid surpassing the domain boundary.}
+		for $t \gtrsim 20~\mathrm{ms}$. Note that due to its rapid acceleration, $\tt{F500\_3E8}$ 
+		(orange) is only run out to $\sim 0.07~\mathrm{s}$ to avoid surpassing the domain boundary.}
 \end{figure}
 
 Looking at the phase plots in Figures~\ref{fig:urho_hot}-\ref{fig:abar_hot}, we see:
