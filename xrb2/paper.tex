@@ -374,8 +374,46 @@ with $\rho > 2.5\times 10^4~\gcc$.
 \caption{\label{fig:time_series_enuc_1000} Time series of the 1000~Hz run {\tt F1000} showing the nuclear energy generation rate, $\dot{e}_\mathrm{nuc}$.}
 \end{figure}
 
+We run three models ({\tt F250}, {\tt F500}, and {\tt F1000}) with the same initial model in terms 
+of temperature but differing rotation rates. {\color{blue}We saw in \citet{flame_wave1} that 
+increasing the 
+neutron star rotation rate reduces the horizontal lengthscale of the flame. An estimate of 
+this lengthscale is given by the Rossby radius of deformation, $L_R$. The Rossby radius may be 
+thought of as the scale over which the balance between the Coriolis force and horizontal pressure 
+gradient becomes important. It is approximately:
+\begin{equation}
+	\label{eqn:rossby}
+	L_R \approx \frac{\sqrt{g H_0}}{\Omega},
+\end{equation}
+where $g$ is gravitational acceleration, $H_0$ is the atmospheric scale height, and $\Omega$ is the 
+neutron star rotation rate. Comparing Figure \ref{fig:time_series_enuc_500} and Figure 
+\ref{fig:time_series_enuc_1000}, the horizontal extent of the $\tt{F1000}$ flame does appear to be 
+reduced compared to the lower rotation $\tt{F500}$ run. From Equation \ref{eqn:rossby}, increasing 
+the rotation rate from 500 Hz to 1000 Hz should decrease $L_R$ by a factor of two, and the greater 
+confinement from the Coriolis force should reduce the horizontal extent of the flame by a similar 
+factor. The Rossby radius is not a perfect measure of this horizontal lengthscale, however, and 
+here the difference is not a factor of two. The simulations seem to follow the theoretical
+scaling described in Equation \ref{eqn:rossby} more closely at higher rotation rates (1000 Hz and 
+up), based on the results of \citet{flame_wave1}.}
 
-We run three models ({\tt F250}, {\tt F500}, and {\tt F1000}) with the same initial model in terms of temperature but differing rotation rates. The {\tt F500} and {\tt F1000} runs both qualitatively resemble the flame structure in \citet{flame_wave1} --- a laterally propagating flame that is lifted off of the bottom of the fuel layer --- but they differ in their burning structures. Figures~\ref{fig:time_series_500} and \ref{fig:time_series_1000} show time series of the mean molecular weight, $\bar{A}$, for the {\tt F500} and {\tt F1000} runs.  Compared to those in \cite{flame_wave1}, ashes behind the flame do not reach as high atomic weights. This is not surprising, since those previous runs artificially boosted the reaction rates.  Comparing these two new runs, the burning is much more evolved for the higher rotation rate, and the ash is actually able to move ahead of the flame front (visible in the Figure  \ref{fig:time_series_1000} 100 ms snapshot). We believe that this is because the increased rotation better confines the initial perturbation and subsequent expansion from the burning, increasing the temperature and density in the flame front such that the reaction rate increases, which allows the reactions to progress further. In contrast to {\tt F500} and {\tt F1000}, the lowest rotation run --- {\tt F250} --- failed to ignite. The lack of ignition for {\tt F250} also aligns with the reasoning given above, with the lower rotation in this case potentially leading to insufficient confinement such that the temperature and density required for ignition is not achieved. In this scenario, another source of confinement (e.g.\ magnetic fields) would need to take over at lower rotation rates to allow a burst to occur, at least for the initial model used here. 
+The {\tt F500} and {\tt F1000} runs both qualitatively resemble the flame structure in 
+\citet{flame_wave1} --- a laterally propagating flame that is lifted off of the bottom of the fuel 
+layer --- but they differ in their burning structures. Figures~\ref{fig:time_series_500} and 
+\ref{fig:time_series_1000} show time series of the mean molecular weight, $\bar{A}$, for the {\tt 
+F500} and {\tt F1000} runs.  Compared to those in \cite{flame_wave1}, ashes behind the flame do not 
+reach as high atomic weights. This is not surprising, since those previous runs artificially 
+boosted the reaction rates.  Comparing these two new runs, the burning is much more evolved for the 
+higher rotation rate, and the ash is actually able to move ahead of the flame front (visible in the 
+Figure  \ref{fig:time_series_1000} 100 ms snapshot). We believe that this is because the increased 
+rotation better confines the initial perturbation and subsequent expansion from the burning, 
+increasing the temperature and density in the flame front such that the reaction rate increases, 
+which allows the reactions to progress further. In contrast to {\tt F500} and {\tt F1000}, the 
+lowest rotation run --- {\tt F250} --- failed to ignite. The lack of ignition for {\tt F250} also 
+aligns with the reasoning given above, with the lower rotation in this case potentially leading to 
+insufficient confinement such that the temperature and density required for ignition is not 
+achieved. In this scenario, another source of confinement (e.g.\ magnetic fields) would need to 
+take over at lower rotation rates to allow a burst to occur, at least for the initial model used 
+here. 
 
 Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a dense region with circular motion. Figure \ref{fig:urho} compares the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the {\tt F250}, {\tt F500}, and {\tt F1000} runs. Most of the burning for each of the simulations occurs in a high density region $\rho > 3 \times 10^5 {\rm g\,cm^{-3}}$. The fluid in this dense, high energy generation region undergoes vortical motion, shown in the Figure \ref{fig:uv} phase plots comparing $u$, $v$ and $\dot{e}_{\rm nuc}$. From the previous plots (see: streamlines?) \MarginPar{NF: need to add streamline plots?}, this most likely corresponds to the leading edge of the flame where fresh fuel is being entrained. This feature is not developed in the 250~Hz flame; it could potentially develop at later times (past the point at which we terminated our simulation), or the flame could just fizzle out and fail to ignite entirely. 
 
@@ -404,14 +442,14 @@ The mean molecular weight $\bar{A}$ within each of our simulations seems to grow
 \subsection{Effect of Rotation Rate on Flame Propagation}\label{ssec:rot_propagation}
 
 For the purpose of measuring the flame propagation speed and acceleration, we track the position of 
-each of our flames as a function of time. We define the position in terms of a specific value of the energy 
-generation rate, $\enucdot$, as we did in \citet{flame_wave1}. To recapitulate: we first 
+each of our flames as a function of time. We define the position in terms of a specific value of 
+the energy generation rate, $\enucdot$, as we did in \citet{flame_wave1}. To recapitulate: we first 
 reduce the 2D $\enucdot$ data for each simulation run to a set of 1D radial profiles by averaging
 over the vertical coordinate. After averaging, we take our reference $\enucdot$ value to be some 
 fraction of the global $\enucdot$ maximum across all of these profiles. Since the flames in our 
-simulations propagate in the positive radial direction, we then search the region of each profile at greater radius than the
-local $\enucdot$ maximum for the point where the $\enucdot$ first drops below this reference
-value. This point gives us the location of our flame front.
+simulations propagate in the positive radial direction, we then search the region of each profile 
+at greater radius than the local $\enucdot$ maximum for the point where the $\enucdot$ first drops 
+below this reference value. This point gives us the location of our flame front.
 
 In \citet{flame_wave1}, we used $0.1\%$ of the global $\enucdot$ maximum for our reference value. 
 For the high temperature unboosted flames, however, we found that the $\enucdot$ profiles failed to 
@@ -456,20 +494,15 @@ We found in \citet{flame_wave1} that the flame speed, $s$, obeys the following r
 	\label{eqn:flame_speed_scaling}
 	s \appropto L_R (\enucdot)^{\half} \propto \frac{(\enucdot)^{\half}}{\Omega},
 \end{equation}
-where $\enucdot$ is the specific nuclear energy generation rate and $L_R$ is the Rossby length. 
+where $\enucdot$ is the specific nuclear energy generation rate and $L_R$ is the Rossby length 
+described by Equation \ref{eqn:rossby}. 
 This was consistent with the results of \citet{cavecchi:2013}, who noted that the flame speeds in 
 their simulations scaled with the Rossby length. As seen in Figure~\ref{fig:flame_speeds_1}, there 
 is no obvious inverse scaling of the flame speed with rotation rate in this set of runs. We 
 observed earlier, however, that nuclear reactions progress more quickly at higher rotation 
 rate. This results in a higher $\enucdot$ --- up to four to six times higher near the burning front 
 after the flame ignites --- which may counteract the reduction in flame speed from the increased 
-Coriolis confinement. The initial position of $\tt{F1000}$ does appear to be reduced compared to 
-the lower rotation $\tt{F500}$ run. From Equation \ref{eqn:flame_speed_scaling}, increasing the 
-rotation rate from 500 Hz to 1000 Hz should decrease $L_R$ by a factor of two, and the initial 
-position of the flame should be reduced by a similar factor (again, due to greater confinement from 
-the Coriolis force). $L_R$ is not, however, a perfect metric for the flame lengthscale. The scaling 
-described in Equation \ref{eqn:flame_speed_scaling} seems to be more accurate at higher rotation 
-rates (1000 Hz and up), based on \citet{flame_wave1}. We also observe that $\tt{F500}$ accelerates 
+Coriolis confinement. We also observe that $\tt{F500}$ accelerates 
 faster than $\tt{F1000}$, which appears to experience a small deceleration at early times. 
 \MarginPar{KE: This is speculation on my part -- does someone else have clear idea why?} This 
 disparity may be a direct result of the difference in Coriolis force. It could also be due to the 
