@@ -304,8 +304,7 @@ peak temperature in the hot model, $T_\mathrm{star} + \delta T$.
 
 For the current simulations, we explore a variety of initial rotation
 rate and temperature conditions for the flame. The main parameters
-describing the models are provided in Table
-\ref{table:runs}. Figure~\ref{fig:hot_profiles} shows the
+describing the models are provided in Table~\ref{table:runs}. Figure~\ref{fig:hot_profiles} shows the
 temperature and density structure for our hot models and
 figure~\ref{fig:cool_profiles} shows the temperature and density
 structure for the cool models.
@@ -483,7 +482,7 @@ $\enucdot$ increase over time.
 
  \MarginPar{NF: I think we should plot peak enucdot as a function of time for each run, it would be useful for me to reference it in one of the later sections}
 
-To explore the effect of different initial temperature configurations, we run four simulations fixed at a rotation rate of 500 Hz with temperatures as shown in Table \ref{table:runs}. For all the 500 Hz simulations (with the exception of the coolest run, $\tt{F500}$), we set $T_\mathrm{star}$ = $T_\mathrm{hi}$, scaling $\delta T$ accordingly to maintain a consistent value of $T_\mathrm{hi} + \delta T$. If we let $T_\mathrm{star} < T_\mathrm{hi}$, the cooler neutron star surface might act as a heat sink and siphon away energy that would otherwise go into heating the burning layer. By choosing $T_\mathrm{star}$ = $T_\mathrm{hi}$, we can effectively explore simulations with greater surface heating. There are several physically distinct mechanisms that could produce an increased temperature at the crust: crustal heating, some other form of shallow heating or a higher accretion rate. In these simulations, we do not model the mechanism producing the heating effect, just the effect itself, so we do not distinguish between which of these mechanisms cause the heating.
+To explore the effect of different initial temperature configurations, we run four simulations fixed at a rotation rate of 500 Hz with temperatures as shown in Table~\ref{table:runs}. For all the 500 Hz simulations (with the exception of the coolest run, $\tt{F500}$), we set $T_\mathrm{star}$ = $T_\mathrm{hi}$, scaling $\delta T$ accordingly to maintain a consistent value of $T_\mathrm{hi} + \delta T$. If we let $T_\mathrm{star} < T_\mathrm{hi}$, the cooler neutron star surface might act as a heat sink and siphon away energy that would otherwise go into heating the burning layer. By choosing $T_\mathrm{star}$ = $T_\mathrm{hi}$, we can effectively explore simulations with greater surface heating. There are several physically distinct mechanisms that could produce an increased temperature at the crust: crustal heating, some other form of shallow heating or a higher accretion rate. In these simulations, we do not model the mechanism producing the heating effect, just the effect itself, so we do not distinguish between which of these mechanisms cause the heating.
 
 \begin{figure}[t]
 \centering
@@ -516,7 +515,7 @@ Figure~\ref{fig:4e8_stacked_abar} shows $\bar{A}$ for $\tt{F500\_4E8}$. Again, b
 
 \subsection{Effect of Temperature on Flame Propagation}\label{ssec:temp_prop}
 
-The method for measuring flame propagation described in Section \ref{ssec:rot_propagation} is applied in Figure \ref{fig:flame_speeds_2} to the three 500 Hz runs with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. Due to the lack of a clear burning front in $\tt{F500\_4E8}$, we neglect to analyze its propagation speed and acceleration. As the initial $T_{\mathrm{star}}$ is increased, the flame becomes greatly accelerated. The initial flame velocities and accelerations derived from a quadratic least-squares fit to each of the datasets are provided in Table \ref{table:flame_speeds}. The reason for the acceleration of the flame over time is not entirely clear. It could be that energy released from burning begins to dominate the flame's propagation as it evolves, increasing the flame speed over time. Another possibility is that the increased temperatures lead to enhanced turbulent mixing effects that pull in more fresh fuel for the flame to burn. Yet another possibility is that the higher initial $T_{\mathrm{star}}$ leads to a greater average temperature in the fuel layer over time, making it easier for the flame to burn the fuel and propagate.
+The method for measuring flame propagation described in Section \ref{ssec:rot_propagation} is applied in Figure \ref{fig:flame_speeds_2} to the three 500 Hz runs with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. Due to the lack of a clear burning front in $\tt{F500\_4E8}$, we do not analyze its propagation speed and acceleration. As the initial $T_{\mathrm{star}}$ is increased, the flame becomes greatly accelerated. The initial flame velocities and accelerations derived from a quadratic least-squares fit to each of the datasets are provided in Table~\ref{table:flame_speeds}. The reason for the acceleration of the flame over time is not entirely clear. It could be that energy released from burning begins to dominate the flame's propagation as it evolves, increasing the flame speed over time. Another possibility is that the increased temperatures lead to enhanced turbulent mixing effects that pull in more fresh fuel for the flame to burn. Yet another possibility is that the higher initial $T_{\mathrm{star}}$ leads to a greater average temperature in the fuel layer over time, making it easier for the flame to burn the fuel and propagate.
 
 
 \begin{figure}[t]
@@ -528,11 +527,7 @@ The method for measuring flame propagation described in Section \ref{ssec:rot_pr
 		(orange) is only run out to $\sim 0.07~\mathrm{s}$ to avoid surpassing the domain boundary.}
 \end{figure}
 
-Looking at the phase plots in Figures~\ref{fig:urho_hot}-\ref{fig:abar_hot}, we see:
-\begin{itemize}
-    \item The $u$-$\rho$ plot in Figure~\ref{fig:urho_hot} shows that the horizontal velocity when $T_{\rm star} = 3\times10^8$~K is sufficiently greater than for the two cooler runs. This is consistent with the plot of the flame front position, where we saw that the hottest flame was significantly faster at later times than the cooler flames.
-    \item The $u$-$v$ plot in Figure~\ref{fig:uv_hot} further demonstrates this, as again we see that the magnitude of the velocity of the flame for the hottest run is significantly larger. Also of interest in these plots is that the coolest run does not seem to have developed the characteristic vortex structure at the burning front (i.e. where $\dot{e}_{\rm nuc}$ is greatest) that can be clearly seen for the hotter runs.
-\end{itemize}
+The $u$-$\rho$ phase plot in Figure~\ref{fig:urho_hot} shows that the horizontal velocity for the $T_{\rm star} = 3\times10^8$~K is sufficiently greater in magnitude than for the two cooler runs. The $u$-$v$ plot in Figure~\ref{fig:uv_hot} further demonstrates this, as again we see that the magnitude of the velocity in the vertical direction of the flame for the hottest run is also significantly larger. This motion therefore most likely corresponds to the vortical motion rather than to the propagation of the flame itself, something which is further supported by the fact that the velocity magnitude is 2-3 orders of magnitude greater than the flame speeds listed in Table~\ref{table:flame_speeds}. Also of interest in these plots is that the coolest run does not seem to have developed the characteristic vortex structure at the burning front (i.e. where $\dot{e}_{\rm nuc}$ is greatest) that can be clearly seen for the hotter runs at this time (40~ms). As can be seen in Figure~\ref{fig:uv} (which was plotted at 100~ms), this does develop more at later times. Similar to what saw when comparing the runs with different rotation rates, it would therefore appear that it takes longer for the flame to develop when $T_{\rm star}$ is cooler. 
 
 \begin{figure}[t]
     \centering
@@ -557,9 +552,13 @@ Looking at the phase plots in Figures~\ref{fig:urho_hot}-\ref{fig:abar_hot}, we 
 %======================================================================
 \section{Discussion and Conclusions}\label{Sec:conclusions}
 
-tl;dr: faster rotation and/or hotter surface temperature = more burning.
+We ran a number of simulations of laterally propagating flames in XRBs in order to explore the effects and rotation and thermal structure. We found that increasing the rotation rate increased the energy generation rate within the flame, enhancing its propagating. This is likely due to greater confinement of the flame from the increased Coriolis force. We explored several models with different crustal temperatures, to determine what effects mechanisms such as higher accretion rates, crustal heating and shallow heating may have on flame propagation. We found that increasing the temperature of the crust significantly enhanced the flame propagation. This we believe to be because a cooler crust allows heat to more efficiently be transferred from the flame itself, therefore reducing the flame's temperature, slowing burning and consequently the reducing its propagation speed. We saw that if the crust temperature was too high, then instead of a flame, the atmosphere would burn stably. This is reminiscent of what is seen for neutron stars with accretion rates exceeding the Eddington luminosity.
 
-Next steps: tracer particles, 3-d, explore resolution more, H/He flames, MHD flames
+In future simulations, we would like to improve and expand our simulations in order to better understand the processes at play and to include more physics. This includes adding tracer particles to the simulations so we can monitor the fluid motion; extending our simulations to 3D, which would hopefully alleviate some of the boundary effects we have observed in these simulations but will require significant computational resource; and exploring the resolution of our simulations more so that we can ensure that we have resolved all the necessary physical processes. We would also like to model H/He flames, \MarginPar{someone please describe here why these would be interesting as I can't remember what makes them different}. We recently added an MHD solver to \castro; this will allow us to explore the effects of magnetic fields on flame propagation in XRBs. 
+
+% tl;dr: faster rotation and/or hotter surface temperature = more burning.
+
+% Next steps: tracer particles, 3-d, explore resolution more, H/He flames, MHD flames
 
 
 \acknowledgments \castro\ is open-source and freely available at
