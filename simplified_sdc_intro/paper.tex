@@ -869,13 +869,13 @@ from $\Ic_q^{n+1/2,(k-1)}$.  We only need to update the internal energy and auxi
 since together with the density, that is all that is needed for the equation of state to get the
 updated temperature.    So our sources are:
 \begin{equation}
-\Rb(\rho e) \approx \Ics_q(\rho e)
+R(\rho e) \approx \Ics_q(\rho e)
 \end{equation}
 and
 \begin{equation}
-\Rb(\rho \alpha_l) \approx \rho^{n+1/2} \Ics_q(\alpha_l)
+R(\rho \alpha_l) \approx \rho^{n+1/2} \Ics_q(\alpha_l)
 \end{equation}
-were $\rho^{n+1/2} = (\rho^n + \rho^\star)/2$.
+where $\rho^{n+1/2} = (\rho^n + \rho^\star)/2$.
 
 Since we have $(dY_e/dt)^n$ from the table, we replace the source for $Y_e$ in the above
 $\Rb(\Uc^n)$ as: \MarginPar{it might be better if we had $\Ics_\Uc$}
@@ -886,9 +886,13 @@ which gives an update for the electron fraction as:
 \begin{equation}
 (\rho Y_e)^\star = (\rho Y_e)^n + \Delta t \Advss{\rho Y_e}^{n+1/2} + \Delta t \rho^{n+1/2} (dY_e/dt)^n
 \end{equation}
+We can then get $\alpha_l^\star = (\rho \alpha_l)^\star/\rho^\star$.
 From this prediction, we get $\rho^\star$, $\alpha_l^\star$, and
 $e^\star$, which allows us to call the EOS and get an updated
 temperature, $T^\star$. \MarginPar{Andy suggests time-centering $dY_e/dt$}
+\begin{equation}
+T^\star = T(\rho^\star, \alpha_l^\star, e^\star)
+\end{equation}
 We can then again call the NSE table:
 \begin{equation}
 \nse{\rho^\star, T^\star, (Y_e)^\star} \rightarrow \bar{A}^{n+1,(k)}, (X_k)^{n+1,(k)}, (B/A)^{n+1,(k)}, (dY_e/dt)
@@ -907,7 +911,7 @@ We then compute the energy release as
 \end{equation}\MarginPar{is this right?}
 and then do the final update of the total energy:
 \begin{equation}
-(\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2} + (\rho \Sdot)^{n+1/2}
+(\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2} + \Delta t (\rho \Sdot)^{n+1/2}
 \end{equation}
 
 \section{Simulations}
