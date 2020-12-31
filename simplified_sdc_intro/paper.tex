@@ -421,7 +421,7 @@ as compared to a method-of-lines approach (see
 \citealt{ppmunsplit}).  In addition to the standard CFL timestep
 limiter for explicit hydrodynamics, \castro\ can also enforce
 timestep limiters based on the energy generation or abundance changes
-over a timestep:
+over a timestep: \MarginPar{do we enforce this in the NSE region?}
 \begin{align}
 \label{eq:dt:nuce}
 \Delta t &\le f_e\, \min_{i} \left\{\frac{e_{i}}{\dot{S}_{i}}\right\} \\
@@ -693,7 +693,7 @@ For this study we will use the 19 nuclei network containing
 \isot{Cr}{48}, \isot{Fe}{52}, \isot{Fe}{54}, \isot{Ni}{56}, protons
 (from photodisintegration), and neutrons.  This is based on the
 ``aprox19'' network from \cite{aprox19} and originally described in
-\cite{Kepler}.  We combine this with a table that gives the nuclear
+\cite{Kepler}.  We use a modified version of the VODE~\citep{vode} integrator---ported to C++ with checks added to the timestep rejection logic that ensure that the species mass fractions stay between 0 and 1\footnote{This modified version of VODE is available in our Microphysics repo: \url{https://github.com/starkiller-astro/Microphysics}.}.\MarginPar{discuss tolerances}  We combine this with a table that gives the nuclear
 statistical equilibrium (NSE) abundances in regions where the system
 is in NSE.  The NSE table was generated using a 127 nuclei reaction
 network and is the same as described in \cite{ma:2013}.  In our
@@ -808,65 +808,40 @@ are as follows:
     \item For a zone that is in NSE:
 
       The goal is to update the composition and thermodynamics due to the 
-      change in the nuclei abundances over the (half-)timestep.  There are
-      a few approaches we can do here.
+      change in the nuclei abundances over the (half-)timestep.  \citet{ma:2013}
+      uses a first-order in time difference to get the new composition state
+      and evaluates the energy release from the change in binding energy in the NSE
+      state.  They only apply a fraction (0.3) of the energy release to the internal
+      energy in a zone, to avoid a potential instability that can arise if too much
+      energy is added to a zone in a single timestep.  We prefer to deal with this
+      issue through the retry mechanism already built into \castro.
 
-      \begin{itemize}
-      \item Method I: {\em Use the time-level $n$ information for the update}.
-
-        This is the approach used in \citet{ma:2013}.  We call the table with the 
-        input state:
-        \begin{equation}
-          \nse{\rho_{\rm in}, T_{\rm in}, (Y_e)_{\rm in}} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
+      The approach we use begins with calling the NSE table with the input state:
+      \begin{equation}
+        \nse{\rho_\inp, T_\inp, (Y_e)_\inp} \rightarrow \bar{A}^\star, (X_k)^\star, (B/A)^\star, dY_e/dt
         \end{equation}
-
-        We can now update $Y_e$:
-        \begin{equation}
-          (Y_e)_{\rm out} = (Y_e)_{\rm in} + \Delta t \frac{dY_e}{dt}
-        \end{equation}
-        and take the auxiliary state values of $\bar{A}$ and $(B/A)$ to be simply
-        the values from the table, $\bar{A}_\out$ and $(B/A)_\out$, and the mass fractions
-        $X_k$ to be the $(X_k)_{\rm out}$ returned from the table.
-
-        Finally, we compute the energy generation rate, $\Sdot$ as:
-        \begin{equation}
-          \label{eq:nse_energy}
-          \Sdot = \left [ \left ( \frac{B}{A} \right )_{\rm out} -
-            \left ( \frac{B}{A} \right )_{\rm in} \right ] N_A \frac{1}{\Delta t}
-        \end{equation}
-
-        We note that \citet{ma:2013} modified Eq.~\ref{eq:nse_energy}
-        to take use only a fraction (0.3) of the energy change from
-        the table, to avoid a potential instability that can arise if
-        too much energy is deposited in a zone in a single timestep
-        (they called this an inertia term).  We prefer to deal with
-        the issue of too much energy being deposited in a zone in one
-        step through the retry mechanism already built into \castro.
-
-      \item Method II: {\em predictor-corrector.}
-
-        This starts out the same as the above method:
-        \begin{equation}
-          \nse{\rho, T, (Y_e)_{\rm in}} \rightarrow \bar{A}^\star, (X_k)^\star, (B/A)^\star, dY_e/dt
-        \end{equation}
-        but we indicate with a $\star$ that most of those values are
-        provisional, and we will seek a better value in the corrector step.
-        We only update $Y_e$ from this call:
-        \begin{equation}
-          (Y_e)_{\rm out} = (Y_e)_{\rm in} + \Delta t \frac{dY_e}{dt}
-        \end{equation}
-        and then we use the table again, but with the updated $Y_e$
-        (note that $\rho_{\rm out}=\rho_{\rm in}$ in the Strang reaction formulation):
-        \MarginPar{Indicate what $T$ is used.}
-        \begin{equation}
-          \nse{\rho_{\rm out}, T_{\rm ???}, (Y_e)_\out} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
-        \end{equation}
-        This corrects the composition so that it is consistent with the updated
-        $Y_e$.  We use these values $\bar{A}_\out$, $(X_k)_\out$, and $(B/A)_\out$ to then complete the update, computing the energy as in Eq.~\ref{eq:nse_energy}.  \MarginPar{we could imagine looping over the EOS to get an updated T and then the table to get the updated $\bar{A}$, to see if that converges?}
-
-      \end{itemize}
-
-      \item For zones not in NSE:
+      We indicate with a $\star$ that most of those values are
+      provisional, and we will seek a better value in the corrector step.
+      We only update $Y_e$ from this call:
+      \begin{equation}
+        (Y_e)_\out = (Y_e)_\inp + \Delta t \frac{dY_e}{dt}
+      \end{equation}
+      and then we use the table again, but with the updated $Y_e$
+      (note that $\rho_{\rm out}=\rho_{\rm in}$ in the Strang reaction formulation):
+      \begin{equation}
+        \nse{\rho_\out, T_\inp, (Y_e)_\out} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
+      \end{equation}
+      In this formulation, we have not updated the temperature. \MarginPar{discuss this more, and perhaps switch to a mode where we try to predict T}
+      This corrects the composition so that it is consistent with the updated
+      $Y_e$.  We use these values $\bar{A}_\out$, $(X_k)_\out$, and $(B/A)_\out$ to then complete the update, computing the energy release, $\Sdot$ as:
+      \begin{equation}
+        \label{eq:nse_energy}
+        \Sdot = \left [ \left ( \frac{B}{A} \right )_\out -
+          \left ( \frac{B}{A} \right )_\inp \right ] N_A \frac{1}{\Delta t}
+      \end{equation}
+      \MarginPar{we could imagine looping over the EOS to get an updated T and then the table to get the updated $\bar{A}$, to see if that converges?}
+      
+    \item For zones not in NSE:
 
     \begin{itemize}
     \item Integrate the full reaction network (Eqs.~\ref{eq:strang:T} and \ref{eq:strang:X}) as usual for Strang splitting
@@ -883,32 +858,33 @@ values, we get instantaneous values of the reaction sources, but the only
 time derivative we have is for $Y_e$.  We will
 use a basic predictor-corrector update:
 \begin{equation}
-\Uc^\star = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2} + \Delta t \Rb (\Uc^n)
+\Uc^\star = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2} + \Delta t \left [\Rb (\Uc) \right ]^{n+1/2}
 \end{equation}
-Calling the NSE table on the starting state gives use:
+Calling the NSE table on the starting state gives us:
 \begin{equation}
 \nse{\rho^n, T^n, (Y_e)^n} \rightarrow \bar{A}^n, (X_k)^n, (B/A)^n, (dY_e/dt)^n
 \end{equation}
-To get the reactive source, we need to use the iteratively-lagged information
-from $\Ic_q^{n+1/2,(k-1)}$:
+To get the reactive source, we need to use the iteratively-lagged time-centered information
+from $\Ic_q^{n+1/2,(k-1)}$.  We only need to update the internal energy and auxiliary data,
+since together with the density, that is all that is needed for the equation of state to get the
+updated temperature.    So our sources are:
 \begin{equation}
-\Rb(\Uc^n) \approx \left (\begin{array}{c}
-  0 \\
-  \rho^n \Ics_q(\omegadot(X_k)) \\
-  \rho^n \Ics_q(\omegadot(\alpha_l)) \\
-  0 \\
-  \Ics_q(\rho e) 
-\end{array}
-\right )
+\Rb(\rho e) \approx \Ics_q(\rho e)
 \end{equation}
-Since we have $(dY_e/dt)^n$ from the table, we replace the source for $Y_e$ in the above
-$\Rb(\Uc^n)$ as:
+and
 \begin{equation}
-R(\rho Y_e) = \rho (dY_e/dt)^n
+\Rb(\rho \alpha_l) \approx \rho^{n+1/2} \Ics_q(\alpha_l)
+\end{equation}
+were $\rho^{n+1/2} = (\rho^n + \rho^\star)/2$.
+
+Since we have $(dY_e/dt)^n$ from the table, we replace the source for $Y_e$ in the above
+$\Rb(\Uc^n)$ as: \MarginPar{it might be better if we had $\Ics_\Uc$}
+\begin{equation}
+R(\rho Y_e) = \rho^{n+1/2} (dY_e/dt)^n
 \end{equation}
 which gives an update for the electron fraction as:
 \begin{equation}
-(\rho Y_e)^\star = (\rho Y_e)^n + \Delta t \Advss{\rho Y_e}^{n+1/2} + \Delta t \rho (dY_e/dt)^n
+(\rho Y_e)^\star = (\rho Y_e)^n + \Delta t \Advss{\rho Y_e}^{n+1/2} + \Delta t \rho^{n+1/2} (dY_e/dt)^n
 \end{equation}
 From this prediction, we get $\rho^\star$, $\alpha_l^\star$, and
 $e^\star$, which allows us to call the EOS and get an updated
