@@ -346,20 +346,27 @@ with $\rho > 2.5\times 10^4~\gcc$.
 
 \subsection{Effect of Rotation Rate on Flame Structure}\label{ssec:rot_structure}
 
-
-
-\begin{figure}[t]
-\centering
-\plotone{time_series_500}
-\caption{\label{fig:time_series_500} Time series of the 500~Hz run {\tt F500} showing the mean molecular weight, $\bar{A}$.}
-\end{figure}
-
-
-\begin{figure}[t]
-\centering
-\plotone{time_series_1000}
-\caption{\label{fig:time_series_1000} Time series of the 1000~Hz run {\tt F1000} showing the mean molecular weight, $\bar{A}$.}
-\end{figure}
+We run three models ({\tt F250}, {\tt F500}, and {\tt F1000}) with the same initial model in terms 
+of temperature but differing rotation rates. {\color{blue}We saw in \citet{flame_wave1} that 
+increasing the 
+neutron star rotation rate reduces the horizontal lengthscale of the flame. An estimate of 
+this lengthscale is given by the Rossby radius of deformation, $L_R$. The Rossby radius may be 
+thought of as the scale over which the balance between the Coriolis force and horizontal pressure 
+gradient becomes important, and is approximately:
+\begin{equation}
+	\label{eqn:rossby}
+	L_R \approx \frac{\sqrt{g H_0}}{\Omega},
+\end{equation}
+where $g$ is gravitational acceleration, $H_0$ is the atmospheric scale height, and $\Omega$ is the 
+neutron star rotation rate. In Figure \ref{fig:time_series_enuc_500} and Figure 
+\ref{fig:time_series_enuc_1000}, we use the energy generation rate $\dot{e}_\mathrm{nuc}$ at $50~\mathrm{ms}$ and $100~\mathrm{ms}$ for {\tt F500} and {\tt F1000} to discern the horizontal extent of the flame at different rotation rates. Taking the rightmost edge of the bright teal/green region (where significant energy generation is occuring) as the leading edge of the flame in each plot, we see that the horizontal extent of the $\tt{F1000}$ flame appears to be 
+reduced compared to the lower rotation $\tt{F500}$ run. From Equation \ref{eqn:rossby}, increasing 
+the rotation rate from 500 Hz to 1000 Hz should decrease $L_R$ by a factor of two, and the greater 
+confinement from the Coriolis force should reduce the horizontal extent of the flame by a similar 
+factor. The Rossby radius is not a perfect measure of this horizontal lengthscale, however, and 
+here the difference is not a factor of two. The simulations seem to follow the theoretical
+scaling described in Equation \ref{eqn:rossby} more closely at higher rotation rates (1000 Hz and 
+up), based on the results of \citet{flame_wave1}.}
 
 \begin{figure}[t]
 \centering
@@ -374,27 +381,18 @@ with $\rho > 2.5\times 10^4~\gcc$.
 \caption{\label{fig:time_series_enuc_1000} Time series of the 1000~Hz run {\tt F1000} showing the nuclear energy generation rate, $\dot{e}_\mathrm{nuc}$.}
 \end{figure}
 
-We run three models ({\tt F250}, {\tt F500}, and {\tt F1000}) with the same initial model in terms 
-of temperature but differing rotation rates. {\color{blue}We saw in \citet{flame_wave1} that 
-increasing the 
-neutron star rotation rate reduces the horizontal lengthscale of the flame. An estimate of 
-this lengthscale is given by the Rossby radius of deformation, $L_R$. The Rossby radius may be 
-thought of as the scale over which the balance between the Coriolis force and horizontal pressure 
-gradient becomes important, and is approximately:
-\begin{equation}
-	\label{eqn:rossby}
-	L_R \approx \frac{\sqrt{g H_0}}{\Omega},
-\end{equation}
-where $g$ is gravitational acceleration, $H_0$ is the atmospheric scale height, and $\Omega$ is the 
-neutron star rotation rate. Comparing Figure \ref{fig:time_series_enuc_500} and Figure 
-\ref{fig:time_series_enuc_1000}, the horizontal extent of the $\tt{F1000}$ flame does appear to be 
-reduced compared to the lower rotation $\tt{F500}$ run. From Equation \ref{eqn:rossby}, increasing 
-the rotation rate from 500 Hz to 1000 Hz should decrease $L_R$ by a factor of two, and the greater 
-confinement from the Coriolis force should reduce the horizontal extent of the flame by a similar 
-factor. The Rossby radius is not a perfect measure of this horizontal lengthscale, however, and 
-here the difference is not a factor of two. The simulations seem to follow the theoretical
-scaling described in Equation \ref{eqn:rossby} more closely at higher rotation rates (1000 Hz and 
-up), based on the results of \citet{flame_wave1}.}
+\begin{figure}[t]
+\centering
+\plotone{time_series_500}
+\caption{\label{fig:time_series_500} Time series of the 500~Hz run {\tt F500} showing the mean molecular weight, $\bar{A}$.}
+\end{figure}
+
+
+\begin{figure}[t]
+\centering
+\plotone{time_series_1000}
+\caption{\label{fig:time_series_1000} Time series of the 1000~Hz run {\tt F1000} showing the mean molecular weight, $\bar{A}$.}
+\end{figure}
 
 The {\tt F500} and {\tt F1000} runs both qualitatively resemble the flame structure in 
 \citet{flame_wave1} --- a laterally propagating flame that is lifted off of the bottom of the fuel 
@@ -407,7 +405,7 @@ higher rotation rate, and the ash is actually able to move ahead of the flame fr
 Figure  \ref{fig:time_series_1000} 100 ms snapshot). We believe that this is because the increased 
 rotation better confines the initial perturbation and subsequent expansion from the burning, 
 increasing the temperature and density in the flame front such that the reaction rate increases, 
-which allows the reactions to progress further. In contrast to {\tt F500} and {\tt F1000}, the 
+which allows the reactions to progress further. {\color{blue} The $\dot{e}_\mathrm{nuc}$ plots in Figure \ref{fig:time_series_enuc_1000} also support this interpretation, with the interior of the {\tt F1000} flame reaching higher $\dot{e}_\mathrm{nuc}$ values than for the {\tt F500} run in Figure \ref{fig:time_series_enuc_500}.} In contrast to {\tt F500} and {\tt F1000}, the 
 lowest rotation run --- {\tt F250} --- failed to ignite. The lack of ignition for {\tt F250} also 
 aligns with the reasoning given above, with the lower rotation in this case potentially leading to 
 insufficient confinement such that the temperature and density required for ignition is not 
@@ -466,10 +464,10 @@ maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
 	20~\mathrm{ms}$.}
 	\tablehead{\colhead{run} & \colhead{$s_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)}} 
 	\startdata
-	{\tt F1000}     & $(3.38 \pm 0.11) \times 10^5$ & $(-0.43 \pm 1.57) \times 10^5$ \\
-	{\tt F500}      & $(2.66 \pm 0.27) \times 10^5$ & $(10.97 \pm 3.22) \times 10^5$ \\
-	{\tt F500\_2E8} & $(3.98 \pm 0.19) \times 10^5$ & $(-1.56 \pm 2.63) \times 10^5$ \\
-	{\tt F500\_3E8} & $(-4.56 \pm 2.92) \times 10^5$ & $(3.39 \pm 0.60) \times 10^7$ \\
+  {\tt F1000}     & $(3.38 \pm 0.11) \times 10^5$ & $(-0.43 \pm 1.57) \times 10^5$ \\
+  {\tt F500}      & $(2.66 \pm 0.27) \times 10^5$ & $(10.97 \pm 3.22) \times 10^5$ \\
+  {\tt F500\_2E8} & $(3.98 \pm 0.19) \times 10^5$ & $(-1.56 \pm 2.63) \times 10^5$ \\
+  {\tt F500\_3E8} & $(-4.56 \pm 2.92) \times 10^5$ & $(3.39 \pm 0.60) \times 10^7$ \\
 	\enddata
 	%
 \end{deluxetable}
