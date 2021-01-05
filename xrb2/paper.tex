@@ -413,7 +413,17 @@ achieved. In this scenario, another source of confinement (e.g.\ magnetic fields
 take over at lower rotation rates to allow a burst to occur, at least for the initial model used 
 here. 
 
-Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a dense region with circular motion. Figure \ref{fig:urho} compares the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the {\tt F250}, {\tt F500}, and {\tt F1000} runs. Most of the burning for each of the simulations occurs in a high density region $\rho > 3 \times 10^5 {\rm g\,cm^{-3}}$. The fluid in this dense, high energy generation region undergoes vortical motion, shown in the Figure \ref{fig:uv} phase plots comparing $u$, $v$ and $\dot{e}_{\rm nuc}$. From the previous plots (see: streamlines?) \MarginPar{NF: need to add streamline plots?}, this most likely corresponds to the leading edge of the flame where fresh fuel is being entrained. This feature is not developed in the 250~Hz flame; it could potentially develop at later times (past the point at which we terminated our simulation), or the flame could just fizzle out and fail to ignite entirely. 
+Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a dense region with circular 
+motion. Figure \ref{fig:urho} compares the horizontal $x$-velocity $u$, density $\rho$ and the 
+nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the {\tt F250}, {\tt F500}, and {\tt F1000} 
+runs. Most of the burning for each of the simulations occurs in a high density region $\rho > 3 
+\times 10^5 {\rm g\,cm^{-3}}$. The fluid in this dense, high energy generation region undergoes 
+vortical motion, shown in the Figure \ref{fig:uv} phase plots comparing $u$, $v$ and $\dot{e}_{\rm 
+nuc}$. From the previous plots (see: streamlines/baroclinicity?) \MarginPar{NF: need to add 
+streamline plots?}, this most likely corresponds to the leading edge of the flame where fresh fuel 
+is being entrained. This feature is not developed in the 250~Hz flame; it could potentially develop 
+at later times (past the point at which we terminated our simulation), or the flame could just 
+fizzle out and fail to ignite entirely. 
 
 The mean molecular weight $\bar{A}$ within each of our simulations seems to grow along defined tracks confined to certain temperatures $T$, as shown in the Figure \ref{fig:abar} phase plots. We believe that the tracks in the plot correspond to reaction pathways in the reaction network. Comparing Figure \ref{fig:abar} to \citet{flame_wave1}, these tracks are much more neat and clearly defined. The ``messiness" of the tracks may be dependent on how mixed the flame interior is. Since these new simulations are un-boosted, they may be inherently less mixed than those in \citet{flame_wave1}. {\tt F1000} aligns with this interpretation: its $\bar{A}$ tracks are somewhat disrupted compared to the slower rotation runs, possibly due to the more vigorous mixing of the vortex at the flame front. Comparing the different runs, we also see that as the rotation rate increases, so does the peak temperature. This makes sense if higher rotation leads to a more concentrated, intense vortex near the flame front. It also agrees with our earlier interpretation of the enhanced burning seen in Figure \ref{fig:time_series_1000} for {\tt F1000}. 
 
@@ -459,10 +469,11 @@ maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
 
 \begin{deluxetable}{lrrr}
 	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each 
-	simulation. $s_0$ is the speed at $t = 0$. The initial flame velocities and accelerations are 
-	derived from a quadratic least-squares fit to each of the datasets for times $t \gtrsim 
-	20~\mathrm{ms}$.}
-	\tablehead{\colhead{run} & \colhead{$s_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)}} 
+	simulation. {\color{blue}$v_0$} is the flame velocity {\color{blue}in the $+r$ direction} at $t 
+	= 0$. The initial flame 
+	velocities and accelerations are derived from a quadratic least-squares fit to each of the 
+	datasets for times $t \gtrsim 20~\mathrm{ms}$.}
+	\tablehead{\colhead{run} & \colhead{$v_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)}} 
 	\startdata
   {\tt F1000}     & $(3.38 \pm 0.11) \times 10^5$ & $(-0.43 \pm 1.57) \times 10^5$ \\
   {\tt F500}      & $(2.66 \pm 0.27) \times 10^5$ & $(10.97 \pm 3.22) \times 10^5$ \\
@@ -480,12 +491,19 @@ maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
 \end{figure}
 
 Figure~\ref{fig:flame_speeds_1} gives position vs.\ time for the $\tt{F500}$ and $\tt{F1000}$ runs 
-(blue and orange, respectively) to show the dependence on rotation rate. As some of the hotter 
-500~Hz runs exhibit significant acceleration, we fit a quadratic curve to each set of data for 
-times $t \gtrsim 20~\mathrm{ms}$, with the fit parameters giving the flame acceleration and 
-initial velocity. \MarginPar{KE: Can add an explanation of the averaging method once that's 
-decided.} These results are displayed in Table~\ref{table:flame_speeds}. \MarginPar{NF: I will 
-update the error estimates.}
+(blue and orange, respectively) to show the dependence on rotation rate. {\color{blue}In 
+\citet{flame_wave1}, we 
+used linear least-squares fits to our position vs.\ time data to estimate the propagation velocity. 
+For this study we instead fit a quadratic curve to each set of data, as some of the hotter 500~Hz 
+runs exhibit significant acceleration. We discard the data points with $t \lesssim 20~\mathrm{ms}$, 
+since these correspond to the initial transient period before the flame has begun to propagate 
+steadily.} The fit parameters yield estimates of the flame acceleration and velocity at $t = 0$, 
+which are provided in Table~\ref{table:flame_speeds}. {\color{blue}Note that the listed velocity is 
+only 
+a parameter that may be used to calculate the flame speed at an arbitrary time. It is not an 
+estimate of the true initial velocity of the flame, since the flame has not achieved ignition yet 
+at $t = 0$.} \MarginPar{KE: Outside of updating the data in the table, is there anything else we 
+want to add to this para?}
 
 We found in \citet{flame_wave1} that the flame speed, $s$, obeys the following relation:
 \begin{equation}
@@ -551,7 +569,7 @@ The method for measuring flame propagation described in Section \ref{ssec:rot_pr
 	\caption{\label{fig:flame_speeds_2} Flame front position vs.\ time for the three 500 Hz runs with
 		$T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. The dashed lines show quadratic least-squares fits to the data
 		for $t \gtrsim 20~\mathrm{ms}$. Note that due to its rapid acceleration, $\tt{F500\_3E8}$ 
-		(orange) is only run out to $\sim 0.07~\mathrm{s}$ to avoid surpassing the domain boundary.}
+		(orange) is only run out to $\sim 70~\mathrm{ms}$ to avoid surpassing the domain boundary.}
 \end{figure}
 
 The $u$-$\rho$ phase plot in Figure~\ref{fig:urho_hot} shows that the horizontal velocity for the $T_{\rm star} = 3\times10^8$~K is sufficiently greater in magnitude than for the two cooler runs. The $u$-$v$ plot in Figure~\ref{fig:uv_hot} further demonstrates this, as again we see that the magnitude of the velocity in the vertical direction of the flame for the hottest run is also significantly larger. This motion therefore most likely corresponds to the vortical motion rather than to the propagation of the flame itself, something which is further supported by the fact that the velocity magnitude is 2-3 orders of magnitude greater than the flame speeds listed in Table~\ref{table:flame_speeds}. Also of interest in these plots is that the coolest run does not seem to have developed the characteristic vortex structure at the burning front (i.e. where $\dot{e}_{\rm nuc}$ is greatest) that can be clearly seen for the hotter runs at this time (40~ms). As can be seen in Figure~\ref{fig:uv} (which was plotted at 100~ms), this does develop more at later times. Similar to what saw when comparing the runs with different rotation rates, it would therefore appear that it takes longer for the flame to develop when $T_{\rm star}$ is cooler. 
