@@ -161,8 +161,8 @@ the coupling to breakdown.  These splitting errors can lead to loss of
 accuracy and further time step limitations.
 
 A particularly difficult phase of evolution to model is the nuclear
-statistical equilibrium that sets in with helium burning for
-temperatures in excess of $4\times 10^9~\mathrm{K}$.  Physically, the
+statistical equilibrium that sets in for
+temperatures in excess of $\mbox{few} \times 10^9~\mathrm{K}$.  Physically, the
 forward and reverse rates of reaction should balance leading to an equilibrium.
 With operator splitting, an NSE region will have a large positive flow
 through the network in a zone in one step followed by a large negative
@@ -744,11 +744,12 @@ using the NSE network, we always provide these two composition quantities as
 inputs to the EOS rather than using the $X_k$ directly.
 the EOS directly from the auxiliary state in each zone instead of
 using the $X_k$ directly.
-Our equation of state needs $\bar{Z}$ in addition
-to the auxiliary quantities, which is is easily computed as
+Our equation of state needs the mean charge per nucleus, $\bar{Z}$, in addition
+to the auxiliary quantities, which is computed as
 \begin{equation}
-\bar{Z} = \bar{A} Y_e
+\bar{Z} = \bar{A} \sum_k \frac{Z_k X_k}{A_k} = \bar{A} Y_e
 \end{equation}
+(see, e.g., \citealt{flash}).
 
 \subsection{Initialization}
 
@@ -780,7 +781,18 @@ Typical values are $\rhonse = 3\times 10^8~\gcc$, $T_\mathrm{nse} =
 
 \subsection{Strang-split algorithm for NSE}
 
-For Strang splitting, the hydrodynamic and reactive substeps over
+For Strang splitting, we alternate the reaction and hydrodynamics,
+with each operation working on the output of the previous operation.
+If we define an advection operator over a timestep $\Delta t$ acting on $\Uc$ as
+$\mathbb{A}_{\Delta t}(\Uc)$ and a reaction operator over a timestep of
+$\Delta t/2$ acting on $\Uc$ as $\mathbb{R}_{\Delta t/2}(\Uc)$, then the advance appears
+as:
+\begin{align}
+  \Uc^\star &= \mathbb{R}_{\Delta t/2}(\Uc^n) \\
+  \Uc^{n+1,\star} &= \mathbb{A}_{\Delta t}(\Uc^\star) \\
+  \Uc^{n+1} &= \mathbb{R}_{\Delta t/2}(\Uc^{n+1,\star})
+\end{align}
+Tthe hydrodynamic and reactive substeps over
 the overall time-advancemenet scheme using the aprox19 + NSE network
 are as follows:
 \begin{itemize}
