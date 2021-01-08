@@ -472,13 +472,13 @@ maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
 	simulation. {\color{blue}$v_0$} is the flame velocity {\color{blue}in the $+r$ direction} at $t 
 	= 0$. The initial flame 
 	velocities and accelerations are derived from a quadratic least-squares fit to each of the 
-	datasets for times $t \gtrsim 20~\mathrm{ms}$.}
-	\tablehead{\colhead{run} & \colhead{$v_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)}} 
+	datasets for times $t \gtrsim 20~\mathrm{ms}$. {\color{blue} Using these fit parameters we calculate the velocity at $t = 50~\mathrm{ms}$ ($v_{50}$), at which point the flames have reached steady propagation.}}
+	\tablehead{\colhead{run} & \colhead{$v_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)} & \colhead{$v_{50}$ (cm s$^{-1}$)}} 
 	\startdata
-  {\tt F1000}     & $(3.38 \pm 0.11) \times 10^5$ & $(-0.43 \pm 1.57) \times 10^5$ \\
-  {\tt F500}      & $(2.66 \pm 0.27) \times 10^5$ & $(10.97 \pm 3.22) \times 10^5$ \\
-  {\tt F500\_2E8} & $(3.98 \pm 0.19) \times 10^5$ & $(-1.56 \pm 2.63) \times 10^5$ \\
-  {\tt F500\_3E8} & $(-4.56 \pm 2.92) \times 10^5$ & $(3.39 \pm 0.60) \times 10^7$ \\
+  {\tt F1000}     & $(3.414 \pm 0.008) \times 10^5$ & $(-1.03 \pm 0.13) \times 10^5$ & $(3.362 \pm 0.010) \times 10^5$\\
+  {\tt F500}      & $(3.077 \pm 0.013) \times 10^5$ & $(5.41 \pm 0.19) \times 10^5$ & $(3.347 \pm 0.016) \times 10^5$\\
+  {\tt F500\_2E8} & $(3.760 \pm 0.015) \times 10^5$ & $(1.74 \pm 0.25) \times 10^5$ & $(3.847 \pm 0.020) \times 10^5$\\
+  {\tt F500\_3E8} & $(-5.293 \pm 0.100) \times 10^5$ & $(3.57 \pm 0.02) \times 10^7$ & $(1.258 \pm 0.015) \times 10^6$\\
 	\enddata
 	%
 \end{deluxetable}
@@ -502,7 +502,7 @@ which are provided in Table~\ref{table:flame_speeds}. {\color{blue}Note that the
 only 
 a parameter that may be used to calculate the flame speed at an arbitrary time. It is not an 
 estimate of the true initial velocity of the flame, since the flame has not achieved ignition yet 
-at $t = 0$.} \MarginPar{KE: Outside of updating the data in the table, is there anything else we 
+at $t = 0$. We use the fit parameters to calculate the flame speeds at $t = 50~\mathrm{ms}$ (when the flame has reached steady propagation), given in the fourth column of Table \ref{table:flame_speeds}.} \MarginPar{KE: Outside of updating the data in the table, is there anything else we 
 want to add to this para?}
 
 We found in \citet{flame_wave1} that the flame speed, $s$, obeys the following relation:
@@ -560,7 +560,7 @@ Figure~\ref{fig:4e8_stacked_abar} shows $\bar{A}$ for $\tt{F500\_4E8}$. Again, b
 
 \subsection{Effect of Temperature on Flame Propagation}\label{ssec:temp_prop}
 
-The method for measuring flame propagation described in Section \ref{ssec:rot_propagation} is applied in Figure \ref{fig:flame_speeds_2} to the three 500 Hz runs with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. Due to the lack of a clear burning front in $\tt{F500\_4E8}$, we do not analyze its propagation speed and acceleration. As the initial $T_{\mathrm{star}}$ is increased, the flame becomes greatly accelerated. The initial flame velocities and accelerations derived from a quadratic least-squares fit to each of the datasets are provided in Table~\ref{table:flame_speeds}. The reason for the acceleration of the flame over time is not entirely clear. It could be that energy released from burning begins to dominate the flame's propagation as it evolves, increasing the flame speed over time. Another possibility is that the increased temperatures lead to enhanced turbulent mixing effects that pull in more fresh fuel for the flame to burn. Yet another possibility is that the higher initial $T_{\mathrm{star}}$ leads to a greater average temperature in the fuel layer over time, making it easier for the flame to burn the fuel and propagate.
+The method for measuring flame propagation described in Section \ref{ssec:rot_propagation} is applied in Figure \ref{fig:flame_speeds_2} to the three 500 Hz runs with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. Due to the lack of a clear burning front in $\tt{F500\_4E8}$, we do not analyze its propagation speed and acceleration. As the initial $T_{\mathrm{star}}$ is increased, the flame becomes greatly accelerated. The initial flame velocities and accelerations derived from a quadratic least-squares fit to each of the datasets, {\color{blue} as well as the flame velocities at $t = 50~\mathrm{ms}$ calculated using the fit parameters,} are provided in Table~\ref{table:flame_speeds}. {\color{blue} Comparing the flame propagation at different initial temperatures, the most robust feature is the acceleration of the $\tt{F500\_3E8}$ run at $t \sim 40~\mathrm{ms}$.} The reason for the acceleration of the flame over time is not entirely clear. It could be that energy released from burning begins to dominate the flame's propagation as it evolves, increasing the flame speed over time. Another possibility is that the increased temperatures lead to enhanced turbulent mixing effects that pull in more fresh fuel for the flame to burn. Yet another possibility is that the higher initial $T_{\mathrm{star}}$ leads to a greater average temperature in the fuel layer over time, making it easier for the flame to burn the fuel and propagate.
 
 
 \begin{figure}[t]
@@ -569,7 +569,7 @@ The method for measuring flame propagation described in Section \ref{ssec:rot_pr
 	\caption{\label{fig:flame_speeds_2} Flame front position vs.\ time for the three 500 Hz runs with
 		$T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. The dashed lines show quadratic least-squares fits to the data
 		for $t \gtrsim 20~\mathrm{ms}$. Note that due to its rapid acceleration, $\tt{F500\_3E8}$ 
-		(orange) is only run out to $\sim 70~\mathrm{ms}$ to avoid surpassing the domain boundary.}
+		(green) is only run out to $\sim 70~\mathrm{ms}$ to avoid surpassing the domain boundary.}
 \end{figure}
 
 The $u$-$\rho$ phase plot in Figure~\ref{fig:urho_hot} shows that the horizontal velocity for the $T_{\rm star} = 3\times10^8$~K is sufficiently greater in magnitude than for the two cooler runs. The $u$-$v$ plot in Figure~\ref{fig:uv_hot} further demonstrates this, as again we see that the magnitude of the velocity in the vertical direction of the flame for the hottest run is also significantly larger. This motion therefore most likely corresponds to the vortical motion rather than to the propagation of the flame itself, something which is further supported by the fact that the velocity magnitude is 2-3 orders of magnitude greater than the flame speeds listed in Table~\ref{table:flame_speeds}. Also of interest in these plots is that the coolest run does not seem to have developed the characteristic vortex structure at the burning front (i.e. where $\dot{e}_{\rm nuc}$ is greatest) that can be clearly seen for the hotter runs at this time (40~ms). As can be seen in Figure~\ref{fig:uv} (which was plotted at 100~ms), this does develop more at later times. Similar to what saw when comparing the runs with different rotation rates, it would therefore appear that it takes longer for the flame to develop when $T_{\rm star}$ is cooler. 
