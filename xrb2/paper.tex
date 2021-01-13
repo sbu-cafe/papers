@@ -490,20 +490,26 @@ maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
 		show quadratic least-squares fits to the data for $t \gtrsim 20~\mathrm{ms}$.}
 \end{figure}
 
-Figure~\ref{fig:flame_speeds_1} gives the position of the flame front as a function of time for the $\tt{F500}$ and $\tt{F1000}$ runs 
-(blue and orange, respectively) to show the dependence on rotation rate. {\color{blue}In 
-\citet{flame_wave1}, we 
-applied a linear least-squares fit to the flame front position as a function of time to estimate the propagation velocity. 
-For this study we instead fit a quadratic curve to each set of data, as some of the hotter $500~\mathrm{Hz}$ 
-runs exhibit significant acceleration. We discarded the data points with $t \lesssim 20~\mathrm{ms}$, 
-since these correspond to the initial transient period before the flame has begun to propagate 
-steadily.} The fit parameters yield estimates of the flame acceleration and velocity at $t = 0~\mathrm{ms}$, 
-which are provided in Table~\ref{table:flame_speeds}. {\color{blue}Note that the listed velocity is 
-only 
-a parameter that may be used to calculate the flame speed at an arbitrary time. It is not an 
-estimate of the true initial velocity of the flame, since the flame has not achieved ignition yet 
-at $t = 0~\mathrm{ms}$. We use the fit parameters to calculate the flame speeds at $t = 50~\mathrm{ms}$ (when the flame has reached steady propagation), given in the fourth column of Table \ref{table:flame_speeds}.} \MarginPar{KE: Outside of updating the data in the table, is there anything else we 
-want to add to this para?}
+Figure~\ref{fig:flame_speeds_1} gives the radial position of the flame front as a function of time 
+for the $\tt{F500}$ and $\tt{F1000}$ runs (blue and orange, respectively) to show the dependence on 
+rotation rate. In \citet{flame_wave1}, we applied a linear least-squares fit to the flame front 
+position as a function of time to estimate the propagation velocity. As some of the flames in this 
+set of simulation runs exhibit significant acceleration, for this study we instead fit the data 
+with a quadratic curve of the form:
+\begin{equation}
+	\label{eq:quadratic_fit}
+	\color{blue} r(t) = \half a t^2 + v_0 t + r_0
+\end{equation}
+\noindent The parameter $a$ is the acceleration of the flame, $v_0$ is the velocity at $t = 
+0~\mathrm{ms}$, and $r_0$ is the position at $t = 0~\mathrm{ms}$. We do not include the data points 
+with $t \lesssim 20~\mathrm{ms}$ when performing the fit, since these correspond to the initial 
+transient period before the flame has begun to propagate steadily. The values of $a$ and $v_0$ for 
+the full suite of simulation runs are provided in Table~\ref{table:flame_speeds}. Note that $v_0$ 
+is only a parameter that may be used to calculate the flame speed at an arbitrary time. It is not 
+an estimate of the true initial velocity of the flame, since the flame has not achieved ignition 
+yet at $t = 0~\mathrm{ms}$. We use the fit parameters to calculate the flame speeds at $t = 
+50~\mathrm{ms}$ (when the flame has reached steady propagation), given in the fourth column of 
+Table \ref{table:flame_speeds}.
 
 We found in \citet{flame_wave1} that the flame speed, $s$, obeys the following relation:
 \begin{equation}
