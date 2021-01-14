@@ -469,16 +469,19 @@ maximum), but allows us to avoid the pitfall encountered by the $0.1\%$ metric.
 
 \begin{deluxetable}{lrrr}
 	\tablecaption{\label{table:flame_speeds} Flame speed and acceleration values measured for each 
-	simulation. {\color{blue}$v_0$} is the flame velocity {\color{blue}in the $+r$ direction} at $t 
+	simulation. $v_0$ is the flame velocity in the $+r$ direction at $t 
 	= 0~\mathrm{ms}$. The initial flame 
 	velocities and accelerations are derived from a quadratic least-squares fit to each of the 
-	datasets for times $t \gtrsim 20~\mathrm{ms}$. {\color{blue} Using these fit parameters we calculate the velocity at $t = 50~\mathrm{ms}$, $v_{50}$, at which point the flames have reached steady propagation.}}
-	\tablehead{\colhead{run} & \colhead{$v_0$ (cm s$^{-1}$)} & \colhead{$a$ (cm s$^{-2}$)} & \colhead{$v_{50}$ (cm s$^{-1}$)}} 
+	datasets for times $t \gtrsim 20~\mathrm{ms}$. Using these fit parameters we calculate the 
+	velocity at $t = 50~\mathrm{ms}$, $v_{50}$, at which point the flames have reached steady 
+	propagation.}
+	\tablehead{\colhead{run} & \colhead{$v_0$ (km s$^{-1}$)} & \colhead{$a$ (km s$^{-2}$)} & 
+	\colhead{$v_{50}$ (km s$^{-1}$)}} 
 	\startdata
-  {\tt F1000}     & $(3.414 \pm 0.008) \times 10^5$ & $(-1.03 \pm 0.13) \times 10^5$ & $(3.362 \pm 0.010) \times 10^5$\\
-  {\tt F500}      & $(3.077 \pm 0.013) \times 10^5$ & $(5.41 \pm 0.19) \times 10^5$ & $(3.347 \pm 0.016) \times 10^5$\\
-  {\tt F500\_2E8} & $(3.760 \pm 0.015) \times 10^5$ & $(1.74 \pm 0.25) \times 10^5$ & $(3.847 \pm 0.020) \times 10^5$\\
-  {\tt F500\_3E8} & $(-5.293 \pm 0.100) \times 10^5$ & $(3.57 \pm 0.02) \times 10^7$ & $(1.258 \pm 0.015) \times 10^6$\\
+  {\tt F1000}     & $3.414 \pm 0.008$ & $-1.03 \pm 0.13$ & $3.362 \pm 0.010$\\
+  {\tt F500}      & $3.077 \pm 0.013$ & $5.41 \pm 0.19$ & $3.347 \pm 0.016$\\
+  {\tt F500\_2E8} & $3.760 \pm 0.015$ & $1.74 \pm 0.25$ & $3.847 \pm 0.020$\\
+  {\tt F500\_3E8} & $-5.293 \pm 0.100$ & $357 \pm 2$ & $12.58 \pm 0.15$\\
 	\enddata
 	%
 \end{deluxetable}
