@@ -70,6 +70,7 @@
 
 \newcommand{\avg}[1]{\overline{#1}}
 \newcommand{\avgtwod}[1]{\langle~#1 \rangle}
+\newcommand{\repavg}[1]{\langle \langle #1 \rangle \rangle}
 \newcommand{\rms}[2]{\left(\delta#1\right)_{r_{#2}}}
 \newcommand{\mymax}[1]{\left(#1\right)_{\rm max}}
 
@@ -345,6 +346,30 @@ fine-grid resolution of $20~\mathrm{cm}$.  In these simulations, refinement
 is carried out in all zones within the atmosphere
 with $\rho > 2.5\times 10^4~\gcc$.
 
+\begin{figure}
+	\plotone{maxima_vs_time.pdf}
+	\caption{\label{fig:maxima}Estimates of temperature (left panel) and nuclear energy generation 
+	rate (right panel) in the burning region as functions of time. The quantities on the vertical 
+	axes are the averages defined by Equation \ref{eqn:top_percentile_avg}.}
+\end{figure}
+
+{\color{blue}
+For some of our analysis, we would like to have a means of estimating the temperature and nuclear 
+energy generation rate in the burning region of each simulation. For this purpose, we define 
+$\repavg{Q}$ to be the mass weighted average
+\begin{equation}
+	\label{eqn:top_percentile_avg}
+	\repavg{Q} \equiv \frac{\sum_{c_i} m(c_i) Q(c_i)}{\sum_{c_i} m(c_i)}; ~c_i \in C_{99}(Q).
+\end{equation}
+\noindent Here, $C_{99}(Q)$ is the set of grid cells with $Q$ values in the top percentile, and 
+$Q(c_i)$ is the value of the quantity $Q$ in cell $c_i$. An alternative to doing this averaging is 
+to simply take the maximum of the quantity across the entire simulation domain, but using 
+$\repavg{Q}$ instead allows us to track changes over a region rather than at a single localized 
+point. Figure \ref{fig:maxima} shows $\repavg{T}$ and $\repavg{\enucdot}$ as functions of time for 
+the subset of our runs that achieve a propagating flame. This figure is referenced at several 
+points throughout the subsequent sections.
+}
+
 \subsection{Effect of Rotation Rate on Flame Structure}\label{ssec:rot_structure}
 
 We run three models ({\tt F250}, {\tt F500}, and {\tt F1000}) with the same initial model in terms 
@@ -500,7 +525,7 @@ position as a function of time to estimate the propagation velocity. As some of 
 set of simulation runs exhibit significant acceleration, for this study we instead fit the data 
 with a quadratic curve of the form:
 \begin{equation}
-	\label{eq:quadratic_fit}
+	\label{eqn:quadratic_fit}
 	\color{blue} r(t) = \half a t^2 + v_0 t + r_0
 \end{equation}
 \noindent The parameter $a$ is the acceleration of the flame, $v_0$ is the velocity at $t = 
@@ -524,11 +549,13 @@ described by Equation \ref{eqn:rossby}. This finding was consistent with the res
 \citet{cavecchi:2013}, who noted that the flame speeds in their simulations scaled with the Rossby 
 length. As seen in Figure~\ref{fig:flame_speeds_1}, there is no obvious inverse scaling of the 
 flame speed with rotation rate in this set of runs. We observed earlier, however, that nuclear 
-reactions progress more quickly at higher rotation rate. This results in a higher $\enucdot$ --- up 
-to four to six times higher near the burning front after the flame ignites --- which may counteract 
-the reduction in flame speed from the increased Coriolis confinement. We also observe that 
-$\tt{F500}$ accelerates faster than $\tt{F1000}$, which appears to experience a small deceleration 
-at early times. This disparity may be a direct result of the difference in Coriolis force.
+reactions progress more quickly at higher rotation rate. {\color{blue}This results in a higher 
+$\enucdot$ --- up 
+to three to four times higher near the burning front after the flame ignites (see Figure 
+\ref{fig:maxima}) --- which may counteract the reduction in flame speed from the increased Coriolis 
+confinement.} We also observe that $\tt{F500}$ accelerates faster than $\tt{F1000}$, which appears 
+to experience a small deceleration at early times. This disparity may be a direct result of the 
+difference in Coriolis force.
 
 % It might be worth plotting peak enucdot as a function of time for each run
 
