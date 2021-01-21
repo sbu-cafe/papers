@@ -366,9 +366,22 @@ $Q(c_i)$ is the value of the quantity $Q$ in cell $c_i$. An alternative to doing
 to simply take the maximum of the quantity across the entire simulation domain, but using 
 $\repavg{Q}$ instead allows us to track changes over a region rather than at a single localized 
 point. Figure \ref{fig:maxima} shows $\repavg{T}$ and $\repavg{\enucdot}$ as functions of time for 
-the subset of our runs that achieve a propagating flame. This figure is referenced at several 
-points throughout the subsequent sections.
+the subset of our runs that achieve a propagating flame. This figure is referenced throughout the 
+subsequent sections.
 }
+
+\begin{figure}
+	\plotone{streamlines_500Hz_temp.pdf}
+	\caption{\label{fig:streamlines}Streamlines showing the velocity field at time $t = 
+	100~\mathrm{ms}$ for the {\tt F500} run. Streamline segments are colored by transverse velocity 
+	(yellower implies faster flow), and segments with transverse velocity $v < 2 \times 
+	10^6~\mathrm{cm/s}$ are scrubbed out. Note that the plot has been stretched vertically to 
+	better show the streamlines -- the aspect ratio is not the aspect ratio of the simulation 
+	domain.}
+\end{figure}
+
+{\color{blue} Figure \ref{fig:streamlines} shows the velocity field. Not sure where we want to put 
+this.}
 
 \subsection{Effect of Rotation Rate on Flame Structure}\label{ssec:rot_structure}
 
