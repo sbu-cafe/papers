@@ -162,7 +162,7 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-We continue to investigate laterally propagating flames in XRBs using
+We continue to investigate laterally propagating flames in type I X-ray bursts using
 fully compressible hydrodynamics simulations.  In the current study we
 relax the approximations used previously and explore the effect of
 rotation rate and the thermal structure of the neutron star on the
@@ -181,7 +181,7 @@ simulations is freely available.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-Considerable evidence suggests that ignition in an X-ray burst starts
+Considerable evidence suggests that ignition in an X-ray burst (XRB) starts
 in a localized region and then spreads across the surface of the
 neutron star~\citep{bhattacharyya:2007,chakraborty:2014}.  We continue
 our study of flame spreading through fully compressible hydrodynamics
@@ -196,7 +196,7 @@ runs significantly faster.
 
 
 We investigate the effect of rotation rate on the flame. With the
-exception of \citet{altamirano2010discovery}, most observations of
+exception of IGR J17480-2446 (\citet{altamirano2010discovery}, spinning at $11~\mathrm{Hz}$), most observations of
 XRBs come from sources with rotation rates of 200-$600~\mathrm{Hz}$
 \citep{bilous:2019,galloway:2020} \MarginPar{check whether this is
 true for XRBs or just burst oscillations}. There are a number of
@@ -257,7 +257,7 @@ missing from our previous simulations.  The simulation framework
 initializes a fuel layer in hydrostatic equilibrium, laterally
 blending a hot model on the left side of the domain (the coordinate
 origin) and a cool model on the right.  The initial temperature
-gradient between the hot and cool models drives a laterally
+gradient between the hot and cool fluids drives a laterally
 propagating flame through the cool fuel.  In our original set of
 calculations, we artificially boosted the flame speed by adjusting the
 conductivity and reaction rate to produce a flame moving 5--10$\times$
@@ -405,7 +405,7 @@ the Coriolis force should reduce the horizontal extent of the flame by a similar
 the Rossby radius is only an approximate measure of this horizontal lengthscale, and in our 
 simulations we see that this scaling does not work so well for all rotation rates. The simulations 
 seem to follow the theoretical scaling described in Equation \ref{eqn:rossby} more closely at 
-higher rotation rates ($1000~\mathrm{Hz}$ and higher), based on the results of \citet{flame_wave1}.
+higher rotation rates ($1000~\mathrm{Hz}$ and higher), based on the results of \citet{flame_wave1}. {\color{blue} Perhaps these new un-boosted runs have not had sufficient time to reach steady propagation, in contrast to the boosted runs in \citet{flame_wave1} that reached steady propagation more quickly.}
 
 \begin{figure}[t]
 \centering
@@ -445,22 +445,22 @@ Figure  \ref{fig:time_series_1000} $100~\mathrm{ms}$ snapshot). We believe that 
 rotation better confines the initial perturbation and subsequent expansion from the burning, 
 increasing the temperature and density in the flame front such that the reaction rate increases, 
 which allows the reactions to progress further. The $\dot{e}_\mathrm{nuc}$ plots in Figure 
-\ref{fig:time_series_enuc_1000} also support this interpretation, with the interior of the 
-flame nearest to the crust in the {\tt F1000} run reaching higher $\dot{e}_\mathrm{nuc}$ values 
+\ref{fig:time_series_enuc_1000} also support this interpretation, with the region of the 
+flame front nearest to the crust in the {\tt F1000} run reaching higher $\dot{e}_\mathrm{nuc}$ values 
 than for the {\tt F500} run in Figure \ref{fig:time_series_enuc_500}. In contrast to {\tt F500} 
 and {\tt F1000}, the lowest rotation run --- {\tt F250} --- failed to ignite. The lack of ignition 
 for {\tt F250} also aligns with the reasoning given above, with the lower rotation in this case 
 potentially leading to insufficient confinement such that the temperature and density required for 
 ignition is not achieved. In this scenario, another source of confinement (e.g.\ magnetic fields, see \citep{art-2016-cavecchi-etal}) 
 would need to take over at lower rotation rates to allow a burst to occur, at least for the initial 
-model used here. 
+model used here. {\color{blue} Given that the size of our domain is $\sim 1~L_R$ for {\tt F250} (using Equation~\ref{eqn:rossby}), however, it is also possible that we simply cannot confine the flame sufficiently with our current domain width.}
 
 Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a dense region with circular 
-motion. Figure \ref{fig:urho} compares the horizontal $x$-velocity $u$, density $\rho$ and the 
+motion. Figure \ref{fig:urho} compares the horizontal $r$-velocity $u$, density $\rho$ and the 
 nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the {\tt F250}, {\tt F500}, and {\tt F1000} 
 runs. Most of the burning for each of the simulations occurs in a high density region $\rho > 3 
 \times 10^5 {\rm g\,cm^{-3}}$. The fluid in this dense, high energy generation region undergoes 
-vortical motion, shown in the Figure \ref{fig:uv} phase plots comparing $u$, $v$ and $\dot{e}_{\rm 
+vortical motion, shown in the Figure \ref{fig:uv} phase plots comparing $u$, vertical z-velocity $v$ and $\dot{e}_{\rm 
 nuc}$. From the previous plots (see: streamlines/baroclinicity?) \MarginPar{NF: need to add 
 streamline plots?}, this most likely corresponds to the leading edge of the flame where fresh fuel 
 is being entrained. This feature is not developed in the $250~\mathrm{Hz}$ flame; it could potentially develop 
@@ -472,13 +472,13 @@ The mean molecular weight $\bar{A}$ within each of our simulations seems to grow
 \begin{figure}[t]
     \centering
     \plotone{urho_plot_0_1}{}
-    \caption{\label{fig:urho}Phase plot of the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and $1000~\mathrm{Hz}$ runs ({\tt F250}, {\tt F500} and {\tt F1000}) at $t = 100~\mathrm{ms}$. The slightly lower $\dot{e}_{\rm nuc}$ values along the $u = 0$ axis are most likely a numerical artifact related to the density gradient setup and finite resolution of these simulations.}
+    \caption{\label{fig:urho}Phase plot of the horizontal $r$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and $1000~\mathrm{Hz}$ runs ({\tt F250}, {\tt F500} and {\tt F1000}) at $t = 100~\mathrm{ms}$. The slightly lower $\dot{e}_{\rm nuc}$ values along the $u = 0$ axis are most likely a numerical artifact related to the density gradient setup and finite resolution of these simulations.}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \plotone{uv_plot_0_1}
-    \caption{\label{fig:uv}Phase plot of the horizontal $x$-velocity $u$, vertical $y$-velocity $v$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and $1000~\mathrm{Hz}$ runs ({\tt F250}, {\tt F500} and {\tt F1000}) at $t = 100~\mathrm{ms}$.}
+    \caption{\label{fig:uv}Phase plot of the horizontal $r$-velocity $u$, vertical $z$-velocity $v$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the 250, 500 and $1000~\mathrm{Hz}$ runs ({\tt F250}, {\tt F500} and {\tt F1000}) at $t = 100~\mathrm{ms}$.}
 \end{figure}
 
 \begin{figure}[t]
@@ -495,7 +495,7 @@ the energy generation rate, $\enucdot$, as we did in \citet{flame_wave1}. To rec
 reduce the 2D $\enucdot$ data for each simulation run to a set of 1D radial profiles by averaging
 over the vertical coordinate. After averaging, we take our reference $\enucdot$ value to be some 
 fraction of the global $\enucdot$ maximum across all of these profiles. Since the flames in our 
-simulations propagate in the positive radial direction, we then search the region of each profile 
+simulations propagate in the positive horizontal direction, we then search the region of each profile 
 at greater radius than the local $\enucdot$ maximum for the point where the $\enucdot$ first drops 
 below this reference value. This point gives us the location of our flame front.
 
@@ -665,19 +665,18 @@ propagate.
 		(green) is only run out to $\sim 70~\mathrm{ms}$ to avoid surpassing the domain boundary.}
 \end{figure}
 
-The $u$-$\rho$ phase plot in Figure~\ref{fig:urho_hot} shows that the horizontal velocity for the $T_{\rm star} = 4\times10^8$~K is significantly greater in magnitude than for the two cooler runs. The $u$-$v$ plot in Figure~\ref{fig:uv_hot} further demonstrates this, as again we see that the magnitude of the velocity in the 
-vertical direction of the flame for the hottest run is also significantly larger. This motion therefore most likely corresponds to the vortical motion rather than to the propagation of the flame itself, something which is further supported by the fact that the velocity magnitude is two to three orders of magnitude greater than the flame speeds listed in Table~\ref{table:flame_speeds}. Also of interest in these plots is that the coolest run does not seem to have developed the characteristic vortex structure at the burning front (i.e. where $\dot{e}_{\rm nuc}$ is greatest) that can be clearly seen for the hotter runs at this time ($40~\mathrm{ms}$). As can be seen in Figure~\ref{fig:uv} (which was plotted at $100~\mathrm{ms}$), this does develop more at later times. Similar to what we saw when comparing the runs with different rotation rates, it would therefore appear that it takes longer for the flame to develop when $T_{\rm star}$ is cooler. 
+The $u$-$\rho$ phase plot in Figure~\ref{fig:urho_hot} shows that the horizontal velocity for the $T_{\rm star} = 4\times10^8$~K {\color{blue} ($\tt{F500\_4e8}$; right panel)} is significantly greater in magnitude than for the cooler {\color{blue}$\tt{F500\_3e8}$ (middle panel) and $\tt{F500}$ (left panel)} runs. The $u$-$v$ plot in Figure~\ref{fig:uv_hot} further demonstrates this, as again we see that the magnitude of the {\color{blue}$\tt{F500\_4e8}$ flame's vertical $z$-velocity $v$} is also significantly larger. This motion therefore most likely corresponds to the vortical motion rather than to the propagation of the flame itself, something which is further supported by the fact that the velocity magnitude is two to three orders of magnitude greater than the flame speeds listed in Table~\ref{table:flame_speeds}. Also of interest in these plots is that the coolest run does not seem to have developed the characteristic vortex structure at the burning front (i.e. where $\dot{e}_{\rm nuc}$ is greatest) that can be clearly seen for the hotter runs at this time ($40~\mathrm{ms}$). As can be seen in Figure~\ref{fig:uv} (which was plotted at $100~\mathrm{ms}$), this does develop more at later times. Similar to what we saw when comparing the runs with different rotation rates, it would therefore appear that it takes longer for the flame to develop when $T_{\rm star}$ is cooler. 
 
 \begin{figure}[t]
     \centering
     \plotone{urho_plot_hotter}
-    \caption{\label{fig:urho_hot}Phase plot of the horizontal $x$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the $500~\mathrm{Hz}$ runs with $T_{\rm star}$ of $10^8~\mathrm{K}$, $3\times10^8~\mathrm{K}$ and $4\times10^8~\mathrm{K}$ ($\tt{F500}$, $\tt{F500\_3e8}$, and $\tt{F500\_4e8}$) at $t = 40~\mathrm{ms}$ {\color{blue} (the latest time that $\tt{F500\_4E8}$ is run out to). The run with $T_{\rm star} = 2\times10^8~\mathrm{K}$ ($\tt{F500\_2E8}$) closely resembles the cooler $\tt{F500}$ run, and is not shown here}.}
+    \caption{\label{fig:urho_hot}Phase plot of the horizontal $r$-velocity $u$, density $\rho$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the $500~\mathrm{Hz}$ runs with $T_{\rm star}$ of $10^8~\mathrm{K}$, $3\times10^8~\mathrm{K}$ and $4\times10^8~\mathrm{K}$ ($\tt{F500}$, $\tt{F500\_3e8}$, and $\tt{F500\_4e8}$) at $t = 40~\mathrm{ms}$ {\color{blue} (the latest time that $\tt{F500\_4E8}$ is run out to). The run with $T_{\rm star} = 2\times10^8~\mathrm{K}$ ($\tt{F500\_2E8}$) closely resembles the cooler $\tt{F500}$ run, and is not shown here}.}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \plotone{uv_plot_hotter}
-    \caption{\label{fig:uv_hot}Phase plot of the horizontal $x$-velocity $u$, vertical $y$-velocity $v$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the $500~\mathrm{Hz}$ runs with $T_{\rm star}$ of $10^8~\mathrm{K}$, $3\times10^8~\mathrm{K}$ and $4\times10^8~\mathrm{K}$ ($\tt{F500}$, $\tt{F500\_3e8}$, and $\tt{F500\_4e8}$) at $t = 40~\mathrm{ms}$. {\color{blue} The run with $T_{\rm star} = 2\times10^8~\mathrm{K}$ ($\tt{F500\_2E8}$) closely resembles the cooler $\tt{F500}$ run, and is not shown here}.}
+    \caption{\label{fig:uv_hot}Phase plot of the horizontal $r$-velocity $u$, vertical $z$-velocity $v$ and the nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the $500~\mathrm{Hz}$ runs with $T_{\rm star}$ of $10^8~\mathrm{K}$, $3\times10^8~\mathrm{K}$ and $4\times10^8~\mathrm{K}$ ($\tt{F500}$, $\tt{F500\_3e8}$, and $\tt{F500\_4e8}$) at $t = 40~\mathrm{ms}$. {\color{blue} The run with $T_{\rm star} = 2\times10^8~\mathrm{K}$ ($\tt{F500\_2E8}$) closely resembles the cooler $\tt{F500}$ run, and is not shown here}.}
 \end{figure}
 
 \begin{figure}[t]
@@ -691,7 +690,7 @@ vertical direction of the flame for the hottest run is also significantly larger
 %======================================================================
 \section{Discussion and Conclusions}\label{Sec:conclusions}
 
-We ran a number of simulations of laterally propagating flames in XRBs in order to explore the effects of rotation and thermal structure. We found that increasing the rotation rate increased the energy generation rate within the flame, enhancing its propagation \MarginPar{I thought the increased rotation rate enhanced nuclear burning, but suppressed flame propagation?}. This is likely due to greater confinement of the flame from the increased Coriolis force. We explored several models with different crustal temperatures, to determine what effects mechanisms such as higher accretion rates, crustal heating and shallow heating may have on flame propagation. We found that increasing the temperature of the crust significantly enhanced the flame propagation. This we believe to be because a cooler crust allows heat to more efficiently be transferred from the flame itself, therefore reducing the flame's temperature, slowing burning and consequently reducing its propagation speed. We saw that if the crust temperature was too high, then instead of a flame, the atmosphere would burn stably. This is reminiscent of what is seen for neutron stars with accretion rates exceeding the Eddington luminosity.
+We ran a number of simulations of laterally propagating flames in XRBs in order to explore the effects of rotation and thermal structure. We found that increasing the rotation rate increased the energy generation rate within the flame and enhanced nuclear burning. {\color{blue} Apart from the lowest rotation run (which failed to ignite), flame propagation was not noticeably impacted by rotation rate; by the time the different flame fronts reached steady propagation, they shared comparable velocities. These results are likely due to the rotation-dependent strength of the Coriolis force and confinement of the flame.} \MarginPar{NF: is the wording of the blue text correct?} We explored several models with different crustal temperatures, to determine what effects mechanisms such as higher accretion rates, crustal heating and shallow heating may have on flame propagation. We found that increasing the temperature of the crust significantly enhanced the flame propagation. This we believe to be because a cooler crust allows heat to more efficiently be transferred from the flame itself, therefore reducing the flame's temperature, slowing burning and consequently reducing its propagation speed. We saw that if the crust temperature was too high, then instead of a flame, the atmosphere would burn stably. This is reminiscent of what is seen for neutron stars with accretion rates exceeding the Eddington luminosity.
 
 In future simulations, we would like to improve and expand our
 simulations in order to better understand the processes at play and to
