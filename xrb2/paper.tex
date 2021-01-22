@@ -354,8 +354,8 @@ with $\rho > 2.5\times 10^4~\gcc$.
 \end{figure}
 
 {\color{blue}
-For some of our analysis, we would like to have a means of estimating the temperature and nuclear 
-energy generation rate in the burning region of each simulation. For this purpose, we define 
+For some of our analysis, we would like to have a means of estimating the temperature ($T$) and nuclear 
+energy generation rate ($\enucdot$) in the burning region of each simulation. For this purpose, we define 
 $\repavg{Q}$ to be the mass weighted average
 \begin{equation}
 	\label{eqn:top_percentile_avg}
@@ -369,19 +369,6 @@ point. Figure \ref{fig:maxima} shows $\repavg{T}$ and $\repavg{\enucdot}$ as fun
 the subset of our runs that achieve a propagating flame. This figure is referenced throughout the 
 subsequent sections.
 }
-
-\begin{figure}
-	\plotone{streamlines_500Hz_temp.pdf}
-	\caption{\label{fig:streamlines}Streamlines showing the velocity field at time $t = 
-	100~\mathrm{ms}$ for the {\tt F500} run. Streamline segments are colored by transverse velocity 
-	(yellower implies faster flow), and segments with transverse velocity $v < 2 \times 
-	10^6~\mathrm{cm/s}$ are scrubbed out. Note that the plot has been stretched vertically to 
-	better show the streamlines -- the aspect ratio is not the aspect ratio of the simulation 
-	domain.}
-\end{figure}
-
-{\color{blue} Figure \ref{fig:streamlines} shows the velocity field. Not sure where we want to put 
-this.}
 
 \subsection{Effect of Rotation Rate on Flame Structure}\label{ssec:rot_structure}
 
@@ -397,7 +384,7 @@ pressure gradient becomes important, and is approximately given by
 \end{equation}
 where $g$ is gravitational acceleration, $H_0$ is the atmospheric scale height, and $\Omega$ is the 
 neutron star rotation rate. In Figure \ref{fig:time_series_enuc_500} and Figure 
-\ref{fig:time_series_enuc_1000}, we use the energy generation rate $\dot{e}_\mathrm{nuc}$ measured at $50~\mathrm{ms}$ and $100~\mathrm{ms}$ to discern the horizontal extent of the flame at different rotation rates. Taking the edge at greatest radius of the bright teal/green region (where significant energy generation is occurring) as the leading edge of the flame in each plot, we see that the horizontal extent of the $1000~\mathrm{Hz}$ flame ($\tt{F1000}$) appears to be 
+\ref{fig:time_series_enuc_1000}, we use the $\dot{e}_\mathrm{nuc}$ measured at $50~\mathrm{ms}$ and $100~\mathrm{ms}$ to discern the horizontal extent of the flame at different rotation rates. Taking the edge at greatest radius of the bright teal/green region (where significant energy generation is occurring) as the leading edge of the flame in each plot, we see that the horizontal extent of the $1000~\mathrm{Hz}$ flame ($\tt{F1000}$) appears to be 
 reduced compared to the lower rotation $500~\mathrm{Hz}$ run ($\tt{F500}$). From Equation 
 \ref{eqn:rossby}, we can see that increasing the rotation rate from $500~\mathrm{Hz}$ to 
 $1000~\mathrm{Hz}$ should decrease $L_R$ by a factor of two, and that the greater confinement from 
@@ -405,7 +392,7 @@ the Coriolis force should reduce the horizontal extent of the flame by a similar
 the Rossby radius is only an approximate measure of this horizontal lengthscale, and in our 
 simulations we see that this scaling does not work so well for all rotation rates. The simulations 
 seem to follow the theoretical scaling described in Equation \ref{eqn:rossby} more closely at 
-higher rotation rates ($1000~\mathrm{Hz}$ and higher), based on the results of \citet{flame_wave1}. {\color{blue} Perhaps these new un-boosted runs have not had sufficient time to reach steady propagation, in contrast to the boosted runs in \citet{flame_wave1} that reached steady propagation more quickly.}
+higher rotation rates ($1000~\mathrm{Hz}$ and higher), based on the results of \citet{flame_wave1}. {\color{blue} Perhaps these new un-boosted runs have not had sufficient time to reach steady propagation, in contrast to the boosted runs in \citet{flame_wave1} that reached steady propagation more quickly.} \MarginPar{does the equation for the Rossby radius only hold for flames with steady propagation?}
 
 \begin{figure}[t]
 \centering
@@ -453,19 +440,29 @@ for {\tt F250} also aligns with the reasoning given above, with the lower rotati
 potentially leading to insufficient confinement such that the temperature and density required for 
 ignition is not achieved. In this scenario, another source of confinement (e.g.\ magnetic fields, see \citep{art-2016-cavecchi-etal}) 
 would need to take over at lower rotation rates to allow a burst to occur, at least for the initial 
-model used here. {\color{blue} Given that the size of our domain is $\sim 1~L_R$ for {\tt F250} (using Equation~\ref{eqn:rossby}), however, it is also possible that we simply cannot confine the flame sufficiently with our current domain width.}
+model used here. {\color{blue} Given that the size of our domain is $\sim 1~L_R$ for {\tt F250} (using Equation~\ref{eqn:rossby}), it is also possible that we simply cannot confine the flame sufficiently with our current domain width.}
 
-Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a dense region with circular 
-motion. Figure \ref{fig:urho} compares the horizontal $r$-velocity $u$, density $\rho$ and the 
+\MarginPar{NF: Each of the figures referenced in this paragraph contributes to the idea that we are seeing burning/energy generation from fluid undergoing vortical motion/fuel being entrained around the flame edge... I just think the logical flow of the sentences could be a bit better.}
+Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a hot, dense region with circular 
+motion. {\color{blue} We visualize the velocity field in the burning region for the {\tt F500} run in Figure~\ref{fig:streamlines}, colored by temperature. Velocities near the bottom edge of the high temperature/high density region (white) tend to have a significant $+z$ component. This boundary most likely corresponds to the leading edge of the flame, where colder fuel undergoes vortical motion and becomes entrained into the burning front.} In Figure~\ref{fig:urho}, which compares the horizontal $r$-velocity $u$, density $\rho$ and the 
 nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the {\tt F250}, {\tt F500}, and {\tt F1000} 
-runs. Most of the burning for each of the simulations occurs in a high density region $\rho > 3 
+runs, most of the burning for each of the simulations occurs in a high density region $\rho > 3 
 \times 10^5 {\rm g\,cm^{-3}}$. The fluid in this dense, high energy generation region undergoes 
-vortical motion, shown in the Figure \ref{fig:uv} phase plots comparing $u$, vertical z-velocity $v$ and $\dot{e}_{\rm 
-nuc}$. From the previous plots (see: streamlines/baroclinicity?) \MarginPar{NF: need to add 
-streamline plots?}, this most likely corresponds to the leading edge of the flame where fresh fuel 
-is being entrained. This feature is not developed in the $250~\mathrm{Hz}$ flame; it could potentially develop 
+vortical motion, shown in the Figure~\ref{fig:uv} phase plots comparing $u$, vertical z-velocity $v$ and $\dot{e}_{\rm 
+nuc}$. {\color{blue} This agrees with the velocity streamlines shown in Figure~\ref{fig:streamlines}.}
+This feature is not developed in the $250~\mathrm{Hz}$ flame in Figure~\ref{fig:uv} {\color{blue} (left panel)}; it could potentially develop 
 at later times (past the point at which we terminated our simulation), or the flame could just 
 fizzle out and fail to ignite entirely. 
+
+\begin{figure}
+  \plotone{streamlines_500Hz_temp.pdf}
+  \caption{\label{fig:streamlines}Streamlines showing the velocity field at time $t = 
+  100~\mathrm{ms}$ for the {\tt F500} run. Streamline segments are colored by transverse velocity 
+  (yellower implies faster flow), and segments with transverse velocity $v < 2 \times 
+  10^6~\mathrm{cm/s}$ are scrubbed out. Note that the plot has been stretched vertically to 
+  better show the streamlines -- the aspect ratio is not the aspect ratio of the simulation 
+  domain.}
+\end{figure}
 
 The mean molecular weight $\bar{A}$ within each of our simulations seems to grow along defined tracks confined to certain temperatures $T$, as shown in the Figure \ref{fig:abar} phase plots. We believe that the tracks in the plot correspond to reaction pathways in the reaction network. Comparing Figure \ref{fig:abar} to \citet{flame_wave1}, these tracks are much more neat and clearly defined. The ``messiness" of the tracks may be dependent on how mixed the flame interior is. Since these new simulations are un-boosted, they may be inherently less mixed than those in \citet{flame_wave1}. {\tt F1000} aligns with this interpretation: its $\bar{A}$ tracks are somewhat disrupted compared to the slower rotation runs, possibly due to the more vigorous mixing of the vortex at the flame front. Comparing the different runs, we also see that as the rotation rate increases, so does the peak temperature. This makes sense if higher rotation leads to a more concentrated, intense vortex near the flame front. It also agrees with our earlier interpretation of the enhanced burning seen in Figure \ref{fig:time_series_1000} for {\tt F1000}. 
 
