@@ -162,16 +162,7 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-We continue to investigate laterally propagating flames in type I X-ray bursts using
-fully compressible hydrodynamics simulations.  In the current study we
-relax the approximations used previously and explore the effect of
-rotation rate and the thermal structure of the neutron star on the
-flame.  We find that at lower rotation rates the flame becomes harder to ignite,
-whereas at higher rotation rates the nuclear burning is enhanced and the flame propagates steadily.
-We also find that higher temperature atmospheres lead to faster
-flames and observe acceleration of the flame front as it propagates
-through the atmosphere.  All of the software used for these
-simulations is freely available.
+We continue to investigate two-dimensional laterally propagating flames in type I X-ray bursts using fully compressible hydrodynamics simulations.  In the current study we relax previous approximations where we artificially boosted the flames. We now use more physically realistic reaction rates, thermal conductivities, and rotation rates, exploring the effects of neutron star rotation rate and thermal structure on the flame.  We find that at lower rotation rates the flame becomes harder to ignite, whereas at higher rotation rates the nuclear burning is enhanced by increased confinement from the Coriolis force and the flame propagates steadily. At higher crustal temperatures, the flame moves more quickly and accelerates as it propagates through the atmosphere. If the temperature is too high, , instead of a flame propagating across the surface the entire atmosphere burns steadily. All of the software used for these simulations is freely available.
 
 
 \end{abstract}
@@ -198,7 +189,7 @@ runs significantly faster.
 
 
 We investigate the effect of rotation rate on the flame. With the
-exception of IGR J17480-2446 (\citet{altamirano2010discovery}, spinning at $11~\mathrm{Hz}$), most observations of
+exception of IGR J17480-2446 (\citealt{altamirano2010discovery}, spinning at $11~\mathrm{Hz}$), most observations of
 XRBs come from sources with rotation rates of $200-600~\mathrm{Hz}$
 \citep{bilous:2019,galloway:2020}. There are a number of
 factors that could explain this lack of observations below $200~\mathrm{Hz}$. It
@@ -685,7 +676,7 @@ The $u$-$\rho$ phase plot in Figure~\ref{fig:urho_hot} shows that the horizontal
 %======================================================================
 \section{Discussion and Conclusions}\label{Sec:conclusions}
 
-We ran a number of simulations of laterally propagating flames in XRBs in order to explore the effects of rotation and thermal structure. We found that increasing the rotation rate increased the energy generation rate within the flame and enhanced nuclear burning. Apart from the lowest rotation run (which failed to ignite), flame propagation was not noticeably impacted by rotation rate; by the time the different flame fronts reached steady propagation, they shared comparable velocities. These results are likely due to the rotation-dependent strength of the Coriolis force its confinement of the flame balancing the enhanced nuclear burning. We explored several models with different crustal temperatures to determine what effects mechanisms such as higher accretion rates, crustal heating and shallow heating may have on flame propagation. We found that increasing the temperature of the crust significantly enhanced the flame propagation. This we believe to be because a cooler crust allows heat to more efficiently be transferred away from the flame itself, therefore reducing the flame's temperature, slowing burning and consequently reducing its propagation speed. At higher temperatures, we saw that the flame itself accelerated, the increased temperature and inability for heat to be transported away from the flame front driving unstable, accelerating flame propagation. We saw that if the crust temperature was too high, then instead of a flame the entire atmosphere would burn stably. This is reminiscent of what is seen for neutron stars with accretion rates exceeding the Eddington luminosity.
+We ran a number of simulations of laterally propagating flames in XRBs in order to explore the effects of rotation and thermal structure. We found that increasing the rotation rate increased the energy generation rate within the flame and enhanced nuclear burning. Apart from the lowest rotation run (which failed to ignite), flame propagation was not noticeably impacted by rotation rate; by the time the different flame fronts reached steady propagation, they shared comparable velocities. These results are likely due to the rotation-dependent strength of the Coriolis force its confinement of the flame balancing the enhanced nuclear burning. We explored several models with different crustal temperatures to determine what effects mechanisms such as higher accretion rates, crustal heating and shallow heating may have on flame propagation. We found that increasing the temperature of the crust significantly enhanced the flame propagation. This we believe to be because a cooler crust allows heat to more efficiently be transferred away from the flame itself, therefore reducing the flame's temperature, slowing burning and consequently reducing its propagation speed. At higher temperatures, we saw that the flame itself accelerated, the increased temperature and inability for heat to be transported away from the flame front driving unstable, accelerating flame propagation. We saw that if the crust temperature was too high, then instead of a flame the entire atmosphere would burn steadily. This is reminiscent of what is seen for neutron stars with accretion rates exceeding the Eddington luminosity.
 
 In future simulations, we would like to improve and expand our
 simulations in order to better understand the processes at play and to
