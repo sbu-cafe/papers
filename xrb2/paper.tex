@@ -166,7 +166,9 @@ We continue to investigate laterally propagating flames in type I X-ray bursts u
 fully compressible hydrodynamics simulations.  In the current study we
 relax the approximations used previously and explore the effect of
 rotation rate and the thermal structure of the neutron star on the
-flame.  We find that higher temperature atmospheres lead to faster
+flame.  We find that at lower rotation rates the flame becomes harder to ignite,
+whereas at higher rotation rates the nuclear burning is enhanced and the flame propagates steadily.
+We also find that higher temperature atmospheres lead to faster
 flames and observe acceleration of the flame front as it propagates
 through the atmosphere.  All of the software used for these
 simulations is freely available.
@@ -197,9 +199,8 @@ runs significantly faster.
 
 We investigate the effect of rotation rate on the flame. With the
 exception of IGR J17480-2446 (\citet{altamirano2010discovery}, spinning at $11~\mathrm{Hz}$), most observations of
-XRBs come from sources with rotation rates of 200-$600~\mathrm{Hz}$
-\citep{bilous:2019,galloway:2020} \MarginPar{check whether this is
-true for XRBs or just burst oscillations}. There are a number of
+XRBs come from sources with rotation rates of $200-600~\mathrm{Hz}$
+\citep{bilous:2019,galloway:2020}. There are a number of
 factors that could explain this lack of observations below $200~\mathrm{Hz}$. It
 could be that there is some physical process which inhibits the flame
 ignition and/or spread at lower rotation rates. It could be that burst
@@ -235,7 +236,7 @@ mimic the effects of lower accretion rates.
 In the following sections, we conduct a series of simulations at various rotation 
 rates and temperatures to investigate their effects on the flame. We find that 
 at lower rotation rates, the flame itself becomes harder to ignite. At higher 
-rotation rates, nuclear burning is enhanced and the flame propagates more quickly. 
+rotation rates, nuclear burning is enhanced and the flame propagates steadily. 
 At higher crustal temperatures, burning is greatly enhanced and the flame accelerates as 
 it propagates. We discuss the implications that this may have for burst physics 
 and observations. 
@@ -259,26 +260,28 @@ blending a hot model on the left side of the domain (the coordinate
 origin) and a cool model on the right.  The initial temperature
 gradient between the hot and cool fluids drives a laterally
 propagating flame through the cool fuel.  In our original set of
-calculations, we artificially boosted the flame speed by adjusting the
+calculations (in in \citet{flame_wave1}), in order to make the 
+simulations computationally feasible we artificially boosted the flame speed by adjusting the
 conductivity and reaction rate to produce a flame moving 5--10$\times$
 faster than the nominal laminar flame speed.  We also used high
 rotation rates to reduce the lateral lengthscale at which the Coriolis
 force balances the lateral flame spreading in order to reduce the size 
-of the simulation domain.  For the current
+of the simulation domain. The port of \castro\ to GPUs~\citep{sc20_gpu} 
+significantly improved its overall performance, enabling
+us to run these new simulations without the previous approximations while
+continuing to resolve the burning front. For these
 simulations, we no longer boost the flame speed---the true
 conductivities (taken from \citealt{Timmes00}) and reaction rates are
-used.  We continue to use a 13-isotope $\alpha$-chain to describe the
-helium burning.  The port of \castro\ to GPUs~\citep{sc20_gpu} 
-significantly improved its overall performance, enabling
-us to run these simulations without the previous approximations while
-continuing to resolve the burning front.
+used. We are also able to use slower, more physically realistic rotation rates.
+  We continue to use a 13-isotope $\alpha$-chain to describe the
+helium burning.  
 
 The initial model is set up in the same fashion as described in
 \citet{flame_wave1}.  In particular, we create a ``hot'' and ``cool''
 hydrostatic model representing the ash and fuel states and blend the
-two models laterally to create a hot region near the origin of
+two models laterally to create a hot region near the origin of the
 coordinates and a smooth transition to the cooler region at larger
-radii.  The cool initial model is characterized by 3 temperatures:
+radii.  The cool initial model is characterized by three temperatures:
 $T_\mathrm{star}$ is the isothermal temperature of the underlying
 neutron star, $T_\mathrm{hi}$ is the temperature at the base of the
 fuel layer, and $T_\mathrm{lo}$ is the minimum temperature of the
@@ -290,24 +293,25 @@ models by varying these parameters.  All models have the same
 peak temperature in the hot model, $T_\mathrm{star} + \delta T$.
 
 \begin{figure}[t]
-\centering
-\plotone{hot}
-\caption{\label{fig:hot_profiles} Initial temperature and density
-  structure vs.\ height in the ``hot'' state.}
+    \centering
+    \plotone{hot}
+    \caption{\label{fig:hot_profiles} Initial temperature and density
+    structure vs.\ height in the ``hot'' state.}
 \end{figure}
 
 \begin{figure}[t]
-\centering
-\plotone{cold}
-\caption{\label{fig:cool_profiles} Initial temperature and density
-  structure vs.\ height in the ``cool'' state.}
+    \centering
+    \plotone{cold}
+    \caption{\label{fig:cool_profiles} Initial temperature and density
+    structure vs.\ height in the ``cool'' state.}
 \end{figure}
 
 For the current simulations, we explore a variety of initial rotation
 rate and temperature conditions for the flame. The main parameters
-describing the models are provided in Table~\ref{table:runs}. Figure~\ref{fig:hot_profiles} shows the
+describing the models and the names by which we shall refer to them in this paper 
+are provided in Table~\ref{table:runs}. Figure~\ref{fig:hot_profiles} shows the
 temperature and density structure for our hot models and
-figure~\ref{fig:cool_profiles} shows the temperature and density
+Figure~\ref{fig:cool_profiles} shows the temperature and density
 structure for the cool models.
 
 
@@ -344,31 +348,33 @@ zones and two levels of refinement (the first level refining the resolution
 by factor of four, and the second by a factor of two again).  This gives a
 fine-grid resolution of $20~\mathrm{cm}$.  In these simulations, refinement 
 is carried out in all zones within the atmosphere
-with $\rho > 2.5\times 10^4~\gcc$.
+with $\rho > 2.5\times 10^4~\gcc$. We use an axisymmetric coordinate system, 
+with the horizontal $r$-direction pointing along the surface of the star and the 
+vertical $z$-direction pointing tangential to the surface.
 
 \begin{figure}
 	\plotone{maxima_vs_time.pdf}
 	\caption{\label{fig:maxima}Estimates of temperature (left panel) and nuclear energy generation 
 	rate (right panel) in the burning region as functions of time. The quantities on the vertical 
-	axes are the averages defined by Equation \ref{eqn:top_percentile_avg}.}
+	axes are the mass-weighted averages defined in Equation~\ref{eqn:top_percentile_avg}.}
 \end{figure}
 
-{\color{blue}
 For some of our analysis, we would like to have a means of estimating the temperature ($T$) and nuclear 
 energy generation rate ($\enucdot$) in the burning region of each simulation. For this purpose, we define 
-$\repavg{Q}$ to be the mass weighted average
+the mass weighted average $\repavg{Q}$ of some quantity $Q$ to be
 \begin{equation}
 	\label{eqn:top_percentile_avg}
 	\repavg{Q} \equiv \frac{\sum_{c_i} m(c_i) Q(c_i)}{\sum_{c_i} m(c_i)}; ~c_i \in C_{99}(Q).
 \end{equation}
 \noindent Here, $C_{99}(Q)$ is the set of grid cells with $Q$ values in the top percentile, and 
-$Q(c_i)$ is the value of the quantity $Q$ in cell $c_i$. An alternative to doing this averaging is 
-to simply take the maximum of the quantity across the entire simulation domain, but using 
-$\repavg{Q}$ instead allows us to track changes over a region rather than at a single localized 
-point. Figure \ref{fig:maxima} shows $\repavg{T}$ and $\repavg{\enucdot}$ as functions of time for 
+$Q(c_i)$ is the value of $Q$ in cell $c_i$\MarginPar{Please define what m(c i) here!}. By using 
+$\repavg{Q}$ instead of simply taking the maximum of the quantity across the entire simulation domain 
+allows us to track changes over the domain as a whole rather than at a single localized 
+point. This will therefore be a better reflection of the overall behavior of the flame rather than of a 
+single localized fluctuation. Figure \ref{fig:maxima} shows $\repavg{T}$ and $\repavg{\enucdot}$ as functions of time for 
 the subset of our runs that achieve a propagating flame. This figure is referenced throughout the 
 subsequent sections.
-}
+
 
 \subsection{Effect of Rotation Rate on Flame Structure}\label{ssec:rot_structure}
 
@@ -382,9 +388,9 @@ pressure gradient becomes important, and is approximately given by
 	\label{eqn:rossby}
 	L_R \approx \frac{\sqrt{g H_0}}{\Omega},
 \end{equation}
-where $g$ is gravitational acceleration, $H_0$ is the atmospheric scale height, and $\Omega$ is the 
+where $g$ is the gravitational acceleration, $H_0$ is the atmospheric scale height, and $\Omega$ is the 
 neutron star rotation rate. In Figure \ref{fig:time_series_enuc_500} and Figure 
-\ref{fig:time_series_enuc_1000}, we use the $\dot{e}_\mathrm{nuc}$ measured at $50~\mathrm{ms}$ and $100~\mathrm{ms}$ to discern the horizontal extent of the flame at different rotation rates. Taking the edge at greatest radius of the bright teal/green region (where significant energy generation is occurring) as the leading edge of the flame in each plot, we see that the horizontal extent of the $1000~\mathrm{Hz}$ flame ($\tt{F1000}$) appears to be 
+\ref{fig:time_series_enuc_1000}, we use the $\dot{e}_\mathrm{nuc}$ measured at $50~\mathrm{ms}$ and $100~\mathrm{ms}$ to discern the horizontal extent of the flame at different rotation rates. Taking the edge at greatest radius of the bright teal/green region where the most significant energy generation is occurring as the leading edge of the flame in each plot, we see that the horizontal extent of the $1000~\mathrm{Hz}$ flame ($\tt{F1000}$) appears to be 
 reduced compared to the lower rotation $500~\mathrm{Hz}$ run ($\tt{F500}$). From Equation 
 \ref{eqn:rossby}, we can see that increasing the rotation rate from $500~\mathrm{Hz}$ to 
 $1000~\mathrm{Hz}$ should decrease $L_R$ by a factor of two, and that the greater confinement from 
@@ -434,20 +440,20 @@ increasing the temperature and density in the flame front such that the reaction
 which allows the reactions to progress further. The $\dot{e}_\mathrm{nuc}$ plots in Figure 
 \ref{fig:time_series_enuc_1000} also support this interpretation, with the region of the 
 flame front nearest to the crust in the {\tt F1000} run reaching higher $\dot{e}_\mathrm{nuc}$ values 
-than for the {\tt F500} run in Figure \ref{fig:time_series_enuc_500}. In contrast to {\tt F500} 
+than for the {\tt F500} run in Figure~\ref{fig:time_series_enuc_500}. In contrast to {\tt F500} 
 and {\tt F1000}, the lowest rotation run --- {\tt F250} --- failed to ignite. The lack of ignition 
 for {\tt F250} also aligns with the reasoning given above, with the lower rotation in this case 
 potentially leading to insufficient confinement such that the temperature and density required for 
 ignition is not achieved. In this scenario, another source of confinement (e.g.\ magnetic fields, see \citep{art-2016-cavecchi-etal}) 
 would need to take over at lower rotation rates to allow a burst to occur, at least for the initial 
-model used here. {\color{blue} Given that the size of our domain is $\sim 1~L_R$ for {\tt F250} (using Equation~\ref{eqn:rossby}), it is also possible that we simply cannot confine the flame sufficiently with our current domain width.}
+model used here. {\color{blue} Given that the size of our domain is $\sim 1~L_R$ for {\tt F250} (using Equation~\ref{eqn:rossby}), it is also possible that we simply cannot confine the flame sufficiently with our current domain width.} We see in Figure~\ref{fig:flame_speeds_1} that the {\tt F500} flame took longer to achieve steady propagation than the {\tt F1000} flame. It may therefore also be that we did not run our simulation for long enough to see the {\tt F250} flame achieve the conditions required for ignition and steady propagation.
 
 Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a dense region with circular 
 motion. In Figure~\ref{fig:urho}, which compares the horizontal $r$-velocity $u$, density $\rho$ and the 
 nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the {\tt F250}, {\tt F500}, and {\tt F1000} 
 runs, most of the burning for each of the simulations occurs in a high density region $\rho > 3 
 \times 10^5 {\rm g\,cm^{-3}}$. The fluid in this dense, high energy generation region undergoes 
-vortical motion, shown in the Figure~\ref{fig:uv} phase plots comparing $u$, vertical z-velocity $v$ and $\dot{e}_{\rm 
+vortical motion, shown in the Figure~\ref{fig:uv} phase plots comparing $u$, the vertical $z$-velocity $v$ and $\dot{e}_{\rm 
 nuc}$. This most likely corresponds to the leading edge of the flame where fresh fuel is being entrained. \MarginPar{not sure if we should keep this sentence about entrainment...}
 This feature is not developed in the $250~\mathrm{Hz}$ flame in Figure~\ref{fig:uv} {\color{blue} (left panel)}; it could potentially develop 
 at later times (past the point at which we terminated our simulation), or the flame could just 
@@ -523,13 +529,13 @@ for the $\tt{F500}$ and $\tt{F1000}$ runs (blue and orange, respectively) to sho
 rotation rate. In \citet{flame_wave1}, we applied a linear least-squares fit to the flame front 
 position as a function of time to estimate the propagation velocity. As some of the flames in this 
 set of simulation runs exhibit significant acceleration, for this study we instead fit the data 
-with a quadratic curve of the form:
+with a quadratic curve of the form
 \begin{equation}
 	\label{eqn:quadratic_fit}
-	\color{blue} r(t) = \half a t^2 + v_0 t + r_0
+	r(t) = \half a t^2 + v_0 t + r_0,
 \end{equation}
-\noindent The parameter $a$ is the acceleration of the flame, $v_0$ is the velocity at $t = 
-0~\mathrm{ms}$, and $r_0$ is the position at $t = 0~\mathrm{ms}$. We do not include the data points 
+\noindent where the parameter $a$ is the acceleration of the flame, $v_0$ is the velocity at $t = 
+0~\mathrm{ms}$, and $r_0$ is the flame front position at $t = 0~\mathrm{ms}$. We do not include the data points 
 with $t \lesssim 20~\mathrm{ms}$ when performing the fit, since these correspond to the initial 
 transient period before the flame has begun to propagate steadily. The values of $a$ and $v_0$ for 
 the full suite of simulation runs are provided in Table~\ref{table:flame_speeds}. Note that $v_0$ 
@@ -549,11 +555,11 @@ described by Equation \ref{eqn:rossby}. This finding was consistent with the res
 \citet{cavecchi:2013}, who noted that the flame speeds in their simulations scaled with the Rossby 
 length. As seen in Figure~\ref{fig:flame_speeds_1}, there is no obvious inverse scaling of the 
 flame speed with rotation rate in this set of runs. We observed earlier, however, that nuclear 
-reactions progress more quickly at higher rotation rate. {\color{blue}This results in a higher 
+reactions progress more quickly at higher rotation rate. This results in a higher 
 $\enucdot$ --- up 
 to three to four times higher near the burning front after the flame ignites (see Figure 
 \ref{fig:maxima}) --- which may counteract the reduction in flame speed from the increased Coriolis 
-confinement.} We also observe that $\tt{F500}$ accelerates faster than $\tt{F1000}$, which appears 
+confinement. We also observe that $\tt{F500}$ accelerates faster than $\tt{F1000}$, which appears 
 to experience a small deceleration at early times. This disparity may be a direct result of the 
 difference in Coriolis force.
 
@@ -603,10 +609,10 @@ However, this is likely to be a numerical artefact rather than a true physical e
 of the boundary conditions imposed at the axis of symmetry for these simulations. $\tt{F500\_4E8}$ 
 clearly reaches much higher $\bar{A}$ values across the domain (especially at the latest snapshot, 
 $t = 40~\mathrm{ms}$) compared to all the other runs described in this paper (see Figures 
-\ref{fig:compare_500Hz_abar}, \ref{fig:time_series_500}, and \ref{fig:time_series_1000}). 
+\ref{fig:time_series_500}, \ref{fig:time_series_1000} and \ref{fig:compare_500Hz_abar}). 
 
 
- {\color{blue} Though $\tt{F500\_4E8}$ does not form a distinct burning front, it does achieve greatly enhanced burning, as shown in the Figure~\ref{fig:abar_hot} $\bar{A}$-$T$ phase plot (right panel). Not only is $\tt{F500\_4E8}$ significantly hotter overall compared to all other runs}, but there is a large causally connected region across a wide range of $\bar{A}$. This indicates that the hotter temperature has facilitated significant burning in reaction pathways that were not favored at the lower temperatures. The reaction pathways are also very disrupted for $\tt{F500\_4E8}$ compared to the cooler runs, suggesting that the hotter temperature leads to more vigorous mixing. {\color{blue}Indeed, this appears to be the case looking at Figure~\ref{fig:4e8_stacked_abar} and the right panel of Figure~\ref{fig:uv_hot} (discussed further in section~\ref{ssec:temp_prop}). The disrupted reaction pathways resemble those found in Figure \ref{fig:abar} for the highest rotation $\tt{F1000}$ run, though they are even more dramatically disrupted for $\tt{F500\_4E8}$. $\tt{F500\_4E8}$ is also noticeably hotter than $\tt{F1000}$, even though it is run for significantly less time ($t = 40~\mathrm{ms}$ vs $t = 100~\mathrm{ms}$). While the correlation between increased temperature, greater mixing, and enhanced burning seen in $\tt{F500\_4E8}$ is present throughout our simulations, $\tt{F500\_4E8}$ is unique in that it seems insufficiently confined to maintain a burning front.} \MarginPar{is it correct to say it's insufficiently confined?} {\color{blue} Enhanced burning in this hottest run aligns with results from the other simulations with differing initial temperature structures; as $T_{\mathrm{star}}$ is increased, the overall behavior and propagation of the flame is significantly altered, implying that burning is very temperature-sensitive. We explore flame propagation further in Section~\ref{ssec:temp_prop}.}
+ {\color{blue} Though $\tt{F500\_4E8}$ does not form a distinct burning front, it does achieve greatly enhanced burning, as shown in the Figure~\ref{fig:abar_hot} $\bar{A}$-$T$ phase plot (right panel). Not only is $\tt{F500\_4E8}$ significantly hotter overall compared to all other runs}, but there is a large causally connected region across a wide range of $\bar{A}$. This indicates that the hotter temperature has facilitated significant burning in reaction pathways that were not favored at the lower temperatures. The reaction pathways are also very disrupted for $\tt{F500\_4E8}$ compared to the cooler runs, suggesting that the hotter temperature leads to more vigorous mixing. {\color{blue}Indeed, this appears to be the case looking at Figure~\ref{fig:4e8_stacked_abar} and the right panel of Figure~\ref{fig:uv_hot} (discussed further in section~\ref{ssec:temp_prop}). The disrupted reaction pathways resemble those found in Figure \ref{fig:abar} for the highest rotation $\tt{F1000}$ run, though they are even more dramatically disrupted for $\tt{F500\_4E8}$. $\tt{F500\_4E8}$ is also noticeably hotter than $\tt{F1000}$, even though it is run for significantly less time ($t = 40~\mathrm{ms}$ vs $t = 100~\mathrm{ms}$). Although the $\tt{F500\_4E8}$ run is clearly a special case in that it develops steady burning across the domain rather than a propagating flame, enhanced burning in this hottest run aligns with results from the other simulations with differing initial temperature structures. As $T_{\mathrm{star}}$ is increased, the overall behavior and propagation of the flame is significantly altered, implying that burning is very temperature-sensitive. We explore flame propagation further in Section~\ref{ssec:temp_prop}.}
 
 
 \begin{figure}[t]
@@ -628,12 +634,15 @@ The method for measuring flame propagation described in Section \ref{ssec:rot_pr
 applied in Figure \ref{fig:flame_speeds_2} to the three $500~\mathrm{Hz}$ runs with 
 $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$. Due to the lack of a clear burning front in 
 $\tt{F500\_4E8}$, we do not analyze its propagation speed and acceleration. As the initial 
-$T_{\mathrm{star}}$ is increased, the flame becomes greatly accelerated. The initial flame 
+$T_{\mathrm{star}}$ is increased beyond $\sim 2\times 10^8$, the flame becomes greatly accelerated. The initial flame 
 velocities and accelerations derived from a quadratic least-squares fit to each of the datasets, as 
 well as the flame velocities at $t = 50~\mathrm{ms}$ calculated using the fit parameters, are 
 provided in Table~\ref{table:flame_speeds}. Comparing the flame propagation at different initial 
 temperatures, the most robust feature is the acceleration of the $\tt{F500\_3E8}$ run at $t \sim 
-40~\mathrm{ms}$. The reason for the acceleration of the flame is not entirely clear. It could be 
+40~\mathrm{ms}$. The reason for the acceleration of the flame is not entirely clear. 
+Whereas for the cooler runs, a state of steady flame propagation is achieved, for the $\tt{F500\_3E8}$ run
+the flame speed continues to increase, suggesting that some instability driving the 
+flame's propagation persists to later times. It could be 
 that energy released from burning begins to dominate the flame's propagation as it evolves, 
 increasing the flame speed over time. Another possibility is that the increased temperatures lead 
 to enhanced turbulent mixing effects that pull in more fresh fuel for the flame to burn. Yet 
@@ -676,7 +685,7 @@ The $u$-$\rho$ phase plot in Figure~\ref{fig:urho_hot} shows that the horizontal
 %======================================================================
 \section{Discussion and Conclusions}\label{Sec:conclusions}
 
-We ran a number of simulations of laterally propagating flames in XRBs in order to explore the effects of rotation and thermal structure. We found that increasing the rotation rate increased the energy generation rate within the flame and enhanced nuclear burning. {\color{blue} Apart from the lowest rotation run (which failed to ignite), flame propagation was not noticeably impacted by rotation rate; by the time the different flame fronts reached steady propagation, they shared comparable velocities. These results are likely due to the rotation-dependent strength of the Coriolis force and confinement of the flame.} \MarginPar{NF: is the wording of the blue text correct?} We explored several models with different crustal temperatures, to determine what effects mechanisms such as higher accretion rates, crustal heating and shallow heating may have on flame propagation. We found that increasing the temperature of the crust significantly enhanced the flame propagation. This we believe to be because a cooler crust allows heat to more efficiently be transferred from the flame itself, therefore reducing the flame's temperature, slowing burning and consequently reducing its propagation speed. We saw that if the crust temperature was too high, then instead of a flame, the atmosphere would burn stably. This is reminiscent of what is seen for neutron stars with accretion rates exceeding the Eddington luminosity.
+We ran a number of simulations of laterally propagating flames in XRBs in order to explore the effects of rotation and thermal structure. We found that increasing the rotation rate increased the energy generation rate within the flame and enhanced nuclear burning. Apart from the lowest rotation run (which failed to ignite), flame propagation was not noticeably impacted by rotation rate; by the time the different flame fronts reached steady propagation, they shared comparable velocities. These results are likely due to the rotation-dependent strength of the Coriolis force its confinement of the flame balancing the enhanced nuclear burning. We explored several models with different crustal temperatures to determine what effects mechanisms such as higher accretion rates, crustal heating and shallow heating may have on flame propagation. We found that increasing the temperature of the crust significantly enhanced the flame propagation. This we believe to be because a cooler crust allows heat to more efficiently be transferred away from the flame itself, therefore reducing the flame's temperature, slowing burning and consequently reducing its propagation speed. At higher temperatures, we saw that the flame itself accelerated, the increased temperature and inability for heat to be transported away from the flame front driving unstable, accelerating flame propagation. We saw that if the crust temperature was too high, then instead of a flame the entire atmosphere would burn stably. This is reminiscent of what is seen for neutron stars with accretion rates exceeding the Eddington luminosity.
 
 In future simulations, we would like to improve and expand our
 simulations in order to better understand the processes at play and to
@@ -684,15 +693,15 @@ include more physics. This includes adding tracer particles to the
 simulations so we can monitor the fluid motion and perform more
 detailed nucleosynthesis; extending our simulations to 3D, which would
 hopefully alleviate some of the boundary effects we have observed in
-these simulations but will require significant computational resource;
+these simulations but will require significant computational resources;
 and exploring the resolution of our simulations more so that we can
-ensure that we have resolved all the necessary physical processes. We
+ensure that we have resolved all of the necessary physical processes. We
 would also like to model H/He flames, as these are the sites of
 rp-process nucleosynthesis~\citep{rpprocess}.  Initially we will use the same reaction
 sequence explored in our previous convection
-calculations~\citep{xrb2}.   Finally, we
+calculations~\citep{xrb2}.  Finally, we
 recently added an MHD solver to \castro~\citep{sazo2020thesis}; this
-will allow us to explore the effects of magnetic fields on flame
+will allow us in the future to explore the effects of magnetic fields on flame
 propagation in XRBs.
 
 % tl;dr: faster rotation and/or hotter surface temperature = more burning.
