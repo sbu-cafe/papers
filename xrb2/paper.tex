@@ -367,13 +367,13 @@ the mass weighted average $\repavg{Q}$ of some quantity $Q$ to be
 	\repavg{Q} \equiv \frac{\sum_{c_i} m(c_i) Q(c_i)}{\sum_{c_i} m(c_i)}; ~c_i \in C_{99}(Q).
 \end{equation}
 \noindent Here, $C_{99}(Q)$ is the set of grid cells with $Q$ values in the top percentile, and 
-$Q(c_i)$ is the value of $Q$ in cell $c_i$\MarginPar{Please define what m(c i) here!}. By using 
-$\repavg{Q}$ instead of simply taking the maximum of the quantity across the entire simulation domain 
-allows us to track changes over the domain as a whole rather than at a single localized 
-point. This will therefore be a better reflection of the overall behavior of the flame rather than of a 
-single localized fluctuation. Figure \ref{fig:maxima} shows $\repavg{T}$ and $\repavg{\enucdot}$ as functions of time for 
-the subset of our runs that achieve a propagating flame. This figure is referenced throughout the 
-subsequent sections.
+$Q(c_i)$ is the value of $Q$ in cell $c_i$ (with $m(c_i)$ being the total mass in cell $c_i$). By 
+using $\repavg{Q}$ instead of simply taking the maximum of the quantity across the entire 
+simulation domain allows us to track changes over the domain as a whole rather than at a single 
+localized point. This will therefore be a better reflection of the overall behavior of the flame 
+rather than of a single localized fluctuation. Figure \ref{fig:maxima} shows $\repavg{T}$ and 
+$\repavg{\enucdot}$ as functions of time for the subset of our runs that achieve a propagating 
+flame. This figure is referenced throughout the subsequent sections.
 
 
 \subsection{Effect of Rotation Rate on Flame Structure}\label{ssec:rot_structure}
