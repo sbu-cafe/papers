@@ -194,8 +194,8 @@ XRBs come from sources with rotation rates of $200-600~\mathrm{Hz}$
 \citep{bilous:2019,galloway:2020}. There are a number of
 factors that could explain this lack of observations below $200~\mathrm{Hz}$. It
 could be that there is some physical process which inhibits the flame
-ignition and/or spread at lower rotation rates. It could be that burst
-oscillations at lower rotation rates are smaller in amplitude and
+ignition and/or spread at lower rotation rates. It could be that bursts
+at lower rotation rates are smaller in amplitude and
 therefore more difficult to detect. It could be that it does not have
 anything to do with the flame at all, but that neutron stars in
 accreting low mass X-ray binaries rarely have rotation rates below $200~\mathrm{Hz}$.
@@ -250,7 +250,7 @@ blending a hot model on the left side of the domain (the coordinate
 origin) and a cool model on the right.  The initial temperature
 gradient between the hot and cool fluids drives a laterally
 propagating flame through the cool fuel.  In our original set of
-calculations (in \citet{flame_wave1}), in order to make the 
+calculations (in \citep{flame_wave1}), in order to make the 
 simulations computationally feasible we artificially boosted the flame speed by adjusting the
 conductivity and reaction rate to produce a flame moving 5--10$\times$
 faster than the nominal laminar flame speed.  We also used high
@@ -338,7 +338,7 @@ zones and two levels of refinement (the first level refining the resolution
 by factor of four, and the second by a factor of two again).  This gives a
 fine-grid resolution of $20~\mathrm{cm}$.  In these simulations, refinement 
 is carried out in all zones within the atmosphere
-with $\rho > 2.5\times 10^4~\gcc$. We use an axisymmetric coordinate system, 
+with density $\rho > 2.5\times 10^4~\gcc$. We use an axisymmetric coordinate system, 
 with the horizontal $r$-direction pointing along the surface of the star and the 
 vertical $z$-direction pointing tangential to the surface.
 
@@ -356,8 +356,9 @@ purpose, we define the mass-weighted average $\repavg{Q}$ of some quantity $Q$ t
 	\label{eqn:top_percentile_avg}
 	\repavg{Q} \equiv \frac{\sum_{c_i} m(c_i) Q(c_i)}{\sum_{c_i} m(c_i)}; ~c_i \in C_{99}(Q).
 \end{equation}
-\noindent Here, $C_{99}(Q)$ is the set of grid cells with $Q$ values in the top percentile, and 
-$Q(c_i)$ is the value of $Q$ in cell $c_i$ (with $m(c_i)$ being the total mass in cell $c_i$). Using $\repavg{Q}$ instead of simply taking the maximum of the quantity across the entire 
+\noindent Here, $C_{99}(Q)$ is the set of grid cells with $Q$ values in the top percentile, 
+$Q(c_i)$ is the value of $Q$ in cell $c_i$, and $m(c_i)$ is the total mass in cell $c_i$. 
+Using $\repavg{Q}$ instead of simply taking the maximum of the quantity across the entire 
 simulation domain allows us to track changes over the domain as a whole rather than at a single 
 localized point. This will therefore be a better reflection of the overall behavior of the flame 
 rather than of a single localized fluctuation. Figure \ref{fig:maxima} shows $\repavg{T}$ and 
@@ -379,7 +380,7 @@ pressure gradient becomes important, and is approximately given by
 \end{equation}
 where $g$ is the gravitational acceleration, $H_0$ is the atmospheric scale height, and $\Omega$ is the 
 neutron star rotation rate. In Figure \ref{fig:time_series_enuc_500} and Figure 
-\ref{fig:time_series_enuc_1000}, we use the $\dot{e}_\mathrm{nuc}$ measured at $50~\mathrm{ms}$ and $100~\mathrm{ms}$ to discern the horizontal extent of the flame at different rotation rates. Taking the edge at greatest radius of the bright teal/green region where the most significant energy generation is occurring as the leading edge of the flame in each plot, we see that the horizontal extent of the $1000~\mathrm{Hz}$ flame ($\tt{F1000}$) appears to be 
+\ref{fig:time_series_enuc_1000}, we use $\dot{e}_\mathrm{nuc}$ measured at $50~\mathrm{ms}$ and $100~\mathrm{ms}$ to discern the horizontal extent of the flame at different rotation rates. Taking the edge at greatest radius of the bright teal/green region where the most significant energy generation is occurring as the leading edge of the flame in each plot, we see that the horizontal extent of the $1000~\mathrm{Hz}$ flame ($\tt{F1000}$) appears to be 
 reduced compared to the lower rotation $500~\mathrm{Hz}$ run ($\tt{F500}$). From Equation 
 \ref{eqn:rossby}, we can see that increasing the rotation rate from $500~\mathrm{Hz}$ to 
 $1000~\mathrm{Hz}$ should decrease $L_R$ by a factor of two, and that the greater confinement from 
@@ -433,7 +434,7 @@ than for the {\tt F500} run in Figure~\ref{fig:time_series_enuc_500}. In contras
 and {\tt F1000}, the lowest rotation run --- {\tt F250} --- failed to ignite. The lack of ignition 
 for {\tt F250} also aligns with the reasoning given above, with the lower rotation in this case 
 potentially leading to insufficient confinement such that the temperature and density required for 
-ignition is not achieved. In this scenario, another source of confinement (e.g.\ magnetic fields, see \citep{art-2016-cavecchi-etal}) 
+ignition is not achieved. In this scenario, another source of confinement (e.g.\ magnetic fields, see \cite{art-2016-cavecchi-etal}) 
 would need to take over at lower rotation rates to allow a burst to occur, at least for the initial 
 model used here. Given that the size of our domain is $\sim 1~L_R$ for {\tt F250} (using Equation~\ref{eqn:rossby}), it is also possible that we simply cannot confine the flame sufficiently with our current domain width. We see in Figure~\ref{fig:flame_speeds_1} (discussed further in Section~\ref{ssec:rot_propagation}) that the {\tt F500} flame took longer to achieve steady propagation than the {\tt F1000} flame. It may therefore also be that we did not run our simulation for long enough to see the {\tt F250} flame achieve the conditions required for ignition and steady propagation.
 
@@ -445,7 +446,7 @@ runs, most of the burning for each of the simulations occurs in a high density r
 vortical motion, shown in the Figure~\ref{fig:uv} phase plots comparing $u$, the vertical $z$-velocity $v$ and $\dot{e}_{\rm 
 nuc}$. This most likely corresponds to the leading edge of the flame where fresh fuel is being entrained.
 This feature is not developed in the $250~\mathrm{Hz}$ flame in Figure~\ref{fig:uv} (left panel); it could potentially develop 
-at later times (past the point at which we terminated our simulation), or the flame could just 
+at later times (past the point at which we terminated our simulation), or the burning could just 
 fizzle out and fail to ignite entirely. 
 
 The mean molecular weight $\bar{A}$ within each of our simulations seems to grow along defined tracks confined to certain temperatures $T$, as shown in the Figure \ref{fig:abar} phase plots. We believe that the tracks in the plot correspond to reaction pathways in the reaction network. Comparing Figure \ref{fig:abar} to \citet{flame_wave1}, these tracks are much more neat and clearly defined. The ``messiness" of the tracks may be dependent on how mixed the flame interior is. Since these new simulations are un-boosted, they may be inherently less mixed than those in \citet{flame_wave1}. {\tt F1000} aligns with this interpretation: its $\bar{A}$ tracks are somewhat disrupted compared to the slower rotation runs, possibly due to the more vigorous mixing of the vortex at the flame front. Comparing the different runs, we also see that as the rotation rate increases, so does the peak temperature. This makes sense if higher rotation leads to a more concentrated, intense vortex near the flame front. It also agrees with our earlier interpretation of the enhanced burning seen in Figure \ref{fig:time_series_1000} for {\tt F1000}. 
