@@ -389,7 +389,7 @@ the Coriolis force should reduce the horizontal extent of the flame by a similar
 the Rossby radius is only an approximate measure of this horizontal lengthscale, and in our 
 simulations we see that this scaling does not work so well for all rotation rates. The simulations 
 seem to follow the theoretical scaling described in Equation \ref{eqn:rossby} more closely at 
-higher rotation rates ($1000~\mathrm{Hz}$ and higher), based on the results of \citet{flame_wave1}. {\color{blue} Perhaps these new un-boosted runs have not had sufficient time to reach steady propagation, in contrast to the boosted runs in \citet{flame_wave1} that reached steady propagation more quickly.} \MarginPar{does the equation for the Rossby radius only hold for flames with steady propagation?}
+higher rotation rates ($1000~\mathrm{Hz}$ and higher), based on the results of \citet{flame_wave1}.
 
 \begin{figure}[t]
 \centering
@@ -437,7 +437,7 @@ for {\tt F250} also aligns with the reasoning given above, with the lower rotati
 potentially leading to insufficient confinement such that the temperature and density required for 
 ignition is not achieved. In this scenario, another source of confinement (e.g.\ magnetic fields, see \citep{art-2016-cavecchi-etal}) 
 would need to take over at lower rotation rates to allow a burst to occur, at least for the initial 
-model used here. {\color{blue} Given that the size of our domain is $\sim 1~L_R$ for {\tt F250} (using Equation~\ref{eqn:rossby}), it is also possible that we simply cannot confine the flame sufficiently with our current domain width.} We see in Figure~\ref{fig:flame_speeds_1} that the {\tt F500} flame took longer to achieve steady propagation than the {\tt F1000} flame. It may therefore also be that we did not run our simulation for long enough to see the {\tt F250} flame achieve the conditions required for ignition and steady propagation.
+model used here. Given that the size of our domain is $\sim 1~L_R$ for {\tt F250} (using Equation~\ref{eqn:rossby}), it is also possible that we simply cannot confine the flame sufficiently with our current domain width. We see in Figure~\ref{fig:flame_speeds_1} that the {\tt F500} flame took longer to achieve steady propagation than the {\tt F1000} flame. It may therefore also be that we did not run our simulation for long enough to see the {\tt F250} flame achieve the conditions required for ignition and steady propagation.
 
 Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a dense region with circular 
 motion. In Figure~\ref{fig:urho}, which compares the horizontal $r$-velocity $u$, density $\rho$ and the 
@@ -445,7 +445,7 @@ nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the {\tt F250}, {\tt F500
 runs, most of the burning for each of the simulations occurs in a high density region $\rho > 3 
 \times 10^5 {\rm g\,cm^{-3}}$. The fluid in this dense, high energy generation region undergoes 
 vortical motion, shown in the Figure~\ref{fig:uv} phase plots comparing $u$, the vertical $z$-velocity $v$ and $\dot{e}_{\rm 
-nuc}$. This most likely corresponds to the leading edge of the flame where fresh fuel is being entrained. \MarginPar{not sure if we should keep this sentence about entrainment...}
+nuc}$. This most likely corresponds to the leading edge of the flame where fresh fuel is being entrained.
 This feature is not developed in the $250~\mathrm{Hz}$ flame in Figure~\ref{fig:uv} (left panel); it could potentially develop 
 at later times (past the point at which we terminated our simulation), or the flame could just 
 fizzle out and fail to ignite entirely. 
