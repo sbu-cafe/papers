@@ -210,9 +210,11 @@ to easier ignition of the flame \citep{art-2015-cavecchi-etal}.
 The temperature structure of the accreted fuel layer can also affect
 the flame propagation.  \citet{Timmes00} showed that laminar helium flames 
 have higher speeds when moving into hotter upstream fuel.
-It is known that crustal heating is stronger at lower
+It has been suggested that crustal heating may be stronger at lower
 accretion rates and weaker at higher accretion rates, due to the
-effect of neutrino losses \citep{Cumming2006,johnston:2019}. 
+effect of neutrino losses \citep{Cumming2006,johnston:2019}, however at 
+very high accretion rates it has been observed that the entire atmosphere 
+simmers in place rather than a flame propagating across the surface \citep{fujimoto1981,bildsten1998thermonuclear,keek2009effect}. 
 A shallow heating
 mechanism of as yet unknown origin has been found necessary to
 reproduce observed properties of XRBs in 1D simulations
@@ -221,7 +223,7 @@ In our
 models, we keep the crust at a constant temperature, so by increasing
 this temperature we can effectively increase the crustal heating, shallow heating
 and/or
-mimic the effects of lower accretion rates. 
+mimic the effects of accretion-induced heating. 
 
 In the following sections, we conduct a series of simulations at various rotation 
 rates and temperatures to investigate their effects on the flame. We find that 
@@ -557,7 +559,7 @@ difference in Coriolis force.
 
 \subsection{Effect of Temperature on Flame Structure}\label{ssec:temp_structure}
 
-To explore the effect of different initial temperature configurations, we run four simulations fixed at a rotation rate of $500~\mathrm{Hz}$ with temperatures as shown in Table~\ref{table:runs}. For all the $500~\mathrm{Hz}$ simulations (with the exception of the coolest run, $\tt{F500}$), we set $T_\mathrm{star}$ = $T_\mathrm{hi}$, scaling $\delta T$ accordingly to maintain a consistent value of $T_\mathrm{hi} + \delta T$. If we let $T_\mathrm{star} < T_\mathrm{hi}$, the cooler neutron star surface might act as a heat sink and siphon away energy that would otherwise go into heating the burning layer. By choosing $T_\mathrm{star}$ = $T_\mathrm{hi}$, we can effectively explore simulations with greater surface heating. There are several physically distinct mechanisms that could produce an increased temperature at the crust: crustal heating, some other form of shallow heating or a higher accretion rate. In these simulations, we do not model the mechanism producing the heating effect, just the effect itself, so we do not distinguish between which of these mechanisms cause the heating.
+To explore the effect of different initial temperature configurations, we run four simulations fixed at a rotation rate of $500~\mathrm{Hz}$ with temperatures as shown in Table~\ref{table:runs}. For all the $500~\mathrm{Hz}$ simulations (with the exception of the coolest run, $\tt{F500}$), we set $T_\mathrm{star}$ = $T_\mathrm{hi}$, scaling $\delta T$ accordingly to maintain a consistent value of $T_\mathrm{hi} + \delta T$. If we let $T_\mathrm{star} < T_\mathrm{hi}$, the cooler neutron star surface might act as a heat sink and siphon away energy that would otherwise go into heating the burning layer. By choosing $T_\mathrm{star}$ = $T_\mathrm{hi}$, we can effectively explore simulations with greater surface heating. There are several physically distinct mechanisms that could produce an increased temperature at the crust: crustal heating, some other form of shallow heating or accretion-induced heating. In these simulations, we do not model the mechanism producing the heating effect, just the effect itself, so we do not distinguish between which of these mechanisms cause the heating.
 
 \begin{figure}[t]
 \centering
