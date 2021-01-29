@@ -211,9 +211,7 @@ the flame propagation.  \citet{Timmes00} showed that laminar helium flames
 have higher speeds when moving into hotter upstream fuel.
 It has been suggested that crustal heating may be stronger at lower
 accretion rates and weaker at higher accretion rates, due to the
-effect of neutrino losses \citep{Cumming2006,johnston:2019}, however at 
-very high accretion rates it has been observed that the entire atmosphere 
-simmers in place rather than a flame propagating across the surface \citep{fujimoto1981,bildsten1998thermonuclear,keek2009effect}. 
+effect of neutrino losses \citep{Cumming2006,johnston:2019}. On the other hand, at very high accretion rates the atmosphere is so heated that it simmers in place rather than forming a propagating flame \citep{fujimoto1981,bildsten1998thermonuclear,keek2009effect}. 
 A shallow heating
 mechanism of as yet unknown origin has been found necessary to
 reproduce observed properties of XRBs in 1D simulations
@@ -225,7 +223,7 @@ and/or
 mimic the effects of accretion-induced heating. 
 
 In the following sections, we conduct a series of simulations at various rotation 
-rates and temperatures to investigate their effects on the flame. We find that 
+rates and crustal temperatures to investigate their effects on the flame. We find that 
 at lower rotation rates, the flame itself becomes harder to ignite. At higher 
 rotation rates, nuclear burning is enhanced and the flame propagates steadily. 
 At higher crustal temperatures, burning is greatly enhanced and the flame accelerates as 
@@ -238,7 +236,7 @@ and observations.
 %======================================================================
 \section{Numerical Approach}\label{Sec:numerics}
 
-We use the Castro hydrodynamics code \citep{castro,castro_joss} and
+We use the \castro\ hydrodynamics code \citep{castro,castro_joss} and
 the simulation framework introduced in \citet{flame_wave1}.  The
 current simulations are all performed in a two-dimensional
 axisymmetric geometry.  For these axisymmetric simulations, we add an
@@ -251,7 +249,7 @@ blending a hot model on the left side of the domain (the coordinate
 origin) and a cool model on the right.  The initial temperature
 gradient between the hot and cool fluids drives a laterally
 propagating flame through the cool fuel.  In our original set of
-calculations (in \citep{flame_wave1}), in order to make the 
+calculations \citep{flame_wave1}, in order to make the 
 simulations computationally feasible we artificially boosted the flame speed by adjusting the
 conductivity and reaction rate to produce a flame moving 5--10$\times$
 faster than the nominal laminar flame speed.  We also used high
@@ -286,15 +284,15 @@ peak temperature in the hot model, $T_\mathrm{star} + \delta T$.
 \begin{figure}[t]
     \centering
     \plotone{hot}
-    \caption{\label{fig:hot_profiles} Initial temperature and density
-    structure vs.\ height in the ``hot'' state.}
+    \caption{\label{fig:hot_profiles} Initial temperature structure (left panel) and density
+    structure (right panel) as a function of height in the ``hot'' state.}
 \end{figure}
 
 \begin{figure}[t]
     \centering
     \plotone{cold}
-    \caption{\label{fig:cool_profiles} Initial temperature and density
-    structure vs.\ height in the ``cool'' state.}
+    \caption{\label{fig:cool_profiles} Initial temperature structure (left panel) and density
+    structure (right panel) as a function of height in the ``cool'' state.}
 \end{figure}
 
 For the current simulations, we explore a variety of initial rotation
@@ -443,7 +441,7 @@ Burning in the {\tt F500} and {\tt F1000} runs is concentrated in a dense region
 motion. In Figure~\ref{fig:urho}, which compares the horizontal $r$-velocity $u$, density $\rho$ and the 
 nuclear energy generation rate $\dot{e}_{\rm nuc}$ for the {\tt F250}, {\tt F500}, and {\tt F1000} 
 runs, most of the burning for each of the simulations occurs in a high density region $\rho > 3 
-\times 10^5 {\rm g\,cm^{-3}}$. The fluid in this dense, high energy generation region undergoes 
+\times 10^5~{\rm g\,cm^{-3}}$. The fluid in this dense, high energy generation region undergoes 
 vortical motion, shown in the Figure~\ref{fig:uv} phase plots comparing $u$, the vertical $z$-velocity $v$ and $\dot{e}_{\rm 
 nuc}$. This most likely corresponds to the leading edge of the flame where fresh fuel is being entrained.
 This feature is not developed in the $250~\mathrm{Hz}$ flame in Figure~\ref{fig:uv} (left panel); it could potentially develop 
@@ -566,7 +564,7 @@ To explore the effect of different initial temperature configurations, we run fo
 \caption{\label{fig:compare_500Hz_abar} Comparison of $\bar{A}$ for 3 different $500~\mathrm{Hz}$ models with neutron star temperatures $T_{\rm star}$ of $10^8~\mathrm{K}$, $2\times10^8~\mathrm{K}$ and $3\times10^8~\mathrm{K}$ ($\tt{F500}$, $\tt{F500\_2e8}$, and $\tt{F500\_3e8}$, respectively), and resulting envelope structures.  Each flame is shown at $70~\mathrm{ms}$.} 
 \end{figure}
 
-Figure~\ref{fig:compare_500Hz_abar} shows $\bar{A}$ for three $500~\mathrm{Hz}$ simulations with different initial temperature structures ($T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$) at $t = 70~\mathrm{ms}$. We do not plot $\tt{F500\_4E8}$ here because it fails to form a clear burning front. $\tt{F500\_3E8}$ (Figure~\ref{fig:compare_500Hz_abar}, bottom panel) --- the hottest run to form a clear burning front --- has a faster propagating flame (this will be discussed further in Section \ref{ssec:temp_prop}). It also reaches slightly higher $\bar{A}$ values than the two cooler runs. The Figure~\ref{fig:abar_hot} $\bar{A}$-$T$ phase plots of $\tt{F500}$ (left) and $\tt{F500\_3E8}$ (middle) also reflect these $\bar{A}$ features, with $\tt{F500\_3E8}$ reaching slightly higher $\bar{A}$ values. $\tt{F500\_3E8}$ also reaches higher $\enucdot$ values at the low end of the temperature range ($< 0.5 \times 10^9 \mathrm{K}$). There appear to be more causally connected regions across a range of $\bar{A}$ at low temperatures for $\tt{F500\_3E8}$ than for $\tt{F500}$, suggesting that the higher $\enucdot$ for $\tt{F500\_3E8}$ generates burning in certain reaction pathways that are not present in the cooler $\tt{F500}$ run. Note that, although $\tt{F500\_3E8}$ is the hottest run with a modified initial temperature configuration to form a distinct flame front, the highest rotation $\tt{F1000}$ flame actually reaches higher temperatures (see Figure~\ref{fig:maxima}, left panel) as well as higher $\bar{A}$ (see Figure~\ref{fig:time_series_1000}).
+Figure~\ref{fig:compare_500Hz_abar} shows $\bar{A}$ for three $500~\mathrm{Hz}$ simulations with different initial temperature structures ($T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$) at $t = 70~\mathrm{ms}$. We do not plot $\tt{F500\_4E8}$ here because it fails to form a clear burning front. $\tt{F500\_3E8}$ (Figure~\ref{fig:compare_500Hz_abar}, bottom panel) --- the hottest run to form a clear burning front --- has a faster propagating flame (this will be discussed further in Section \ref{ssec:temp_prop}). It also reaches slightly higher $\bar{A}$ values than the two cooler runs. The Figure~\ref{fig:abar_hot} $\bar{A}$-$T$ phase plots of $\tt{F500}$ (left) and $\tt{F500\_3E8}$ (middle) also reflect these $\bar{A}$ features, with $\tt{F500\_3E8}$ reaching slightly higher $\bar{A}$ values. $\tt{F500\_3E8}$ also reaches higher $\enucdot$ values at the low end of the temperature range ($< 0.5 \times 10^9~\mathrm{K}$). There appear to be more causally connected regions across a range of $\bar{A}$ at low temperatures for $\tt{F500\_3E8}$ than for $\tt{F500}$, suggesting that the higher $\enucdot$ for $\tt{F500\_3E8}$ generates burning in certain reaction pathways that are not present in the cooler $\tt{F500}$ run. Note that, although $\tt{F500\_3E8}$ is the hottest run with a modified initial temperature configuration to form a distinct flame front, the highest rotation $\tt{F1000}$ flame actually reaches higher temperatures (see Figure~\ref{fig:maxima}, left panel) as well as higher $\bar{A}$ (see Figure~\ref{fig:time_series_1000}).
 
 
 In contrast to the models with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$, $\tt{F500\_4E8}$ 
@@ -587,7 +585,7 @@ significant burning occurring even higher, with $\enucdot$ reaching $\sim
 $\enucdot$ values on the order of $10^{18}~\mathrm{erg}\,\mathrm{g}^{-1} \mathrm{s}^{-1}$ 
 (see Figure~\ref{fig:maxima}, right panel), even at the latest timesteps ($\sim 
 70~\mathrm{ms}$, when the flame is most developed). Significant $\enucdot$ values for 
-all other runs are confined to the flame front, rather than spanning the entire domain.
+all runs other than $\tt{F500\_4E8}$ are confined to the flame front, rather than spanning the entire domain.
 
 Figure~\ref{fig:4e8_stacked_abar} shows $\bar{A}$ for $\tt{F500\_4E8}$. Again, burning extends 
 across the domain and high into the atmosphere and fuel layer, lacking the characteristic flame 
@@ -651,7 +649,7 @@ propagate.
 		(green) is only run out to $\sim 70~\mathrm{ms}$ to avoid surpassing the domain boundary.}
 \end{figure}
 
-The $u$-$\rho$ phase plot in Figure~\ref{fig:urho_hot} shows that the horizontal velocity for the $T_{\rm star} = 4\times10^8$~K ($\tt{F500\_4e8}$; right panel) is significantly greater in magnitude than for the cooler $\tt{F500\_3e8}$ (middle panel) and $\tt{F500}$ (left panel) runs. The $u$-$v$ plot in Figure~\ref{fig:uv_hot} further demonstrates this, as again we see that the magnitude of the $\tt{F500\_4e8}$ flame's vertical $z$-velocity $v$ is also significantly larger. This motion therefore most likely corresponds to the vortical motion rather than to the propagation of the flame itself, something which is further supported by the fact that the velocity magnitude is two to three orders of magnitude greater than the flame speeds listed in Table~\ref{table:flame_speeds}. Also of interest in these plots is that the coolest run does not seem to have developed the characteristic vortex structure at the burning front (i.e. where $\dot{e}_{\rm nuc}$ is greatest) that can be clearly seen for the hotter runs at this time ($40~\mathrm{ms}$). As can be seen in Figure~\ref{fig:uv} (which was plotted at $100~\mathrm{ms}$), this does develop more at later times. Similar to what we saw when comparing the runs with different rotation rates, it would therefore appear that it takes longer for the flame to develop when $T_{\rm star}$ is cooler. 
+In both the $u$-$\rho$ phase plot in Figure~\ref{fig:urho_hot} and the $u$-$v$ phase plot in Figure~\ref{fig:uv_hot}, the horizontal $u$-velocity for the $\tt{F500\_4e8}$ (right panel) burning region is slightly larger than that of the cooler runs. Additionally, the cooler runs' $u$-velocities are two to three orders of magnitude greater than the flame speeds listed in Table~\ref{table:flame_speeds}. These phase plot velocities therefore most likely correspond to vortical motion in the turbulent burning vortices rather than the propagation of a flame itself. The vertical $z$-velocity $v$ in Figure~\ref{fig:uv_hot} further suggests that $\tt{F500\_4e8}$ undergoes increased vortical motion, as we see that the velocity magnitude in the burning region is significantly larger than in the lower temperature runs. Also of interest in these plots is that the coolest run does not seem to have developed the characteristic vortex structure at the burning front (i.e. where $\dot{e}_{\rm nuc}$ is greatest) that can be clearly seen for the hotter runs at this time ($40~\mathrm{ms}$). As can be seen in Figure~\ref{fig:uv} (which was plotted at $100~\mathrm{ms}$), this does develop more at later times. Similar to what we saw when comparing the runs with different rotation rates, it would therefore appear that it takes longer for the flame to develop when $T_{\rm star}$ is cooler. 
 
 \begin{figure}[t]
     \centering
