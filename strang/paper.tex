@@ -1,0 +1,250 @@
+\documentclass[times,modern]{aastex63}
+
+% these lines seem necessary for pdflatex to get the paper size right
+\pdfpagewidth 8.5in
+\pdfpageheight 11.0in
+
+\usepackage[T1]{fontenc}
+\usepackage{epsf,color,amsmath}
+
+\usepackage{cancel}
+
+\newcommand{\sfrac}[2]{\mathchoice%
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}} {#1\!/#2}}
+
+
+\newcommand{\castro}{{\sf Castro}}
+\newcommand{\maestro}{{\sf Maestro}}
+\newcommand{\flash}{{\sf Flash}}
+\newcommand{\amrex}{{\sf AMReX}}
+
+\newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\isotm}[2]{{}^{#2}\mathrm{#1}}
+
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\cms}{\mathrm{cm~s^{-1} }}
+
+\newcommand{\nablab}{{\mathbf{\nabla}}}
+\newcommand{\Ub}{\mathbf{U}}
+\newcommand{\gb}{\mathbf{g}}
+\newcommand{\omegadot}{\dot{\omega}}
+\newcommand{\Sdot}{\dot{S}}
+\newcommand{\ddx}[1]{{\frac{{\partial#1}}{\partial x}}}
+\newcommand{\ddt}[1]{{\frac{{\partial#1}}{\partial t}}}
+\newcommand{\odt}[1]{{\frac{{d#1}}{dt}}}
+\newcommand{\divg}[1]{{\nablab \cdot \left (#1\right)}}
+\newcommand{\dedr}{\left . {\partial{}e}/{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedrd}{\left . \frac{\partial{}e}{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedX}{\left . {\partial{}e}/{\partial{}X_k} \right |_{\rho, T}}
+\newcommand{\dedXd}{\left . \frac{\partial{}e}{\partial{}X_k} \right |_{\rho, T, X_{j,j\ne k}}}
+\newcommand{\dedT}{\left . {\partial{}e}/{\partial{}T} \right |_{\rho,X_k}}
+\newcommand{\dedTd}{\left . \frac{\partial{}e}{\partial{}T} \right |_{\rho,X_k}}
+
+\newcommand{\Ic}{{\boldsymbol{\mathcal{I}}}}
+\newcommand{\Ics}{{\mathcal{I}}}
+\newcommand{\smax}{{s_\mathrm{max}}}
+\newcommand{\kth}{k_\mathrm{th}}
+\usepackage{bm}
+
+\newcommand{\Uc}{{\,\bm{\mathcal{U}}}}
+\newcommand{\Fb}{\mathbf{F}}
+\newcommand{\Sc}{\mathbf{S}}
+
+\newcommand{\xv}{{(x)}}
+\newcommand{\yv}{{(y)}}
+\newcommand{\zv}{{(z)}}
+
+\newcommand{\ex}{{\bf e}_x}
+\newcommand{\ey}{{\bf e}_y}
+\newcommand{\ez}{{\bf e}_z}
+
+\newcommand{\Ab}{{\bf A}}
+\newcommand{\Sq}{{\bf S}_\qb}
+\newcommand{\Sqhydro}{{\Sq^{\mathrm{hydro}}}}
+\newcommand{\qb}{{\bf q}}
+
+\newcommand{\Shydro}{{{\bf H}}}
+\newcommand{\Hb}{{\bf H}}
+\newcommand{\Rb}{{\bf R}}
+\newcommand{\Rq}{{\bf R}}
+\newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
+\newcommand{\Advt}[1]{{\left [\boldsymbol{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
+\newcommand{\Advss}[1]{{\left [{\mathcal{{A}}} \left(#1\right)\right]}}
+\newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
+
+\newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
+
+\newcommand{\nse}[1]{{\mathrm{NSE}( #1 )}}
+
+\newcommand{\rhonse}{{\rho_\mathrm{nse}}}
+\newcommand{\tnse}{{T_\mathrm{nse}}}
+\newcommand{\Anse}{{A_\mathrm{nse}}}
+\newcommand{\Bnse}{{B_\mathrm{nse}}}
+
+\newcommand{\out}{{\rm out}}
+\newcommand{\inp}{{\rm in}}
+
+\setlength{\marginparwidth}{0.75in}
+\newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
+
+\begin{document}
+%======================================================================
+% Title
+%======================================================================
+%\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
+\title{Practical Effects of Integrating Temperature / Energy with Strang Split Reactions}
+
+%\shorttitle{A Simplified SDC Method}
+\shorttitle{Temperature Integration with Strang}
+
+
+\shortauthors{}
+
+%% \author[0000-0001-8401-030X]{M.~Zingale}
+%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+%%        Stony Brook, NY 11794-3800}
+
+%% \author[0000-0003-0439-4556]{M.~P.~Katz}
+%% \affiliation{Nvidia Corp}
+
+%% \author[0000-0002-5749-334X]{J.~B.~Bell}
+%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+%% \author[0000-0003-1791-0265]{A.~J.~Nonaka}
+%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+%% \author[0000-0001-8092-1974]{W.~Zhang}
+%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+%% \correspondingauthor{Michael Zingale}
+%% \email{michael.zingale@stonybrook.edu}
+
+
+%======================================================================
+% Abstract and Keywords
+%======================================================================
+\begin{abstract}
+Folks should integrate energy with their reactions!
+\end{abstract}
+
+\keywords{hydrodynamics---methods: numerical}
+
+%======================================================================
+% Introduction
+%======================================================================
+\section{Introduction}\label{Sec:Introduction}
+
+
+\section{Numerical Methodology}
+
+We are using Castro
+
+\section{Simulations}
+
+\subsection{Reacting convergence test problem}
+
+We use the reacting convergence test problem introduced in \cite{castro_sdc}.
+
+\clearpage
+
+\begin{deluxetable}{lllllll}
+\tablecaption{\label{table:react_convert_no_T} Convergence ($L_1$ norm) for the reacting convergence with no $T$ integration.}
+\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
+\startdata
+ $\rho$                      & $2.735 \times 10^{18}$  & 2.057  & $6.571 \times 10^{17}$  & 2.474  & $1.183 \times 10^{17}$  \\
+ $\rho u$                    & $6.729 \times 10^{26}$  & 2.416  & $1.260 \times 10^{26}$  & 2.699  & $1.941 \times 10^{25}$  \\
+ $\rho v$                    & $6.729 \times 10^{26}$  & 2.416  & $1.260 \times 10^{26}$  & 2.699  & $1.941 \times 10^{25}$  \\
+ $\rho E$                    & $2.513 \times 10^{35}$  & 2.226  & $5.372 \times 10^{34}$  & 2.169  & $1.195 \times 10^{34}$  \\
+ $\rho e$                    & $2.292 \times 10^{35}$  & 2.194  & $5.011 \times 10^{34}$  & 2.253  & $1.051 \times 10^{34}$  \\
+ $T$                         & $2.321 \times 10^{21}$  & 1.606  & $7.623 \times 10^{20}$  & 1.993  & $1.915 \times 10^{20}$  \\
+ $\rho X(\isotm{He}{4})$     & $2.806 \times 10^{18}$  & 2.028  & $6.880 \times 10^{17}$  & 2.432  & $1.275 \times 10^{17}$  \\
+ $\rho X(\isotm{C}{12})$     & $1.807 \times 10^{17}$  & 1.846  & $5.026 \times 10^{16}$  & 1.605  & $1.653 \times 10^{16}$  \\
+ $\rho X(\isotm{O}{16})$     & $1.905 \times 10^{14}$  & 1.500  & $6.737 \times 10^{13}$  & 1.439  & $2.484 \times 10^{13}$  \\
+ $\rho X(\isotm{Fe}{56})$    & $2.735 \times 10^{8}$   & 2.057  & $6.571 \times 10^{7}$   & 2.474  & $1.183 \times 10^{7}$   \\
+\enddata
+\end{deluxetable}
+
+
+\begin{deluxetable}{lllllll}
+\tablecaption{\label{table:react_convert_no_T} Convergence ($L_1$ norm) for the reacting convergence with $T$ integration but frozen $c_x$.}
+\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
+\startdata
+ $\rho$                      & $2.781 \times 10^{18}$  & 2.051  & $6.711 \times 10^{17}$  & 2.580  & $1.122 \times 10^{17}$  \\
+ $\rho u$                    & $6.781 \times 10^{26}$  & 2.445  & $1.245 \times 10^{26}$  & 2.907  & $1.659 \times 10^{25}$  \\
+ $\rho v$                    & $6.781 \times 10^{26}$  & 2.445  & $1.245 \times 10^{26}$  & 2.907  & $1.659 \times 10^{25}$  \\
+ $\rho E$                    & $2.465 \times 10^{35}$  & 2.333  & $4.892 \times 10^{34}$  & 2.650  & $7.794 \times 10^{33}$  \\
+ $\rho e$                    & $2.268 \times 10^{35}$  & 2.298  & $4.610 \times 10^{34}$  & 2.722  & $6.988 \times 10^{33}$  \\
+ $T$                         & $2.248 \times 10^{21}$  & 1.682  & $7.003 \times 10^{20}$  & 2.439  & $1.291 \times 10^{20}$  \\
+ $\rho X(\isotm{He}{4})$     & $2.862 \times 10^{18}$  & 2.027  & $7.023 \times 10^{17}$  & 2.554  & $1.196 \times 10^{17}$  \\
+ $\rho X(\isotm{C}{12})$     & $1.717 \times 10^{17}$  & 1.945  & $4.460 \times 10^{16}$  & 2.194  & $9.745 \times 10^{15}$  \\
+ $\rho X(\isotm{O}{16})$     & $1.718 \times 10^{14}$  & 1.648  & $5.482 \times 10^{13}$  & 1.898  & $1.471 \times 10^{13}$  \\
+ $\rho X(\isotm{Fe}{56})$    & $2.781 \times 10^{8}$   & 2.051  & $6.711 \times 10^{7}$   & 2.580  & $1.122 \times 10^{7}$   \\
+\enddata
+\end{deluxetable}
+
+
+\begin{deluxetable}{lllllll}
+\tablecaption{\label{table:react_convert_no_T} Convergence ($L_1$ norm) for the reacting convergence with no $T$ integration and calling the EOS.}
+\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
+\startdata
+ $\rho$                      & $2.781 \times 10^{18}$  & 2.051  & $6.711 \times 10^{17}$  & 2.580  & $1.122 \times 10^{17}$  \\
+ $\rho u$                    & $6.781 \times 10^{26}$  & 2.445  & $1.245 \times 10^{26}$  & 2.907  & $1.659 \times 10^{25}$  \\
+ $\rho v$                    & $6.781 \times 10^{26}$  & 2.445  & $1.245 \times 10^{26}$  & 2.907  & $1.659 \times 10^{25}$  \\
+ $\rho E$                    & $2.465 \times 10^{35}$  & 2.333  & $4.892 \times 10^{34}$  & 2.650  & $7.794 \times 10^{33}$  \\
+ $\rho e$                    & $2.268 \times 10^{35}$  & 2.298  & $4.610 \times 10^{34}$  & 2.722  & $6.988 \times 10^{33}$  \\
+ $T$                         & $2.248 \times 10^{21}$  & 1.682  & $7.003 \times 10^{20}$  & 2.439  & $1.291 \times 10^{20}$  \\
+ $\rho X(\isotm{He}{4})$     & $2.862 \times 10^{18}$  & 2.027  & $7.023 \times 10^{17}$  & 2.554  & $1.196 \times 10^{17}$  \\
+ $\rho X(\isotm{C}{12})$     & $1.717 \times 10^{17}$  & 1.945  & $4.460 \times 10^{16}$  & 2.194  & $9.745 \times 10^{15}$  \\
+ $\rho X(\isotm{O}{16})$     & $1.718 \times 10^{14}$  & 1.648  & $5.482 \times 10^{13}$  & 1.898  & $1.471 \times 10^{13}$  \\
+ $\rho X(\isotm{Fe}{56})$    & $2.781 \times 10^{8}$   & 2.051  & $6.711 \times 10^{7}$   & 2.580  & $1.122 \times 10^{7}$   \\
+\enddata
+\end{deluxetable}
+
+\section{Summary}
+
+
+\acknowledgements \castro\ is freely available at
+\url{http://github.com/AMReX-Astro/Castro}.  All of the code and
+problem setups used here are available in the git repo.  The work at
+Stony Brook was supported by DOE/Office of Nuclear Physics grant
+DE-FG02-87ER40317.  This material is based upon work supported by the
+U.S. Department of Energy, Office of Science, Office of Advanced
+Scientific Computing Research and Office of Nuclear Physics,
+Scientific Discovery through Advanced Computing (SciDAC) program under
+Award Number DE-SC0017955.  This research was supported by the
+Exascale Computing Project (17-SC-20-SC), a collaborative effort of
+the U.S. Department of Energy Office of Science and the National
+Nuclear Security Administration.
+
+\software{\amrex\ \citep{amrex_joss},
+          \castro\ \citep{castro},
+          GNU Compiler Collection (\url{https://gcc.gnu.org/}),
+          Linux (\url{https://www.kernel.org}),
+          matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
+          NumPy \citep{numpy,numpy2},
+          python (\url{https://www.python.org/}), 
+          SymPy \citep{sympy}
+         }
+
+
+
+
+%======================================================================
+% References
+%======================================================================
+
+\bibliographystyle{aasjournal}
+\bibliography{ws}
+
+\end{document}
