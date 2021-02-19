@@ -150,13 +150,29 @@ is needed for second-order accuracy.
 
 \section{Numerical Methodology}
 
-We are using Castro
+We are using the freely-available \castro\ simulation
+code~\citep{castro,castro_joss}.  \castro\ solves the equations of
+hydrodynamics using an unsplit piecewise parabolic method coupled with
+gravity and reactions.  For reactive flow, either Strang splitting or
+spectral deferred corrections are used to couple the hydrodynamics and
+reactions~\citep{castro_sdc}.  Here we focus on the Strang splitting.
 
-\section{Simulations}
+One option to make temperature integration less expensive is to freeze
+the values of the thermodynamics quantities at the start of the
+reactive integration.  This approach was done in \citet{ABNZ:III}.
+This can work well in ``simmering'' phases of reactions where the
+thermodynamic state is not changing much over a timestep, but for
+explosive reactions, this may be a poor approximation.
 
-\subsection{Reacting convergence test problem}
-
-We use the reacting convergence test problem introduced in \cite{castro_sdc}.
+In \cite{castro_sdc}, we introduced a test problem where we could
+measure the convergence of a reacting hydrodynamics problem via
+Richardson extrapolation---this was an acoustic pulse with helium
+burning via $3-\alpha$ and
+$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$.  Those tests focused on
+SDC coupling and showed that we can get overall 4th order in space and
+time convergence.  Here we run the same test with Strang coupling,
+looking at the various approaches at incorporating a temperature
+equation in the reactive portion of the update.
 
 \begin{figure}[t]
 \centering
