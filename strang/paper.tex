@@ -97,7 +97,7 @@
 % Title
 %======================================================================
 %\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
-\title{Practical Effects of Integrating Temperature / Energy with Strang Split Reactions}
+\title{Practical Effects of Integrating Temperature with Strang Split Reactions}
 
 %\shorttitle{A Simplified SDC Method}
 \shorttitle{Temperature Integration with Strang}
@@ -129,7 +129,15 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-Folks should integrate energy with their reactions!
+For astrophysical reacting flows, operator splitting is commonly used
+to couple hydrodynamics and reactions.  Each process operates
+independent of one another, but by staggering the updates in a
+symmetric fashion (via Strang splitting) second order accuracy in time
+can be achieved.  However, approximations are often made to the
+reacting system, including the choice of whether or not to integrate
+temperature with the species.  Here we demonstrate through a simple
+convergence test that integrating temperature together with reactions
+is needed for second-order accuracy.
 \end{abstract}
 
 \keywords{hydrodynamics---methods: numerical}
@@ -150,87 +158,11 @@ We are using Castro
 
 We use the reacting convergence test problem introduced in \cite{castro_sdc}.
 
-\clearpage
-
-\begin{deluxetable}{lllllll}
-\tablecaption{\label{table:react_convert_no_T} Convergence ($L_1$ norm) for the reacting convergence with no $T$ integration.}
-\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
-\startdata
- $\rho$                      & $2.735 \times 10^{18}$  & 2.057  & $6.571 \times 10^{17}$  & 2.474  & $1.183 \times 10^{17}$  \\
- $\rho u$                    & $6.729 \times 10^{26}$  & 2.416  & $1.260 \times 10^{26}$  & 2.699  & $1.941 \times 10^{25}$  \\
- $\rho v$                    & $6.729 \times 10^{26}$  & 2.416  & $1.260 \times 10^{26}$  & 2.699  & $1.941 \times 10^{25}$  \\
- $\rho E$                    & $2.513 \times 10^{35}$  & 2.226  & $5.372 \times 10^{34}$  & 2.169  & $1.195 \times 10^{34}$  \\
- $\rho e$                    & $2.292 \times 10^{35}$  & 2.194  & $5.011 \times 10^{34}$  & 2.253  & $1.051 \times 10^{34}$  \\
- $T$                         & $2.321 \times 10^{21}$  & 1.606  & $7.623 \times 10^{20}$  & 1.993  & $1.915 \times 10^{20}$  \\
- $\rho X(\isotm{He}{4})$     & $2.806 \times 10^{18}$  & 2.028  & $6.880 \times 10^{17}$  & 2.432  & $1.275 \times 10^{17}$  \\
- $\rho X(\isotm{C}{12})$     & $1.807 \times 10^{17}$  & 1.846  & $5.026 \times 10^{16}$  & 1.605  & $1.653 \times 10^{16}$  \\
- $\rho X(\isotm{O}{16})$     & $1.905 \times 10^{14}$  & 1.500  & $6.737 \times 10^{13}$  & 1.439  & $2.484 \times 10^{13}$  \\
- $\rho X(\isotm{Fe}{56})$    & $2.735 \times 10^{8}$   & 2.057  & $6.571 \times 10^{7}$   & 2.474  & $1.183 \times 10^{7}$   \\
-\enddata
-\end{deluxetable}
-
-
-\begin{deluxetable}{lllllll}
-\tablecaption{\label{table:react_convert_no_T} Convergence ($L_1$ norm) for the reacting convergence with $T$ integration but frozen $c_x$.}
-\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
-\startdata
- $\rho$                      & $2.781 \times 10^{18}$  & 2.051  & $6.711 \times 10^{17}$  & 2.580  & $1.122 \times 10^{17}$  \\
- $\rho u$                    & $6.781 \times 10^{26}$  & 2.445  & $1.245 \times 10^{26}$  & 2.907  & $1.659 \times 10^{25}$  \\
- $\rho v$                    & $6.781 \times 10^{26}$  & 2.445  & $1.245 \times 10^{26}$  & 2.907  & $1.659 \times 10^{25}$  \\
- $\rho E$                    & $2.465 \times 10^{35}$  & 2.333  & $4.892 \times 10^{34}$  & 2.650  & $7.794 \times 10^{33}$  \\
- $\rho e$                    & $2.268 \times 10^{35}$  & 2.298  & $4.610 \times 10^{34}$  & 2.722  & $6.988 \times 10^{33}$  \\
- $T$                         & $2.248 \times 10^{21}$  & 1.682  & $7.003 \times 10^{20}$  & 2.439  & $1.291 \times 10^{20}$  \\
- $\rho X(\isotm{He}{4})$     & $2.862 \times 10^{18}$  & 2.027  & $7.023 \times 10^{17}$  & 2.554  & $1.196 \times 10^{17}$  \\
- $\rho X(\isotm{C}{12})$     & $1.717 \times 10^{17}$  & 1.945  & $4.460 \times 10^{16}$  & 2.194  & $9.745 \times 10^{15}$  \\
- $\rho X(\isotm{O}{16})$     & $1.718 \times 10^{14}$  & 1.648  & $5.482 \times 10^{13}$  & 1.898  & $1.471 \times 10^{13}$  \\
- $\rho X(\isotm{Fe}{56})$    & $2.781 \times 10^{8}$   & 2.051  & $6.711 \times 10^{7}$   & 2.580  & $1.122 \times 10^{7}$   \\
-\enddata
-\end{deluxetable}
-
-
-\begin{deluxetable}{lllllll}
-\tablecaption{\label{table:react_convert_no_T} Convergence ($L_1$ norm) for the reacting convergence with no $T$ integration and calling the EOS.}
-\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
-\startdata
- $\rho$                      & $2.781 \times 10^{18}$  & 2.051  & $6.711 \times 10^{17}$  & 2.580  & $1.122 \times 10^{17}$  \\
- $\rho u$                    & $6.781 \times 10^{26}$  & 2.445  & $1.245 \times 10^{26}$  & 2.907  & $1.659 \times 10^{25}$  \\
- $\rho v$                    & $6.781 \times 10^{26}$  & 2.445  & $1.245 \times 10^{26}$  & 2.907  & $1.659 \times 10^{25}$  \\
- $\rho E$                    & $2.465 \times 10^{35}$  & 2.333  & $4.892 \times 10^{34}$  & 2.650  & $7.794 \times 10^{33}$  \\
- $\rho e$                    & $2.268 \times 10^{35}$  & 2.298  & $4.610 \times 10^{34}$  & 2.722  & $6.988 \times 10^{33}$  \\
- $T$                         & $2.248 \times 10^{21}$  & 1.682  & $7.003 \times 10^{20}$  & 2.439  & $1.291 \times 10^{20}$  \\
- $\rho X(\isotm{He}{4})$     & $2.862 \times 10^{18}$  & 2.027  & $7.023 \times 10^{17}$  & 2.554  & $1.196 \times 10^{17}$  \\
- $\rho X(\isotm{C}{12})$     & $1.717 \times 10^{17}$  & 1.945  & $4.460 \times 10^{16}$  & 2.194  & $9.745 \times 10^{15}$  \\
- $\rho X(\isotm{O}{16})$     & $1.718 \times 10^{14}$  & 1.648  & $5.482 \times 10^{13}$  & 1.898  & $1.471 \times 10^{13}$  \\
- $\rho X(\isotm{Fe}{56})$    & $2.781 \times 10^{8}$   & 2.051  & $6.711 \times 10^{7}$   & 2.580  & $1.122 \times 10^{7}$   \\
-\enddata
-\end{deluxetable}
-
-
-\begin{deluxetable}{lllllll}
-\tablecaption{\label{table:react_convert_no_T} Convergence ($L_1$ norm) for the reacting convergence with $e$ integration.}
-\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
-\startdata
- $\rho$                      & $2.794 \times 10^{18}$  & 2.044  & $6.777 \times 10^{17}$  & 2.554  & $1.154 \times 10^{17}$  \\
- $\rho u$                    & $6.796 \times 10^{26}$  & 2.448  & $1.245 \times 10^{26}$  & 2.889  & $1.681 \times 10^{25}$  \\
- $\rho v$                    & $6.796 \times 10^{26}$  & 2.448  & $1.245 \times 10^{26}$  & 2.889  & $1.681 \times 10^{25}$  \\
- $\rho E$                    & $2.451 \times 10^{35}$  & 2.351  & $4.803 \times 10^{34}$  & 2.742  & $7.179 \times 10^{33}$  \\
- $\rho e$                    & $2.261 \times 10^{35}$  & 2.320  & $4.526 \times 10^{34}$  & 2.821  & $6.403 \times 10^{33}$  \\
- $T$                         & $2.237 \times 10^{21}$  & 1.691  & $6.927 \times 10^{20}$  & 2.482  & $1.240 \times 10^{20}$  \\
- $\rho X(\isotm{He}{4})$     & $2.878 \times 10^{18}$  & 2.020  & $7.096 \times 10^{17}$  & 2.529  & $1.229 \times 10^{17}$  \\
- $\rho X(\isotm{C}{12})$     & $1.698 \times 10^{17}$  & 1.950  & $4.393 \times 10^{16}$  & 2.232  & $9.353 \times 10^{15}$  \\
- $\rho X(\isotm{O}{16})$     & $1.687 \times 10^{14}$  & 1.660  & $5.338 \times 10^{13}$  & 1.957  & $1.375 \times 10^{13}$  \\
- $\rho X(\isotm{Fe}{56})$    & $2.794 \times 10^{8}$   & 2.044  & $6.777 \times 10^{7}$   & 2.554  & $1.154 \times 10^{7}$   \\
-\enddata
-\end{deluxetable}
-
+\begin{figure}[t]
+\centering
+\plotone{test}
+\caption{\label{thefigure} our results}
+\end{figure}
 
 \section{Summary}
 
