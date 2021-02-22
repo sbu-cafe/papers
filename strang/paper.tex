@@ -137,7 +137,8 @@ can be achieved.  However, approximations are often made to the
 reacting system, including the choice of whether or not to integrate
 temperature with the species.  Here we demonstrate through a simple
 convergence test that integrating temperature together with reactions
-is needed for second-order accuracy.
+achieves the best convergence when modeling reactive flows with Strang
+splitting.
 \end{abstract}
 
 \keywords{hydrodynamics---methods: numerical}
@@ -146,6 +147,28 @@ is needed for second-order accuracy.
 % Introduction
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
+
+Simulations of stellar flows require solving the equations of
+hydrodynamics coupled with a nuclear reaction network.  The equations
+of hydrodynamics with reacting sources are:
+\begin{align}
+\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \Ub) &= 0 \\
+\frac{\partial (\rho X_k)}{\partial t} + \nabla \cdot (\rho \Ub X_k) &= \rho \omegadot_k \\
+\frac{\partial (\rho \Ub)}{\partial t} + \nabla \cdot (\rho \Ub \Ub) + \nabla p &= 0 \\
+\frac{\partial (\rho E)}{\partial t} + \nabla \cdot \left [ (\rho E + p) \Ub \right ] &= \rho \Sdot
+\end{align}
+where $\rho$ is the density, $\Ub$ is the velocity vector, $X_k$ are the species mass fractions,
+$\omegadot_k$ are the species creation rates (from reactions), $p$ is the pressure, $E$ is the
+total energy / unit mass, and $\Sdot$ is the nuclear energy generation rate.
+
+When we are reacting, we need to evolve the temperature, which we can write as:
+equation:
+\begin{equation}
+\rho c_v \frac{DT}{Dt} = \rho \left (\frac{p}{\rho^2} - e_\rho \right ) \frac{D\rho}{Dt} + \rho \Sdot
+\end{equation}
+(this form neglects the change in temperature due to composition
+changes from reactions, see \citealt{ABNZ:III}, which assumes chemical
+equilibrium). 
 
 
 \section{Numerical Methodology}
@@ -157,22 +180,18 @@ gravity and reactions.  For reactive flow, either Strang splitting or
 spectral deferred corrections are used to couple the hydrodynamics and
 reactions~\citep{castro_sdc}.  Here we focus on the Strang splitting.
 
-The equations of hydrodynamics with reacting sources are:
-\begin{align}
-\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \Ub) &= 0 \\
-\frac{\partial (\rho X_k)}{\partial t} + \nabla \cdot (\rho \Ub X_k) &= \rho \omegadot_k \\
-\frac{\partial (\rho \Ub)}{\partial t} + \nabla \cdot (\rho \Ub \Ub) + \nabla p &= 0 \\
-\frac{\partial (\rho E)}{\partial t} + \nabla \cdot \left [ (\rho E + p) \Ub \right ] &= \rho \Sdot
-\end{align}
-
-When we are reacting, we need the temperature, so we can look at a temperature evolution
-equation:
+In a Strang split evolution~\cite{strang:1968}, we update the full
+hydrodynamics state, $\Uc$ as:
 \begin{equation}
-\rho c_v \frac{DT}{Dt} = \rho \left (\frac{p}{\rho^2} - e_\rho \right ) \frac{D\rho}{Dt} + \rho \Sdot
+  \Uc^{n+1} = {\bf R}_{\Delta t/2} {\bf A}_{\Delta t} {\bf R}_{\Delta t/2} \Uc^n
 \end{equation}
-(this form neglects the change in temperature due to composition
-changes from reactions, see \citealt{ABNZ:III}, which assumes chemical
-equilibrium).  During reactions, we neglect the hydrodynamics terms,
+where ${\bf R}_{\Delta t/2}$ is the reaction update through a timestep
+$\Delta t/2$ and ${\bf A}_{\Delta t}$ is the advective update through
+$\Delta t$.  We see with this splitting, each process operates on the
+state left behind by the previous operation, and the staggering of the
+physics is done to give second order accuracy in time.
+
+During reactions, we neglect the hydrodynamics terms,
 so the reactive system updates according to:
 \begin{align}
 \frac{D\rho}{Dt} &= 0 \\
@@ -180,20 +199,21 @@ so the reactive system updates according to:
 \frac{DT}{Dt} &= \frac{\Sdot}{c_v}
 \end{align}
 
+
 There are several different approximations that people make in the
 literature to this operator-split reacting system, in order to make
 integrating the reaction system computationally less expensive:
 \begin{itemize}
 \item Neglect temerature evolution completely in the burn, only
   evolving Eq.~\ref{eq:species}.  This is the method used in
-  \citet{flash}.
+  \citet{flash}. \MarginPar{other codes?}
 \item Evolve the temperature equation, but ``freeze'' the specific
   heat, $c_v$, at the start of integration to avoid potentially
   expensive equation of state calls.  This was discussed in
-  \citet{ABNZ:III} and is the default method in \castro.
+  \cite{Bell:2004} and is the default method in \castro.
 \item Evolve the full system, calling the equation of state each time
   we evaluate the righthand side of the system to get an updated
-  $c_v$.
+  $c_v$.  This is an option in \castro.
 \end{itemize}
 Depending on how vigorous the burning is and how much the temperature
 changes during a hydrodynamic timestep, one or more of these
@@ -202,9 +222,9 @@ that evolving the full system will be required.  The goal of this
 note is to try to quantify the convergence of a reacting hydrodynamics
 code with these different approximations.
 
-In \cite{castro_sdc}, we introduced a test problem where we could
+In \citet{castro_sdc}, we introduced a test problem where we could
 measure the convergence of a reacting hydrodynamics problem via
-Richardson extrapolation---this was an acoustic pulse with helium
+Richardson extrapolation\MarginPar{ref?}---this was an acoustic pulse with helium
 burning via $3$-$\alpha$ and
 $\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$.  Those tests focused on
 SDC coupling and showed that we can get overall 4th order in space and
@@ -214,7 +234,8 @@ equation in the reactive portion of the update.
 
 For each method, we run the \castro\ {\tt reacting\_convergence} test
 problem at 5 resolutions: $64^2$, $128^2$, $256^2$, $512^2$, and
-$1024^2$.  We then compute four errors between adjacent resolutions by
+$1024^2$, with the timestep kept fixed in proportion to the grid resolution.
+We then compute four errors between adjacent resolutions by
 coarsening the finer resolution run, and computing the $L_1$ norm over
 all zones.  Figure~\ref{thefigure} shows the norm of the error
 vs.\ the coarse run resolution.  Guidelines showing ideal first and
@@ -233,7 +254,12 @@ second order convergence are shown.
 Looking at global convergence of a reacting hydrodynamics problem we
 see that second order convergence is only realized when temperature is
 evolved alongside the composition when using an operator-split
-approach to reactions. 
+approach to reactions.  This is just a single, rather simple problem,
+but this suggests that reactive hydrodynamics simulations should
+switch to integrating temperature or another energy equation together
+with reactions to yield better overall convergence and accuracy.  We
+expect that for problems with vigorous burning, such as detonation,s
+this will be especially important.
 
 \acknowledgements \castro\ is freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  All of the code and
