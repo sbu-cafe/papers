@@ -1,4 +1,4 @@
-\documentclass[times,modern]{aastex63}
+\documentclass[times,preprint]{aastex63}
 
 % these lines seem necessary for pdflatex to get the paper size right
 \pdfpagewidth 8.5in
@@ -157,12 +157,50 @@ gravity and reactions.  For reactive flow, either Strang splitting or
 spectral deferred corrections are used to couple the hydrodynamics and
 reactions~\citep{castro_sdc}.  Here we focus on the Strang splitting.
 
-One option to make temperature integration less expensive is to freeze
-the values of the thermodynamics quantities at the start of the
-reactive integration.  This approach was done in \citet{ABNZ:III}.
-This can work well in ``simmering'' phases of reactions where the
-thermodynamic state is not changing much over a timestep, but for
-explosive reactions, this may be a poor approximation.
+The equations of hydrodynamics with reacting sources are:
+\begin{align}
+\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \Ub) &= 0 \\
+\frac{\partial (\rho X_k)}{\partial t} + \nabla \cdot (\rho \Ub X_k) &= \rho \omegadot_k \\
+\frac{\partial (\rho \Ub)}{\partial t} + \nabla \cdot (\rho \Ub \Ub) + \nabla p &= 0 \\
+\frac{\partial (\rho E)}{\partial t} + \nabla \cdot \left [ (\rho E + p) \Ub \right ] &= \rho \Sdot
+\end{align}
+
+When we are reacting, we need the temperature, so we can look at a temperature evolution
+equation:
+\begin{equation}
+\rho c_v \frac{DT}{Dt} = \rho \left (\frac{p}{\rho^2} - e_\rho \right ) \frac{D\rho}{Dt} + \rho \Sdot
+\end{equation}
+(this form neglects the change in temperature due to composition
+changes from reactions, see \citealt{ABNZ:III}, which assumes chemical
+equilibrium).  During reactions, we neglect the hydrodynamics terms,
+so the reactive system updates according to:
+\begin{align}
+\frac{D\rho}{Dt} &= 0 \\
+\frac{DX_k}{Dt} &= \omegadot_k \label{eq:species} \\
+\frac{DT}{Dt} &= \frac{\Sdot}{c_v}
+\end{align}
+
+There are several different approximations that people make in the
+literature to this operator-split reacting system, in order to make
+integrating the reaction system computationally less expensive:
+\begin{itemize}
+\item Neglect temerature evolution completely in the burn, only
+  evolving Eq.~\ref{eq:species}.  This is the method used in
+  \citet{flash}.
+\item Evolve the temperature equation, but ``freeze'' the specific
+  heat, $c_v$, at the start of integration to avoid potentially
+  expensive equation of state calls.  This was discussed in
+  \citet{ABNZ:III} and is the default method in \castro.
+\item Evolve the full system, calling the equation of state each time
+  we evaluate the righthand side of the system to get an updated
+  $c_v$.
+\end{itemize}
+Depending on how vigorous the burning is and how much the temperature
+changes during a hydrodynamic timestep, one or more of these
+approximations may be reasonable.  For explosive reactions, we expect
+that evolving the full system will be required.  The goal of this
+note is to try to quantify the convergence of a reacting hydrodynamics
+code with these different approximations.
 
 In \cite{castro_sdc}, we introduced a test problem where we could
 measure the convergence of a reacting hydrodynamics problem via
@@ -188,8 +226,14 @@ second order convergence are shown.
 \caption{\label{thefigure} our results}
 \end{figure}
 
+
+
 \section{Summary}
 
+Looking at global convergence of a reacting hydrodynamics problem we
+see that second order convergence is only realized when temperature is
+evolved alongside the composition when using an operator-split
+approach to reactions. 
 
 \acknowledgements \castro\ is freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  All of the code and
