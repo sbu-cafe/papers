@@ -252,7 +252,8 @@ $1024^2$, with the timestep kept fixed in proportion to the grid resolution.
 We then compute four errors between adjacent resolutions by
 coarsening the finer resolution run, and computing the $L_1$ norm over
 all zones.  Figure~\ref{thefigure} shows the norm of the error
-vs.\ the coarse run resolution.  Guidelines showing ideal first and
+vs.\ the coarse run resolution.  The slope of these lines is a
+measure of the convergence rate~\citep{ORVV}.  Guidelines showing ideal first and
 second order convergence are shown.
 
 \begin{figure}[t]
