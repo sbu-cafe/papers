@@ -161,7 +161,11 @@ where $\rho$ is the density, $\Ub$ is the velocity vector, $X_k$ are the species
 $\omegadot_k$ are the species creation rates (from reactions), $p$ is the pressure, $E$ is the
 total energy / unit mass, and $\Sdot$ is the nuclear energy generation rate.
 
-When we are reacting, we need to evolve the temperature, which we can write as:
+When we are reacting, we can look at internal energy:
+\begin{equation}
+\rho \frac{De}{Dt} + p \nabla \cdot \Ub = \rho \Sdot
+\end{equation}
+or alternately, we can evolve the temperature, which we can write as:
 \begin{equation}
 \rho c_v \frac{DT}{Dt} = \rho \left (\frac{p}{\rho^2} - e_\rho \right ) \frac{D\rho}{Dt} + \rho \Sdot
 \end{equation}
@@ -194,25 +198,36 @@ During reactions, we neglect the hydrodynamics terms,
 so the reactive system updates according to:
 \begin{align}
 \frac{D\rho}{Dt} &= 0 \\
-\frac{DX_k}{Dt} &= \omegadot_k \label{eq:species} \\
-\frac{DT}{Dt} &= \frac{\Sdot}{c_v}
+\frac{DX_k}{Dt} &= \omegadot_k \label{eq:species}
 \end{align}
-
+with either
+\begin{equation}
+\frac{DT}{Dt} = \frac{\Sdot}{c_v}
+\end{equation}
+or
+\begin{equation}
+\frac{De}{Dt} = \Sdot
+\end{equation}
 
 There are several different approximations that people make in the
 literature to this operator-split reacting system, in order to make
 integrating the reaction system computationally less expensive:
 \begin{itemize}
-\item Neglect temerature evolution completely in the burn, only
-  evolving Eq.~\ref{eq:species}.  This is the method used in
-  \citet{flash}. \MarginPar{other codes?}
-\item Evolve the temperature equation, but ``freeze'' the specific
+\item Evolve $(X_k)$ only.  This neglects temerature evolution
+  completely in the burn, only evolving Eq.~\ref{eq:species}.  This is
+  the method used in \citet{flash}. \MarginPar{other codes?}
+
+\item Evolve $(X_k, T)$, but ``freeze'' the specific
   heat, $c_v$, at the start of integration to avoid potentially
   expensive equation of state calls.  This was discussed in
   \cite{Bell:2004} and is the default method in \castro.
-\item Evolve the full system, calling the equation of state each time
+
+\item Evolve $(X_k, T)$, calling the equation of state each time
   we evaluate the righthand side of the system to get an updated
   $c_v$.  This is an option in \castro.
+
+\item Evolve $(X_k, e)$, and get $T$ from $e$ using the equation of
+  state.
 \end{itemize}
 Depending on how vigorous the burning is and how much the temperature
 changes during a hydrodynamic timestep, one or more of these
