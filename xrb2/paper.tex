@@ -1,5 +1,5 @@
 %\documentclass[12pt, preprint]{aastex}
-\documentclass[preprint,times,tighten]{aastex63}
+\documentclass[preprint,times,tighten,linenumbers,trackchanges]{aastex63}
 
 \usepackage{epsf,color,amsmath}
 
@@ -188,8 +188,8 @@ runs significantly faster.
 
 
 We investigate the effect of rotation rate on the flame. With the
-exception of IGR J17480-2446 (\citealt{altamirano2010discovery}, spinning at $11~\mathrm{Hz}$), most observations of
-XRBs come from sources with rotation rates of $200-600~\mathrm{Hz}$
+exception of IGR J17480-2446 (\citealt{altamirano2010discovery}, spinning at $11~\mathrm{Hz}$), \replaced{most observations of
+XRBs come from sources with}{most observations of XRBs which come from sources with known rotation rates have} rotation rates of $200-600~\mathrm{Hz}$
 \citep{bilous:2019,galloway:2020}. There are a number of
 factors that could explain this lack of observations below $200~\mathrm{Hz}$. It
 could be that there is some physical process which inhibits the flame
@@ -270,12 +270,14 @@ The initial model is set up in the same fashion as described in
 hydrostatic model representing the ash and fuel states and blend the
 two models laterally to create a hot region near the origin of the
 coordinates and a smooth transition to the cooler region at larger
-radii.  The cool initial model is characterized by three temperatures:
+radii. \added{This hot region extends out to $r_\mathrm{pert} =4.096\times 10^4 \mathrm{cm}$.}
+ The cool initial model is characterized by three temperatures:
 $T_\mathrm{star}$ is the isothermal temperature of the underlying
 neutron star, $T_\mathrm{hi}$ is the temperature at the base of the
 fuel layer, and $T_\mathrm{lo}$ is the minimum temperature of the
 atmosphere. The atmosphere structure is isentropic as it falls from
-$T_\mathrm{hi}$ down to $T_\mathrm{lo}$.  For the hot model, we
+$T_\mathrm{hi}$ down to $T_\mathrm{lo}$, \added{and so is marginally 
+unstable to convection}.  For the hot model, we
 replace $T_\mathrm{hi}$ with $T_\mathrm{hi} + \delta T$.  In the
 calculations presented here, we explore the structure of the initial
 models by varying these parameters.  All models have the same
@@ -676,7 +678,37 @@ As can be seen in Figure~\ref{fig:uv} (which was plotted at $100~\mathrm{ms}$), 
 %======================================================================
 \section{Discussion and Conclusions}\label{Sec:conclusions}
 
-We ran a number of simulations of laterally propagating flames in XRBs in order to explore the effects of rotation and thermal structure. We found that increasing the rotation rate increased the energy generation rate within the flame and enhanced nuclear burning. Apart from the lowest rotation run (which failed to ignite), flame propagation was not noticeably impacted by rotation rate; by the time the different flame fronts reached steady propagation, they shared comparable velocities. These results are likely due to the rotation-dependent strength of the Coriolis force and its confinement of the flame balancing the enhanced nuclear burning. We explored several models with different crustal temperatures to determine what effects mechanisms such as higher accretion rates, crustal heating and shallow heating may have on flame propagation. We found that increasing the temperature of the crust significantly enhanced the flame propagation. This we believe to be because a cooler crust allows heat to more efficiently be transferred away from the flame itself, therefore reducing the flame's temperature, slowing burning and consequently reducing its propagation speed. At higher crustal temperatures, we saw that the inability for heat to be efficiently transported away from the flame front increased the flame temperature, driving unstable, accelerating flame propagation. We saw that if the crust temperature was too high, then instead of a flame the entire atmosphere would burn steadily. This is reminiscent of what is seen for neutron stars with accretion rates exceeding the Eddington limit.
+We ran a number of simulations of laterally propagating flames in XRBs in order 
+to explore the effects of rotation and thermal structure. We found that increasing 
+the rotation rate increased the energy generation rate within the flame and 
+enhanced nuclear burning. Apart from the lowest rotation run (which failed to 
+ignite), flame propagation was not noticeably impacted by rotation rate; by 
+the time the different flame fronts reached steady propagation, they shared 
+comparable velocities. These results are likely due to the rotation-dependent 
+strength of the Coriolis force and its confinement of the flame balancing 
+the enhanced nuclear burning. \added{This lack of dependence of the flame speed on 
+the rotation rate could be tested using observations, as it infers that the burst 
+rise time should have little dependence on the rotation rate. }
+
+
+We explored several models with different 
+crustal temperatures to determine what effects mechanisms such as higher 
+accretion rates, crustal heating and shallow heating may have on flame 
+propagation. We found that increasing the temperature of the crust 
+significantly enhanced the flame propagation. This we believe to be 
+because a cooler crust allows heat to more efficiently be transferred 
+away from the flame itself, therefore reducing the flame's temperature, 
+slowing burning and consequently reducing its propagation speed. At higher 
+crustal temperatures, we saw that the inability for heat to be efficiently 
+transported away from the flame front increased the flame temperature, 
+driving unstable, accelerating flame propagation. We saw that if the crust 
+temperature was too high, then instead of a flame the entire atmosphere 
+would burn steadily. This is reminiscent of what is seen for neutron stars 
+with accretion rates exceeding the Eddington limit. \added{This dependence of the 
+flame speed on the crustal temperature could also be tested using observations, 
+by looking to see how the burst rise time depends on the accretion rate (which 
+may affect the crustal heating).}
+
 
 In future work, we would like to improve and expand our
 simulations in order to better understand the processes at play and to
@@ -703,7 +735,8 @@ propagation in XRBs.
 \acknowledgments \castro\ is open-source and freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The problem setup used
 here is available in the git repo as {\tt
-  flame\_wave}.  The work at Stony Brook was supported by DOE/Office
+  flame\_wave}.  \added{We thank the anonymous referee for the helpful suggestions.}
+  The work at Stony Brook was supported by DOE/Office
 of Nuclear Physics grant DE-FG02-87ER40317.  This material is based upon work supported by the
 U.S. Department of Energy, Office of Science, Office of Advanced
 Scientific Computing Research and Office of Nuclear Physics, Scientific
@@ -722,7 +755,7 @@ of the U.S. Department of Energy under Contract No. DE-AC05-00OR22725,
 awarded through the DOE INCITE program.  We thank NVIDIA Corporation
 for the donation of a Titan X and Titan V GPU through their academic
 grant program.  This research has made use of NASA's Astrophysics Data
-System Bibliographic Services.
+System Bibliographic Services. 
 
 \facilities{NERSC, OLCF}
 
