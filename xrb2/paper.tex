@@ -566,15 +566,30 @@ To explore the effect of different initial temperature configurations, we run fo
 \caption{\label{fig:compare_500Hz_abar} Comparison of $\bar{A}$ for 3 different $500~\mathrm{Hz}$ models with neutron star temperatures $T_{\rm star}$ of $10^8~\mathrm{K}$, $2\times10^8~\mathrm{K}$ and $3\times10^8~\mathrm{K}$ ($\tt{F500}$, $\tt{F500\_2e8}$, and $\tt{F500\_3e8}$, respectively), and resulting envelope structures.  Each flame is shown at $70~\mathrm{ms}$.} 
 \end{figure}
 
-Figure~\ref{fig:compare_500Hz_abar} shows $\bar{A}$ for three $500~\mathrm{Hz}$ simulations with different initial temperature structures ($T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$) at $t = 70~\mathrm{ms}$. We do not plot $\tt{F500\_4E8}$ here because it fails to form a clear burning front. $\tt{F500\_3E8}$ (Figure~\ref{fig:compare_500Hz_abar}, bottom panel) --- the hottest run to form a clear burning front --- has a faster propagating flame (this will be discussed further in Section \ref{ssec:temp_prop}). It also reaches slightly higher $\bar{A}$ values than the two cooler runs. The Figure~\ref{fig:abar_hot} $\bar{A}$-$T$ phase plots of $\tt{F500}$ (left) and $\tt{F500\_3E8}$ (middle) also reflect these $\bar{A}$ features, with $\tt{F500\_3E8}$ reaching slightly higher $\bar{A}$ values. $\tt{F500\_3E8}$ also reaches higher $\enucdot$ values at the low end of the temperature range ($< 0.5 \times 10^9~\mathrm{K}$). There appear to be more causally connected regions across a range of $\bar{A}$ at low temperatures for $\tt{F500\_3E8}$ than for $\tt{F500}$, suggesting that the higher $\enucdot$ for $\tt{F500\_3E8}$ generates burning in certain burning trajectories that are not present in the cooler $\tt{F500}$ run. Note that, although $\tt{F500\_3E8}$ is the hottest run with a modified initial temperature configuration to form a distinct flame front, the highest rotation $\tt{F1000}$ flame actually reaches higher temperatures (see Figure~\ref{fig:maxima}, left panel) as well as higher $\bar{A}$ (see Figure~\ref{fig:time_series_1000}).
+Figure~\ref{fig:compare_500Hz_abar} shows $\bar{A}$ for three $500~\mathrm{Hz}$ simulations with 
+different initial temperature structures ($T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$) at 
+$t = 70~\mathrm{ms}$. We do not plot $\tt{F500\_4E8}$ here because it fails to form a clear burning 
+front. $\tt{F500\_3E8}$ (Figure~\ref{fig:compare_500Hz_abar}, bottom panel) --- the hottest run to 
+form a clear burning front --- has a faster propagating flame (this will be discussed further in 
+Section \ref{ssec:temp_prop}). It also reaches slightly higher $\bar{A}$ values than the two cooler 
+runs. The Figure~\ref{fig:abar_hot} $\bar{A}$-$T$ phase plots of $\tt{F500}$ (left) and 
+$\tt{F500\_3E8}$ (middle) also reflect these $\bar{A}$ features, with $\tt{F500\_3E8}$ reaching 
+slightly higher $\bar{A}$ values. $\tt{F500\_3E8}$ also reaches higher $\enucdot$ values at the 
+low end of the temperature range ($< 0.5 \times 10^9~\mathrm{K}$). There appear to be more causally 
+connected regions across a range of $\bar{A}$ at low temperatures for $\tt{F500\_3E8}$ than for 
+$\tt{F500}$, suggesting that the higher $\enucdot$ for $\tt{F500\_3E8}$ generates burning in certain 
+burning trajectories that are not present in the cooler $\tt{F500}$ run. Note that, although 
+$\tt{F500\_3E8}$ is the hottest run with a modified initial temperature configuration to form 
+a distinct flame front, the highest rotation $\tt{F1000}$ flame actually reaches higher temperatures 
+(see Figure~\ref{fig:maxima}, left panel) as well as higher $\bar{A}$ (see Figure~\ref{fig:time_series_1000}).
 
 
 In contrast to the models with $T_{\mathrm{star}} \leq 3 \times 10^8~\mathrm{K}$, $\tt{F500\_4E8}$ 
-is so hot that the organized flame structure is lost. The fuel layer undergoes stable burning and 
+is so hot that the organized flame structure is lost. \deleted{The fuel layer undergoes stable burning and 
 essentially simmers in place, rather than forming a flame. This process has been observed in 
 neutron stars with accretion rates that exceed the Eddington limit 
 \citep{fujimoto1981,bildsten1998thermonuclear,keek2009effect}; in this model we have essentially 
-recreated the conditions found in such stars with high accretion rates. This model burns so 
+recreated the conditions found in such stars with high accretion rates.} This model burns so 
 strongly that it is only run out to $40~\mathrm{ms}$. After an initial period when the burning 
 moves across the domain, residual burning continues and eventually ignites the entire fuel layer at 
 late times, as shown in Figures \ref{fig:4e8_stacked_enuc} and \ref{fig:4e8_stacked_abar} for three 
@@ -588,6 +603,22 @@ $\enucdot$ values on the order of $10^{18}~\mathrm{erg}\,\mathrm{g}^{-1} \mathrm
 (see Figure~\ref{fig:maxima}, right panel), even at the latest timesteps ($\sim 
 70~\mathrm{ms}$, when the flame is most developed). Significant $\enucdot$ values for 
 all runs other than $\tt{F500\_4E8}$ are confined to the flame front, rather than spanning the entire domain.
+
+\added{Rather than the fuel igniting in a 
+localized hot spot and forming a flame which propagates across the domain, for this system the heat produced 
+by the high temperature crust alone is sufficient to ignite material across the entire domain. Uniform burning 
+across a large fraction of or even the entire surface of the neutron star has been observed in neutron stars 
+with accretion rates that exceed the Eddington limit 
+\citep{fujimoto1981,bildsten1998thermonuclear,keek2009effect}. However, it is important to note here that the
+conditions in our model vary from the conditions that would occur in a neutron star ocean undergoing stable burning 
+in a number of ways. Firstly, the model begins without any burning taking place, and initial model assumes that a 
+significant amount of unburnt fuel has been able to build up. For a stably burning system, freshly accreted material 
+would be continuously burnt, so there would be much less unburnt fuel available. Secondly, we are only modelling 
+a few tens of milliseconds, rather than an ongoing process. We therefore do not demonstrate that this system would 
+continue to burn stably if the high crustal temperature were maintained and sufficient fuel continued to be 
+available, e.g.~through the continued accretion of fresh material. However, this run does suggest that 
+a crust with a sufficiently high temperature can provide enough energy to heat the fuel above it to the point of 
+ignition, and it may be that if these conditions were maintained that it would be able to sustain stable burning.}
 
 Figure~\ref{fig:4e8_stacked_abar} shows $\bar{A}$ for $\tt{F500\_4E8}$. Again, burning extends 
 across the domain and high into the atmosphere and fuel layer, lacking the characteristic flame 
