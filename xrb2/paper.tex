@@ -382,7 +382,7 @@ pressure gradient becomes important, and is approximately given by
 where $g$ is the gravitational acceleration, $H_0$ is the atmospheric scale height, and $\Omega$ is the 
 neutron star rotation rate. In Figure \ref{fig:time_series_enuc_500} and Figure 
 \ref{fig:time_series_enuc_1000}, we use $\dot{e}_\mathrm{nuc}$ measured at $50~\mathrm{ms}$ and $100~\mathrm{ms}$ to discern the horizontal extent of the flame at different rotation rates. Taking the edge at greatest radius of the bright teal/green region where the most significant energy generation is occurring as the leading edge of the flame in each plot, we see that the horizontal extent of the $1000~\mathrm{Hz}$ flame ($\tt{F1000}$) appears to be 
-reduced compared to the lower rotation $500~\mathrm{Hz}$ run ($\tt{F500}$). From Equation 
+reduced compared to the lower rotation $500~\mathrm{Hz}$ run ($\tt{F500}$). \added{As the natural aspect ratio makes it hard to see the flame structure, we show the energy generation rate for the $\tt{F1000}$ simulation with the vertical extent stretched in Figure~\ref{fig:flame_stretch}.}  From Equation 
 \ref{eqn:rossby}, we can see that increasing the rotation rate from $500~\mathrm{Hz}$ to 
 $1000~\mathrm{Hz}$ should decrease $L_R$ by a factor of two, and that the greater confinement from 
 the Coriolis force should reduce the horizontal extent of the flame by a similar factor. However, 
@@ -390,6 +390,7 @@ the Rossby radius is only an approximate measure of this horizontal lengthscale,
 simulations we see that this scaling does not work so well for all rotation rates. The simulations 
 seem to follow the theoretical scaling described in Equation \ref{eqn:rossby} more closely at 
 higher rotation rates ($1000~\mathrm{Hz}$ and higher), based on the results of \citet{flame_wave1}.
+
 
 \begin{figure}[t]
 \centering
@@ -403,6 +404,14 @@ higher rotation rates ($1000~\mathrm{Hz}$ and higher), based on the results of \
 \plotone{time_series_enuc_1000}
 \caption{\label{fig:time_series_enuc_1000} Time series of the $1000~\mathrm{Hz}$ run {\tt F1000} showing the nuclear energy generation rate, $\dot{e}_\mathrm{nuc}$.}
 \end{figure}
+
+\added{
+\begin{figure}[t]
+\centering
+\plotone{stretch}
+\caption{\label{fig:flame_stretch} Energy generation rate for run {\tt F1000} at 100 ms with the vertical extent stretched to show detail.}
+\end{figure}
+}
 
 \begin{figure}[t]
 \centering
