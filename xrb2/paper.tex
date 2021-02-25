@@ -161,7 +161,19 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-We continue to investigate two-dimensional laterally propagating flames in type I X-ray bursts using fully compressible hydrodynamics simulations.  In the current study we relax previous approximations where we artificially boosted the flames. We now use more physically realistic reaction rates, thermal conductivities, and rotation rates, exploring the effects of neutron star rotation rate and thermal structure on the flame.  We find that at lower rotation rates the flame becomes harder to ignite, whereas at higher rotation rates the nuclear burning is enhanced by increased confinement from the Coriolis force and the flame propagates steadily. At higher crustal temperatures, the flame moves more quickly and accelerates as it propagates through the atmosphere. If the temperature is too high, instead of a flame propagating across the surface the entire atmosphere burns steadily. All of the software used for these simulations is freely available.
+We continue to investigate two-dimensional laterally propagating flames in type I X-ray 
+bursts using fully compressible hydrodynamics simulations.  In the current study we relax 
+previous approximations where we artificially boosted the flames. We now use more physically 
+realistic reaction rates, thermal conductivities, and rotation rates, exploring the effects 
+of neutron star rotation rate and thermal structure on the flame.  We find that at lower 
+rotation rates the flame becomes harder to ignite, whereas at higher rotation rates the 
+nuclear burning is enhanced by increased confinement from the Coriolis force and the 
+flame propagates steadily. At higher crustal temperatures, the flame moves more quickly 
+and accelerates as it propagates through the atmosphere. If the temperature is too high, 
+instead of a flame propagating across the surface the entire atmosphere burns 
+\replaced{steadily}{uniformly}. \added{Our findings could have implications for the 
+relationship between observed burst rise times and neutron star rotation and accretion rates.} 
+All of the software used for these simulations is freely available.
 
 
 \end{abstract}
@@ -380,7 +392,7 @@ pressure gradient becomes important, and is approximately given by
 	L_R \approx \frac{\sqrt{g H_0}}{\Omega},
 \end{equation}
 where $g$ is the gravitational acceleration, $H_0$ is the atmospheric scale height, and $\Omega$ is the 
-neutron star rotation rate. In Figure \ref{fig:time_series_enuc_500} and Figure 
+neutron star rotation rate. \added{If we take $g \sim 3.6 \times 10^{12}~\mathrm{cm}~\mathrm{s}^{-2}$ and $H_0\sim 10^3~\mathrm{cm}$, then for the $500~\mathrm{Hz}$ system we find the Rossby length to approximately be $L_R \sim 1.2 \times 10^5~\mathrm{cm}$. This estimate is likely to be an overestimate of the true value of the Rossby length in our simulations, as we saw that the flame is confined on a much smaller length scale.} In Figure \ref{fig:time_series_enuc_500} and Figure 
 \ref{fig:time_series_enuc_1000}, we use $\dot{e}_\mathrm{nuc}$ measured at $50~\mathrm{ms}$ and $100~\mathrm{ms}$ to discern the horizontal extent of the flame at different rotation rates. Taking the edge at greatest radius of the bright teal/green region where the most significant energy generation is occurring as the leading edge of the flame in each plot, we see that the horizontal extent of the $1000~\mathrm{Hz}$ flame ($\tt{F1000}$) appears to be 
 reduced compared to the lower rotation $500~\mathrm{Hz}$ run ($\tt{F500}$). \added{As the natural aspect ratio makes it hard to see the flame structure, we show the energy generation rate for the $\tt{F1000}$ simulation with the vertical extent stretched in Figure~\ref{fig:flame_stretch}.}  From Equation 
 \ref{eqn:rossby}, we can see that increasing the rotation rate from $500~\mathrm{Hz}$ to 
@@ -553,7 +565,7 @@ $s_l$, of the flame is approximately
 \end{equation}
 Here, $\mathcal{D} = k_{th} / (\rho c_v)$ is the thermal diffusivity, $\enucdot$ is the specific
 nuclear energy generation rate, and $E$ is the specific total energy \citep{timmeswoosley:1992}. 
-\citet{cavecchi:2013} explored the effects of rotation on the flame propagation, and noted that the 
+\citet{cavecchi:2013} explored the effects of rotation on the flame's propagation, and noted that the 
 flame speed in their simulations scaled with the ratio $L_R/H_0$ of Rossby length to atmospheric 
 scale height. Combining this scaling with Equation \ref{eqn:laminar_flame_speed} yields a revised 
 estimate for the flame speed, $s$:
@@ -566,11 +578,11 @@ and neglecting variations in $H_0$ and $E$, we can then derive the following app
 relation:
 \begin{equation}
 	\label{eqn:flame_speed_scaling}
-	s \appropto \frac{(\mathcal{D} \enucdot)^{\half}}{\Omega}
+	s \appropto \frac{(\mathcal{D} \enucdot)^{\half}}{\Omega}.
 \end{equation}
 We were able to test the validity of this scaling relation in \citet{flame_wave1}, where we studied 
 the effects of varying the thermal conductivity/diffusivity, energy generation rate, and rotation 
-rate. These results supplemented the findings of \citet{cavecchi:2013}. Despite this formulation of 
+rate. These results supported the findings of \citet{cavecchi:2013}. Despite this formulation of 
 the flame speed neglecting some relevant physics (e.g.\ turbulence), the relation proved
 consistent with our simulation results.}
 
@@ -804,7 +816,7 @@ propagation in XRBs.
 \acknowledgments \castro\ is open-source and freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The problem setup used
 here is available in the git repo as {\tt
-  flame\_wave}.  \added{We thank the anonymous referee for the helpful suggestions.}
+  flame\_wave}.  \added{We thank the anonymous referee for their helpful suggestions.}
   The work at Stony Brook was supported by DOE/Office
 of Nuclear Physics grant DE-FG02-87ER40317.  This material is based upon work supported by the
 U.S. Department of Energy, Office of Science, Office of Advanced
