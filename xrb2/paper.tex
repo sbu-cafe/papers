@@ -545,23 +545,52 @@ yet at $t = 0~\mathrm{ms}$. We use the fit parameters to calculate the flame spe
 50~\mathrm{ms}$ (when the flame has reached steady propagation), given in the fourth column of 
 Table \ref{table:flame_speeds}.
 
-We found in \citet{flame_wave1} that the flame speed, $s$, obeys the following relation:
+\added{For the simple case of a laminar flame front driven by conduction, the propagation rate, 
+$s_l$, of the flame is approximately
+\begin{equation}
+	\label{eqn:laminar_flame_speed}
+	s_l \approx \left( \frac{\mathcal{D} \enucdot}{E} \right)^{\half}.
+\end{equation}
+Here, $\mathcal{D} = k_{th} / (\rho c_v)$ is the thermal diffusivity, $\enucdot$ is the specific
+nuclear energy generation rate, and $E$ is the specific total energy \citep{timmeswoosley:1992}. 
+\citet{cavecchi:2013} explored the effects of rotation on the flame propagation, and noted that the 
+flame speed in their simulations scaled with the ratio $L_R/H_0$ of Rossby length to atmospheric 
+scale height. Combining this scaling with Equation \ref{eqn:laminar_flame_speed} yields a revised 
+estimate for the flame speed, $s$:
+\begin{equation}
+	s \approx \frac{L_R}{H_0} s_l \approx \frac{L_R}{H_0} \left( \frac{\mathcal{D} \enucdot}{E} 
+	\right)^{\half}.
+\end{equation}
+Observing that $L_R$ is inversely proportional to the angular rotation frequency $\Omega$ and 
+and neglecting variations in $H_0$ and $E$, we can then derive the following approximate scaling 
+relation:
 \begin{equation}
 	\label{eqn:flame_speed_scaling}
-	s \appropto L_R (\enucdot)^{\half} \propto \frac{(\enucdot)^{\half}}{\Omega},
+	s \appropto \frac{(\mathcal{D} \enucdot)^{\half}}{\Omega}
 \end{equation}
+We were able to test the validity of this scaling relation in \citet{flame_wave1}, where we studied 
+the effects of varying the thermal conductivity/diffusivity, energy generation rate, and rotation 
+rate. These results supplemented the findings of \citet{cavecchi:2013}. Despite this formulation of 
+the flame speed neglecting some relevant physics (e.g.\ turbulence), the relation proved
+consistent with our simulation results.}
+
+\deleted{We found in \citet{flame_wave1} that the flame speed, $s$, obeys the following relation:
+$s \appropto L_R (\enucdot)^{\half} \propto \frac{(\enucdot)^{\half}}{\Omega},$
 where $\enucdot$ is the specific nuclear energy generation rate and $L_R$ is the Rossby length 
 described by Equation \ref{eqn:rossby}. This finding was consistent with the results of 
 \citet{cavecchi:2013}, who noted that the flame speeds in their simulations scaled with the Rossby 
-length. As seen in Figure~\ref{fig:flame_speeds_1}, there is no obvious inverse scaling of the 
-flame speed with rotation rate in this set of runs. We observed earlier, however, that nuclear 
+length.}
+
+\added{This study explores a more physical parameter space than \citet{flame_wave1}}, and as seen 
+in 
+Figure~\ref{fig:flame_speeds_1}, there is no clear inverse scaling of the 
+flame speed with rotation rate in the new set of runs. We observed earlier, however, that nuclear 
 reactions progress more quickly at higher rotation rate. This results in a higher 
-$\enucdot$ --- up 
-to three to four times higher near the burning front after the flame ignites (see Figure 
-\ref{fig:maxima}) --- which may counteract the reduction in flame speed from the increased Coriolis 
-confinement. We also observe that $\tt{F500}$ accelerates faster than $\tt{F1000}$, which appears 
-to experience a small deceleration at early times. This disparity may be a direct result of the 
-difference in Coriolis force.
+$\enucdot$ --- up to three to four times higher near the burning front after the flame ignites (see 
+Figure \ref{fig:maxima}) --- which may counteract the reduction in flame speed from the increased 
+Coriolis confinement. Comparing accelerations, we also observe that $\tt{F500}$ accelerates faster 
+than $\tt{F1000}$, which appears to experience a small deceleration at early times. This disparity 
+may be a direct result of the difference in Coriolis force.
 
 % It might be worth plotting peak enucdot as a function of time for each run
 
