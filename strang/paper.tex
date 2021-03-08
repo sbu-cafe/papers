@@ -112,17 +112,12 @@
 %% \author[0000-0003-0439-4556]{M.~P.~Katz}
 %% \affiliation{Nvidia Corp}
 
-%% \author[0000-0002-5749-334X]{J.~B.~Bell}
-%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+%% \author[0000-0002-1530-781X]{A.\ Harpole}
+%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+%%              Stony Brook, NY 11794-3800}
 
-%% \author[0000-0003-1791-0265]{A.~J.~Nonaka}
-%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
-
-%% \author[0000-0001-8092-1974]{W.~Zhang}
-%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
-
-%% \correspondingauthor{Michael Zingale}
-%% \email{michael.zingale@stonybrook.edu}
+%% \author[0000-0003-2300-5165]{D.\ E.\ Willcox}
+%% \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
 
 
 %======================================================================
@@ -176,15 +171,15 @@ equilibrium).
 
 \section{Numerical Methodology}
 
-We are using the freely-available \castro\ simulation
-code~\citep{castro,castro_joss}.  \castro\ solves the equations of
-hydrodynamics using an unsplit piecewise parabolic method coupled with
-gravity and reactions.  For reactive flow, either Strang splitting or
-spectral deferred corrections are used to couple the hydrodynamics and
+We use the freely-available \castro\ simulation
+code~\citep{castro,castro_joss} to solve the equations of
+hydrodynamics, using an unsplit piecewise parabolic method coupled with
+reactions.  \castro\ uses either Strang splitting or
+spectral deferred corrections (SDC) to couple the hydrodynamics and
 reactions~\citep{castro_sdc}.  Here we focus on the Strang splitting.
 
-In a Strang split evolution~\cite{strang:1968}, we update the full
-hydrodynamics state, $\Uc$ as:
+In a Strang split evolution~\citep{strang:1968}, we update the full
+hydrodynamics state, $\Uc$, as:
 \begin{equation}
   \Uc^{n+1} = {\bf R}_{\Delta t/2} {\bf A}_{\Delta t} {\bf R}_{\Delta t/2} \Uc^n
 \end{equation}
@@ -217,64 +212,79 @@ integrating the reaction system computationally less expensive:
   completely in the burn, only evolving Eq.~\ref{eq:species}.  This is
   the method used in \citet{flash}. \MarginPar{other codes?}
 
-\item Evolve $(X_k, T)$, but ``freeze'' the specific
-  heat, $c_v$, at the start of integration to avoid potentially
-  expensive equation of state calls.  This was discussed in
-  \cite{Bell:2004} and is the default method in \castro.
-
-\item Evolve $(X_k, T)$, calling the equation of state each time
-  we evaluate the righthand side of the system to get an updated
-  $c_v$.  This is an option in \castro.
+\item Evolve $(X_k, T)$.  To avoid expensive equation of state calls
+  in getting the specific heat, we can optionally ``freeze'' the value
+  of $c_v$ at the start of integration to avoid potentially expensive
+  equation of state calls.  This was discussed in \cite{Bell:2004} and
+  until recently was the default method in \castro.
 
 \item Evolve $(X_k, e)$, and get $T$ from $e$ using the equation of
   state.
 \end{itemize}
+For all of these cases, density is constant during the reaction operation.
 Depending on how vigorous the burning is and how much the temperature
 changes during a hydrodynamic timestep, one or more of these
-approximations may be reasonable.  For explosive reactions, we expect
+methods may be reasonable.  For explosive reactions, we expect
 that evolving the full system will be required.  The goal of this
 note is to try to quantify the convergence of a reacting hydrodynamics
 code with these different approximations.
 
 In \citet{castro_sdc}, we introduced a test problem where we could
 measure the convergence of a reacting hydrodynamics problem via
-Richardson extrapolation\MarginPar{ref?}---this was an acoustic pulse with helium
+Richardson extrapolation---this was an acoustic pulse with helium
 burning via $3$-$\alpha$ and
-$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$.  Those tests focused on
-SDC coupling and showed that we can get overall 4th order in space and
-time convergence.  Here we run the same test with Strang coupling,
-looking at the various approaches at incorporating a temperature
-equation in the reactive portion of the update.
+$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$.  Initially, the domain is
+pure $\isotm{He}{4}$, but both $\isotm{C}{12}$ and $\isotm{O}{16}$ are
+created as time evolves.  The published tests focused on SDC coupling
+and showed that we can get overall 4th order in space and time
+convergence.  Here we run the same test with Strang coupling, looking
+at the various approaches at incorporating a temperature / energy equation in
+the reactive portion of the update.
 
 For each method, we run the \castro\ {\tt reacting\_convergence} test
 problem at 5 resolutions: $64^2$, $128^2$, $256^2$, $512^2$, and
 $1024^2$, with the timestep kept fixed in proportion to the grid resolution.
 We then compute four errors between adjacent resolutions by
 coarsening the finer resolution run, and computing the $L_1$ norm over
-all zones.  Figure~\ref{thefigure} shows the norm of the error
-vs.\ the coarse run resolution.  The slope of these lines is a
-measure of the convergence rate~\citep{ORVV}.  Guidelines showing ideal first and
-second order convergence are shown.
+all zones.  
+
+Figure~\ref{thefigure} shows the norm of the error vs.\ the coarse run
+resolution.  The slope of these lines is a measure of the convergence
+rate~\citep{ORVV}.  Guidelines show ideal first and second order
+convergence.  We see that all methods converge at least second order
+for density, but for the thermodynamic quantities, $(\rho e)$ and $T$,
+the method where only $X_k$ is evolved during reactions has larger
+errors and much worse convergence than the other methods.  Looking at
+the trace nuclei generated in the burning, $\isotm{C}{12}$ and
+$\isotm{O}{16}$, we see a large difference between the two methods
+that evolve some sort of energy and the one method where only $X_k$ is
+evolved---the latter converging essentially first order at high
+resolution.
 
 \begin{figure}[t]
 \centering
 \plotone{test}
-\caption{\label{thefigure} our results}
+\caption{\label{thefigure} Convergence of fluid quantities as a function of resolution
+for 3 different Strang equation systems: just evolving $X_k$, evolving $(X_k, T)$, but fixing $c_v$ at the start of integration (``frozen''), and evolving $(X_k, e)$.}
 \end{figure}
+
 
 
 
 \section{Summary}
 
 Looking at global convergence of a reacting hydrodynamics problem we
-see that second order convergence is only realized when temperature is
-evolved alongside the composition when using an operator-split
+see that second order convergence is only realized when temperature or
+energy is evolved alongside the composition when using a Strang-split
 approach to reactions.  This is just a single, rather simple problem,
 but this suggests that reactive hydrodynamics simulations should
 switch to integrating temperature or another energy equation together
-with reactions to yield better overall convergence and accuracy.  We
-expect that for problems with vigorous burning, such as detonation,s
-this will be especially important.
+with reactions to yield better overall convergence and accuracy.  This
+complements the work of \citep{muller:1986} which showed that when
+evolving near nuclear statistical equilibrium, that evolving entropy
+with the system is needed for stability.  We expect that for problems
+with vigorous burning, such as detonations, this will be especially
+important.
 
 \acknowledgements \castro\ is freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  All of the code and
