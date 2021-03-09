@@ -148,7 +148,7 @@ hydrodynamics coupled with a nuclear reaction network.  The equations
 of hydrodynamics with reacting sources are:
 \begin{align}
 \frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \Ub) &= 0 \\
-\frac{\partial (\rho X_k)}{\partial t} + \nabla \cdot (\rho \Ub X_k) &= \rho \omegadot_k \\
+\frac{\partial (\rho X_k)}{\partial t} + \nabla \cdot (\rho X_k \Ub) &= \rho \omegadot_k \\
 \frac{\partial (\rho \Ub)}{\partial t} + \nabla \cdot (\rho \Ub \Ub) + \nabla p &= 0 \\
 \frac{\partial (\rho E)}{\partial t} + \nabla \cdot \left [ (\rho E + p) \Ub \right ] &= \rho \Sdot
 \end{align}
@@ -219,7 +219,8 @@ integrating the reaction system computationally less expensive:
   until recently was the default method in \castro.
 
 \item Evolve $(X_k, e)$, and get $T$ from $e$ using the equation of
-  state.
+  state.  This was discussed in \citet{fma} and is the current default
+  method in \castro.
 \end{itemize}
 For all of these cases, density is constant during the reaction operation.
 Depending on how vigorous the burning is and how much the temperature
@@ -306,7 +307,7 @@ Nuclear Security Administration.
           matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
           NumPy \citep{numpy,numpy2},
           python (\url{https://www.python.org/}),
-          VODE \cite{vode}
+          VODE \citep{vode}
          }
 
 
