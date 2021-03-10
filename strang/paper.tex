@@ -212,7 +212,8 @@ integrating the reaction system computationally less expensive:
   completely in the burn, only evolving Eq.~\ref{eq:species}.  This is
   the method used in \citet{flash}. \MarginPar{other codes?}
 
-\item Evolve $(X_k, T)$.  To avoid expensive equation of state calls
+\item Evolve $(X_k, T)$.   This is used in \cite{Pakmor:2012}.  To avoid
+  expensive equation of state calls
   in getting the specific heat, we can optionally ``freeze'' the value
   of $c_v$ at the start of integration to avoid potentially expensive
   equation of state calls.  This was discussed in \cite{Bell:2004} and
