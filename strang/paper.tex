@@ -208,7 +208,7 @@ There are several different approximations that people make in the
 literature to this operator-split reacting system, in order to make
 integrating the reaction system computationally less expensive:
 \begin{itemize}
-\item Evolve $(X_k)$ only.  This neglects temerature evolution
+\item Evolve $(X_k)$ only.  This neglects temperature evolution
   completely in the burn, only evolving Eq.~\ref{eq:species}.  This is
   the method used in \citet{flash}. \MarginPar{other codes?}
 
@@ -223,6 +223,8 @@ integrating the reaction system computationally less expensive:
   state.  This was discussed in \citet{fma} and is the current default
   method in \castro.
 \end{itemize}
+\cite{Raskin:2010} also propose a hybrid system where the first approach is
+used in most cases, switching to the second approach only near NSE.
 For all of these cases, density is constant during the reaction operation.
 Depending on how vigorous the burning is and how much the temperature
 changes during a hydrodynamic timestep, one or more of these
