@@ -105,19 +105,20 @@
 
 \shortauthors{}
 
-%% \author[0000-0001-8401-030X]{M.~Zingale}
-%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
-%%        Stony Brook, NY 11794-3800}
+\author[0000-0001-8401-030X]{M.~Zingale}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+       Stony Brook, NY 11794-3800}
 
-%% \author[0000-0003-0439-4556]{M.~P.~Katz}
-%% \affiliation{Nvidia Corp}
+\author[0000-0003-0439-4556]{M.~P.~Katz}
+\affiliation{Nvidia Corp}
 
-%% \author[0000-0002-1530-781X]{A.\ Harpole}
-%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
-%%              Stony Brook, NY 11794-3800}
+\author[0000-0003-2300-5165]{D.\ E.\ Willcox}
+\affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
 
-%% \author[0000-0003-2300-5165]{D.\ E.\ Willcox}
-%% \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
+\author[0000-0002-1530-781X]{A.\ Harpole}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+             Stony Brook, NY 11794-3800}
+
 
 
 %======================================================================
@@ -210,7 +211,7 @@ that make integrating the reaction system computationally less expensive:
 \begin{itemize}
 \item Evolve $(X_k)$ only.  This neglects temperature evolution
   completely in the burn, only evolving Eq.~\ref{eq:species}.  This is
-  the method used in \citet{flash}. \MarginPar{other codes?}
+  the method used in \citet{flash}.
 
 \item Evolve $(X_k, T)$.   This is used in \cite{Pakmor:2012} and
   \cite{Garcia-Senz:2013}.  To avoid expensive equation of state calls
@@ -289,9 +290,8 @@ with the system is needed for stability.  We expect that for problems
 with vigorous burning, such as detonations, directly coupling the composition
 and thermodynamic evolution will be especially important.
 
-\acknowledgements \castro\ is freely available at
-\url{http://github.com/AMReX-Astro/Castro}.  All of the code and
-problem setups used here are available in the git repo.  The work at
+\acknowledgements \castro\ and all of the code used here is freely available at
+\url{https://github.com/AMReX-Astro/Castro}.   The work at
 Stony Brook was supported by DOE/Office of Nuclear Physics grant
 DE-FG02-87ER40317.  This material is based upon work supported by the
 U.S. Department of Energy, Office of Science, Office of Advanced
@@ -305,7 +305,6 @@ Nuclear Security Administration.
 \software{\amrex\ \citep{amrex_joss},
           \castro\ \citep{castro},
           GNU Compiler Collection (\url{https://gcc.gnu.org/}),
-          Linux (\url{https://www.kernel.org}),
           matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
           NumPy \citep{numpy,numpy2},
           python (\url{https://www.python.org/}),
