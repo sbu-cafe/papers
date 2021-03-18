@@ -155,17 +155,20 @@ of hydrodynamics with reacting sources are:
 \end{align}
 where $\rho$ is the density, $\Ub$ is the velocity vector, $X_k$ are the species mass fractions,
 $\omegadot_k$ are the species creation rates (from reactions), $p$ is the pressure, $E$ is the
-total energy / unit mass, and $\Sdot$ is the nuclear energy generation rate.
+specific total energy, and $\Sdot$ is the nuclear energy generation rate.
 
-When we are reacting, we can look at internal energy:
+When we are reacting, we can look at internal energy
 \begin{equation}
-\rho \frac{De}{Dt} + p \nabla \cdot \Ub = \rho \Sdot
+\rho \frac{De}{Dt} + p \nabla \cdot \Ub = \rho \Sdot,
 \end{equation}
-or alternately, we can evolve the temperature, which we can write as:
+where $e$ is the specific internal energy or alternately, we can evolve the temperature, 
+which we can write as
 \begin{equation}
-\rho c_v \frac{DT}{Dt} = \rho \left (\frac{p}{\rho^2} - e_\rho \right ) \frac{D\rho}{Dt} + \rho \Sdot
+\rho c_v \frac{DT}{Dt} = \rho \left (\frac{p}{\rho^2} - e_\rho \right ) \frac{D\rho}{Dt} + \rho \Sdot,
 \end{equation}
-(this form neglects the change in temperature due to composition
+where $c_v$ is the specific heat capacity at constant volume, $T$ is the temperature and $e_\rho$ is the derivative of 
+the specific internal energy with respect to density (this form neglects the change in 
+temperature due to composition
 changes from reactions, see \citealt{ABNZ:III}, which assumes chemical
 equilibrium). 
 
@@ -269,7 +272,7 @@ resolution.
 \centering
 \plotone{test}
 \caption{\label{thefigure} Convergence of fluid quantities as a function of resolution
-for 3 different Strang equation systems: just evolving $X_k$, evolving $(X_k, T)$ with $c_v$ held fixed, and evolving $(X_k, e)$.}
+for 3 different Strang equation systems: just evolving $X_k$, evolving $(X_k, T)$ with $c_v$ held fixed, and evolving $(X_k, e)$. The dotted lines show ideal first and second order convergence.}
 \end{figure}
 
 
