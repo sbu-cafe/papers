@@ -125,16 +125,22 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-For astrophysical reacting flows, operator splitting is commonly used
-to couple hydrodynamics and reactions.  Each process operates
-independent of one another, but by staggering the updates in a
-symmetric fashion (via Strang splitting) second order accuracy in time
-can be achieved.  However, approximations are often made to the
-reacting system, including the choice of whether or not to integrate
-temperature with the species.  Here we demonstrate through a simple
-convergence test that integrating an energy equation together with reactions
-achieves the best convergence when modeling reactive flows with Strang
-splitting.  Additionally, second order convergence cannot be achieved without integrating an energy or temperature equation.
+Many astrophysical environments involve convective or explosive flows
+driven by thermonuclear reactions (Type Ia supernovae, classical
+novae, X-ray bursts, stellar evolution).  Simulation codes need to
+accurately capture the interactions between reactions and
+hydrodynamics to produce realistic models of these events.  For
+astrophysical reacting flows, operator splitting is commonly used to
+couple hydrodynamics and reactions.  Each process operates independent
+of one another, but by staggering the updates in a symmetric fashion
+(via Strang splitting) second order accuracy in time can be achieved.
+However, approximations are often made to the reacting system,
+including the choice of whether or not to integrate temperature with
+the species.  Here we demonstrate through a simple convergence test
+that integrating an energy equation together with reactions achieves
+the best convergence when modeling reactive flows with Strang
+splitting.  Additionally, second order convergence cannot be achieved
+without integrating an energy or temperature equation.
 \end{abstract}
 
 \keywords{hydrodynamics---methods: numerical}
@@ -144,7 +150,9 @@ splitting.  Additionally, second order convergence cannot be achieved without in
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-Simulations of stellar flows require solving the equations of
+Type Ia supernovae, classical novae, X-ray bursts, and general stellar
+evolution reactive flows, where the nuclear energy release can drive
+strong convective or explosive flows.  These stellar flows require solving the equations of
 hydrodynamics coupled with a nuclear reaction network.  The equations
 of hydrodynamics with reacting sources are:
 \begin{align}
@@ -253,7 +261,7 @@ all zones.
 
 Figure~\ref{thefigure} shows the norm of the error vs.\ the coarse run
 resolution.  The slope of these lines is a measure of the convergence
-rate~\citep{ORVV}.  We see that all methods converge at least second order
+rate~\citep{ORVV}.  We see that all methods converge to at least second order
 for density, but for the thermodynamic quantities, $(\rho e)$ and $T$,
 the method where only $X_k$ is evolved during reactions has larger
 errors and much worse convergence than the other methods.  Looking at
