@@ -922,6 +922,18 @@ and then do the final update of the total energy:
 (\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2} + \Delta t (\rho \Sdot)^{n+1/2}
 \end{equation}
 
+\subsection{NSE Bailout}
+
+There is one additional part of the time integration algorithm.
+Because $T$ evolves during the reactions (for both Strang and SDC), it
+is possible for a zone to start out not in NSE but evolve into NSE
+during the reaction update.  When this happens, the ODE integrator may
+fail, because an excessive number of timesteps is required.  Rather
+than trigger our retry mechanism and throw away the entire timestep
+and start over with a smaller $\Delta t$, we first check if the zone
+evolved into NSE, and if so, we redo the zone update using the NSE
+prescription.
+
 \section{Simulations}
 
 \subsection{Reacting convergence test problem}
@@ -931,6 +943,11 @@ of a reacting hydrodynamic algorithm.  We run that same test here with the
 simplified SDC algorithm.
 
 Also explore: PLM vs PPM, 1 vs. 2 vs. 3 iterations
+
+% run on 04-06-21
+% Castro       git describe: 21.04-dirty
+% AMReX        git describe: 21.03-58-g87c81d0ca
+% Microphysics git describe: 21.04-1-g33a4d0fe
 
 \begin{deluxetable}{lllllll}
 \tablecaption{\label{table:react_convert_strang} Convergence ($L_1$ norm) for the reacting convergence problem using Strang splitting.}
@@ -951,28 +968,12 @@ Also explore: PLM vs PPM, 1 vs. 2 vs. 3 iterations
 \enddata
 \end{deluxetable}
 
-\begin{deluxetable}{lllllll}
-\tablecaption{\label{table:react_convert_strang} Convergence ($L_1$ norm) for the reacting convergence problem using Strang splitting with $T$ evolution disabled.}
-\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
-\startdata
- $\rho$                      & $2.735 \times 10^{18}$  & 2.057  & $6.571 \times 10^{17}$  & 2.474  & $1.183 \times 10^{17}$  \\
- $\rho u$                    & $6.729 \times 10^{26}$  & 2.416  & $1.260 \times 10^{26}$  & 2.699  & $1.941 \times 10^{25}$  \\
- $\rho v$                    & $6.729 \times 10^{26}$  & 2.416  & $1.260 \times 10^{26}$  & 2.699  & $1.941 \times 10^{25}$  \\
- $\rho E$                    & $2.513 \times 10^{35}$  & 2.226  & $5.372 \times 10^{34}$  & 2.169  & $1.195 \times 10^{34}$  \\
- $\rho e$                    & $2.292 \times 10^{35}$  & 2.194  & $5.011 \times 10^{34}$  & 2.253  & $1.051 \times 10^{34}$  \\
- $T$                         & $2.321 \times 10^{21}$  & 1.606  & $7.623 \times 10^{20}$  & 1.993  & $1.915 \times 10^{20}$  \\
- $\rho X(\isotm{He}{4})$     & $2.806 \times 10^{18}$  & 2.028  & $6.880 \times 10^{17}$  & 2.432  & $1.275 \times 10^{17}$  \\
- $\rho X(\isotm{C}{12})$     & $1.807 \times 10^{17}$  & 1.846  & $5.026 \times 10^{16}$  & 1.605  & $1.653 \times 10^{16}$  \\
- $\rho X(\isotm{O}{16})$     & $1.905 \times 10^{14}$  & 1.500  & $6.737 \times 10^{13}$  & 1.439  & $2.484 \times 10^{13}$  \\
- $\rho X(\isotm{Fe}{56})$    & $2.735 \times 10^{8}$   & 2.057  & $6.571 \times 10^{7}$   & 2.474  & $1.183 \times 10^{7}$   \\
-\enddata
-\end{deluxetable}
 
+% run on 04-06-21
+% Castro       git describe: 21.04-dirty
+% AMReX        git describe: 21.03-58-g87c81d0ca
+% Microphysics git describe: 21.04-1-g33a4d0fe
 
-% run on 12-31-20
-% Castro: 20.12-80-gfe3e9c8de8
 \begin{deluxetable}{lllllll}
 \tablecaption{\label{table:react_convert_strang} Convergence ($L_1$ norm) for the reacting convergence problem using SDC integration (2 iterations).}
 \tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
