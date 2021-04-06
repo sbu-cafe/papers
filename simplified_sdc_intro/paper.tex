@@ -366,32 +366,15 @@ We can write the energy equation as:
 \odt{(\rho E)} = \odt{(\rho e)} + \odt{K} = \rho \Sdot
 \end{equation}
 where $K$ is the kinetic energy, $K = |u|^2/2$.  Since the density and velocity
-are unchanged by reactions, we consider the following:
+are unchanged by reactions, our energy equation becomes:
 \begin{equation}
+\label{eq:strang:e}
 \odt{(\rho e)} = \rho \odt{e} = \rho \Sdot
 \end{equation}
 The reaction rates are typically expressed as $\omegadot_k(\rho, T, X_k)$
-when we evolve this system.  This requires an EOS inversion to get $T$ from $e$ each
-time we need to evaluate the reactive terms.
-We choose to instead integrate the temperature.
-We can write the energy equation as:
-\begin{equation}
-\rho \odt{e} = \rho \left [ \underbrace{\left . \frac{\partial e}{\partial T} \right |_\rho}_{c_v}
-                            \odt{T} +
-                            \left . \frac{\partial e}{\partial \rho} \right |_T
-                            \cancelto{0}{\odt{\rho}} \;\; \right ] = \rho \Sdot
-\end{equation}
-reducing to
-\begin{equation}
-\label{eq:strang:T}
-\odt{T} = \frac{1}{c_v} \Sdot
-\end{equation}
-We can alternately derive this from an enthalpy equation, which is the
-correct formulation when we are at constant pressure, and we get the
-same temperature equation but with $c_v$ replaced by $c_p$.
-Technically this requires an EOS call to get $c_x$, but if the
-specific heat varies slowly, we can freeze it during the reaction
-solve or use a Taylor expansion in $T$ to capture slow evolution.
+when we evolve this system, which requires us to get temperature from
+the equation of state each
+time we need to evaluate the reactive terms.  
 
 We also typically integrate mass fraction itself, instead of partial
 densities:
@@ -399,14 +382,18 @@ densities:
 \label{eq:strang:X}
 \odt{X_k} = \omegadot_k
 \end{equation}
-We integrate Equations (\ref{eq:strang:T}) and (\ref{eq:strang:X}) using
+We integrate Equations (\ref{eq:strang:e}) and (\ref{eq:strang:X}) using
 an implicit ODE solver designed for stiff systems of
 equations, VODE~\citep{vode}.
 
-With Strang splitting, the state can drift significantly off of the
-smooth solution to the coupled reactive hydrodynamics equations, as
-shown graphically in \cite{astronum:2018} using an earlier version of
-the present algorithm.
+We explored this and other approaches (including not evolving an
+energy / temperature equation during the reaction step) in
+\citep{strang_rnaas} and showed that the above formulation gets second
+order convergence.  However, for very strong reactions, when using
+Strang splitting the state can drift significantly off of the smooth
+solution to the coupled reactive hydrodynamics equations, as shown
+graphically in \cite{astronum:2018} using an earlier version of the
+present algorithm.
 
 A variation on Strang splitting called (re-)balanced splitting was
 developed in \citet{speth:2013}.
