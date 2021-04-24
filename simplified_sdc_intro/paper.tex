@@ -852,75 +852,83 @@ are as follows:
 \subsection{SDC-NSE Coupling}
 
 With SDC evolution, when we are in NSE, we need to do the advective
-and reactive updates together.  With the tabulated NSE reaction
-values, we get instantaneous values of the reaction sources, but the only
-time derivative we have is for $Y_e$.  We will
-use a basic predictor-corrector update:
+and reactive updates together.  We want to compute:
 \begin{equation}
-\Uc^\star = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2} + \Delta t \left [\Rb (\Uc) \right ]^{n+1/2}
+\Uc^{n+1,(k)} = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2,(k)} + \Delta t \left [\Rb (\Uc) \right ]^{n+1/2,(k)}
 \end{equation}
+For density and momentum, we can do this update already, since there
+are no reactive sources.  That gives us $\rho^{n+1,(k)}$ and $(\rho
+\Ub)^{n+1,(k)}$.  For the other quantities, the NSE table gives only the
+instantaneous values. aside from $Y_e$.  We therefore do an iterative
+update.
+
 Calling the NSE table on the starting state gives us:
 \begin{equation}
 \nse{\rho^n, T^n, (Y_e)^n} \rightarrow \bar{A}^n, (X_k)^n, (B/A)^n, (dY_e/dt)^n
 \end{equation}
-To get the reactive source, we need to use the iteratively-lagged time-centered information
-from $\Ic_q^{n+1/2,(k-1)}$.  We only need to update the internal energy and auxiliary data,
-since together with the density, that is all that is needed for the equation of state to get the
-updated temperature.    So our sources are:
-\begin{equation}
-R(\rho e) \approx \Ics_q(\rho e)
-\end{equation}
-and
-\begin{equation}
-R(\rho \alpha_l) \approx \rho^{n+1/2} \Ics_q(\alpha_l)
-\end{equation}
-where $\rho^{n+1/2} = (\rho^n + \rho^\star)/2$.
-
-Since we have $(dY_e/dt)^n$ from the table, we replace the source for $Y_e$ in the above
-$\Rb(\Uc^n)$ as: \MarginPar{it might be better if we had $\Ics_\Uc$}
-\begin{equation}
-R(\rho Y_e) = \rho^{n+1/2} (dY_e/dt)^n
-\end{equation}
-which gives an update for the electron fraction as:
-\begin{equation}
-(\rho Y_e)^\star = (\rho Y_e)^n + \Delta t \Advss{\rho Y_e}^{n+1/2} + \Delta t \rho^{n+1/2} (dY_e/dt)^n
-\end{equation}
-We can then get $\alpha_l^\star = (\rho \alpha_l)^\star/\rho^\star$.
-From this prediction, we get $\rho^\star$, $\alpha_l^\star$, and
-$e^\star$, which allows us to call the EOS and get an updated
-temperature, $T^\star$. \MarginPar{Andy suggests time-centering $dY_e/dt$}
-\begin{equation}
-T^\star = T(\rho^\star, \alpha_l^\star, e^\star)
-\end{equation}
-We can then again call the NSE table:
-\begin{equation}
-\nse{\rho^\star, T^\star, (Y_e)^\star} \rightarrow \bar{A}^{n+1,(k)}, (X_k)^{n+1,(k)}, (B/A)^{n+1,(k)}, (dY_e/dt)
-\end{equation}
-where we use the outputs to define the new values of the composition variables.
-Since the density and momenta don't have reactive sources, we just use the $\Uc^\star$ state
-as their new values:
+We now compute a first approximation to the reactive source:
 \begin{align}
-\rho^{n+1,(k)} &= \rho^\star \\
-(\rho u)^{n+1,(k)} &= (\rho u)^\star
+R^{(0)}(\rho e) &= 0 \\
+R^{(0)}(\rho Y_e) &= \rho^n (dY_e/dt)^n \\
+R^{(0)}(\rho \bar{A}) &= 0
 \end{align}
-We then compute the energy release as
-\begin{equation}
-       (\rho \Sdot)^{n+1/2} = \frac{\rho^{n+1,(k)} + \rho^n}{2}
-             \left [ \left ( \frac{B}{A} \right )^{n+1,(k)} -
-                     \left ( \frac{B}{A} \right )^n \right ] N_A \frac{1}{\Delta t}
-\end{equation}
 
-{\color{red}
-Note I tried this first, but it really doesn't work.  I'd like to understand better:
+Now we iterate $\xi = 0, \ldots N-1$, doing the following:
+
+\begin{itemize}
+\item Update the energy as:
+   \begin{equation}
+     (\rho e)^{n+1,(\xi)} = (\rho e)^n + \Delta t \Advss{\rho e}^{n+1/2,(k)} + \Delta t R^{(\xi)}(\rho e)
+   \end{equation}
+
+\item Update the auxiliary data as:
+   \begin{equation}
+     (\rho \alpha_l)^{n+1,(\xi)} = (\rho \alpha_l)^n + \Delta t \Advss{\rho \alpha_l}^{n+1/2,(k)} + \Delta t R^{(\xi)}(\rho \alpha_l)
+   \end{equation}
+
+\item Compute the updated temperature, $T^{n+1,(k)}$ as
+  \begin{equation}
+    T^{n+1,(\xi)} = T(\rho^{n+1,(k)},  \alpha^{n+1,(\xi)},  e^{n+1,(\xi)})
+  \end{equation}
+  where $\alpha^{n+1,(\xi)} = (\rho  \alpha)^{n+1,(\xi)} / \rho^{n+1,(k)}$ and $e^{n+1,(\xi)} = (\rho e)^{n+1,(\xi)} / \rho^{n+1,(k)}$.
+
+\item Call the NSE table to get the new NSE state
+  \begin{equation}
+    \nse{\rho^{n+1,(k)}, T^{n+1,(\xi)}, (Y_e)^{n+1,(\xi)}} \rightarrow \bar{A}^{n+1,(\xi)}, (X_k)^{n+1,(\xi)}, (B/A)^{n+1,(\xi)}, (dY_e/dt)^{n+1,(\xi)}
+  \end{equation}
+
+\item Recompute the reactive source terms for the next iteration.
+
+  The energy generation rate is found as:
+  \begin{equation}
+    (\rho \Sdot)^{n+1/2,(\xi)} = \frac{\rho^{n+1,(k)} + \rho^n}{2}
+    \left [ \left ( \frac{B}{A} \right )^{n+1,(\xi)} -
+      \left ( \frac{B}{A} \right )^n \right ] N_A \frac{1}{\Delta t}
+  \end{equation}
+  and our new auxiliary sources are:
+\begin{align}
+R^{(\xi+1)}(\rho e) &= (\rho \Sdot)^{n+1/2,(\xi)} \\
+R^{(\xi+1)}(\rho Y_e) &= \frac{\rho^{n+1,(k)} + \rho^n}{2} \frac{1}{2} \left [ \left (\frac{dY_e}{dt} \right )^n + \left (\frac{dY_e}{dt} \right )^{n+1,(\xi)} \right ] \\
+R^{(\xi+1)}(\rho \bar{A}) &= \frac{\rho^{n+1,(k)} + \rho^n}{2} \frac{1}{\Delta t} \left [ \bar{A}^{n+1,(\xi)} - \frac{(\rho \bar{A})^n}{\rho^n} \right ]
+\end{align}
+
+\end{itemize}
+
+With the iteration complete, we can do the final update of the total energy using last iterations prediction of the source (for iteration $N$):
 \begin{equation}
-       (\rho \Sdot)^{n+1/2} = \left [ \rho^{n+1,(k)} \left ( \frac{B}{A} \right )^{n+1,(k)} -
-                            \rho^n \left ( \frac{B}{A} \right )^n \right ] N_A \frac{1}{\Delta }t
+(\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2} + \Delta t (\rho \Sdot)^{n+1/2,(N)}
 \end{equation}
-}
-and then do the final update of the total energy:
-\begin{equation}
-(\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2} + \Delta t (\rho \Sdot)^{n+1/2}
-\end{equation}
+and we take the values of the auxiliary state and mass fractions from the last call to the NSE table:
+\begin{align}
+(\rho Y_e)^{n+1,(k)} &= \rho^{n+1,(k)} (Y_e)^{n+1,(N-1)} \\
+(\rho \bar{A})^{n+1,(k)} &= \rho^{n+1,(k)} (\bar{A})^{n+1,(N-1)} \\
+(\rho (B/A))^{n+1,(k)} &= \rho^{n+1,(k)} (B/A)^{n+1,(N-1)} \\
+(\rho Y_e)^{n+1,(k)} &= \rho^{n+1,(k)} (X_k)^{n+1,(N-1)}
+\end{align}
+
+We note that this update is not fully second order, however, the
+treatment of $Y_e$ is, and we expect that to have the dominant effect
+in the thermodynamic evolution through NSE.
 
 \subsection{NSE Bailout}
 
