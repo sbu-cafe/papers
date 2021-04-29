@@ -524,6 +524,21 @@ compressible hydrodynamics below.
         \Sqhydro^{n+1/2} = \frac{1}{2} \left ( \Sqhydro^n + \Sqhydro^{n+1,(k-1)} \right )
       \end{equation}
 
+      In the unsplit CTU method \citep{ppmunsplit}, the interface
+      states used for the final Riemann problem through the zone
+      interface consist of a normal predictor and a transverse flux
+      correction.  We can add the source terms either to the normal
+      predictor (for example, doing characteristic tracing as
+      described in \citealt{ppm}) or after all of the transverse flux
+      corrections are made.  Both are second-order accurate.  For the
+      hydrodynamics sources, we do those in the normal predictor.
+      However, for the reactive sources, we found that it is most
+      reliable to add them at the end of the interface state
+      construction, after the transverse flux corrections.  This is
+      because we want to ensure that sum over species of $\Ic_\qb$ is
+      zero, and characteristic tracing or the various flux corrections
+      may not preserve this.
+
     \item solve the Riemann problem at each interface to get a unique
       conserved state on each interface, $\Uc^{n+1/2,(k)}_{i+1/2}$
 
