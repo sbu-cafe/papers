@@ -1193,6 +1193,7 @@ To solve the reaction system implicitly, the ODE solver needs the Jacobian,
 $\partial \Rb/\partial \Uc$.  We follow the method of \cite{castro_sdc}
 and factor this into two pieces,
 \begin{equation}
+\label{eq:factored_jac}
 {\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc}.
 \end{equation}
 
@@ -1204,10 +1205,23 @@ Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
 \Uc^\prime = \left ( \begin{array}{c} \rho \\ \rho X_\alpha \\ \rho X_\beta \\ \rho E \\ \rho e \end{array} \right )
 \end{equation}
 We take the intermediate state to be ${\bf w} = (\rho, X_\alpha, X_\beta,
-K, T)^\intercal$, where $K$ is the kinetic energy:
+K, e)^\intercal$, where $K$ is the kinetic energy:
 \begin{equation}
 K = \frac{1}{2} u^2
 \end{equation}
+Note: this intermediate state differs from what we used in \citet{castro_sdc} in that
+we are using $e$ instead of $T$ as an independent variable now.  This follows from
+the work shown in \citet{strang_rnaas} that explored integrating the Strang
+reaction system with an energy equation.  If the network gives derivatives in terms
+of temperature, we can convert as:
+\begin{equation}
+\left . \frac{\partial \phi}{\partial T} \right |_\rho =
+  \left . \frac{\partial \phi}{\partial e} \right |_\rho 
+  \left . \frac{\partial e}{\partial T} \right |_\rho =
+  c_v \left . \frac{\partial \phi}{\partial e} \right |_\rho
+\end{equation}
+for some quantity $\phi(\rho, T)$.  Here we identified the specific heat
+at constant volume, $c_v = \partial e/\partial T|_\rho$.
 
 The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
 \begin{equation}
@@ -1216,23 +1230,20 @@ The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
        1 & 0 & 0 & 0 & 0 \\
        X_\alpha & \rho & 0 & 0 & 0 \\
        X_\beta & 0 & \rho & 0 & 0  \\
-       \rho e_\rho  + e + K &
+       e + K &
                  \rho  e_{X_\alpha} & \rho e_{X_\beta} & \rho &
-                 \rho e_T \\
-       \rho e_\rho  + e  &
+                 \rho \\
+       e  &
                  \rho  e_{X_\alpha} & \rho e_{X_\beta} & 0 &
-                 \rho e_T
+                 \rho
      \end{array}\right)
 \end{equation}
 where we use the following notation for compactness:
 \begin{equation}
-e_\rho = \dedrd \qquad
-e_T = \dedTd \qquad
 e_{X_k} = \dedXd
 \end{equation}
-and write the kinetic energy as $K = u^2/2$.  We get the inverse
-(computed via SymPy, see the included Jupyter notebook) is:
-
+We get the inverse
+(computed via SymPy, see the included Jupyter notebook) as:
 \begin{equation}
 \renewcommand{\arraystretch}{1.5}
 \frac{\partial {\bf w}}{\partial \Uc^\prime} = \left (
@@ -1241,8 +1252,8 @@ and write the kinetic energy as $K = u^2/2$.  We get the inverse
    - \frac{X_\alpha}{\rho} & \frac{1}{\rho} & 0 & 0 & 0 \\
    - \frac{X_\beta}{\rho} & 0 & \frac{1}{\rho} & 0 & 0 \\
    - \frac{K}{\rho} & 0 & 0 & \frac{1}{\rho} & -\frac{1}{\rho} \\
-   \frac{\sum_k X_{k} e_{X_k} - \rho e_\rho - e}{ \rho e_T} &
-    -\frac{e_{X_\alpha}}{\rho e_T} & -\frac{e_{X_\beta}}{\rho e_T} & 0 & \frac{1}{\rho e_T} \\
+   \frac{\sum_k X_{k} e_{X_k}  - e}{ \rho} &
+    -\frac{e_{X_\alpha}}{\rho} & -\frac{e_{X_\beta}}{\rho} & 0 & \frac{1}{\rho} \\
    \end{array}\right)
 \renewcommand{\arraystretch}{1}
 \end{equation}
@@ -1270,6 +1281,14 @@ and the Jacobian is computed as $\partial \Rb/\partial {\bf w}$:
   \end{array}
   \right )
 \end{equation}
+
+While VODE can compute the entire Jacobian, ${\bf J}$ numerically via differencing, we found
+that does not give reliable results.  Instead, we compute $\partial {\bf w}/\partial {\bf U}^\prime$ analytically and $\partial {\bf R}/\partial {\bf w}$ numerically via one-sided differencing.
+The resulting Jacobian, as computed via equation~\ref{eq:factored_jac}, is larger than
+expected by the integrator because of the inclusion of the $\rho$
+terms in the intermediate steps, so we remove the row corresponding to
+$R(\rho)$ and the column corresponding to $\partial/\partial \rho$
+before passing the Jacobian to VODE.
 
 
 
