@@ -85,6 +85,7 @@
 \newcommand{\tnse}{{T_\mathrm{nse}}}
 \newcommand{\Anse}{{A_\mathrm{nse}}}
 \newcommand{\Bnse}{{B_\mathrm{nse}}}
+\newcommand{\Cnse}{{C_\mathrm{nse}}}
 
 \newcommand{\out}{{\rm out}}
 \newcommand{\inp}{{\rm in}}
@@ -695,7 +696,13 @@ For this study we will use the 19 nuclei network containing
 \isot{Cr}{48}, \isot{Fe}{52}, \isot{Fe}{54}, \isot{Ni}{56}, protons
 (from photodisintegration), and neutrons.  This is based on the
 ``aprox19'' network from \cite{aprox19} and originally described in
-\cite{Kepler}.  We use a modified version of the VODE~\citep{vode} integrator---ported to C++ with checks added to the timestep rejection logic that ensure that the species mass fractions stay between 0 and 1\footnote{This modified version of VODE is available in our Microphysics repo: \url{https://github.com/starkiller-astro/Microphysics}.}.\MarginPar{discuss tolerances}  We combine this with a table that gives the nuclear
+\cite{Kepler}.  We use a modified version of the VODE~\citep{vode}
+integrator---ported to C++ with checks added to the timestep rejection
+logic that ensure that the species mass fractions stay between 0 and \MarginPar{we need to be clear that there is different logic for SDC}
+1\footnote{This modified version of VODE is available in our
+Microphysics repo:
+\url{https://github.com/starkiller-astro/Microphysics}.}.\MarginPar{discuss
+  tolerances} We combine this with a table that gives the nuclear
 statistical equilibrium (NSE) abundances in regions where the system
 is in NSE.  The NSE table was generated using a 127 nuclei reaction
 network and is the same as described in \cite{ma:2013}.  In our
@@ -775,11 +782,13 @@ nuclei, where the Fe-group nuclei are \isot{Cr}{48}, \isot{Fe}{52},
 \rho &> \rhonse \\
 T &> \tnse \\
 X(\isotm{C}{12}) &< \Anse \\
-X(\isotm{He}{4}) + \sum_{k \in \mathrm{Fe-group}} X_k &> \Bnse
+X(\isotm{He}{4}) + \sum_{k \in \mathrm{Fe-group}} X_k &> \Bnse \\
+X(\isotm{Si}{26}) &< \Cnse 
 \end{align}
-Typical values are $\rhonse = 3\times 10^8~\gcc$, $T_\mathrm{nse} =
-3\times 10^9~\mathrm{K}$, and $\Anse = 0.12$ and $\Bnse=
-0.88$---these are the values used in \citet{ma:2013}.
+Typical values are $\rhonse = 2\times 10^6~\gcc$, $T_\mathrm{nse} =
+3\times 10^9~\mathrm{K}$, $\Anse = 0.12$, $\Bnse=
+0.88$, and $\Cnse = 0.01$.  The values of $\Anse$ and $\Bnse$ are based on \citet{ma:2013}.
+The value of $\Cnse$ ensures that Si-burning has ended before invoking the table.
 
 \subsection{Strang-split algorithm for NSE}
 
