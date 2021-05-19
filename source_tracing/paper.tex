@@ -1,0 +1,203 @@
+\documentclass[times,modern]{aastex63}
+
+% these lines seem necessary for pdflatex to get the paper size right
+\pdfpagewidth 8.5in
+\pdfpageheight 11.0in
+
+\usepackage[T1]{fontenc}
+\usepackage{epsf,color,amsmath}
+
+\usepackage{cancel}
+
+\input mysymbols
+
+\newcommand{\Sb}{{\bf S}}
+
+\newcommand{\sfrac}[2]{\mathchoice%
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}} {#1\!/#2}}
+
+\newcommand{\myhalf}{{\sfrac{1}{2}}}
+
+
+\newcommand{\castro}{{\sf Castro}}
+\newcommand{\maestro}{{\sf Maestro}}
+\newcommand{\flash}{{\sf Flash}}
+\newcommand{\amrex}{{\sf AMReX}}
+
+\newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\isotm}[2]{{}^{#2}\mathrm{#1}}
+
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\cms}{\mathrm{cm~s^{-1} }}
+
+
+\usepackage{bm}
+
+
+\setlength{\marginparwidth}{0.75in}
+\newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
+
+\begin{document}
+%======================================================================
+% Title
+%======================================================================
+%\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
+\title{Source Tracing in PPM}
+
+%\shorttitle{A Simplified SDC Method}
+\shorttitle{Source Tracing in PPM}
+
+
+\shortauthors{}
+
+%% \author[0000-0001-8401-030X]{M.~Zingale}
+%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+%%        Stony Brook, NY 11794-3800}
+
+%% \author[0000-0003-0439-4556]{M.~P.~Katz}
+%% \affiliation{Nvidia Corp}
+
+%% \author[0000-0002-5749-334X]{J.~B.~Bell}
+%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+%% \author[0000-0003-1791-0265]{A.~J.~Nonaka}
+%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+%% \author[0000-0001-8092-1974]{W.~Zhang}
+%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+%% \correspondingauthor{Michael Zingale}
+%% \email{michael.zingale@stonybrook.edu}
+
+
+%======================================================================
+% Abstract and Keywords
+%======================================================================
+\begin{abstract}
+\end{abstract}
+
+\keywords{hydrodynamics---methods: numerical}
+
+%======================================================================
+% Introduction
+%======================================================================
+\section{Introduction}\label{Sec:Introduction}
+
+Consider the primitive variable system
+\begin{equation}
+\qb_t + \Ab(\qb) = \Sb(\qb)
+\end{equation}
+where $\Sb$ are the source terms to the primitive variables.
+
+Recall that for the piecewise linear method, we predict states to the interface, $i+\myhalf$,
+and the midpoint in time $n+\myhalf$.
+\begin{align}
+\qb_{i+\myhalf,L}^{n+\myhalf} &= \qb_i^n +
+    \left . \frac{\Delta x}{2} \frac{\partial \qb}{\partial x} \right |_i +
+    \frac{\Delta t}{2} \underbrace{\left .\frac{\partial \qb}{\partial t} \right |_i}_{= -\Ab \partial \qb / \partial x + \Sb} + \ldots \\
+&= \qb_i^n + \frac{\Delta x}{2} \left . \frac{\partial \qb}{\partial x} \right |_i
+          + \frac{\Delta t}{2} \left ( -\Ab \frac{\partial \qb}{\partial x} + \Sb \right )_i\\
+&= \qb_i^n + \frac{1}{2} \left [ 1 - \frac{\Delta t}{\Delta x} \Ab_i \right ] \Delta \qb_i + \frac{\Delta t}{2} \Sb_i \label{eq:taylorstate}
+\end{align}
+Using a characteristic projection, we recognize:
+\begin{equation}
+\Ab \Delta \qb = \sum_\nu (\lb^\enu \cdot \Delta \qb) \lambda^\enu \rb^\enu
+\end{equation}
+We can modify the sum to only include waves moving toward the interface, then
+\begin{equation}
+\qb_{i+\myhalf,L}^{n+\myhalf} = \qb_i^n + \frac{1}{2} \sum_{\nu,\lambda^\enu > 0}
+   \left (1 - \frac{\Delta t}{\Delta x} \lambda_i^\enu \right )
+   (\lb_i^\enu \cdot \Delta \qb_i) \rb_i^\enu + \frac{\Delta t}{2} \Sb_i
+\end{equation}
+
+What about including the source in the characteristic projection?  We can write
+\begin{equation}
+\Sb = \sum_\nu (\lb^\enu \cdot \Sb) \rb^\enu
+\end{equation}
+then we have:
+\begin{equation}
+\qb_{i+\myhalf,L}^{n+\myhalf} = \qb_i^n + \frac{1}{2} \sum_{\nu,\lambda^\enu > 0}
+   \lb^\enu \cdot \left [ \left (1 - \frac{\Delta t}{\Delta x} \lambda_i^\enu \right )
+   \Delta \qb_i + \Delta t \Sb_i \right ] \rb_i^\enu
+\end{equation}
+
+Instead of this, we could introduce a reference state before the projection, which has the
+effect of minimizing the jumps seen by the linearization in the projection operation.
+If we consider the difference between $\qb_{i+\myhalf,L}^{n+\myhalf}$ and a reference state, $\qb_\refs$ as:
+\begin{equation}
+\qb_{i+\myhalf,L}^{n+\myhalf}  - \qb_\refs = 
+  \qb_i^n - \qb_\refs + \frac{1}{2} \left [ \left (1 - \frac{\Delta t}{\Delta x} \Ab_i \right ) \Delta \qb_i + \Delta t \Sb_i \right ]
+\end{equation}
+and then project the RHS, we have
+\begin{equation}
+\qb_{i+\myhalf,L}^{n+\myhalf}  = \qb_\refs - \sum_{\nu,\lambda^\enu > 0} \lb_i^\enu \cdot \left \{
+  \qb_\refs - \qb_i^n - \frac{1}{2} \left [ \left (1 - \frac{\Delta t}{\Delta x} \lambda_i^\enu \right ) \Delta \qb_i - \Delta t \Sb_i \right ] \right \} \rb^\enu \label{eq:plm_project}
+\end{equation}
+
+Now PPM recognizes that the this construction looks like the integral under $\qb(x)$ that
+can reach the interface in the timestep \citep{millercolella:2002},
+\begin{equation}
+\qb_i + \frac{1}{2} \left (1 - \frac{\Delta x}{\Delta t} \lambda^\enu \right ) \Delta \qb \approx
+  \frac{1}{\lambda^\enu \Delta t} \int_{x_{i+\myhalf} - \lambda^\enu \Delta t}^{x_{i+\myhalf}} \qb(x) dx \equiv \Ic_+^\enu(\qb)
+\end{equation}
+(This is exact for piecewise linear reconstruction).  For PPM, the interface state is then
+written as:
+\begin{equation}
+\qb_{i+\myhalf,L}^{n+\myhalf}  = \qb_\refs - \sum_{\nu,\lambda^\enu > 0} \lb_i^\enu \cdot \left  [
+  \qb_\refs - \Ic_+^\enu(\qb) - \Delta t \Ic_+^\enu(\Sb) \right ] \rb^\enu
+\end{equation}
+Note, this is the form that \citet{ppm} suggest, we'll revisit the
+$\Delta t$ factor in front of the source term shortly.
+
+Let's see how this PPM form reduces when we assume a piecewise linear profile for $\qb$ and $\Sb$:
+\begin{align}
+\qb(x) &= \qb_i + \frac{\Delta \qb_i}{\Delta x} (x - x_i) \\
+\Sb(x) &= \Sb_i + \frac{\Delta \Sb_i}{\Delta x} (x - x_i) 
+\end{align}
+Putting these forms in the integral, we get:
+\begin{equation}
+\qb_{i+\myhalf,L}^{n+\myhalf}  = \qb_\refs - \sum_{\nu,\lambda^\enu > 0} \lb_i^\enu \cdot \left  [
+  \qb_\refs - \qb_i - \frac{1}{2} \left ( 1 - \lambda_i^\enu \frac{\Delta t}{\Delta x} \right ) \Delta \qb_i
+           - \Delta t \Sb_i - \frac{\Delta t}{2} \left ( 1 - \lambda_i^\enu \frac{\Delta t}{\Delta x} \right ) \Delta \Sb_i \right ] \rb_i^\enu
+\end{equation}
+This almost looks like Eq.~\ref{eq:plm_project}, but there are two
+differences: (1) the PPM form has a term proportional to $\Delta
+\Sb_i$ that captures the variation of the source term over the cell
+and (2) the PPM form has a full $\Delta t$ in front of the source term
+instead of $\Delta t/2$.  We believe that it should be $\Delta t/2$,
+which would make the correct PPM interface state with source
+projection:
+\begin{equation}
+\qb_{i+\myhalf,L}^{n+\myhalf}  = \qb_\refs - \sum_{\nu,\lambda^\enu > 0} \lb_i^\enu \cdot \left  [
+  \qb_\refs - \Ic_+^\enu(\qb) - \frac{\Delta t}{2} \Ic_+^\enu(\Sb) \right ] \rb^\enu
+\end{equation}
+Now there is not a mathematical reason to include the $\Delta \Sb$
+variation, but physically it makes sense to consider only the
+acceleration that a quantity will see over a timestep as it approaches
+the interface.
+
+Now we can choose the reference state.  In the PPM paper, the choice was the fastest wave
+moving toward the interface,
+\begin{equation}
+\qb_\refs = \Ic_+^\evp(\qb)
+\end{equation}
+with the justification that the choice of reference state should
+reduce the size of the jump that the linearized projection works on.
+But if the source terms are large, a better choice is:
+\begin{equation}
+\qb_\refs = \Ic_+^\evp(\qb) + \frac{\Delta t}{2} \Ic_+^\evp(\Sb)
+\end{equation}
+
+%======================================================================
+% References
+%======================================================================
+
+\bibliographystyle{aasjournal}
+\bibliography{ws}
+
+\end{document}
