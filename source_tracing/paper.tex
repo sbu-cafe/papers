@@ -108,6 +108,19 @@ Using a characteristic projection, we recognize:
 \begin{equation}
 \Ab \Delta \qb = \sum_\nu (\lb^\enu \cdot \Delta \qb) \lambda^\enu \rb^\enu
 \end{equation}
+where $\lambda^\enu$ are the eigevalues of $\Ab$,
+\begin{align}
+\lambda^\evm &= u - c \\
+\lambda^\evz &= u \\
+\lambda^\evp &= u + c
+\end{align}
+and $\lb$ and $\rb$ are the left and right eigenvectors of $\Ab$:
+\begin{align}
+\lb^\enu \Ab &= \lambda^\enu \lb^\enu \\
+\Ab \rb^\enu &= \lambda^\enu \rb^\enu
+\end{align}
+normalized such that $\lb^{(i)} \cdot \rb^{(j)} = \delta_{ij}$.
+
 We can modify the sum to only include waves moving toward the interface, then
 \begin{equation}
 \qb_{i+\myhalf,L}^{n+\myhalf} = \qb_i^n + \frac{1}{2} \sum_{\nu,\lambda^\enu > 0}
