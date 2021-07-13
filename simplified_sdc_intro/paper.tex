@@ -389,7 +389,7 @@ equations, VODE~\citep{vode}.
 
 We explored this and other approaches (including not evolving an
 energy / temperature equation during the reaction step) in
-\citep{strang_rnaas} and showed that the above formulation gets second
+\citet{strang_rnaas} and showed that the above formulation gets second
 order convergence.  However, for very strong reactions, when using
 Strang splitting the state can drift significantly off of the smooth
 solution to the coupled reactive hydrodynamics equations, as shown
@@ -539,6 +539,9 @@ compressible hydrodynamics below.
       because we want to ensure that sum over species of $\Ic_\qb$ is
       zero, and characteristic tracing or the various flux corrections
       may not preserve this.
+
+      {\color{red} We enforce that the species interface states remain in $[0, 1]$ after adding the reactive source.}
+
 
     \item solve the Riemann problem at each interface to get a unique
       conserved state on each interface, $\Uc^{n+1/2,(k)}_{i+1/2}$
@@ -790,6 +793,7 @@ Typical values are $\rhonse = 2\times 10^6~\gcc$, $T_\mathrm{nse} =
 0.88$, and $\Cnse = 0.01$.  The values of $\Anse$ and $\Bnse$ are based on \citet{ma:2013}.
 The value of $\Cnse$ ensures that Si-burning has ended before invoking the table.
 
+
 \subsection{Strang-split algorithm for NSE}
 
 For Strang splitting, we alternate the reaction and hydrodynamics,
@@ -964,7 +968,7 @@ fail, because an excessive number of timesteps is required.  Rather
 than trigger our retry mechanism and throw away the entire timestep
 and start over with a smaller $\Delta t$, we first check if the zone
 evolved into NSE, and if so, we redo the zone update using the NSE
-prescription.
+prescription.  {\color{red} We optionally apply a relaxation factor, typically, $0.9$, to the NSE conditions to allow a state that is close to NSE after an integrator failure enter NSE.}
 
 \section{Simulations}
 
@@ -1292,7 +1296,8 @@ and the Jacobian is computed as $\partial \Rb/\partial {\bf w}$:
 \end{equation}
 
 While VODE can compute the entire Jacobian, ${\bf J}$ numerically via differencing, we found
-that does not give reliable results.  Instead, we compute $\partial {\bf w}/\partial {\bf U}^\prime$ analytically and $\partial {\bf R}/\partial {\bf w}$ numerically via one-sided differencing.
+that does not give reliable results.  Instead, we compute $\partial {\bf w}/\partial {\bf U}^\prime$ analytically and $\partial {\bf R}/\partial {\bf w}$ numerically via one-sided differencing, following
+the algorithm in \cite{lsode} to minimize numerical noise.
 The resulting Jacobian, as computed via equation~\ref{eq:factored_jac}, is larger than
 expected by the integrator because of the inclusion of the $\rho$
 terms in the intermediate steps, so we remove the row corresponding to
