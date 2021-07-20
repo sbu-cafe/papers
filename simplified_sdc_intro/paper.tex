@@ -1216,30 +1216,25 @@ Nuclear Security Administration.
 
 \label{sec:app:jacobian}
 
-To solve the reaction system implicitly, the ODE solver needs the Jacobian,
-$\partial \Rb/\partial \Uc$.  We follow the method of \cite{castro_sdc}
-and factor this into two pieces,
+To solve the reaction system implicitly, the ODE solver needs the
+Jacobian, $\partial \Rb/\partial \Uc^\prime$, where $\Uc^\prime =
+(\rho X_k, \rho e)^\intercal$ is the subset of the conserved variables we are
+integrating.  We follow the method of \cite{castro_sdc} and factor
+this into two pieces,
 \begin{equation}
 \label{eq:factored_jac}
-{\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc}.
+{\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc^\prime}.
 \end{equation}
-
-Even though it has no reactive sources, we include $\rho$ in our conservative state
-for the purposes of computing the Jacobian (we denote the conserved state used for the
-Jacobian $\Uc^\prime$).
 Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
 \begin{equation}
-\Uc^\prime = \left ( \begin{array}{c} \rho \\ \rho X_\alpha \\ \rho X_\beta \\ \rho E \\ \rho e \end{array} \right )
+\Uc^\prime = \left ( \begin{array}{c} \rho X_\alpha \\ \rho X_\beta \\ \rho e \end{array} \right )
 \end{equation}
-We take the intermediate state to be ${\bf w} = (\rho, X_\alpha, X_\beta,
-K, e)^\intercal$, where $K$ is the kinetic energy:
+For interfacing with the reaction network, we use a simpler set of variables,
 \begin{equation}
-K = \frac{1}{2} u^2
+{\bf w} = \left ( \begin{array}{c} X_\alpha \\  X_\beta \\ e \end{array} \right )
 \end{equation}
-Note: this intermediate state differs from what we used in \citet{castro_sdc} in that
-we are using $e$ instead of $T$ as an independent variable now.  This follows from
-the work shown in \citet{strang_rnaas} that explored integrating the Strang
-reaction system with an energy equation.  If the network gives derivatives in terms
+Note: this intermediate state differs from what we used in \citet{castro_sdc} but agrees with that from \cite{strang_rnaas} in that
+we use $e$ instead of $T$ as the independent variable.  If the network gives derivatives in terms
 of temperature, we can convert as:
 \begin{equation}
 \left . \frac{\partial \phi}{\partial T} \right |_\rho =
@@ -1252,17 +1247,11 @@ at constant volume, $c_v = \partial e/\partial T|_\rho$.
 
 The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
 \begin{equation}
-\frac{\partial \Uc}{\partial {\bf w}} = \left (
-   \begin{array}{ccccc}
-       1 & 0 & 0 & 0 & 0 \\
-       X_\alpha & \rho & 0 & 0 & 0 \\
-       X_\beta & 0 & \rho & 0 & 0  \\
-       e + K &
-                 \rho  e_{X_\alpha} & \rho e_{X_\beta} & \rho &
-                 \rho \\
-       e  &
-                 \rho  e_{X_\alpha} & \rho e_{X_\beta} & 0 &
-                 \rho
+\frac{\partial \Uc^\prime}{\partial {\bf w}} = \left (
+   \begin{array}{ccc}
+       \rho & 0 & 0 \\
+       0 & \rho & 0  \\
+       \rho  e_{X_\alpha} & \rho e_{X_\beta} & \rho \\
      \end{array}\right)
 \end{equation}
 where we use the following notation for compactness:
@@ -1274,71 +1263,65 @@ We get the inverse
 \begin{equation}
 \renewcommand{\arraystretch}{1.5}
 \frac{\partial {\bf w}}{\partial \Uc^\prime} = \left (
-  \begin{array}{ccccc}
-   1  & 0 & 0 & 0 & 0 \\
-   - \frac{X_\alpha}{\rho} & \frac{1}{\rho} & 0 & 0 & 0 \\
-   - \frac{X_\beta}{\rho} & 0 & \frac{1}{\rho} & 0 & 0 \\
-   - \frac{K}{\rho} & 0 & 0 & \frac{1}{\rho} & -\frac{1}{\rho} \\
-   \frac{\sum_k X_{k} e_{X_k}  - e}{ \rho} &
-    -\frac{e_{X_\alpha}}{\rho} & -\frac{e_{X_\beta}}{\rho} & 0 & \frac{1}{\rho} \\
+  \begin{array}{ccc}
+   \frac{1}{\rho} & 0 & 0 \\
+   0 & \frac{1}{\rho} & 0 \\
+    -\frac{e_{X_\alpha}}{\rho} & -\frac{e_{X_\beta}}{\rho} & \frac{1}{\rho} \\
    \end{array}\right)
 \renewcommand{\arraystretch}{1}
 \end{equation}
 
 The reaction vector is
 \begin{equation}
-\Rb(\Uc^\prime) = \left (  \begin{array}{c} 0 \\ \rho \omegadot_\alpha \\ \rho \omegadot_\beta \\ \rho \Sdot \\ \rho \Sdot \end{array} \right )
+\Rb(\Uc^\prime) = \left (  \begin{array}{c} \rho \omegadot_\alpha \\ \rho \omegadot_\beta \\ \rho \Sdot \end{array} \right )
 \end{equation}
-and the Jacobian is computed as $\partial \Rb/\partial {\bf w}$:
+We take all the quantities to be functions of $\rho$, $e$, and $X_k$,
+but since $\rho$ doesn't change from the reactions (the reactive
+source of the continuity equation is zero), it is held constant in
+these derivatives.  The Jacobian is computed as $\partial \Rb/\partial
+{\bf w}$:
 \begin{equation}
+\renewcommand{\arraystretch}{1.5}
 \frac{\partial \Rb}{\partial {\bf w}} = \left (
-  \begin{array}{ccccc}
-     0 & 0 & 0 & 0 & 0 \\
-     \omegadot_\alpha + \rho \frac{\partial \omegadot_\alpha}{\partial \rho} &
+  \begin{array}{ccc}
      \rho \frac{\partial \omegadot_\alpha}{\partial X_\alpha} &
-     \rho \frac{\partial \omegadot_\alpha}{\partial X_\beta} & 0 & \rho \frac{\partial \omegadot_\alpha}{\partial e} \\
+     \rho \frac{\partial \omegadot_\alpha}{\partial X_\beta} & 
+     \rho \frac{\partial \omegadot_\alpha}{\partial e} \\
       %
-     \omegadot_\beta + \rho \frac{\partial \omegadot_\beta}{\partial \rho} &
      \rho \frac{\partial \omegadot_\beta}{\partial X_\alpha} &
-     \rho \frac{\partial \omegadot_\beta}{\partial X_\beta} & 0 &  \rho \frac{\partial \omegadot_\beta}{\partial e} \\
+     \rho \frac{\partial \omegadot_\beta}{\partial X_\beta} &
+     \rho \frac{\partial \omegadot_\beta}{\partial e} \\
      %
-     \Sdot + \rho \frac{\partial \Sdot}{\partial \rho} & \rho \frac{\partial \Sdot}{\partial X_\alpha} & \rho \frac{\partial \Sdot}{\partial X_\beta} & 0 & \rho \frac{\partial \Sdot}{\partial e} \\
-     %
-     \Sdot + \rho \frac{\partial \Sdot}{\partial \rho} & \rho \frac{\partial \Sdot}{\partial X_\alpha} & \rho \frac{\partial \Sdot}{\partial X_\beta} & 0 & \rho \frac{\partial \Sdot}{\partial e} \\
+     \rho \frac{\partial \Sdot}{\partial X_\alpha} &
+     \rho \frac{\partial \Sdot}{\partial X_\beta} &
+     \rho \frac{\partial \Sdot}{\partial e} \\
   \end{array}
   \right )
+\renewcommand{\arraystretch}{1}
 \end{equation}
 
 While VODE can compute the entire Jacobian, ${\bf J}$ numerically via differencing, we found
 that does not give reliable results.  Instead, we compute $\partial {\bf w}/\partial {\bf \Uc}^\prime$ analytically and $\partial {\bf R}/\partial {\bf w}$ numerically via one-sided differencing, following
 the algorithm in \cite{lsode} to minimize numerical noise.
-
-The final Jacobian is found by multiplying these two and removing the row corresponding to
-$R(\rho)$ and the column corresponding to $\partial/\partial \rho$:
+The final Jacobian is found by multiplying these two:
 \begin{equation}
-\frac{\partial \Rb}{\partial {\bf \Uc}} = \left (
-  \begin{array}{ccccc}
+\renewcommand{\arraystretch}{1.5}
+\frac{\partial \Rb}{\partial \Uc^\prime} = \left (
+  \begin{array}{ccc}
     \frac{\partial \omegadot_\alpha}{\partial X_\alpha} -\frac{\partial \omegadot_\alpha}{\partial e} e_{X_\alpha} &
     \frac{\partial \omegadot_\alpha}{\partial X_\beta} -\frac{\partial \omegadot_\alpha}{\partial e}  e_{X_\beta} &
-    0 &
     \frac{\partial \omegadot_\alpha}{\partial e} \\
      %
     \frac{\partial \omegadot_\beta}{\partial X_\alpha} -\frac{\partial \omegadot_\beta}{\partial e} e_{X_\alpha} &
     \frac{\partial \omegadot_\beta}{\partial X_\beta} -\frac{\partial \omegadot_\beta}{\partial e}  e_{X_\beta} &
-    0 &
     \frac{\partial \omegadot_\beta}{\partial e} \\
      %
      \frac{\partial \Sdot}{\partial X_\alpha} - \frac{\partial \Sdot}{\partial e} e_{X_\alpha} &
      \frac{\partial \Sdot}{\partial X_\beta} - \frac{\partial \Sdot}{\partial e} e_{X_\beta} &
-     0 &
-     \frac{\partial \Sdot}{\partial e} \\
-     %
-     \frac{\partial \Sdot}{\partial X_\alpha} - \frac{\partial \Sdot}{\partial e} e_{X_\alpha} &
-     \frac{\partial \Sdot}{\partial X_\beta} - \frac{\partial \Sdot}{\partial e} e_{X_\beta} &
-     0 &
      \frac{\partial \Sdot}{\partial e} \\
   \end{array}
   \right )
+\renewcommand{\arraystretch}{1}
 \end{equation}
 
 
