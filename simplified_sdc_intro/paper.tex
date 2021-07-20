@@ -216,11 +216,14 @@ where
            \rho X_k \\
            \rho \alpha_l \\
            \rho u \\
-           \rho E \end{array}\right )
+           \rho E \\
+           \rho e \end{array}\right )
 \end{equation}
 are the conserved fluid quantities: mass density, $\rho$, velocity,
 $u$, specific total energy, $E$, and nuclear species mass fractions,
-$X_k$, and auxiliary composition variables, $\alpha_l$.  The mass fractions
+$X_k$, and auxiliary composition variables, $\alpha_l$.  We also carry
+the specific internal energy, $e$, as part of a dual energy
+formulation (see \citealt{bryan:1995,wdmergerI}). The mass fractions
 are constrained to sum to 1, $\sum_k X_k = 1$, but no such constraint
 exists on the auxiliary variables.  The specific total energy relates
 to the specific internal energy as $E = e + u^2/2$.  The corresponding
@@ -231,7 +234,8 @@ fluxes are
    \rho X_k u \\
    \rho \alpha_l u \\
    \rho u u + p \\
-   \rho u E + u p
+   \rho u E + u p \\
+   \rho u e
    \end{array} \right )
 \end{equation}
 Here the pressure, $p$, enters, and is found via the equation of state.  For a system
@@ -255,7 +259,17 @@ $\Rb$,
 \begin{equation}
   \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc).
 \end{equation}
-\MarginPar{Detail out what is $\Hb(\Uc)$?}
+The hydrodynamic sources include the ``pdV'' work for internal energy
+as well as gravity
+\begin{equation}
+  \Hb(\Ub) = \left ( \begin{array}{c}
+    0 \\
+    0 \\
+    0 \\
+    \rho g \\
+    \rho u g \\
+    -p \partial u/\partial x \end{array} \right )
+\end{equation}
  The reactive sources take the form:
 \begin{equation}
   \Rb(\Uc) = \left ( \begin{array}{c}
@@ -263,7 +277,8 @@ $\Rb$,
      \rho \omegadot(X_k) \\
      \rho \omegadot(\alpha_l) \\
      0 \\
-     \rho \dot{S}
+     \rho \dot{S} \\
+     \rho \dot{S} 
   \end{array} \right )
 \end{equation}
 where $\omegadot(X_k)$ is the creation rate for species $k$, $\omegadot(\alpha_l)$ is the creation rate for
@@ -313,7 +328,7 @@ sources (now in terms of the primitive variables) and reaction terms,
 with
 \begin{equation}
 \label{eq:prim_sources}
-\Rb(q) = \left ( \begin{array}{c}
+\Rb(\qb) = \left ( \begin{array}{c}
      0 \\
      \omegadot(X_k) \\
      \omegadot(\alpha_l) \\
@@ -553,8 +568,7 @@ compressible hydrodynamics below.
           &- \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
       \end{align}
     Now the conservative hydrodynamics source terms are computed by first updating to the
-    new state with advection and the old-time source term applied for the full $\Delta t$ as:
-\MarginPar{I'm confused what happens with the $\Uc^{\star\star}$ state; I don't see it below.  Is The $\Shydro^{n+1/2}$ used below suppose to be from the $\Uc^{\star\star}$ state?}
+    new state with advection and the old-time source term applied for the full $\Delta t$ as: \MarginPar{little more complicated than this---we don't include the pdV source here}
     \begin{equation}
       \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)} + \Delta t \Hb(\Uc^n)
     \end{equation}
