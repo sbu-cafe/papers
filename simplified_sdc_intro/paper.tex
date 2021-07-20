@@ -79,7 +79,7 @@
 
 \newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
 
-\newcommand{\nse}[1]{{\mathrm{NSE}( #1 )}}
+\newcommand{\nse}[1]{{\mathtt{NSE}( #1 )}}
 
 \newcommand{\rhonse}{{\rho_\mathrm{nse}}}
 \newcommand{\tnse}{{T_\mathrm{nse}}}
@@ -272,6 +272,7 @@ as well as gravity
 \end{equation}
  The reactive sources take the form:
 \begin{equation}
+  \label{eq:react_source}
   \Rb(\Uc) = \left ( \begin{array}{c}
      0 \\
      \rho \omegadot(X_k) \\
@@ -623,16 +624,36 @@ compressible hydrodynamics below.
     \begin{equation}
       \odt{\Uc} = \Adv{\Uc}^{n+1/2,(k)} + \Rb(\Uc)
     \end{equation}
-    This integration begins with $\Uc^n$ and results in $\Uc^{n+1,(k)}$.
 
-    As we are integrating this system we need to get the
-    temperature, $T$, for the rate evaluations.  We construct this
-    by subtracting the kinetic energy from the total energy to get
-    the specific internal energy, $e$, and then calling the equation
-    of state.
+    Looking at the form of Eq.~\ref{eq:react_source}, we see that only
+    the species, auxiliary quantities, and energies have source terms.
+    Since we are reacting, we will use the $X_k$ as the primary
+    composition variable and compute $\alpha_l$ as needed from them,
+    so we don't directly integrate the auxiliary quantities.
+    Likewise, the total and internal energies both provide the same
+    information, and integrating both overconstrains the system, so we
+    just integrate the internal energy.  We define the subset of variables
+    that are directly integrated as:
+    \begin{equation}
+      \Uc^\prime = \left ( \begin{array}{c} \rho X_k \\ \rho e \end{array} \right )
+    \end{equation}
+    and we integrate
+    \begin{equation}
+      \odt{\Uc^\prime} = \Adv{\Uc^\prime}^{n+1/2,(k)} + \Rb(\Uc^\prime)
+    \end{equation}
+    This integration begins with $\Uc^{\prime,n}$ and results in $\Uc^{\prime,n+1,(k)}$.
+
+    We will need the density at times during the integration, which we construct as:
+    \begin{equation}
+      \rho(t) = \rho^n + \Advss{\rho}^{n+1/2,(k)} \, t
+    \end{equation}
+    As we are integrating this system we need to get the temperature,
+    $T$, for the rate evaluations.  We obtain this by directly from
+    internal energy, composition, and density using the equation of
+    state.
 
     Our integrator also needs the Jacobian of the system, in terms of
-    the conserved variables.  This is different than the form of the
+    the $\Uc^\prime$.  This is different than the form of the
     Jacobian usually used in reaction networks.  We describe the form
     of the Jacobian in appendix \ref{sec:app:jacobian}.
 
@@ -641,13 +662,22 @@ compressible hydrodynamics below.
     so when we integrate our system, their contributions will be
     linear in time.  Since $(\rho X_k)$ sees a linear advective term,
     $\rho$ does as well.  $(\rho u)$ will also have linear
-    contributions in time from advection.  Since the reactions don't
-    affect $\rho$ and $(\rho u)$, we can algebraically update these
-    using this piecewise linear behavior:
-    \begin{align}
-      \rho(t) &= \rho^n + \Advss{\rho}^{n+1/2,(k)} \, t \\
-      (\rho u)(t) &= (\rho u)^n + \Advss{\rho u}^{n+1/2,(k)} \, t
-    \end{align}
+    contributions in time from advection.
+
+
+    At the end of the integration, we can do the conservative update of momentum
+    and energy.  Momentum is straightforward, since there are no reactive sources:
+    \begin{equation}
+      (\rho u)^{n+1} = (\rho u)^n + \Delta t \Advss{\rho u}^{n+1/2,(k)}
+    \end{equation}
+    For total energy, we first need to isolate the reactive source for energy:
+    \begin{equation}
+      (\rho \Sdot)^{n+1/2} = \frac{(\rho e)^{n+1} - (\rho e)^n}{\Delta t} - \Advss{\rho e}^{n+1/2,(k)}
+    \end{equation}
+    Then the update is
+    \begin{equation}
+      (\rho E)^{n+1} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2,(k)} + \Delta t (\rho \Sdot)^{n+1/2}
+    \end{equation}
 
   \item {\em Compute the Reactive Source Terms.}
 
@@ -885,7 +915,7 @@ are as follows:
     \item For zones not in NSE:
 
     \begin{itemize}
-    \item Integrate the full reaction network (Eqs.~\ref{eq:strang:T} and \ref{eq:strang:X}) as usual for Strang splitting
+    \item Integrate the full reaction network (Eqs.~\ref{eq:strang:e} and \ref{eq:strang:X}) as usual for Strang splitting
     \item Update the aux quantities at the end of the burn using Eqs.~\ref{eq:aux:ye}, \ref{eq:aux:abar}, and \ref{eq:aux:bea} with the new mass fractions, $X_k$.
     \end{itemize}
   \end{itemize}
@@ -1025,7 +1055,7 @@ Also explore: PLM vs PPM, 1 vs. 2 vs. 3 iterations
 % Microphysics git describe: 21.04-1-g33a4d0fe
 
 \begin{deluxetable}{lllllll}
-\tablecaption{\label{table:react_convert_strang} Convergence ($L_1$ norm) for the reacting convergence problem using SDC integration (2 iterations).}
+\tablecaption{\label{table:react_convert_sdc} Convergence ($L_1$ norm) for the reacting convergence problem using SDC integration (2 iterations).}
 \tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
            \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
            \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
@@ -1127,7 +1157,7 @@ problem using Strang splitting.}
 % Microphysics git describe: 21.04-1-g33a4d0fe
 
 \begin{deluxetable}{lllllll}
-\tablecaption{\label{table:nse_strang_methodII} Convergence ($L_1$ norm) for the NSE convergence
+\tablecaption{\label{table:nse_sdc_methodII} Convergence ($L_1$ norm) for the NSE convergence
 problem using the simplified-SDC algorithm.}
 \tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
            \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
