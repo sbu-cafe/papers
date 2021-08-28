@@ -1012,7 +1012,14 @@ fail, because an excessive number of timesteps is required.  Rather
 than trigger our retry mechanism and throw away the entire timestep
 and start over with a smaller $\Delta t$, we first check if the zone
 evolved into NSE, and if so, we redo the zone update using the NSE
-prescription.  {\color{red} We optionally apply a relaxation factor, typically, $0.9$, to the NSE conditions to allow a state that is close to NSE after an integrator failure enter NSE.}
+prescription.  To ensure that this is not triggered at the very start
+of integration, we require a minimum number of steps (10) to have
+elapsed before checking for NSE.  After we leave the integrator, the
+state is returned to the burner driver where we finish the integration
+via NSE if the conditions satisfy the NSE criteria.  We optionally
+apply a relaxation factor, typically, $0.9$, to the NSE conditions to
+allow a state that is close to NSE after an integrator failure enter
+NSE.
 
 \section{Simulations}
 
@@ -1203,7 +1210,10 @@ output every step and then for a single zone plot enuc every timestep to see if 
 
 \subsection{Reacting Buoyant Bubble}
 
-This test problem was first shown in \cite{ABNZ:III}.
+We next consider a buoyant, reacting bubble in a stratified,
+plane-parallel atmosphere.  This test exercises the treatment of
+hydrodynamical sources in the SDC integration.  We use the set of
+initial conditions that was first shown in \cite{ABNZ:III}.
 
 \subsection{Massive Star}
 
@@ -1258,25 +1268,28 @@ this into two pieces,
 \label{eq:factored_jac}
 {\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc^\prime}.
 \end{equation}
+where the state ${\bf w}$ is chosen to match the set of variables used to evaluate the reaction rates.
 Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
 \begin{equation}
 \Uc^\prime = \left ( \begin{array}{c} \rho X_\alpha \\ \rho X_\beta \\ \rho e \end{array} \right )
 \end{equation}
-For interfacing with the reaction network, we use a simpler set of variables,
+For interfacing with the reaction network, we use
 \begin{equation}
-{\bf w} = \left ( \begin{array}{c} X_\alpha \\  X_\beta \\ e \end{array} \right )
+{\bf w} = \left ( \begin{array}{c} X_\alpha \\  X_\beta \\ T \end{array} \right )
 \end{equation}
-Note: this intermediate state differs from what we used in \citet{castro_sdc} but agrees with that from \cite{strang_rnaas} in that
-we use $e$ instead of $T$ as the independent variable.  If the network gives derivatives in terms
-of temperature, we can convert as:
-\begin{equation}
-\left . \frac{\partial \phi}{\partial T} \right |_\rho =
-  \left . \frac{\partial \phi}{\partial e} \right |_\rho 
-  \left . \frac{\partial e}{\partial T} \right |_\rho =
-  c_v \left . \frac{\partial \phi}{\partial e} \right |_\rho
-\end{equation}
-for some quantity $\phi(\rho, T)$.  Here we identified the specific heat
-at constant volume, $c_v = \partial e/\partial T|_\rho$.
+Note: even though we are using $T$ here instead of $e$, we still do the overall ODE integration
+in terms of $(\rho e)$, consistent with the Strang method described in \cite{strang_rnaas}.
+%%  in that
+%% we use $e$ instead of $T$ as the independent variable.  If the network gives derivatives in terms
+%% of temperature, we can convert as:
+%% \begin{equation}
+%% \left . \frac{\partial \phi}{\partial T} \right |_\rho =
+%%   \left . \frac{\partial \phi}{\partial e} \right |_\rho 
+%%   \left . \frac{\partial e}{\partial T} \right |_\rho =
+%%   c_v \left . \frac{\partial \phi}{\partial e} \right |_\rho
+%% \end{equation}
+%% for some quantity $\phi(\rho, T)$.  Here we identified the specific heat
+%% at constant volume, $c_v = \partial e/\partial T|_\rho$.
 
 The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
 \begin{equation}
@@ -1284,22 +1297,26 @@ The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
    \begin{array}{ccc}
        \rho & 0 & 0 \\
        0 & \rho & 0  \\
-       \rho  e_{X_\alpha} & \rho e_{X_\beta} & \rho \\
+       \rho  e_{X_\alpha} & \rho e_{X_\beta} & \rho c_v \\
      \end{array}\right)
 \end{equation}
 where we use the following notation for compactness:
 \begin{equation}
 e_{X_k} = \dedXd
 \end{equation}
+and the specific heat at constant volume is
+\begin{equation}
+c_v = \left . \frac{\partial e}{\partial T} \right |_{\rho, X_k}
+\end{equation}
 We get the inverse
-(computed via SymPy, see the included Jupyter notebook) as:
+(computed via SymPy) as:
 \begin{equation}
 \renewcommand{\arraystretch}{1.5}
 \frac{\partial {\bf w}}{\partial \Uc^\prime} = \left (
   \begin{array}{ccc}
    \frac{1}{\rho} & 0 & 0 \\
    0 & \frac{1}{\rho} & 0 \\
-    -\frac{e_{X_\alpha}}{\rho} & -\frac{e_{X_\beta}}{\rho} & \frac{1}{\rho} \\
+    -\frac{e_{X_\alpha}}{\rho c_v} & -\frac{e_{X_\beta}}{\rho c_v} & \frac{1}{\rho c_v} \\
    \end{array}\right)
 \renewcommand{\arraystretch}{1}
 \end{equation}
@@ -1319,45 +1336,53 @@ these derivatives.  The Jacobian is computed as $\partial \Rb/\partial
   \begin{array}{ccc}
      \rho \frac{\partial \omegadot_\alpha}{\partial X_\alpha} &
      \rho \frac{\partial \omegadot_\alpha}{\partial X_\beta} & 
-     \rho \frac{\partial \omegadot_\alpha}{\partial e} \\
+     \rho \frac{\partial \omegadot_\alpha}{\partial T} \\
       %
      \rho \frac{\partial \omegadot_\beta}{\partial X_\alpha} &
      \rho \frac{\partial \omegadot_\beta}{\partial X_\beta} &
-     \rho \frac{\partial \omegadot_\beta}{\partial e} \\
+     \rho \frac{\partial \omegadot_\beta}{\partial T} \\
      %
      \rho \frac{\partial \Sdot}{\partial X_\alpha} &
      \rho \frac{\partial \Sdot}{\partial X_\beta} &
-     \rho \frac{\partial \Sdot}{\partial e} \\
+     \rho \frac{\partial \Sdot}{\partial T} \\
   \end{array}
   \right )
 \renewcommand{\arraystretch}{1}
 \end{equation}
 
-While VODE can compute the entire Jacobian, ${\bf J}$ numerically via differencing, we found
-that does not give reliable results.  Instead, we compute $\partial {\bf w}/\partial {\bf \Uc}^\prime$ analytically and $\partial {\bf R}/\partial {\bf w}$ numerically via one-sided differencing, following
-the algorithm in \cite{lsode} to minimize numerical noise.
 The final Jacobian is found by multiplying these two:
 \begin{equation}
 \renewcommand{\arraystretch}{1.5}
 \frac{\partial \Rb}{\partial \Uc^\prime} = \left (
   \begin{array}{ccc}
-    \frac{\partial \omegadot_\alpha}{\partial X_\alpha} -\frac{\partial \omegadot_\alpha}{\partial e} e_{X_\alpha} &
-    \frac{\partial \omegadot_\alpha}{\partial X_\beta} -\frac{\partial \omegadot_\alpha}{\partial e}  e_{X_\beta} &
-    \frac{\partial \omegadot_\alpha}{\partial e} \\
+    \frac{\partial \omegadot_\alpha}{\partial X_\alpha} - \frac{e_{X_\alpha}}{c_v} \frac{\partial \omegadot_\alpha}{\partial T} &
+    \frac{\partial \omegadot_\alpha}{\partial X_\beta} - \frac{e_{X_\beta}}{c_v} \frac{\partial \omegadot_\alpha}{\partial T} &
+    \frac{1}{c_v} \frac{\partial \omegadot_\alpha}{\partial T} \\
      %
-    \frac{\partial \omegadot_\beta}{\partial X_\alpha} -\frac{\partial \omegadot_\beta}{\partial e} e_{X_\alpha} &
-    \frac{\partial \omegadot_\beta}{\partial X_\beta} -\frac{\partial \omegadot_\beta}{\partial e}  e_{X_\beta} &
-    \frac{\partial \omegadot_\beta}{\partial e} \\
+    \frac{\partial \omegadot_\beta}{\partial X_\alpha} - \frac{e_{X_\alpha}}{c_v} \frac{\partial \omegadot_\beta}{\partial T} &
+    \frac{\partial \omegadot_\beta}{\partial X_\beta} - \frac{e_{X_\beta}}{c_v} \frac{\partial \omegadot_\beta}{\partial T} &
+    \frac{1}{c_v} \frac{\partial \omegadot_\beta}{\partial T} \\
      %
-     \frac{\partial \Sdot}{\partial X_\alpha} - \frac{\partial \Sdot}{\partial e} e_{X_\alpha} &
-     \frac{\partial \Sdot}{\partial X_\beta} - \frac{\partial \Sdot}{\partial e} e_{X_\beta} &
-     \frac{\partial \Sdot}{\partial e} \\
+     \frac{\partial \Sdot}{\partial X_\alpha} -  \frac{e_{X_\alpha}}{c_v} \frac{\partial \Sdot}{\partial T} &
+     \frac{\partial \Sdot}{\partial X_\beta} -  \frac{e_{X_\beta}}{c_v} \frac{\partial \Sdot}{\partial T} &
+     \frac{1}{c_v} \frac{\partial \Sdot}{\partial T} \\
   \end{array}
   \right )
 \renewcommand{\arraystretch}{1}
 \end{equation}
+We note that the form of these entries is the same as one would arrive at if you start with the rates expressed as
+$\omega_k(\rho, T(\rho, X_j, e), X_j)$ and note that constant $e$ implies that
+\begin{equation}
+\left . \frac{\partial T}{\partial X_k} \right |_{\rho, e} = - \frac{e_{X_k}}{c_v}
+\end{equation}
 
-
+While VODE can compute the entire Jacobian, ${\bf J}$ numerically via
+differencing, we found that does not give reliable results.  Instead,
+we compute compute the derivatives with respect to $X_k$ and $T$
+one-sided differencing, following the algorithm in \cite{lsode} to
+minimize numerical noise.  We then use the equation of state to
+compute $e_{X_k}$ and $c_v$ and construct the entries of the final
+Jacobian.
 
 
 %======================================================================
