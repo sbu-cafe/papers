@@ -35,6 +35,7 @@
 \newcommand{\omegadot}{\dot{\omega}}
 \newcommand{\Sdot}{\dot{S}}
 \newcommand{\ddx}[1]{{\frac{{\partial#1}}{\partial x}}}
+\newcommand{\ddxs}[1]{{\frac{{\partial}}{\partial x}}#1}
 \newcommand{\ddt}[1]{{\frac{{\partial#1}}{\partial t}}}
 \newcommand{\odt}[1]{{\frac{{d#1}}{dt}}}
 \newcommand{\divg}[1]{{\nablab \cdot \left (#1\right)}}
@@ -90,6 +91,7 @@
 \newcommand{\out}{{\rm out}}
 \newcommand{\inp}{{\rm in}}
 
+
 \setlength{\marginparwidth}{0.75in}
 \newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
 
@@ -106,24 +108,22 @@
 
 \shortauthors{}
 
-%% \author[0000-0001-8401-030X]{M.~Zingale}
-%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
-%%        Stony Brook, NY 11794-3800}
+\author[0000-0001-8401-030X]{M.~Zingale}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+  Stony Brook, NY 11794-3800}
 
-%% \author[0000-0003-0439-4556]{M.~P.~Katz}
-%% \affiliation{Nvidia Corp}
+\author[0000-0003-0439-4556]{M.~P.~Katz}
+\affiliation{Nvidia Corp}
 
-%% \author[0000-0002-5749-334X]{J.~B.~Bell}
-%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+\author[0000-0003-1791-0265]{A.~J.~Nonaka}
+\affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
 
-%% \author[0000-0003-1791-0265]{A.~J.~Nonaka}
-%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+\author[0000-0002-1530-781X]{Alice Harpole}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+             Stony Brook, NY 11794-3800}
 
-%% \author[0000-0001-8092-1974]{W.~Zhang}
-%% \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
-
-%% \correspondingauthor{Michael Zingale}
-%% \email{michael.zingale@stonybrook.edu}
+\correspondingauthor{Michael Zingale}
+\email{michael.zingale@stonybrook.edu}
 
 
 %======================================================================
@@ -132,16 +132,17 @@
 \begin{abstract}
 Reacting astrophysical flows can be challenging to model because of
 the difficulty in accurately coupling hydrodynamics and reactions.
-This can be particularly acute at high temperatures where nuclear
-statistical equilibrium is established.  We develop a simplified
-approach based on spectral deferred corrections (SDC) coupling of explicit
-hydrodynamics and stiff reaction sources as an alternative to operator
-splitting or the more comprehensive SDC approach we demonstrated
-previously.  We apply the new method to some example problems and show
-how to modify it to work with a hybrid network consisting of a
-reaction ODE system and a table for nuclear statistical equilibrium.
-This is all done in the framework of the \castro\ hydrodynamics code,
-and all algorithm implementations are freely available.
+This can be particularly acute during explosive burning or at high
+temperatures where nuclear statistical equilibrium is established.  We
+develop a simplified approach based on the ideas of spectral deferred
+corrections (SDC) coupling of explicit hydrodynamics and stiff
+reaction sources as an alternative to operator splitting or the more
+comprehensive SDC approach we demonstrated previously.  We apply the
+new method to some example problems and show how to modify it to work
+with a hybrid network consisting of a reaction ODE system and a table
+for nuclear statistical equilibrium.  This is all done in the
+framework of the \castro\ hydrodynamics code, and all algorithm
+implementations are freely available.
 \end{abstract}
 
 \keywords{hydrodynamics---methods: numerical}
@@ -151,15 +152,21 @@ and all algorithm implementations are freely available.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-Reactive flow can be challenging to model when changes in the
-nuclear abundances due to reactions are integrated over hydrodynamic
-time scales.  Traditional methods of coupling
+Modeling astrophysical reacting flows can be challenging because of
+the disparity better the nuclear and hydrodynamics timescales.
+Reaction networks tend to be stiff, requiring implicit integration
+techniques to stably integrate the system.  In contrast, compressible
+hydrodynamics flows are limited by the (often much longer)
+sound-crossing time over a computational cell and can be solved using
+explicit time integration. Traditional methods of coupling
 hydrodynamics and reactions used in astrophysics use operator
 splitting---each physical process acts on the output of the previous
-process in alternating fashion.  This makes it easy to add physics in a modular way to a
-simulation code, but competition between physical processes can cause
-the coupling to breakdown.  These splitting errors can lead to loss of
-accuracy and further time step limitations.
+process in alternating fashion.  This makes it easy to use different
+time-integration methods for the different physics, and to build a
+simulation code in a modular way.  However, competition between the
+different physical processes can cause the coupling to breakdown.
+These splitting errors can lead to loss of accuracy and further time
+step limitations.
 
 A particularly difficult phase of evolution to model is the nuclear
 statistical equilibrium that sets in for
@@ -178,23 +185,34 @@ Alternately, at high temperatures, a reaction network can be replaced
 with a table of NSE abundances and the zone's composition set through
 table look-ups (e.g.\ \citealt{ma:2013}) \MarginPar{need more here}
 
-In \cite{castro_sdc}, we developed second- and fourth-order accurate
-methods in space and time for coupling hydrodynamics and nuclear
-reaction networks based on spectral deferred corrections (SDC)
-methods, and demonstrated the method in a variety of test problems.
-The approach presented here is considerably simpler from a temporal
-integration standpoint, but allows is to incorporate modifications
-for regions in nuclear statistical equilibirum.
-Furthermore, we reuse the main
-CTU hydrodynamics construction and a largely similar ODE integration
+The \castro\ hydrodynamics code \citep{castro,castro_joss} is used for
+all of our numerical experiments.  \castro\ is a compressible
+(magneto-, radiation-) hydrodynamics code built on the AMReX adaptive
+mesh refinement (AMR) framework \citep{amrex_joss}.  \castro\ has been
+designed to be performance portable and runs on massively parallel CPU
+and GPU architectures \citep{castro_gpu}.  For hydrodynamics, the
+corner transport upwind (CTU) \citep{ppmunsplit} method with the
+piecewise parabolic method (PPM) \citep{ppm,millercolella:2002} is
+used.  \castro\ includes self-gravity, rotation, arbitrary equations
+of state and reaction networks, and has been used for modeling X-ray
+bursts and different models of thermonuclear, core-collapse, and
+pair-instability supernovae.  Recently in \citet{castro_sdc}, we
+developed second- and fourth-order accurate methods in space and time
+for coupling hydrodynamics and nuclear reaction networks based on
+spectral deferred corrections (SDC) methods, and demonstrated the
+method in a variety of test problems.
+
+The time-integration approach presented here is considerably simpler than
+the SDC method of \citet{castro_sdc}, but allows us to reuse the main CTU
+hydrodynamics construction and a largely similar ODE integration
 scheme, making this method easier to add to existing simulation codes.
-It also extends to adaptive mesh refinement with subcycling in a
-straightforward manner, avoiding the complications described in
-\citep{mccorquodalecolella} needed to fill ghost cells when using
-method-of-lines integration.  However, it is restricted to
+Furthermore, it also extends to adaptive mesh refinement with
+subcycling in a straightforward manner, avoiding the complications
+described in \citep{mccorquodalecolella} needed to fill ghost cells
+when using method-of-lines integration.  However, it is restricted to
 second-order accuracy overall.  We term this algorithm the
-``simplified SDC method''.  We use the \castro\ hydrodynamics code
-\citep{castro} for all of our numerical experiments, and all of the
+``simplified SDC method''.  In this paper we describe the overall method, show its extension to NSE,
+and demonstrate it on several test problems using \castro.  All of the
 code to reproduce the results in this paper are in the \castro\ github
 repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 
@@ -206,41 +224,36 @@ of exposition we describe the one-dimensional case;
 multidimensional extensions are a straightforward modification to
 include the CTU hydrodynamics scheme.
 The system appears as:
+\begin{align}
+\label{eq:conserved_system}
+\ddt{\rho} + \ddxs{(\rho u)} &= 0 \\
+\ddt{(\rho X_k)} + \ddxs{(\rho X_k u)} &= \rho \omegadot(X_k) \\
+\ddt{(\rho \alpha_k)} + \ddxs{(\rho \alpha_k u)} &= \rho \omegadot(\alpha_k) \\
+\ddt{(\rho u)} + \ddxs{(\rho u^2 + p)} &= \rho g \\
+\ddt{(\rho E)} + \ddxs{(\rho E u + p u)} &= \rho ug + \rho \Sdot 
+\end{align}
+where $\rho$ is the mass density, $u$ is velocity, $E$ is specific
+total energy, $p$ is the pressure, and we carry nuclear species mass
+fractions, $X_k$, and auxiliary composition variables, $\alpha_l$.  The specific total
+energy relates to the specific internal energy, $e$, as $E = e + u^2/2$,
+and we also separately evolve $e$, as part of a dual
+energy formulation (see \citealt{bryan:1995,wdmergerI}):
 \begin{equation}
-\frac{\partial \Uc_t}{\partial t}  + \frac{\partial \Fb^\xv (\Uc)}{\partial x} = \Sc(\Uc)
+\ddt{(\rho e)} + \ddxs{(\rho e u)} + p \ddx{u} = \rho \Sdot
 \end{equation}
-where
-\begin{equation}
-\Uc = \left ( \begin{array}{c}
-           \rho \\
-           \rho X_k \\
-           \rho \alpha_l \\
-           \rho u \\
-           \rho E \\
-           \rho e \end{array}\right )
-\end{equation}
-are the conserved fluid quantities: mass density, $\rho$, velocity,
-$u$, specific total energy, $E$, and nuclear species mass fractions,
-$X_k$, and auxiliary composition variables, $\alpha_l$.  We also carry
-the specific internal energy, $e$, as part of a dual energy
-formulation (see \citealt{bryan:1995,wdmergerI}). The mass fractions
-are constrained to sum to 1, $\sum_k X_k = 1$, but no such constraint
-exists on the auxiliary variables.  The specific total energy relates
-to the specific internal energy as $E = e + u^2/2$.  The corresponding
-fluxes are
-\begin{equation}
-\Fb^\xv (\Uc) = \left ( \begin{array}{c}
-   \rho u \\
-   \rho X_k u \\
-   \rho \alpha_l u \\
-   \rho u u + p \\
-   \rho u E + u p \\
-   \rho u e
-   \end{array} \right )
-\end{equation}
-Here the pressure, $p$, enters, and is found via the equation of state.  For a system
-where the composition is completely specified by the mass fractions, $X_k$, the equation
-of state would take the form:
+ The mass fractions are constrained to sum to 1, $\sum_k X_k = 1$, but
+ no such constraint exists on the auxiliary variables.  Gravity,
+ represented by the gravitational acceleration $g$ appears as a source
+ term.  Finally, $\omegadot(X_k)$ is the creation rate for species
+ $k$, $\omegadot(\alpha_l)$ is the creation rate for auxiliary
+ composition variable $l$, and $\dot{S}$ is the energy generation rate
+ per unit mass.  Aside from the $p\partial u/\partial x$ (``pdV'')
+ term in the internal energy equation, this system is in conservative
+ form with source terms.
+
+To close the system, we need the equation of state.  For a system
+where the composition is completely specified by the mass fractions,
+$X_k$, the equation of state would take the form:
 \begin{equation}
 p = p(\rho, X_k, e)
 \end{equation}
@@ -253,26 +266,25 @@ our EOS has the form:
 p = p(\rho, \alpha_l, e)
 \end{equation}
 
-We decompose the source terms, $\Sc(\Uc)$, into
-hydrodynamical sources, $\Hb$ (like gravity), and reactive sources,
-$\Rb$,
+For convenience, we'll use $\Uc$ to represent the conserved state
+and split the sources up into pure hydrodynamic and reactive parts:
 \begin{equation}
-  \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc).
-\end{equation}
-The hydrodynamic sources include the ``pdV'' work for internal energy
-as well as gravity
-\begin{equation}
-  \Hb(\Ub) = \left ( \begin{array}{c}
+  \Uc = \left ( \begin{array}{c}
+           \rho \\
+           \rho X_k \\
+           \rho \alpha_l \\
+           \rho u \\
+           \rho E \\
+           \rho e \end{array}\right )
+  \qquad
+  \Hb(\Uc) = \left ( \begin{array}{c}
     0 \\
     0 \\
     0 \\
     \rho g \\
     \rho u g \\
-    -p \partial u/\partial x \end{array} \right )
-\end{equation}
- The reactive sources take the form:
-\begin{equation}
-  \label{eq:react_source}
+    0 \end{array} \right )
+  \qquad
   \Rb(\Uc) = \left ( \begin{array}{c}
      0 \\
      \rho \omegadot(X_k) \\
@@ -282,9 +294,13 @@ as well as gravity
      \rho \dot{S} 
   \end{array} \right )
 \end{equation}
-where $\omegadot(X_k)$ is the creation rate for species $k$, $\omegadot(\alpha_l)$ is the creation rate for
-auxiliary composition variable $l$, and $\dot{S}$
-is the energy generation rate per unit mass.
+We will represent the total source as $\Sc(\Uc)$:
+\begin{equation}
+  \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc).
+\end{equation}
+We note that the internal energy ``pdV'' work is not treated as a source
+term but is instead constructed with the hydrodynamical fluxes are computed in the CTU method.
+
 
 Sometimes it is preferable to work with the primitive variables,
 \begin{equation}
@@ -300,7 +316,7 @@ Sometimes it is preferable to work with the primitive variables,
 Here, the system appears
 as:
 \begin{equation}
-\qb_t + \Ab^\xv(\qb) \qb_x  = \Sq
+\qb_t + \Ab^\xv(\qb) \qb_x  = \Sc(\qb)
 \end{equation}
 with the matrix $\Ab^\xv$ giving the coefficients of the spatial derivatives
 of the primitive variables:
@@ -314,21 +330,32 @@ of the primitive variables:
     0 & 0 & 0 & \rho h & 0 & u
   \end{array} \right )
 \end{equation}
-where $\Gamma_1$ is an adiabatic index,
+where $h$ is the specific enthalpy and $\Gamma_1$ is an adiabatic index,
 $\Gamma_1 = d\log p/d\log\rho|_s$ at constant entropy.
+The CTU+PPM algorithm uses the characteristic wave structure of $\Ab$
+to collect the information that makes it to an interface over a timestep
+in order to compute the fluxes through the interface.
 Note, the primitive state has two thermodynamic quantities, $p$
 and $(\rho e)$, to more efficiently handle the general equation of
 state in the Riemann solver, as described in \citet{castro}, but
 alternate formulations are possible \citep{colellaglaz:1985}.
-The source term vector, $\Sq$, can again be decomposed into hydrodynamic
+The source term vector, $\Sc(\qb)$, can again be decomposed into hydrodynamic
 sources (now in terms of the primitive variables) and reaction terms,
-\MarginPar{Can we use $\Sc(\qb)$ instead of $\Sq$ and $\Hb(\qb)$ instead of $\Sqhydro$ to keep notation consistent with the conserved variables, since you are already doing that with $\Rb(\qb)$?}
 \begin{equation}
-  \Sq = \Sqhydro + \Rb(\qb)
+  \Sc(\qb) = \Hb(\qb) + \Rb(\qb)
 \end{equation}
 with
 \begin{equation}
 \label{eq:prim_sources}
+\Hb(\qb) = \left ( \begin{array}{c}
+     0 \\
+     0 \\
+     0 \\
+     g \\
+     0 \\
+     0 \\
+   \end{array} \right )
+\qquad
 \Rb(\qb) = \left ( \begin{array}{c}
      0 \\
      \omegadot(X_k) \\
@@ -347,19 +374,14 @@ h/\partial T |_p$.  A derivation of this source for the pressure
 equation can be found in \cite{ABNZ:III}.  We note that this source is
 algebraically identical to that shown in Eq.~25 of \cite{castro}.
 
-
-
-We use the \castro\ hydrodynamics code~\cite{castro}, together with
-corner transport upwind piecewise parabolic method
-hydrodynamics~\citep{millercolella:2002}.  This is a finite-volume
-method that uses characteristic tracing to predict a time-centered
-flux through the interfaces of the grid zones.  For pure
-hydrodynamics, these time-centered fluxes result in second-order
-accurate time integration.  With reactions, we want to couple
-hydrodynamics and the reaction sources to second order.  Nuclear
+The CTU+PPM method for hydrodynamics is second-order accurate in space
+and time.  We want to couple the reactive sources to the hydrodynamics
+to be second-order in time as well.  As discussed above, nuclear
 reaction sources are stiff, and need to be integrated using implicit
-methods for stabilty.  Operator splitting (e.g., Strang) is traditionally employed
-here, and is used as a benchmark for comparison in this paper.
+methods for stabilty.  Operator splitting (e.g., Strang) is
+traditionally employed here, and is used as a benchmark for comparison
+in this paper.  We'll discuss this traditional approach next before moving
+on to our new time-coupling method.
 
 
 
@@ -454,34 +476,40 @@ Strang and simplified-SDC integration scheme.
 
 \subsection{Spectral Deferred Corrections}
 
-The basic idea of spectral deferred corrections is to express the
+The basic idea of spectral deferred corrections \MarginPar{ref} is to express the
 update as an integral and divide the time-update into a number of
 discrete time nodes.  The integral is then approximated using a
 quadrature rule over these time nodes and low order approximations are
 used to update the state from one time node to the next.  The method
 uses iteration to successively improve the solution and the ultimate
 accuracy is determined by the quadrature method used to evaluate the
-integral, which is done using an iteratively-lagged solution.
+integral, which is done using an iteratively-lagged solution.  This is the
+classic approach that we implemented in \cite{castro_sdc}.
 
-We start by writing our update as:
+Our simplified-SDC approach is based on the method described in \citet{SDC-old} and
+a similar implementation in the \maestro\ simulation code.
+We again start by considering the update
+in integral form:
 \begin{equation}
 \Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
 \end{equation}
-where $\Advs{\Uc} =  -{\partial \Fb^\xv (\Uc)}/{\partial x} + \Hb(\Uc)$.
-For the simplified SDC method we explore here, we will make the
-advective term piecewise constant in time, using the value at the
-midpoint in time, to achieve second-order accuracy, giving us:
+where $\Advs{\Uc}$ includes all terms in system
+\ref{eq:conserved_system} except for the reactive source terms,
+$\Rb(\Ub)$ (i.e., it includes the flux divergences, ``pdV'' term for
+internal energy, and the pure hydrodynamical sources).  In this approach, we 
+approximate the advective term
+piecewise constant in time, using the value at the midpoint in time,
+to achieve second-order accuracy, giving us:
 \begin{equation}
 \label{eq:integral:simplesdc}
 \Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left \{ \Adv{\Uc}^{n+1/2} + \Rb(\Uc) \right \} dt
 \end{equation}
-This is the approach first shown in \citep{SDC-old}.  A
-version of this was also implemented in the \maestro\ low-Mach number
-hydrodynamics code some time ago.  The compressible version for use in
-\castro\ is slightly different due to the need to do some operations
+The \castro\ version of the simplified-SDC algorithm
+differs from the previous versions due to the need to do some operations
 on the conserved variable state and some on the primitive variable
-state.  We describe the application of this to the equations of
-compressible hydrodynamics below.
+state. 
+
+The basic time update algorithm proceeds as:
 
 \begin{itemize}
 
@@ -492,13 +520,15 @@ compressible hydrodynamics below.
   \begin{itemize}
   \item We need an approximation of how much the reactions alone
     changed the primitive variable state over the timestep, which we
-    will denote $\Ic_q$.  Since we do not have any information about
-    the current timestep in the first iteration,
-    we use the value from the last iteration of the previous timestep:
+    will denote $\Ic_q$ (this is basically an approximation of
+    $\Rb(q)$).
+
+    Since we do not have any information about the current
+    timestep in the first iteration, we use the value from the last
+    iteration of the previous timestep:
     \begin{equation}
       \Ic^{n+1/2,(0)}_{\qb} = \Ic^{n-1/2,(\smax)}_{\qb}
     \end{equation}
-    \MarginPar{changed to 1-based $k$ iteration for aesthetics?  I can switch it back if you prefer ``-1'' to be the starting point instead of ``0''.}
   %% \item Solve the Poisson problem for the initial gravitational potential:
   %%   \begin{equation}
   %%     \nabla^2 \Phi^n = 4\pi G \rho^n
@@ -528,7 +558,7 @@ compressible hydrodynamics below.
     \item predict $\qb$ to the interfaces at $t^{n+1/2}$ using the CTU PPM
       method.  The source terms, $\Sq$, used in the prediction are:
       \begin{equation}
-        \Sq = \Sqhydro^{n+1/2} + \Ic_\qb^{n+1/2,(k-1)}
+        \Sc(\qb) = \Hb(\qb) + \Ic_\qb^{n+1/2,(k-1)}
       \end{equation}
       Here we use the iteratively lagged integrals of the primitive variable
       terms accounting only for reactions, $\Ic_\qb^{n+1/2,(k-1)}$, as the
