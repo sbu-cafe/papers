@@ -76,6 +76,7 @@
 \newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
 \newcommand{\Advt}[1]{{\left [\boldsymbol{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
 \newcommand{\Advss}[1]{{\left [{\mathcal{{A}}} \left(#1\right)\right]}}
+\newcommand{\Advsst}[1]{{\left [{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
 \newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
 
 \newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
@@ -222,52 +223,7 @@ repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 We solve the Euler equations for compressible, reacting flow.  For ease
 of exposition we describe the one-dimensional case;
 multidimensional extensions are a straightforward modification to
-include the CTU hydrodynamics scheme.
-The system appears as:
-\begin{align}
-\label{eq:conserved_system}
-\ddt{\rho} + \ddxs{(\rho u)} &= 0 \\
-\ddt{(\rho X_k)} + \ddxs{(\rho X_k u)} &= \rho \omegadot(X_k) \\
-\ddt{(\rho \alpha_k)} + \ddxs{(\rho \alpha_k u)} &= \rho \omegadot(\alpha_k) \\
-\ddt{(\rho u)} + \ddxs{(\rho u^2 + p)} &= \rho g \\
-\ddt{(\rho E)} + \ddxs{(\rho E u + p u)} &= \rho ug + \rho \Sdot 
-\end{align}
-where $\rho$ is the mass density, $u$ is velocity, $E$ is specific
-total energy, $p$ is the pressure, and we carry nuclear species mass
-fractions, $X_k$, and auxiliary composition variables, $\alpha_l$.  The specific total
-energy relates to the specific internal energy, $e$, as $E = e + u^2/2$,
-and we also separately evolve $e$, as part of a dual
-energy formulation (see \citealt{bryan:1995,wdmergerI}):
-\begin{equation}
-\ddt{(\rho e)} + \ddxs{(\rho e u)} + p \ddx{u} = \rho \Sdot
-\end{equation}
- The mass fractions are constrained to sum to 1, $\sum_k X_k = 1$, but
- no such constraint exists on the auxiliary variables.  Gravity,
- represented by the gravitational acceleration $g$ appears as a source
- term.  Finally, $\omegadot(X_k)$ is the creation rate for species
- $k$, $\omegadot(\alpha_l)$ is the creation rate for auxiliary
- composition variable $l$, and $\dot{S}$ is the energy generation rate
- per unit mass.  Aside from the $p\partial u/\partial x$ (``pdV'')
- term in the internal energy equation, this system is in conservative
- form with source terms.
-
-To close the system, we need the equation of state.  For a system
-where the composition is completely specified by the mass fractions,
-$X_k$, the equation of state would take the form:
-\begin{equation}
-p = p(\rho, X_k, e)
-\end{equation}
-However, as we'll see shortly, when we use the NSE table, we are using
-the results of a much larger network then can be represented by the
-mass fractions, and in this case, we rely on the auxiliary composition
-variables, $\alpha_l$, to describe the state of the composition, and
-our EOS has the form:
-\begin{equation}
-p = p(\rho, \alpha_l, e)
-\end{equation}
-
-For convenience, we'll use $\Uc$ to represent the conserved state
-and split the sources up into pure hydrodynamic and reactive parts:
+include the CTU hydrodynamics scheme.  Our conserved variables are
 \begin{equation}
   \Uc = \left ( \begin{array}{c}
            \rho \\
@@ -276,7 +232,36 @@ and split the sources up into pure hydrodynamic and reactive parts:
            \rho u \\
            \rho E \\
            \rho e \end{array}\right )
-  \qquad
+\end{equation}
+where $\rho$ is the mass density, $u$ is velocity, $E$ is specific
+total energy, $p$ is the pressure, and we carry nuclear species mass
+fractions, $X_k$, and auxiliary composition variables, $\alpha_l$.  The specific total
+energy relates to the specific internal energy, $e$, as $E = e + u^2/2$,
+and we also separately evolve $e$, as part of a dual
+energy formulation (see \citealt{bryan:1995,wdmergerI}).
+ The mass fractions are constrained to sum to 1, $\sum_k X_k = 1$, but
+ no such constraint exists on the auxiliary variables. 
+Defining the hydrodynamical fluxes:
+\begin{equation}
+  \Fb(\Uc) = \left ( \begin{array}{c}
+         \rho u \\
+         \rho X_k u \\
+         \rho \alpha_l u \\
+         \rho u^2 p \\
+         (\rho E + p) u \\
+         \rho e u \end{array}\right )
+\end{equation}
+We can write the system in conservative form for all state variables aside from $(\rho e)$ as:
+\begin{equation}
+  \ddt{\Uc} + \ddx{\Fb(\Uc)} = \Sc(\Uc)
+\end{equation}
+where for the special case of $(\rho e)$, we have an additional ``pdV'' term:
+\begin{equation}
+\ddt{(\rho e)} + \ddx{F(\rho e)} + p \ddx{u} = S(\rho e)
+\end{equation}
+
+We'll split the source term, $\Sc(\Uc)$ into pure hydrodynamic and reactive parts:
+\begin{equation}
   \Hb(\Uc) = \left ( \begin{array}{c}
     0 \\
     0 \\
@@ -294,12 +279,48 @@ and split the sources up into pure hydrodynamic and reactive parts:
      \rho \dot{S} 
   \end{array} \right )
 \end{equation}
-We will represent the total source as $\Sc(\Uc)$:
+with 
 \begin{equation}
   \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc).
 \end{equation}
-We note that the internal energy ``pdV'' work is not treated as a source
-term but is instead constructed with the hydrodynamical fluxes are computed in the CTU method.
+Here, gravity, represented by the gravitational acceleration $g$
+appears as a pure hydrodynamical source term.  From reactions,
+$\omegadot(X_k)$ is the creation rate for species $k$,
+$\omegadot(\alpha_l)$ is the creation rate for auxiliary composition
+variable $l$, and $\dot{S}$ is the energy generation rate per unit
+mass.  We note that the internal energy ``pdV'' work is not treated as
+a source term but is instead constructed with the hydrodynamical
+fluxes are computed in the CTU method.
+
+Aside from the $p\partial u/\partial x$ (``pdV'') term in the internal
+energy equation, this system is in conservative form with source
+terms.
+
+We'll define the advective terms with hydrodynamic sources, $\Advs{\Uc}$ as
+\begin{equation}
+\Advs{\Uc} = -\ddx{\Fb(\Uc)} + \Hb(\Uc)
+\end{equation}
+for the general case, with the $(\rho e)$ component again having the extra
+``pdV'' term:
+\begin{equation}
+\mathcal{A}(\rho e) = -\ddx{F(\rho e)} -p \ddx{u} + H(\rho e)
+\end{equation}
+
+
+To close the system, we need the equation of state.  For a system
+where the composition is completely specified by the mass fractions,
+$X_k$, the equation of state would take the form:
+\begin{equation}
+p = p(\rho, X_k, e)
+\end{equation}
+However, as we'll see shortly, when we use the NSE table, we are using
+the results of a much larger network then can be represented by the
+mass fractions, and in this case, we rely on the auxiliary composition
+variables, $\alpha_l$, to describe the state of the composition, and
+our EOS has the form:
+\begin{equation}
+p = p(\rho, \alpha_l, e)
+\end{equation}
 
 
 Sometimes it is preferable to work with the primitive variables,
@@ -493,10 +514,7 @@ in integral form:
 \begin{equation}
 \Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
 \end{equation}
-where $\Advs{\Uc}$ includes all terms in system
-\ref{eq:conserved_system} except for the reactive source terms,
-$\Rb(\Ub)$ (i.e., it includes the flux divergences, ``pdV'' term for
-internal energy, and the pure hydrodynamical sources).  In this approach, we 
+In this approach, we 
 approximate the advective term
 piecewise constant in time, using the value at the midpoint in time,
 to achieve second-order accuracy, giving us:
@@ -593,12 +611,20 @@ The basic time update algorithm proceeds as:
 
     \item construct the advective update terms, $\Advt{\Uc}^{n+1/2,(k)}_{i}$,
       by first ignoring the hydrodynamics sources,
-      \begin{align}
+      \begin{equation}
         \Advt{\Uc}^{n+1/2,(k)}_{i} =
-          &- \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
+          - \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
+      \end{equation}
+      for the general case, and
+      \begin{align}
+        \Advsst{\rho e}^{n+1/2,(k)}_{i} =
+          &- \frac{F\left((\rho e)^{n+1/2,(k)}_{i+1/2}\right) - F\left((\rho e)^{n+1/2,(k)}_{i-1/2}\right)}{\Delta x} \\
+          &- \left (\frac{p_{i+1/2}^{n+1/2,(k)} + p_{i-1/2}^{n+1/2,(k)}}{2} \right )\frac{u_{i+1/2}^{n+1/2,(k)} - u_{i-1/2}^{n+1/2,(k)}}{\Delta x}
       \end{align}
+      for $(\rho e)$.
+
     Now the conservative hydrodynamics source terms are computed by first updating to the
-    new state with advection and the old-time source term applied for the full $\Delta t$ as: \MarginPar{little more complicated than this---we don't include the pdV source here}
+    new state with advection and the old-time source term applied for the full $\Delta t$ as: 
     \begin{equation}
       \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)} + \Delta t \Hb(\Uc^n)
     \end{equation}
@@ -621,7 +647,7 @@ The basic time update algorithm proceeds as:
     %% \end{equation}
     We then evaluate the source terms with $\Uc^{\star\star}$ and
     correct the advective term so that we have a time-centered
-    source: \MarginPar{are we actually doing this correctly for SDC?}
+    source.
     The final advective update term is then\footnote{For a source like gravity, this update can be done first for $\rho$ and then define the new momentum source using $\rho^{\star\star}$ and likewise for energy}:
     \begin{equation}
       \Adv{\Uc}^{n+1/2,(k)}_{i} = \Advt{\Uc}^{n+1/2,(k)}_{i} +
@@ -636,7 +662,8 @@ The basic time update algorithm proceeds as:
     %%                 S_{\rho E}^{n+1/2} \end{array} \right )
     %% \end{equation}
 
-    \MarginPar{if $\Shydro$ depended on the outcome of the burn, we might need to do things differently here}
+    We note that this procedure works because the source terms here do
+    not depend on the outcome of the reactions.
 
     \end{itemize}
 
@@ -685,13 +712,6 @@ The basic time update algorithm proceeds as:
     the $\Uc^\prime$.  This is different than the form of the
     Jacobian usually used in reaction networks.  We describe the form
     of the Jacobian in appendix \ref{sec:app:jacobian}.
-
-    Note that our advection terms are piecewise
-    constant \MarginPar{need to think about this more} approximations,
-    so when we integrate our system, their contributions will be
-    linear in time.  Since $(\rho X_k)$ sees a linear advective term,
-    $\rho$ does as well.  $(\rho u)$ will also have linear
-    contributions in time from advection.
 
 
     At the end of the integration, we can do the conservative update of momentum
