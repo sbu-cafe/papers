@@ -564,12 +564,12 @@ The basic time update algorithm proceeds as:
       terms accounting only for reactions, $\Ic_\qb^{n+1/2,(k-1)}$, as the
       reactive source.  This is in contrast to Strang-splitting, where no
       explicit reactive source terms are seen by the hydrodynamics update.
-      Any hydrodynamic source terms are time-centered
-      using the previous iteration:
-\MarginPar{Formally both $t^n$ or $t^{n+1/2}$ sources give you 2nd-order since they are CTU predictor source terms.  I've never found this type of iteration for this term to amount to any benefit}
-      \begin{equation}
-        \Sqhydro^{n+1/2} = \frac{1}{2} \left ( \Sqhydro^n + \Sqhydro^{n+1,(k-1)} \right )
-      \end{equation}
+%%       Any hydrodynamic source terms are time-centered
+%%       using the previous iteration:
+%% \MarginPar{Formally both $t^n$ or $t^{n+1/2}$ sources give you 2nd-order since they are CTU predictor source terms.  I've never found this type of iteration for this term to amount to any benefit}
+%%       \begin{equation}
+%%         \Sqhydro^{n+1/2} = \frac{1}{2} \left ( \Sqhydro^n + \Sqhydro^{n+1,(k-1)} \right )
+%%       \end{equation}
 
       In the unsplit CTU method \citep{ppmunsplit}, the interface
       states used for the final Riemann problem through the zone
@@ -584,9 +584,8 @@ The basic time update algorithm proceeds as:
       construction, after the transverse flux corrections.  This is
       because we want to ensure that sum over species of $\Ic_\qb$ is
       zero, and characteristic tracing or the various flux corrections
-      may not preserve this.
-
-      {\color{red} We enforce that the species interface states remain in $[0, 1]$ after adding the reactive source.}
+      may not preserve this.  We enforce that the species interface
+      states remain in $[0, 1]$ after adding the reactive source.
 
 
     \item solve the Riemann problem at each interface to get a unique
