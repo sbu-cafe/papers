@@ -1,0 +1,1447 @@
+\documentclass[times,modern]{aastex63}
+
+% these lines seem necessary for pdflatex to get the paper size right
+\pdfpagewidth 8.5in
+\pdfpageheight 11.0in
+
+\usepackage[T1]{fontenc}
+\usepackage{epsf,color,amsmath}
+
+\usepackage{cancel}
+
+\newcommand{\sfrac}[2]{\mathchoice%
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}} {#1\!/#2}}
+
+
+\newcommand{\castro}{{\sf Castro}}
+\newcommand{\maestro}{{\sf Maestro}}
+\newcommand{\flash}{{\sf Flash}}
+\newcommand{\amrex}{{\sf AMReX}}
+
+\newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\isotm}[2]{{}^{#2}\mathrm{#1}}
+
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\cms}{\mathrm{cm~s^{-1} }}
+
+\newcommand{\nablab}{{\mathbf{\nabla}}}
+\newcommand{\Ub}{\mathbf{U}}
+\newcommand{\gb}{\mathbf{g}}
+\newcommand{\omegadot}{\dot{\omega}}
+\newcommand{\Sdot}{\dot{S}}
+\newcommand{\ddx}[1]{{\frac{{\partial#1}}{\partial x}}}
+\newcommand{\ddxs}[1]{{\frac{{\partial}}{\partial x}}#1}
+\newcommand{\ddt}[1]{{\frac{{\partial#1}}{\partial t}}}
+\newcommand{\odt}[1]{{\frac{{d#1}}{dt}}}
+\newcommand{\divg}[1]{{\nablab \cdot \left (#1\right)}}
+\newcommand{\dedr}{\left . {\partial{}e}/{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedrd}{\left . \frac{\partial{}e}{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedX}{\left . {\partial{}e}/{\partial{}X_k} \right |_{\rho, T}}
+\newcommand{\dedXd}{\left . \frac{\partial{}e}{\partial{}X_k} \right |_{\rho, T, X_{j,j\ne k}}}
+\newcommand{\dedT}{\left . {\partial{}e}/{\partial{}T} \right |_{\rho,X_k}}
+\newcommand{\dedTd}{\left . \frac{\partial{}e}{\partial{}T} \right |_{\rho,X_k}}
+
+\newcommand{\Ic}{{\boldsymbol{\mathcal{I}}}}
+\newcommand{\Ics}{{\mathcal{I}}}
+\newcommand{\smax}{{s_\mathrm{max}}}
+\newcommand{\kth}{k_\mathrm{th}}
+\usepackage{bm}
+
+\newcommand{\Uc}{{\,\bm{\mathcal{U}}}}
+\newcommand{\Fb}{\mathbf{F}}
+\newcommand{\Sc}{\mathbf{S}}
+
+\newcommand{\xv}{{(x)}}
+\newcommand{\yv}{{(y)}}
+\newcommand{\zv}{{(z)}}
+
+\newcommand{\ex}{{\bf e}_x}
+\newcommand{\ey}{{\bf e}_y}
+\newcommand{\ez}{{\bf e}_z}
+
+\newcommand{\Ab}{{\bf A}}
+\newcommand{\Sq}{{\bf S}_\qb}
+\newcommand{\Sqhydro}{{\Sq^{\mathrm{hydro}}}}
+\newcommand{\qb}{{\bf q}}
+
+\newcommand{\Shydro}{{{\bf H}}}
+\newcommand{\Hb}{{\bf H}}
+\newcommand{\Rb}{{\bf R}}
+\newcommand{\Rq}{{\bf R}}
+\newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
+\newcommand{\Advt}[1]{{\left [\boldsymbol{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
+\newcommand{\Advss}[1]{{\left [{\mathcal{{A}}} \left(#1\right)\right]}}
+\newcommand{\Advsst}[1]{{\left [{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
+\newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
+
+\newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
+
+\newcommand{\nse}[1]{{\mathtt{NSE}( #1 )}}
+
+\newcommand{\rhonse}{{\rho_\mathrm{nse}}}
+\newcommand{\tnse}{{T_\mathrm{nse}}}
+\newcommand{\Anse}{{A_\mathrm{nse}}}
+\newcommand{\Bnse}{{B_\mathrm{nse}}}
+\newcommand{\Cnse}{{C_\mathrm{nse}}}
+
+\newcommand{\out}{{\rm out}}
+\newcommand{\inp}{{\rm in}}
+
+
+\setlength{\marginparwidth}{0.75in}
+\newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
+
+\begin{document}
+%======================================================================
+% Title
+%======================================================================
+%\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
+\title{Extending Simplified SDC to Nuclear Statistical Equilibrium}
+
+%\shorttitle{A Simplified SDC Method}
+\shorttitle{Hydro/Reaction Coupling with NSE}
+
+
+\shortauthors{}
+
+\author[0000-0001-8401-030X]{M.~Zingale}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+  Stony Brook, NY 11794-3800}
+
+\author[0000-0003-0439-4556]{M.~P.~Katz}
+\affiliation{Nvidia Corp}
+
+\author[0000-0003-1791-0265]{A.~J.~Nonaka}
+\affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+\author[0000-0002-1530-781X]{Alice Harpole}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+             Stony Brook, NY 11794-3800}
+
+\correspondingauthor{Michael Zingale}
+\email{michael.zingale@stonybrook.edu}
+
+
+%======================================================================
+% Abstract and Keywords
+%======================================================================
+\begin{abstract}
+Reacting astrophysical flows can be challenging to model because of
+the difficulty in accurately coupling hydrodynamics and reactions.
+This can be particularly acute during explosive burning or at high
+temperatures where nuclear statistical equilibrium is established.  We
+develop a simplified approach based on the ideas of spectral deferred
+corrections (SDC) coupling of explicit hydrodynamics and stiff
+reaction sources as an alternative to operator splitting or the more
+comprehensive SDC approach we demonstrated previously.  We apply the
+new method to some example problems and show how to modify it to work
+with a hybrid network consisting of a reaction ODE system and a table
+for nuclear statistical equilibrium.  This is all done in the
+framework of the \castro\ hydrodynamics code, and all algorithm
+implementations are freely available.
+\end{abstract}
+
+\keywords{hydrodynamics---methods: numerical}
+
+%======================================================================
+% Introduction
+%======================================================================
+\section{Introduction}\label{Sec:Introduction}
+
+Modeling astrophysical reacting flows can be challenging because of
+the disparity better the nuclear and hydrodynamics timescales.
+Reaction networks tend to be stiff, requiring implicit integration
+techniques to stably integrate the system.  In contrast, compressible
+hydrodynamics flows are limited by the (often much longer)
+sound-crossing time over a computational cell and can be solved using
+explicit time integration. Traditional methods of coupling
+hydrodynamics and reactions used in astrophysics use operator
+splitting---each physical process acts on the output of the previous
+process in alternating fashion.  This makes it easy to use different
+time-integration methods for the different physics, and to build a
+simulation code in a modular way.  However, competition between the
+different physical processes can cause the coupling to breakdown.
+These splitting errors can lead to loss of accuracy and further time
+step limitations.
+
+A particularly difficult phase of evolution to model is the nuclear
+statistical equilibrium that sets in for
+temperatures in excess of $\mbox{few} \times 10^9~\mathrm{K}$.  Physically, the
+forward and reverse rates of reaction should balance leading to an equilibrium.
+With operator splitting, an NSE region will have a large positive flow
+through the network in a zone in one step followed by a large negative
+flow over the next timestep, as the code struggles to produce an
+equilibrium.  These large changes in abundances (and large alternately
+positive and negative energy generation rates) can be a challenge for
+a code.  The easiest way to improve the coupling is to cut the
+timestep, but this makes simulations prohibitively expensive.
+Sometimes the burning is simply halted on a zone-by-zone basis when
+NSE conditions are reached (e.g., as in \citealt{hedet}).
+Alternately, at high temperatures, a reaction network can be replaced
+with a table of NSE abundances and the zone's composition set through
+table look-ups (e.g.\ \citealt{ma:2013}) \MarginPar{need more here}
+
+The \castro\ hydrodynamics code \citep{castro,castro_joss} is used for
+all of our numerical experiments.  \castro\ is a compressible
+(magneto-, radiation-) hydrodynamics code built on the AMReX adaptive
+mesh refinement (AMR) framework \citep{amrex_joss}.  \castro\ has been
+designed to be performance portable and runs on massively parallel CPU
+and GPU architectures \citep{castro_gpu}.  For hydrodynamics, the
+corner transport upwind (CTU) \citep{ppmunsplit} method with the
+piecewise parabolic method (PPM) \citep{ppm,millercolella:2002} is
+used.  \castro\ includes self-gravity, rotation, arbitrary equations
+of state and reaction networks, and has been used for modeling X-ray
+bursts and different models of thermonuclear, core-collapse, and
+pair-instability supernovae.  Recently in \citet{castro_sdc}, we
+developed second- and fourth-order accurate methods in space and time
+for coupling hydrodynamics and nuclear reaction networks based on
+spectral deferred corrections (SDC) methods, and demonstrated the
+method in a variety of test problems.
+
+The time-integration approach presented here is considerably simpler than
+the SDC method of \citet{castro_sdc}, but allows us to reuse the main CTU
+hydrodynamics construction and a largely similar ODE integration
+scheme, making this method easier to add to existing simulation codes.
+Furthermore, it also extends to adaptive mesh refinement with
+subcycling in a straightforward manner, avoiding the complications
+described in \citep{mccorquodalecolella} needed to fill ghost cells
+when using method-of-lines integration.  However, it is restricted to
+second-order accuracy overall.  We term this algorithm the
+``simplified SDC method''.  In this paper we describe the overall method, show its extension to NSE,
+and demonstrate it on several test problems using \castro.  All of the
+code to reproduce the results in this paper are in the \castro\ github
+repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
+
+\section{Numerical Methodology}
+
+
+We solve the Euler equations for compressible, reacting flow.  For ease
+of exposition we describe the one-dimensional case;
+multidimensional extensions are a straightforward modification to
+include the CTU hydrodynamics scheme.  Our conserved variables are
+\begin{equation}
+  \Uc = \left ( \begin{array}{c}
+           \rho \\
+           \rho X_k \\
+           \rho \alpha_l \\
+           \rho u \\
+           \rho E \\
+           \rho e \end{array}\right )
+\end{equation}
+where $\rho$ is the mass density, $u$ is velocity, $E$ is specific
+total energy, $p$ is the pressure, and we carry nuclear species mass
+fractions, $X_k$, and auxiliary composition variables, $\alpha_l$.  The specific total
+energy relates to the specific internal energy, $e$, as $E = e + u^2/2$,
+and we also separately evolve $e$, as part of a dual
+energy formulation (see \citealt{bryan:1995,wdmergerI}).
+ The mass fractions are constrained to sum to 1, $\sum_k X_k = 1$, but
+ no such constraint exists on the auxiliary variables. 
+Defining the hydrodynamical fluxes:
+\begin{equation}
+  \Fb(\Uc) = \left ( \begin{array}{c}
+         \rho u \\
+         \rho X_k u \\
+         \rho \alpha_l u \\
+         \rho u^2 p \\
+         (\rho E + p) u \\
+         \rho e u \end{array}\right )
+\end{equation}
+We can write the system in conservative form for all state variables aside from $(\rho e)$ as:
+\begin{equation}
+  \ddt{\Uc} + \ddx{\Fb(\Uc)} = \Sc(\Uc)
+\end{equation}
+where for the special case of $(\rho e)$, we have an additional ``pdV'' term:
+\begin{equation}
+\ddt{(\rho e)} + \ddx{F(\rho e)} + p \ddx{u} = S(\rho e)
+\end{equation}
+
+We'll split the source term, $\Sc(\Uc)$ into pure hydrodynamic and reactive parts:
+\begin{equation}
+  \Hb(\Uc) = \left ( \begin{array}{c}
+    0 \\
+    0 \\
+    0 \\
+    \rho g \\
+    \rho u g \\
+    0 \end{array} \right )
+  \qquad
+  \Rb(\Uc) = \left ( \begin{array}{c}
+     0 \\
+     \rho \omegadot(X_k) \\
+     \rho \omegadot(\alpha_l) \\
+     0 \\
+     \rho \dot{S} \\
+     \rho \dot{S} 
+  \end{array} \right )
+\end{equation}
+with 
+\begin{equation}
+  \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc).
+\end{equation}
+Here, gravity, represented by the gravitational acceleration $g$
+appears as a pure hydrodynamical source term.  From reactions,
+$\omegadot(X_k)$ is the creation rate for species $k$,
+$\omegadot(\alpha_l)$ is the creation rate for auxiliary composition
+variable $l$, and $\dot{S}$ is the energy generation rate per unit
+mass.  We note that the internal energy ``pdV'' work is not treated as
+a source term but is instead constructed with the hydrodynamical
+fluxes are computed in the CTU method.
+
+Aside from the $p\partial u/\partial x$ (``pdV'') term in the internal
+energy equation, this system is in conservative form with source
+terms.
+
+We'll define the advective terms with hydrodynamic sources, $\Advs{\Uc}$ as
+\begin{equation}
+\Advs{\Uc} = -\ddx{\Fb(\Uc)} + \Hb(\Uc)
+\end{equation}
+for the general case, with the $(\rho e)$ component again having the extra
+``pdV'' term:
+\begin{equation}
+\mathcal{A}(\rho e) = -\ddx{F(\rho e)} -p \ddx{u} + H(\rho e)
+\end{equation}
+
+
+To close the system, we need the equation of state.  For a system
+where the composition is completely specified by the mass fractions,
+$X_k$, the equation of state would take the form:
+\begin{equation}
+p = p(\rho, X_k, e)
+\end{equation}
+However, as we'll see shortly, when we use the NSE table, we are using
+the results of a much larger network then can be represented by the
+mass fractions, and in this case, we rely on the auxiliary composition
+variables, $\alpha_l$, to describe the state of the composition, and
+our EOS has the form:
+\begin{equation}
+p = p(\rho, \alpha_l, e)
+\end{equation}
+
+
+Sometimes it is preferable to work with the primitive variables,
+\begin{equation}
+\qb = \left ( \begin{array}{c}
+  \rho \\
+  X_k \\
+  \alpha_l \\
+  u \\
+  p \\
+  (\rho e) \\
+\end{array} \right )
+\end{equation}
+Here, the system appears
+as:
+\begin{equation}
+\qb_t + \Ab^\xv(\qb) \qb_x  = \Sc(\qb)
+\end{equation}
+with the matrix $\Ab^\xv$ giving the coefficients of the spatial derivatives
+of the primitive variables:
+\begin{equation}
+\Ab^\xv(\qb) = \left ( \begin{array}{cccccc}
+    u & 0 & 0 & \rho & 0 & 0 \\
+    0 & u & 0 & 0    & 0 & 0 \\
+    0 & 0 & u & 0    & 0 & 0 \\
+    0 & 0 & 0 & u    & 1/\rho & 0 \\
+    0 & 0 & 0 & \Gamma_1 p & u & 0 \\
+    0 & 0 & 0 & \rho h & 0 & u
+  \end{array} \right )
+\end{equation}
+where $h$ is the specific enthalpy and $\Gamma_1$ is an adiabatic index,
+$\Gamma_1 = d\log p/d\log\rho|_s$ at constant entropy.
+The CTU+PPM algorithm uses the characteristic wave structure of $\Ab$
+to collect the information that makes it to an interface over a timestep
+in order to compute the fluxes through the interface.
+Note, the primitive state has two thermodynamic quantities, $p$
+and $(\rho e)$, to more efficiently handle the general equation of
+state in the Riemann solver, as described in \citet{castro}, but
+alternate formulations are possible \citep{colellaglaz:1985}.
+The source term vector, $\Sc(\qb)$, can again be decomposed into hydrodynamic
+sources (now in terms of the primitive variables) and reaction terms,
+\begin{equation}
+  \Sc(\qb) = \Hb(\qb) + \Rb(\qb)
+\end{equation}
+with
+\begin{equation}
+\label{eq:prim_sources}
+\Hb(\qb) = \left ( \begin{array}{c}
+     0 \\
+     0 \\
+     0 \\
+     g \\
+     0 \\
+     0 \\
+   \end{array} \right )
+\qquad
+\Rb(\qb) = \left ( \begin{array}{c}
+     0 \\
+     \omegadot(X_k) \\
+     \omegadot(\alpha_l) \\
+     0 \\
+     \Gamma_1 p \sigma \Sdot \\
+     \rho \Sdot
+   \end{array} \right )
+\end{equation}
+where
+\begin{equation}
+\sigma \equiv \frac{\partial p/\partial T |_\rho}{\rho c_p \partial p/\partial \rho |_T}
+\end{equation}
+and $c_p$ is the specific heat at constant pressure, $c_p = \partial
+h/\partial T |_p$.  A derivation of this source for the pressure
+equation can be found in \cite{ABNZ:III}.  We note that this source is
+algebraically identical to that shown in Eq.~25 of \cite{castro}.
+
+The CTU+PPM method for hydrodynamics is second-order accurate in space
+and time.  We want to couple the reactive sources to the hydrodynamics
+to be second-order in time as well.  As discussed above, nuclear
+reaction sources are stiff, and need to be integrated using implicit
+methods for stabilty.  Operator splitting (e.g., Strang) is
+traditionally employed here, and is used as a benchmark for comparison
+in this paper.  We'll discuss this traditional approach next before moving
+on to our new time-coupling method.
+
+
+
+\subsection{Strang Splitting}
+
+In Strang splitting, we first integrate the system with reactions terms only (no advection)
+over $\Delta t/2$, then integrate the advection terms only (no reactions) over $\Delta t$,
+and finally integrate the reaction terms only over $\Delta t/2$.
+
+In the absence of advective terms, our reaction system appears as just
+$d\Uc/dt = \Rb(\Uc)$, or:
+\begin{align}
+\odt{\rho} & = 0 \\
+\odt{(\rho X_k)} &= \rho \omegadot(X_k) \\
+\odt{(\rho \alpha_l)} &= \rho \omegadot(\alpha_l) \\
+\odt{(\rho u)} &= 0 \\
+\odt{(\rho E)} &= \rho \Sdot
+\end{align}
+We can write the energy equation as:
+\begin{equation}
+\odt{(\rho E)} = \odt{(\rho e)} + \odt{K} = \rho \Sdot
+\end{equation}
+where $K$ is the kinetic energy, $K = \rho |u|^2/2$.  Since the density and velocity
+are unchanged by reactions (when Strang splitting), our energy equation becomes:
+\begin{equation}
+\label{eq:strang:e}
+\odt{(\rho e)} = \rho \odt{e} = \rho \Sdot
+\end{equation}
+The reaction rates are typically expressed as $\omegadot_k(\rho, T, X_k)$
+when we evolve this system, which requires us to get temperature from
+the equation of state each
+time we need to evaluate the reactive terms.  
+
+We also typically integrate mass fraction itself, instead of partial
+densities:
+\begin{equation}
+\label{eq:strang:X}
+\odt{X_k} = \omegadot_k
+\end{equation}
+We integrate Equations (\ref{eq:strang:e}) and (\ref{eq:strang:X}) using
+an implicit ODE solver designed for stiff systems of
+equations, VODE~\citep{vode}.
+
+We explored this and other approaches (including not evolving an
+energy / temperature equation during the reaction step) in
+\citet{strang_rnaas} and showed that the above formulation gets second
+order convergence.  However, for very strong reactions, when using
+Strang splitting the state can drift significantly off of the smooth
+solution to the coupled reactive hydrodynamics equations, as shown
+graphically in \cite{astronum:2018} using an earlier version of the
+present algorithm.
+
+A variation on Strang splitting called (re-)balanced splitting was
+developed in \citet{speth:2013}.
+
+
+\subsection{Timestep Limiters and Retry Mechanism}
+
+Since this method is based off of the CTU hydrodynamics scheme, it
+benefits from the larger timestep that method can take (when done with
+full corner coupling, the advective CFL condition is unity)
+as compared to a method-of-lines approach (see
+\citealt{ppmunsplit}).  In addition to the standard CFL timestep
+limiter for explicit hydrodynamics, \castro\ can also enforce
+timestep limiters based on the energy generation or abundance changes
+over a timestep: \MarginPar{do we enforce this in the NSE region?}
+\begin{align}
+\label{eq:dt:nuce}
+\Delta t &\le f_e\, \min_{i} \left\{\frac{e_{i}}{\dot{S}_{i}}\right\} \\
+%
+\label{eq:dt:nucX}
+\Delta t &\le f_X\, \min_{i} \left\{\min_{k,X_k > \epsilon_X}\frac{{X_k}_{i}}{{\omegadot(X_k)_i}}\right\}
+\end{align}
+where $i$ is the zone index and $f_e$ and $f_X$ are runtime parameters
+used to control the allowed change, and only species for which $X_k > \epsilon_X$ are considered.
+
+\castro\ has the ability to reject a timestep if it detects a failure
+and retry with smaller timesteps (subcycling to make up the original
+required timestep).  Among the conditions that can trigger this are
+density falling below zero during advection, the ODE integration
+failing to converge in the implicit solve, or violation of one of the
+timestep limiters during the step.  This means that equations
+(\ref{eq:dt:nuce}) and (\ref{eq:dt:nucX}) are not reactive, but instead
+guaranteed to be met throughout the simulation, because the step is
+rejected if they are violated.  This contrasts to similar approaches
+used in other codes where conditions \ref{eq:dt:nuce} and
+\ref{eq:dt:nucX} are used to restrict the next timestep size, but the
+update over the current step is kept, which already violated the
+constraints. \MarginPar{would be nice to have a reference here} The retry mechanism in \castro\ works with both the
+Strang and simplified-SDC integration scheme.
+
+
+\subsection{Spectral Deferred Corrections}
+
+The basic idea of spectral deferred corrections \MarginPar{ref} is to express the
+update as an integral and divide the time-update into a number of
+discrete time nodes.  The integral is then approximated using a
+quadrature rule over these time nodes and low order approximations are
+used to update the state from one time node to the next.  The method
+uses iteration to successively improve the solution and the ultimate
+accuracy is determined by the quadrature method used to evaluate the
+integral, which is done using an iteratively-lagged solution.  This is the
+classic approach that we implemented in \cite{castro_sdc}.
+
+Our simplified-SDC approach is based on the method described in \citet{SDC-old} and
+a similar implementation in the \maestro\ simulation code.
+We again start by considering the update
+in integral form:
+\begin{equation}
+\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
+\end{equation}
+In this approach, we 
+approximate the advective term
+piecewise constant in time, using the value at the midpoint in time,
+to achieve second-order accuracy, giving us:
+\begin{equation}
+\label{eq:integral:simplesdc}
+\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left \{ \Adv{\Uc}^{n+1/2} + \Rb(\Uc) \right \} dt
+\end{equation}
+The \castro\ version of the simplified-SDC algorithm
+differs from the previous versions due to the need to do some operations
+on the conserved variable state and some on the primitive variable
+state. 
+
+The basic time update algorithm proceeds as:
+
+\begin{itemize}
+
+\item {\em Initialization}
+
+\label{sec:initialization}
+
+  \begin{itemize}
+  \item We need an approximation of how much the reactions alone
+    changed the primitive variable state over the timestep, which we
+    will denote $\Ic_q$ (this is basically an approximation of
+    $\Rb(q)$).
+
+    Since we do not have any information about the current
+    timestep in the first iteration, we use the value from the last
+    iteration of the previous timestep:
+    \begin{equation}
+      \Ic^{n+1/2,(0)}_{\qb} = \Ic^{n-1/2,(\smax)}_{\qb}
+    \end{equation}
+  %% \item Solve the Poisson problem for the initial gravitational potential:
+  %%   \begin{equation}
+  %%     \nabla^2 \Phi^n = 4\pi G \rho^n
+  %%   \end{equation}
+
+  %% \item Set the first guess at the new time potential as
+  %%   $\Phi^{n+1,(0)} = \Phi^n$.
+
+  \end{itemize}
+
+\item {\em Iterate}
+
+  Iterate from $k = 1, \ldots, \smax$.  For second-order accuracy,
+  $\smax = 2$ is sufficient.  In addition to denoting the time-level
+  with a superscript (like $n$ or $n+1$), we'll use a second subscript
+  in parentheses to keep track of the iteration.  A single iteration
+  starts with $\Uc^n$ and results in the new time-level state for that
+  iteration, $\Uc^{n+1,(k)}$.
+
+  \begin{itemize}
+  \item {\em Create the advective update term, $\Adv{\Uc}^{n+1/2,(k)}$}
+
+    \begin{itemize}
+    \item convert $\Uc \rightarrow \qb$.  This is an algebraic transformation,
+      but will require the EOS.
+
+    \item predict $\qb$ to the interfaces at $t^{n+1/2}$ using the CTU PPM
+      method.  The source terms, $\Sq$, used in the prediction are:
+      \begin{equation}
+        \Sc(\qb) = \Hb(\qb) + \Ic_\qb^{n+1/2,(k-1)}
+      \end{equation}
+      Here we use the iteratively lagged integrals of the primitive variable
+      terms accounting only for reactions, $\Ic_\qb^{n+1/2,(k-1)}$, as the
+      reactive source.  This is in contrast to Strang-splitting, where no
+      explicit reactive source terms are seen by the hydrodynamics update.
+%%       Any hydrodynamic source terms are time-centered
+%%       using the previous iteration:
+%% \MarginPar{Formally both $t^n$ or $t^{n+1/2}$ sources give you 2nd-order since they are CTU predictor source terms.  I've never found this type of iteration for this term to amount to any benefit}
+%%       \begin{equation}
+%%         \Sqhydro^{n+1/2} = \frac{1}{2} \left ( \Sqhydro^n + \Sqhydro^{n+1,(k-1)} \right )
+%%       \end{equation}
+
+      In the unsplit CTU method \citep{ppmunsplit}, the interface
+      states used for the final Riemann problem through the zone
+      interface consist of a normal predictor and a transverse flux
+      correction.  We can add the source terms either to the normal
+      predictor (for example, doing characteristic tracing as
+      described in \citealt{ppm}) or after all of the transverse flux
+      corrections are made.  Both are second-order accurate.  For the
+      hydrodynamics sources, we do those in the normal predictor.
+      However, for the reactive sources, we found that it is most
+      reliable to add them at the end of the interface state
+      construction, after the transverse flux corrections.  This is
+      because we want to ensure that sum over species of $\Ic_\qb$ is
+      zero, and characteristic tracing or the various flux corrections
+      may not preserve this.  We enforce that the species interface
+      states remain in $[0, 1]$ after adding the reactive source.
+
+
+    \item solve the Riemann problem at each interface to get a unique
+      conserved state on each interface, $\Uc^{n+1/2,(k)}_{i+1/2}$
+
+    \item construct the advective update terms, $\Advt{\Uc}^{n+1/2,(k)}_{i}$,
+      by first ignoring the hydrodynamics sources,
+      \begin{equation}
+        \Advt{\Uc}^{n+1/2,(k)}_{i} =
+          - \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
+      \end{equation}
+      for the general case, and
+      \begin{align}
+        \Advsst{\rho e}^{n+1/2,(k)}_{i} =
+          &- \frac{F\left((\rho e)^{n+1/2,(k)}_{i+1/2}\right) - F\left((\rho e)^{n+1/2,(k)}_{i-1/2}\right)}{\Delta x} \\
+          &- \left (\frac{p_{i+1/2}^{n+1/2,(k)} + p_{i-1/2}^{n+1/2,(k)}}{2} \right )\frac{u_{i+1/2}^{n+1/2,(k)} - u_{i-1/2}^{n+1/2,(k)}}{\Delta x}
+      \end{align}
+      for $(\rho e)$.
+
+    Now the conservative hydrodynamics source terms are computed by first updating to the
+    new state with advection and the old-time source term applied for the full $\Delta t$ as: 
+    \begin{equation}
+      \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)} + \Delta t \Hb(\Uc^n)
+    \end{equation}
+    %% first updating the density to the new state with advection only as:
+    %% \begin{equation}
+    %%   \rho^{\star\star} = \rho^n + \Delta t \Advt{\rho}^{n+1/2,(k)}
+    %% \end{equation}
+    %% then constructing the momentum source term:
+    %% \begin{equation}
+    %%   {\bf S}_{\rho\Ub}^{n+1/2} = \frac{1}{2} (\rho^n \gb^n + \rho^{\star\star} \gb^{n+1,(k-1)})
+    %% \end{equation}
+    %% Then updating the momentum with only advection as:
+    %% \begin{equation}
+    %%   (\rho \Ub)^{\star\star} = (\rho \Ub)^n + \Delta t \Advt{\rho\Ub}^{n+1/2,(k)} + \Delta t {\bf S}_{\rho\Ub}^{n+1/2}
+    %% \end{equation}
+    %% and finally constructing the energy source:
+    %% \begin{equation}
+    %%   S_{\rho E}^{n+1/2} = \frac{1}{2} \left [ (\rho\Ub)^n \cdot \gb^n + (\rho\Ub)^{\star\star} \cdot \gb^{n+1,(k-1)}
+    %%     \right ]
+    %% \end{equation}
+    We then evaluate the source terms with $\Uc^{\star\star}$ and
+    correct the advective term so that we have a time-centered
+    source.
+    The final advective update term is then\footnote{For a source like gravity, this update can be done first for $\rho$ and then define the new momentum source using $\rho^{\star\star}$ and likewise for energy}:
+    \begin{equation}
+      \Adv{\Uc}^{n+1/2,(k)}_{i} = \Advt{\Uc}^{n+1/2,(k)}_{i} +
+      \frac{\Delta t}{2} \left (\Shydro(\Uc^n) + \Shydro(\Uc^{\star\star}) \right )
+    \end{equation}
+
+    %% with
+    %% \begin{equation}
+    %%   \Shydro^{n+1/2} = \left ( \begin{array}{c}
+    %%                  0 \\ 0 \\ 0 \\
+    %%                 {\bf S}_{\rho\Ub}^{n+1/2} \cdot \ex \\
+    %%                 S_{\rho E}^{n+1/2} \end{array} \right )
+    %% \end{equation}
+
+    We note that this procedure works because the source terms here do
+    not depend on the outcome of the reactions.
+
+    \end{itemize}
+
+  \item {\em Update the System Using a Method of Lines Integration}
+
+    We update the state by doing the integral in equation
+    (\ref{eq:integral:simplesdc}).  Since we are approximating the
+    advective term as piecewise constant in time, we can simply use an
+    ODE integrator to integrate this, just as we do with the reaction
+    system in Strang splitting.  The difference here being that we are
+    integrating the conserved variables and the state sees the effect
+    of advection as we integrate the reactions.  So rather than use
+    $d\Uc/dt = \Rb(\Uc)$, the ODE form we use is
+    \begin{equation}
+      \odt{\Uc} = \Adv{\Uc}^{n+1/2,(k)} + \Rb(\Uc)
+    \end{equation}
+
+    Looking at the form of Eq.~\ref{eq:react_source}, we see that only
+    the species, auxiliary quantities, and energies have source terms.
+    Since we are reacting, we will use the $X_k$ as the primary
+    composition variable and compute $\alpha_l$ as needed from them,
+    so we don't directly integrate the auxiliary quantities.
+    Likewise, the total and internal energies both provide the same
+    information, and integrating both overconstrains the system, so we
+    just integrate the internal energy.  We define the subset of variables
+    that are directly integrated as:
+    \begin{equation}
+      \Uc^\prime = \left ( \begin{array}{c} \rho X_k \\ \rho e \end{array} \right )
+    \end{equation}
+    and we integrate
+    \begin{equation}
+      \odt{\Uc^\prime} = \Adv{\Uc^\prime}^{n+1/2,(k)} + \Rb(\Uc^\prime)
+    \end{equation}
+    This integration begins with $\Uc^{\prime,n}$ and results in $\Uc^{\prime,n+1,(k)}$.
+
+    We will need the density at times during the integration, which we construct as:
+    \begin{equation}
+      \rho(t) = \rho^n + \Advss{\rho}^{n+1/2,(k)} \, t
+    \end{equation}
+    As we are integrating this system we need to get the temperature,
+    $T$, for the rate evaluations.  We obtain this by directly from
+    internal energy, composition, and density using the equation of
+    state.
+
+    Our integrator also needs the Jacobian of the system, in terms of
+    the $\Uc^\prime$.  This is different than the form of the
+    Jacobian usually used in reaction networks.  We describe the form
+    of the Jacobian in appendix \ref{sec:app:jacobian}.
+
+
+    At the end of the integration, we can do the conservative update of momentum
+    and energy.  Momentum is straightforward, since there are no reactive sources:
+    \begin{equation}
+      (\rho u)^{n+1} = (\rho u)^n + \Delta t \Advss{\rho u}^{n+1/2,(k)}
+    \end{equation}
+    For total energy, we first need to isolate the reactive source for energy:
+    \begin{equation}
+      (\rho \Sdot)^{n+1/2} = \frac{(\rho e)^{n+1} - (\rho e)^n}{\Delta t} - \Advss{\rho e}^{n+1/2,(k)}
+    \end{equation}
+    Then the update is
+    \begin{equation}
+      (\rho E)^{n+1} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2,(k)} + \Delta t (\rho \Sdot)^{n+1/2}
+    \end{equation}
+
+  \item {\em Compute the Reactive Source Terms.}
+
+    We now seek the $\Ic$'s that capture the effect of just the
+    reaction sources on the state variables for the next iteration.
+    For the conserved quantities, these would simply be:
+    \begin{equation}
+      \Ic^{(k)}_{\Uc} = \frac{\Uc^{n+1,(k)} - \Uc^n}{\Delta t} - \Adv{\Uc}^{n+1/2,(k)}
+    \end{equation}
+    However, for our primitive variables, which are used in the
+    prediction, we need to construct the required source terms more
+    carefully.  We want:
+    \begin{equation}
+      \label{eq:Iq}
+      \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^n}{\Delta t} - \Adv{\qb}^{n+1/2,(k)}
+    \end{equation}
+    but we need the advective update for $\qb$, which we have not
+    constructed.  We note that $\Ic^{(k)}_\qb$ is an approximation to the integral of 
+    Eq.~\ref{eq:prim_sources} over the timestep.  Additionally, we cannot simply use the equation of
+    state on $\Ic^{(k)}_{\Uc}$ since this is a time-derivative and
+    does not represent a well-defined state in itself.  Instead, we
+    derive $\Ic^{(k)}_{\qb}$ via a multi-step process.  We first find
+    the conservative state as if it were updated only with advection:
+    \begin{equation}
+      \Uc^\star = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2,(k)}
+    \end{equation}
+    and then construct the corresponding primitive variable state via an algebraic transform,
+    $\Uc^\star \rightarrow \qb^\star$.
+    This allows us to define the advective update for $\qb$ as:
+    \begin{equation}
+      \Adv{\qb}^{n+1/2,(k)} = \frac{\qb^\star - \qb^n}{\Delta t}
+    \end{equation}
+    Defining the primitive state corresponding to the fully-updated
+    conserved state via an algebraic transform, $\Uc^{n+1,(k)}
+    \rightarrow \qb^{n+1,(k)}$, we can construct $\Ic^{(k)}_{\qb}$ as given
+    in Equation (\ref{eq:Iq}).
+    Putting all of this together, we see:
+    \begin{equation}
+      \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^\star}{\Delta t}
+    \end{equation}
+
+
+
+  %% \item {\em Solve for the New Gravitational Potential.}
+
+  %%   We solve
+  %%   \begin{equation}
+  %%     \nabla^2 \Phi^{n+1,(k)} = 4\pi G \rho^{n+1,(k)}
+  %%   \end{equation}
+
+  \end{itemize}
+
+\end{itemize}
+
+
+
+\section{Reaction Networks and Nuclear Statistical Equilibrium}
+
+For this study we will use the 19 nuclei network containing
+\isot{H}{1}, \isot{He}{3}, \isot{He}{4}, \isot{C}{12}, \isot{N}{14},
+\isot{O}{16}, \isot{Ne}{20}, \isot{Mg}{24}, \isot{Si}{28},
+\isot{S}{32}, \isot{Ar}{36}, \isot{Ca}{40}, \isot{Ti}{44},
+\isot{Cr}{48}, \isot{Fe}{52}, \isot{Fe}{54}, \isot{Ni}{56}, protons
+(from photodisintegration), and neutrons.  This is based on the
+``aprox19'' network from \cite{aprox19} and originally described in
+\cite{Kepler}.  We use a modified version of the VODE~\citep{vode}
+integrator---ported to C++ with checks added to the timestep rejection
+logic that ensure that the species mass fractions stay between 0 and \MarginPar{we need to be clear that there is different logic for SDC}
+1\footnote{This modified version of VODE is available in our
+Microphysics repo:
+\url{https://github.com/starkiller-astro/Microphysics}.}.\MarginPar{discuss
+  tolerances} We combine this with a table that gives the nuclear
+statistical equilibrium (NSE) abundances in regions where the system
+is in NSE.  The NSE table was generated using a 127 nuclei reaction
+network and is the same as described in \cite{ma:2013}.  In our
+simulations, we carry all 19 isotopes in the main network in each zone
+and advect them in the hydrodynamics portion of the algorithm.  The
+composition of the larger 127 nuclei network is mapped into the 19
+isotopes we carry according to Table \ref{table:nuclei}.
+
+The NSE table requires: \MarginPar{need a statement about how the table was constructed and what NSE means}
+\begin{equation}
+  \label{eq:aux:ye}
+  Y_e = \sum_k \frac{Z_k X_k}{A_k}
+\end{equation}
+(where $A_k$ and $Z_k$ are the atomic weight and atomic number of nucleus $k$) and provides
+\begin{align}
+\label{eq:aux:abar}
+\bar{A} &= \left [ \sum_k \frac{X_k}{A_k} \right ]^{-1} \\
+\label{eq:aux:bea}
+\left (\frac{B}{A} \right ) &= \sum_k \frac{B_k X_k}{A_k}
+\end{align}
+where $B_k$ is the binding energy of nucleus $k$.  In our simulations,
+we store these 3 quantities as auxiliary data that is carried along
+with the rest of the fluid state in each zone.  The table also returns
+values of the mass fractions mapped onto the 19-isotopes we carry, $X_k$, and the time-derivative of $Y_e$, $dY_e/dt$.
+We use the notation:
+\begin{equation}
+\nse{\rho,T,Y_e} \rightarrow \bar{A}, X_k, (B/A), dY_e/dt
+\end{equation}
+to represent the NSE table call and its inputs and outputs.
+
+We can derive evolution equations for each of these composition quantities as:
+\begin{align}
+\frac{DY_e}{Dt} &= \sum_k \frac{Z_k}{A_k} \frac{DX_k}{Dt} = \sum_k \frac{Z_k}{A_k} \omegadot_k \\
+\frac{D\bar{A}}{Dt} &= -\bar{A}^2 \sum_k \frac{1}{A_k} \frac{DX_k}{Dt} = -\bar{A}^2 \sum_k \frac{1}{A_k} \omegadot_k \\
+\frac{D}{Dt} \left (\frac{B}{A} \right ) &= \sum_k \frac{B_k}{A_k} \frac{DX_k}{Dt} = \sum_k \frac{B_k}{A_k} \omegadot_k
+\end{align}
+For Strang split coupling of hydro and reactions, $DX_k/Dt = 0$,
+therefore each of these auxillary equations obeys an advection
+equation in the hydro part of the advancement.  In the SDC algorithm,
+there will be a reactive source (an $\Ic_q$) for each of these that is
+computed in the same manner as above.  We note that our NSE table
+provides the evolution of $Y_e$ due to reactions ($DY_e/Dt$) directly.
+
+The compositional quantities
+it carries, $\bar{A}$ and $Y_e$ are not representable from the 19
+isotopes we carry in the main network. For this reason, when we are
+using the NSE network, we always provide these two composition quantities as
+inputs to the EOS rather than using the $X_k$ directly.
+the EOS directly from the auxiliary state in each zone instead of
+using the $X_k$ directly.
+Our equation of state needs the mean charge per nucleus, $\bar{Z}$, in addition
+to the auxiliary quantities, which is computed as
+\begin{equation}
+\bar{Z} = \bar{A} \sum_k \frac{Z_k X_k}{A_k} = \bar{A} Y_e
+\end{equation}
+(see, e.g., \citealt{flash}).
+
+\subsection{Initialization}
+
+We initialize the mass fractions, $X_k$, and then compute the
+electron fraction, $Y_e$, using (\ref{eq:aux:ye}).
+For the two other composition
+quantities we carry, $\bar{A}$, and $(B/A)$, we need values that are
+consistent with the value of $Y_e$ and the nuclei stored in the NSE
+table.  Therefore, if the thermodynamic conditions put us in NSE
+(using the conditions defined below), then we obtain $\bar{A}$ and
+$(B/A)$ from the NSE table.  Otherwise, we compute these directly from
+$X_k$ using (\ref{eq:aux:abar}) and (\ref{eq:aux:bea}).
+
+\subsection{NSE condition}
+
+We treat a zone as being in NSE if the density and temperature exceed
+some threshold and the composition is mainly $\alpha$ and Fe-group
+nuclei, where the Fe-group nuclei are \isot{Cr}{48}, \isot{Fe}{52},
+\isot{Fe}{54}, and \isot{Ni}{56}.  The full condition is:
+\begin{align}
+\rho &> \rhonse \\
+T &> \tnse \\
+X(\isotm{C}{12}) &< \Anse \\
+X(\isotm{He}{4}) + \sum_{k \in \mathrm{Fe-group}} X_k &> \Bnse \\
+X(\isotm{Si}{26}) &< \Cnse 
+\end{align}
+Typical values are $\rhonse = 2\times 10^6~\gcc$, $T_\mathrm{nse} =
+3\times 10^9~\mathrm{K}$, $\Anse = 0.12$, $\Bnse=
+0.88$, and $\Cnse = 0.01$.  The values of $\Anse$ and $\Bnse$ are based on \citet{ma:2013}.
+The value of $\Cnse$ ensures that Si-burning has ended before invoking the table.
+
+
+\subsection{Strang-split algorithm for NSE}
+
+For Strang splitting, we alternate the reaction and hydrodynamics,
+with each operation working on the output of the previous operation.
+If we define an advection operator over a timestep $\Delta t$ acting on $\Uc$ as
+$\mathbb{A}_{\Delta t}(\Uc)$ and a reaction operator over a timestep of
+$\Delta t/2$ acting on $\Uc$ as $\mathbb{R}_{\Delta t/2}(\Uc)$, then the advance appears
+as:
+\begin{align}
+  \Uc^\star &= \mathbb{R}_{\Delta t/2}(\Uc^n) \\
+  \Uc^{n+1,\star} &= \mathbb{A}_{\Delta t}(\Uc^\star) \\
+  \Uc^{n+1} &= \mathbb{R}_{\Delta t/2}(\Uc^{n+1,\star})
+\end{align}
+Tthe hydrodynamic and reactive substeps over
+the overall time-advancemenet scheme using the aprox19 + NSE network
+are as follows:
+\begin{itemize}
+
+\item {\em Hydrodynamics update}
+  
+  At the beginning of each hydrodynamic update we have an input state,
+  $\Uc_{\rm in}$ that we wish to integrate over $\Delta t$ to obtain $\Uc_{\rm out}$
+  The hydrodynamics update proceeds as normal, but with an advection
+  equation for each of the auxiliary composition variables:
+  \begin{align}
+    \ddt{(\rho Y_e)} + \ddx{(\rho Y_e u)} &= 0 \\
+    \ddt{(\rho \bar{A})} + \ddx{(\rho \bar{A} u)} &= 0 \\
+    \ddt{[\rho (B/A)]} + \ddx{[\rho (B/A) u]} &= 0 
+  \end{align}
+
+
+\item {\em Reactive update}
+
+  At the beginning of each reactive update we have an input state,
+  $\Uc_{\rm in}$ that we wish to integrate over $\Delta t/2$ to obtain $\Uc_{\rm out}$.
+  
+  \begin{itemize}
+
+    \item For a zone that is in NSE:
+
+      The goal is to update the composition and thermodynamics due to the 
+      change in the nuclei abundances over the (half-)timestep.  \citet{ma:2013}
+      uses a first-order in time difference to get the new composition state
+      and evaluates the energy release from the change in binding energy in the NSE
+      state.  They only apply a fraction (0.3) of the energy release to the internal
+      energy in a zone, to avoid a potential instability that can arise if too much
+      energy is added to a zone in a single timestep.  We prefer to deal with this
+      issue through the retry mechanism already built into \castro.
+
+      The approach we use begins with calling the NSE table with the input state:
+      \begin{equation}
+        \nse{\rho_\inp, T_\inp, (Y_e)_\inp} \rightarrow \bar{A}^\star, (X_k)^\star, (B/A)^\star, dY_e/dt
+        \end{equation}
+      We indicate with a $\star$ that most of those values are
+      provisional, and we will seek a better value in the corrector step.
+      We only update $Y_e$ from this call:
+      \begin{equation}
+        (Y_e)_\out = (Y_e)_\inp + \Delta t \frac{dY_e}{dt}
+      \end{equation}
+      and then we use the table again, but with the updated $Y_e$
+      (note that $\rho_{\rm out}=\rho_{\rm in}$ in the Strang reaction formulation):
+      \begin{equation}
+        \nse{\rho_\out, T_\inp, (Y_e)_\out} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
+      \end{equation}
+      In this formulation, we have not updated the temperature. \MarginPar{discuss this more, and perhaps switch to a mode where we try to predict T}
+      This corrects the composition so that it is consistent with the updated
+      $Y_e$.  We use these values $\bar{A}_\out$, $(X_k)_\out$, and $(B/A)_\out$ to then complete the update, computing the energy release, $\Sdot$ as:
+      \begin{equation}
+        \label{eq:nse_energy}
+        \Sdot = \left [ \left ( \frac{B}{A} \right )_\out -
+          \left ( \frac{B}{A} \right )_\inp \right ] N_A \frac{1}{\Delta t}
+      \end{equation}
+      \MarginPar{we could imagine looping over the EOS to get an updated T and then the table to get the updated $\bar{A}$, to see if that converges?}
+      
+    \item For zones not in NSE:
+
+    \begin{itemize}
+    \item Integrate the full reaction network (Eqs.~\ref{eq:strang:e} and \ref{eq:strang:X}) as usual for Strang splitting
+    \item Update the aux quantities at the end of the burn using Eqs.~\ref{eq:aux:ye}, \ref{eq:aux:abar}, and \ref{eq:aux:bea} with the new mass fractions, $X_k$.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{SDC-NSE Coupling}
+
+With SDC evolution, when we are in NSE, we need to do the advective
+and reactive updates together.  We want to compute:
+\begin{equation}
+\Uc^{n+1,(k)} = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2,(k)} + \Delta t \left [\Rb (\Uc) \right ]^{n+1/2,(k)}
+\end{equation}
+For density and momentum, we can do this update already, since there
+are no reactive sources.  That gives us $\rho^{n+1,(k)}$ and $(\rho
+\Ub)^{n+1,(k)}$.  For the other quantities, the NSE table gives only the
+instantaneous values. aside from $Y_e$.  We therefore do an iterative
+update.
+
+Calling the NSE table on the starting state gives us:
+\begin{equation}
+\nse{\rho^n, T^n, (Y_e)^n} \rightarrow \bar{A}^n, (X_k)^n, (B/A)^n, (dY_e/dt)^n
+\end{equation}
+We now compute a first approximation to the reactive source:
+\begin{align}
+R^{(0)}(\rho e) &= 0 \\
+R^{(0)}(\rho Y_e) &= \rho^n (dY_e/dt)^n \\
+R^{(0)}(\rho \bar{A}) &= 0
+\end{align}
+
+Now we iterate $\xi = 0, \ldots N-1$, doing the following:
+
+\begin{itemize}
+\item Update the energy as:
+   \begin{equation}
+     (\rho e)^{n+1,(\xi)} = (\rho e)^n + \Delta t \Advss{\rho e}^{n+1/2,(k)} + \Delta t R^{(\xi)}(\rho e)
+   \end{equation}
+
+\item Update the auxiliary data as:
+   \begin{equation}
+     (\rho \alpha_l)^{n+1,(\xi)} = (\rho \alpha_l)^n + \Delta t \Advss{\rho \alpha_l}^{n+1/2,(k)} + \Delta t R^{(\xi)}(\rho \alpha_l)
+   \end{equation}
+
+\item Compute the updated temperature, $T^{n+1,(k)}$ as
+  \begin{equation}
+    T^{n+1,(\xi)} = T(\rho^{n+1,(k)},  \alpha^{n+1,(\xi)},  e^{n+1,(\xi)})
+  \end{equation}
+  where $\alpha^{n+1,(\xi)} = (\rho  \alpha)^{n+1,(\xi)} / \rho^{n+1,(k)}$ and $e^{n+1,(\xi)} = (\rho e)^{n+1,(\xi)} / \rho^{n+1,(k)}$.
+
+\item Call the NSE table to get the new NSE state
+  \begin{equation}
+    \nse{\rho^{n+1,(k)}, T^{n+1,(\xi)}, (Y_e)^{n+1,(\xi)}} \rightarrow \bar{A}^{n+1,(\xi)}, (X_k)^{n+1,(\xi)}, (B/A)^{n+1,(\xi)}, (dY_e/dt)^{n+1,(\xi)}
+  \end{equation}
+
+\item Recompute the reactive source terms for the next iteration.
+
+  The energy generation rate is found as:
+  \begin{equation}
+    (\rho \Sdot)^{n+1/2,(\xi)} = \frac{\rho^{n+1,(k)} + \rho^n}{2}
+    \left [ \left ( \frac{B}{A} \right )^{n+1,(\xi)} -
+      \left ( \frac{B}{A} \right )^n \right ] N_A \frac{1}{\Delta t}
+  \end{equation}
+  and our new auxiliary sources are:
+\begin{align}
+R^{(\xi+1)}(\rho e) &= (\rho \Sdot)^{n+1/2,(\xi)} \\
+R^{(\xi+1)}(\rho Y_e) &= \frac{\rho^{n+1,(k)} + \rho^n}{2} \frac{1}{2} \left [ \left (\frac{dY_e}{dt} \right )^n + \left (\frac{dY_e}{dt} \right )^{n+1,(\xi)} \right ] \\
+R^{(\xi+1)}(\rho \bar{A}) &= \frac{\rho^{n+1,(k)} + \rho^n}{2} \frac{1}{\Delta t} \left [ \bar{A}^{n+1,(\xi)} - \frac{(\rho \bar{A})^n}{\rho^n} \right ]
+\end{align}
+
+\end{itemize}
+
+With the iteration complete, we can do the final update of the total energy using last iterations prediction of the source (for iteration $N$):
+\begin{equation}
+(\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2} + \Delta t (\rho \Sdot)^{n+1/2,(N)}
+\end{equation}
+and we take the values of the auxiliary state and mass fractions from the last call to the NSE table:
+\begin{align}
+(\rho Y_e)^{n+1,(k)} &= \rho^{n+1,(k)} (Y_e)^{n+1,(N-1)} \\
+(\rho \bar{A})^{n+1,(k)} &= \rho^{n+1,(k)} (\bar{A})^{n+1,(N-1)} \\
+(\rho (B/A))^{n+1,(k)} &= \rho^{n+1,(k)} (B/A)^{n+1,(N-1)} \\
+(\rho Y_e)^{n+1,(k)} &= \rho^{n+1,(k)} (X_k)^{n+1,(N-1)}
+\end{align}
+
+We note that this update is not fully second order, however, the
+treatment of $Y_e$ is, and we expect that to have the dominant effect
+in the thermodynamic evolution through NSE.
+
+\subsection{NSE Bailout}
+
+There is one additional part of the time integration algorithm.
+Because $T$ evolves during the reactions (for both Strang and SDC), it
+is possible for a zone to start out not in NSE but evolve into NSE
+during the reaction update.  When this happens, the ODE integrator may
+fail, because an excessive number of timesteps is required.  Rather
+than trigger our retry mechanism and throw away the entire timestep
+and start over with a smaller $\Delta t$, we first check if the zone
+evolved into NSE, and if so, we redo the zone update using the NSE
+prescription.  To ensure that this is not triggered at the very start
+of integration, we require a minimum number of steps (10) to have
+elapsed before checking for NSE.  After we leave the integrator, the
+state is returned to the burner driver where we finish the integration
+via NSE if the conditions satisfy the NSE criteria.  We optionally
+apply a relaxation factor, typically, $0.9$, to the NSE conditions to
+allow a state that is close to NSE after an integrator failure enter
+NSE.
+
+\section{Simulations}
+
+\subsection{Reacting convergence test problem}
+
+\cite{castro_sdc} introduced a test problem for measuring convergence
+of a reacting hydrodynamic algorithm.  We run that same test here with the
+simplified SDC algorithm.
+
+Also explore: PLM vs PPM, 1 vs. 2 vs. 3 iterations
+
+% run on 04-06-21
+% Castro       git describe: 21.04-dirty
+% AMReX        git describe: 21.03-58-g87c81d0ca
+% Microphysics git describe: 21.04-1-g33a4d0fe
+
+\begin{deluxetable}{lllllll}
+\tablecaption{\label{table:react_convert_strang} Convergence ($L_1$ norm) for the reacting convergence problem using Strang splitting.}
+\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
+\startdata
+ $\rho$                      & $2.794 \times 10^{18}$  & 2.044  & $6.777 \times 10^{17}$  & 2.554  & $1.154 \times 10^{17}$  \\
+ $\rho u$                    & $6.796 \times 10^{26}$  & 2.448  & $1.245 \times 10^{26}$  & 2.889  & $1.681 \times 10^{25}$  \\
+ $\rho v$                    & $6.796 \times 10^{26}$  & 2.448  & $1.245 \times 10^{26}$  & 2.889  & $1.681 \times 10^{25}$  \\
+ $\rho E$                    & $2.451 \times 10^{35}$  & 2.351  & $4.803 \times 10^{34}$  & 2.742  & $7.179 \times 10^{33}$  \\
+ $\rho e$                    & $2.261 \times 10^{35}$  & 2.320  & $4.526 \times 10^{34}$  & 2.821  & $6.403 \times 10^{33}$  \\
+ $T$                         & $2.237 \times 10^{21}$  & 1.691  & $6.927 \times 10^{20}$  & 2.482  & $1.240 \times 10^{20}$  \\
+ $\rho X(\isotm{He}{4})$     & $2.878 \times 10^{18}$  & 2.020  & $7.096 \times 10^{17}$  & 2.529  & $1.229 \times 10^{17}$  \\
+ $\rho X(\isotm{C}{12})$     & $1.698 \times 10^{17}$  & 1.950  & $4.393 \times 10^{16}$  & 2.232  & $9.353 \times 10^{15}$  \\
+ $\rho X(\isotm{O}{16})$     & $1.687 \times 10^{14}$  & 1.660  & $5.338 \times 10^{13}$  & 1.957  & $1.375 \times 10^{13}$  \\
+ $\rho X(\isotm{Fe}{56})$    & $2.794 \times 10^{8}$   & 2.044  & $6.777 \times 10^{7}$   & 2.554  & $1.154 \times 10^{7}$   \\
+\enddata
+\end{deluxetable}
+
+
+% run on 04-06-21
+% Castro       git describe: 21.04-dirty
+% AMReX        git describe: 21.03-58-g87c81d0ca
+% Microphysics git describe: 21.04-1-g33a4d0fe
+
+\begin{deluxetable}{lllllll}
+\tablecaption{\label{table:react_convert_sdc} Convergence ($L_1$ norm) for the reacting convergence problem using SDC integration (2 iterations).}
+\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
+\startdata
+ $\rho$                      & $2.795 \times 10^{18}$  & 2.044  & $6.777 \times 10^{17}$  & 2.554  & $1.154 \times 10^{17}$  \\
+ $\rho u$                    & $6.798 \times 10^{26}$  & 2.449  & $1.245 \times 10^{26}$  & 2.889  & $1.680 \times 10^{25}$  \\
+ $\rho v$                    & $6.798 \times 10^{26}$  & 2.449  & $1.245 \times 10^{26}$  & 2.889  & $1.680 \times 10^{25}$  \\
+ $\rho E$                    & $2.452 \times 10^{35}$  & 2.352  & $4.804 \times 10^{34}$  & 2.742  & $7.179 \times 10^{33}$  \\
+ $\rho e$                    & $2.262 \times 10^{35}$  & 2.321  & $4.527 \times 10^{34}$  & 2.822  & $6.404 \times 10^{33}$  \\
+ $T$                         & $2.236 \times 10^{21}$  & 1.691  & $6.927 \times 10^{20}$  & 2.481  & $1.240 \times 10^{20}$  \\
+ $\rho X(\isotm{He}{4})$     & $2.879 \times 10^{18}$  & 2.020  & $7.096 \times 10^{17}$  & 2.529  & $1.229 \times 10^{17}$  \\
+ $\rho X(\isotm{C}{12})$     & $1.697 \times 10^{17}$  & 1.950  & $4.393 \times 10^{16}$  & 2.231  & $9.357 \times 10^{15}$  \\
+ $\rho X(\isotm{O}{16})$     & $1.686 \times 10^{14}$  & 1.659  & $5.338 \times 10^{13}$  & 1.957  & $1.375 \times 10^{13}$  \\
+ $\rho X(\isotm{Fe}{56})$    & $2.795 \times 10^{8}$   & 2.044  & $6.777 \times 10^{7}$   & 2.554  & $1.154 \times 10^{7}$   \\
+\enddata
+\end{deluxetable}
+
+
+\subsection{NSE convergence test problem}
+
+To test the coupling of the NSE table to the hydrodynamics, we run a
+similar problem as above, except with the thermodynamic conditions
+appropriate for the matter to be in NSE.  The initial conditions are:
+\begin{align}
+\rho &= \rho_0 \\
+T &= T_0 \left [ 1 + (\delta T) e^{-(r/\lambda)^2} \cos^6(\pi r/L) \right ] \\
+Y_e &= (Y_e)_0 \left [ 1 + (\delta Y_e) e^{-(r/\lambda)^2} \cos^6(\pi r/L) \right ] 
+\end{align}
+where $r$ is the distance from the center of the domain and the
+remaining parameters are listed in Table~\ref{table:nse}.  This has
+$Y_e$ varying between $[0.47, 0.5]$ initially\MarginPar{check}.  The mass fractions
+and remaining composition variables are then initialized from the NSE table, as described in section~\ref{sec:initialization}.
+
+The domain has a size $[0, L]^2$, and the timestep is fixed as:
+\begin{equation}
+\Delta t = 10^{-3} \left ( \frac{64}{N} \right )~\mathrm{s}
+\end{equation}
+where $N$ is the number of zones in each direction.
+
+\begin{deluxetable}{lcc}
+\tablecaption{\label{table:nse} NSE convergence test problem.}
+\tablehead{\colhead{parameter} & \colhead{value}}
+\startdata
+$\rho_0$ & $5\times 10^8~\gcc$ \\
+$T_0$    & $4\times 10^9~\mathrm{K}$ \\
+$(\delta T)$ & $0.2$ \\
+$(Y_e)_0$   & $0.5$ \\
+$(\delta Y_e)$ & $-0.05$ \\
+$\lambda$   & $2\times 10^7~\mathrm{cm}$ \\
+$L$         & $10^8~\mathrm{cm}$ \\
+\enddata
+\end{deluxetable}
+
+Figure~\ref{fig:nse_ye} shows the $Y_e$ profile for the Strang evolution case.
+
+\begin{figure}[t]
+\centering
+\plotone{ye_plot}
+\caption{\label{fig:nse_ye} Profile of $Y_e$ through the middle of the domain (slicing along $x$)
+for the $128^2$ Strang NSE test simulation.}
+\end{figure}
+
+
+% run on 04-06-21
+% Castro       git describe: 21.04-dirty
+% AMReX        git describe: 21.03-58-g87c81d0ca
+% Microphysics git describe: 21.04-1-g33a4d0fe
+
+\begin{deluxetable}{lllllll}
+\tablecaption{\label{table:nse_strang_methodII} Convergence ($L_1$ norm) for the NSE convergence
+problem using Strang splitting.}
+\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
+\startdata
+ $\rho$                      & $4.522 \times 10^{19}$  & 1.659  & $1.432 \times 10^{19}$  & 1.542  & $4.917 \times 10^{18}$  \\
+ $\rho u$                    & $1.883 \times 10^{28}$  & 1.681  & $5.873 \times 10^{27}$  & 1.524  & $2.042 \times 10^{27}$  \\
+ $\rho v$                    & $1.883 \times 10^{28}$  & 1.681  & $5.873 \times 10^{27}$  & 1.524  & $2.042 \times 10^{27}$  \\
+ $\rho E$                    & $5.933 \times 10^{37}$  & 1.613  & $1.940 \times 10^{37}$  & 1.411  & $7.293 \times 10^{36}$  \\
+ $\rho e$                    & $5.931 \times 10^{37}$  & 1.613  & $1.939 \times 10^{37}$  & 1.411  & $7.291 \times 10^{36}$  \\
+ $T$                         & $9.885 \times 10^{20}$  & 1.207  & $4.281 \times 10^{20}$  & 1.058  & $2.057 \times 10^{20}$  \\
+ $\rho X(\isotm{H}{1})$      & $4.522 \times 10^{-11}$ & 1.659  & $1.432 \times 10^{-11}$ & 1.542  & $4.917 \times 10^{-12}$ \\
+ $\rho X(\isotm{He}{4})$     & $5.086 \times 10^{17}$  & 1.430  & $1.887 \times 10^{17}$  & 1.187  & $8.288 \times 10^{16}$  \\
+ $\rho X(\isotm{C}{12})$     & $1.585 \times 10^{12}$  & 1.829  & $4.462 \times 10^{11}$  & 1.433  & $1.652 \times 10^{11}$  \\
+ $\rho X(\isotm{O}{16})$     & $8.060 \times 10^{12}$  & 1.706  & $2.470 \times 10^{12}$  & 1.347  & $9.710 \times 10^{11}$  \\
+ $\rho X(\isotm{Cr}{48})$    & $1.149 \times 10^{19}$  & 1.400  & $4.353 \times 10^{18}$  & 1.258  & $1.820 \times 10^{18}$  \\
+ $\rho X(\isotm{Fe}{52})$    & $9.018 \times 10^{19}$  & 1.173  & $4.001 \times 10^{19}$  & 1.127  & $1.832 \times 10^{19}$  \\
+ $\rho X(\isotm{Fe}{54})$    & $5.036 \times 10^{20}$  & 1.731  & $1.517 \times 10^{20}$  & 1.727  & $4.582 \times 10^{19}$  \\
+ $\rho X(\isotm{Ni}{56})$    & $5.686 \times 10^{20}$  & 1.622  & $1.847 \times 10^{20}$  & 1.563  & $6.252 \times 10^{19}$  \\
+ $\rho Y_e$                  & $2.379 \times 10^{19}$  & 1.678  & $7.431 \times 10^{18}$  & 1.578  & $2.489 \times 10^{18}$  \\
+ $\rho \bar{A}$              & $5.141 \times 10^{21}$  & 1.230  & $2.191 \times 10^{21}$  & 1.087  & $1.032 \times 10^{21}$  \\
+ $\rho (B/A)$                & $4.149 \times 10^{20}$  & 1.693  & $1.283 \times 10^{20}$  & 1.562  & $4.345 \times 10^{19}$  \\
+\enddata
+\end{deluxetable}
+
+% run on 04-06-21
+% Castro       git describe: 21.04-dirty
+% AMReX        git describe: 21.03-58-g87c81d0ca
+% Microphysics git describe: 21.04-1-g33a4d0fe
+
+\begin{deluxetable}{lllllll}
+\tablecaption{\label{table:nse_sdc_methodII} Convergence ($L_1$ norm) for the NSE convergence
+problem using the simplified-SDC algorithm.}
+\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
+           \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
+\startdata
+ $\rho$                      & $4.553 \times 10^{19}$  & 1.636  & $1.465 \times 10^{19}$  & 1.583  & $4.891 \times 10^{18}$  \\
+ $\rho u$                    & $1.949 \times 10^{28}$  & 1.650  & $6.210 \times 10^{27}$  & 1.513  & $2.176 \times 10^{27}$  \\
+ $\rho v$                    & $1.949 \times 10^{28}$  & 1.650  & $6.210 \times 10^{27}$  & 1.513  & $2.176 \times 10^{27}$  \\
+ $\rho E$                    & $5.691 \times 10^{37}$  & 1.622  & $1.848 \times 10^{37}$  & 1.561  & $6.266 \times 10^{36}$  \\
+ $\rho e$                    & $5.689 \times 10^{37}$  & 1.622  & $1.848 \times 10^{37}$  & 1.561  & $6.265 \times 10^{36}$  \\
+ $T$                         & $5.778 \times 10^{20}$  & 1.740  & $1.729 \times 10^{20}$  & 1.702  & $5.316 \times 10^{19}$  \\
+ $\rho X(\isotm{H}{1})$      & $4.553 \times 10^{-11}$ & 1.636  & $1.465 \times 10^{-11}$ & 1.583  & $4.891 \times 10^{-12}$ \\
+ $\rho X(\isotm{He}{4})$     & $2.541 \times 10^{17}$  & 1.807  & $7.262 \times 10^{16}$  & 1.634  & $2.339 \times 10^{16}$  \\
+ $\rho X(\isotm{C}{12})$     & $1.140 \times 10^{12}$  & 1.838  & $3.189 \times 10^{11}$  & 1.670  & $1.002 \times 10^{11}$  \\
+ $\rho X(\isotm{O}{16})$     & $5.413 \times 10^{12}$  & 1.819  & $1.535 \times 10^{12}$  & 1.658  & $4.864 \times 10^{11}$  \\
+ $\rho X(\isotm{Cr}{48})$    & $7.020 \times 10^{18}$  & 1.793  & $2.026 \times 10^{18}$  & 1.614  & $6.621 \times 10^{17}$  \\
+ $\rho X(\isotm{Fe}{52})$    & $3.631 \times 10^{19}$  & 1.579  & $1.215 \times 10^{19}$  & 1.597  & $4.018 \times 10^{18}$  \\
+ $\rho X(\isotm{Fe}{54})$    & $4.670 \times 10^{20}$  & 1.807  & $1.335 \times 10^{20}$  & 1.869  & $3.654 \times 10^{19}$  \\
+ $\rho X(\isotm{Ni}{56})$    & $4.858 \times 10^{20}$  & 1.808  & $1.387 \times 10^{20}$  & 1.860  & $3.820 \times 10^{19}$  \\
+ $\rho Y_e$                  & $2.372 \times 10^{19}$  & 1.649  & $7.564 \times 10^{18}$  & 1.587  & $2.518 \times 10^{18}$  \\
+ $\rho \bar{A}$              & $4.009 \times 10^{21}$  & 1.693  & $1.240 \times 10^{21}$  & 1.690  & $3.843 \times 10^{20}$  \\
+ $\rho (B/A)$                & $4.222 \times 10^{20}$  & 1.666  & $1.330 \times 10^{20}$  & 1.605  & $4.374 \times 10^{19}$  \\
+\enddata
+\end{deluxetable}
+
+
+
+\subsection{Detonation}
+
+The purpose here is to look at what timestep is taken when we use the nuclear burning limiters.
+Run with aprox19 only, Strang and SDC, then aprox19 + NSE, Strang and NSE.
+
+Look at number of SDC iterations too.
+
+How does the timestep limiter work in the middle of SDC iterating?
+
+aprox21
+
+look at number of RHS calls, wallclock time
+
+output every step and then for a single zone plot enuc every timestep to see if it oscillates
+
+
+\subsection{Reacting Buoyant Bubble}
+
+We next consider a buoyant, reacting bubble in a stratified,
+plane-parallel atmosphere.  This test exercises the treatment of
+hydrodynamical sources in the SDC integration.  We use the set of
+initial conditions that was first shown in \cite{ABNZ:III}.
+
+\subsection{Massive Star}
+
+Do this in 1-d
+Show the amount of work needed for Strang vs. SDC
+
+Play around with the threshold where NSE kicks in
+
+\section{Summary}
+
+We presented a simplified spectral deferred corrections scheme for coupling
+hydrodynamics and reactions.
+
+Future work is to extend this methodology to MHD.
+
+
+
+\acknowledgements \castro\ is freely available at
+\url{http://github.com/AMReX-Astro/Castro}.  All of the code and
+problem setups used here are available in the git repo.  The work at
+Stony Brook was supported by DOE/Office of Nuclear Physics grant
+DE-FG02-87ER40317.  This material is based upon work supported by the
+U.S. Department of Energy, Office of Science, Office of Advanced
+Scientific Computing Research and Office of Nuclear Physics,
+Scientific Discovery through Advanced Computing (SciDAC) program under
+Award Number DE-SC0017955.  This research was supported by the
+Exascale Computing Project (17-SC-20-SC), a collaborative effort of
+the U.S. Department of Energy Office of Science and the National
+Nuclear Security Administration.
+
+\software{\amrex\ \citep{amrex_joss},
+          \castro\ \citep{castro},
+          GNU Compiler Collection (\url{https://gcc.gnu.org/}),
+          Linux (\url{https://www.kernel.org}),
+          matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
+          NumPy \citep{numpy,numpy2},
+          python (\url{https://www.python.org/}), 
+          SymPy \citep{sympy}
+         }
+
+
+
+\appendix
+
+\section{Jacobian}
+
+\label{sec:app:jacobian}
+
+To solve the reaction system implicitly, the ODE solver needs the
+Jacobian, $\partial \Rb/\partial \Uc^\prime$, where $\Uc^\prime =
+(\rho X_k, \rho e)^\intercal$ is the subset of the conserved variables we are
+integrating.  We follow the method of \cite{castro_sdc} and factor
+this into two pieces,
+\begin{equation}
+\label{eq:factored_jac}
+{\bf J} = \frac{\partial \Rb}{\partial {\bf w }} \frac{\partial {\bf w}}{\partial \Uc^\prime}.
+\end{equation}
+where the state ${\bf w}$ is chosen to match the set of variables used to evaluate the reaction rates.
+Writing this out for two species, $X_\alpha$ and $X_\beta$, we have
+\begin{equation}
+\Uc^\prime = \left ( \begin{array}{c} \rho X_\alpha \\ \rho X_\beta \\ \rho e \end{array} \right )
+\end{equation}
+For interfacing with the reaction network, we use
+\begin{equation}
+{\bf w} = \left ( \begin{array}{c} X_\alpha \\  X_\beta \\ T \end{array} \right )
+\end{equation}
+Note: even though we are using $T$ here instead of $e$, we still do the overall ODE integration
+in terms of $(\rho e)$, consistent with the Strang method described in \cite{strang_rnaas}.
+%%  in that
+%% we use $e$ instead of $T$ as the independent variable.  If the network gives derivatives in terms
+%% of temperature, we can convert as:
+%% \begin{equation}
+%% \left . \frac{\partial \phi}{\partial T} \right |_\rho =
+%%   \left . \frac{\partial \phi}{\partial e} \right |_\rho 
+%%   \left . \frac{\partial e}{\partial T} \right |_\rho =
+%%   c_v \left . \frac{\partial \phi}{\partial e} \right |_\rho
+%% \end{equation}
+%% for some quantity $\phi(\rho, T)$.  Here we identified the specific heat
+%% at constant volume, $c_v = \partial e/\partial T|_\rho$.
+
+The Jacobian transformation $\partial \Uc^\prime/\partial {\bf w}$ is:
+\begin{equation}
+\frac{\partial \Uc^\prime}{\partial {\bf w}} = \left (
+   \begin{array}{ccc}
+       \rho & 0 & 0 \\
+       0 & \rho & 0  \\
+       \rho  e_{X_\alpha} & \rho e_{X_\beta} & \rho c_v \\
+     \end{array}\right)
+\end{equation}
+where we use the following notation for compactness:
+\begin{equation}
+e_{X_k} = \dedXd
+\end{equation}
+and the specific heat at constant volume is
+\begin{equation}
+c_v = \left . \frac{\partial e}{\partial T} \right |_{\rho, X_k}
+\end{equation}
+We get the inverse
+(computed via SymPy) as:
+\begin{equation}
+\renewcommand{\arraystretch}{1.5}
+\frac{\partial {\bf w}}{\partial \Uc^\prime} = \left (
+  \begin{array}{ccc}
+   \frac{1}{\rho} & 0 & 0 \\
+   0 & \frac{1}{\rho} & 0 \\
+    -\frac{e_{X_\alpha}}{\rho c_v} & -\frac{e_{X_\beta}}{\rho c_v} & \frac{1}{\rho c_v} \\
+   \end{array}\right)
+\renewcommand{\arraystretch}{1}
+\end{equation}
+
+The reaction vector is
+\begin{equation}
+\Rb(\Uc^\prime) = \left (  \begin{array}{c} \rho \omegadot_\alpha \\ \rho \omegadot_\beta \\ \rho \Sdot \end{array} \right )
+\end{equation}
+We take all the quantities to be functions of $\rho$, $e$, and $X_k$,
+but since $\rho$ doesn't change from the reactions (the reactive
+source of the continuity equation is zero), it is held constant in
+these derivatives.  The Jacobian is computed as $\partial \Rb/\partial
+{\bf w}$:
+\begin{equation}
+\renewcommand{\arraystretch}{1.5}
+\frac{\partial \Rb}{\partial {\bf w}} = \left (
+  \begin{array}{ccc}
+     \rho \frac{\partial \omegadot_\alpha}{\partial X_\alpha} &
+     \rho \frac{\partial \omegadot_\alpha}{\partial X_\beta} & 
+     \rho \frac{\partial \omegadot_\alpha}{\partial T} \\
+      %
+     \rho \frac{\partial \omegadot_\beta}{\partial X_\alpha} &
+     \rho \frac{\partial \omegadot_\beta}{\partial X_\beta} &
+     \rho \frac{\partial \omegadot_\beta}{\partial T} \\
+     %
+     \rho \frac{\partial \Sdot}{\partial X_\alpha} &
+     \rho \frac{\partial \Sdot}{\partial X_\beta} &
+     \rho \frac{\partial \Sdot}{\partial T} \\
+  \end{array}
+  \right )
+\renewcommand{\arraystretch}{1}
+\end{equation}
+
+The final Jacobian is found by multiplying these two:
+\begin{equation}
+\renewcommand{\arraystretch}{1.5}
+\frac{\partial \Rb}{\partial \Uc^\prime} = \left (
+  \begin{array}{ccc}
+    \frac{\partial \omegadot_\alpha}{\partial X_\alpha} - \frac{e_{X_\alpha}}{c_v} \frac{\partial \omegadot_\alpha}{\partial T} &
+    \frac{\partial \omegadot_\alpha}{\partial X_\beta} - \frac{e_{X_\beta}}{c_v} \frac{\partial \omegadot_\alpha}{\partial T} &
+    \frac{1}{c_v} \frac{\partial \omegadot_\alpha}{\partial T} \\
+     %
+    \frac{\partial \omegadot_\beta}{\partial X_\alpha} - \frac{e_{X_\alpha}}{c_v} \frac{\partial \omegadot_\beta}{\partial T} &
+    \frac{\partial \omegadot_\beta}{\partial X_\beta} - \frac{e_{X_\beta}}{c_v} \frac{\partial \omegadot_\beta}{\partial T} &
+    \frac{1}{c_v} \frac{\partial \omegadot_\beta}{\partial T} \\
+     %
+     \frac{\partial \Sdot}{\partial X_\alpha} -  \frac{e_{X_\alpha}}{c_v} \frac{\partial \Sdot}{\partial T} &
+     \frac{\partial \Sdot}{\partial X_\beta} -  \frac{e_{X_\beta}}{c_v} \frac{\partial \Sdot}{\partial T} &
+     \frac{1}{c_v} \frac{\partial \Sdot}{\partial T} \\
+  \end{array}
+  \right )
+\renewcommand{\arraystretch}{1}
+\end{equation}
+We note that the form of these entries is the same as one would arrive at if you start with the rates expressed as
+$\omega_k(\rho, T(\rho, X_j, e), X_j)$ and note that constant $e$ implies that
+\begin{equation}
+\left . \frac{\partial T}{\partial X_k} \right |_{\rho, e} = - \frac{e_{X_k}}{c_v}
+\end{equation}
+
+While VODE can compute the entire Jacobian, ${\bf J}$ numerically via
+differencing, we found that does not give reliable results.  Instead,
+we compute compute the derivatives with respect to $X_k$ and $T$
+one-sided differencing, following the algorithm in \cite{lsode} to
+minimize numerical noise.  We then use the equation of state to
+compute $e_{X_k}$ and $c_v$ and construct the entries of the final
+Jacobian.
+
+
+%======================================================================
+% References
+%======================================================================
+
+\bibliographystyle{aasjournal}
+\bibliography{ws}
+
+\end{document}
