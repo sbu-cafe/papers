@@ -391,8 +391,13 @@ on to our new time-coupling method.  Figure~\ref{fig:flowchart} shows a graphica
 flowchart of the reaction and hydrodynamics advances in the two methods.
 
 \begin{figure}[t]
-\plottwo{sdc_strang_flowchart_I}{sdc_strang_flowchart_II}
-\caption{\label{fig:flowchart} flowchart}
+\plotone{sdc_strang_flowchart_I}
+\caption{\label{fig:strang_flowchart} flowchart}
+\end{figure}
+
+\begin{figure}[t]
+\plotone{sdc_strang_flowchart_II}
+\caption{\label{fig:sdc_flowchart} flowchart}
 \end{figure}
 
 
@@ -850,6 +855,12 @@ hydrodynamical sources in the SDC integration.  We use the set of
 initial conditions that was first shown in \cite{ABNZ:III}.
 
 \subsection{Sub-Chandra Double Detonation}
+
+\begin{figure}[t]
+\centering
+\plotone{subch2}
+\caption{\label{fig:subch_network} Reaction network for the double detonation problem.}
+\end{figure}
 
 Do this in 1-d
 Show the amount of work needed for Strang vs. SDC
