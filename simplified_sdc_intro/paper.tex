@@ -20,6 +20,7 @@
 
 \newcommand{\castro}{{\sf Castro}}
 \newcommand{\maestro}{{\sf Maestro}}
+\newcommand{\pynucastro}{{\sf pynucastro}}
 \newcommand{\flash}{{\sf Flash}}
 \newcommand{\amrex}{{\sf AMReX}}
 
@@ -847,14 +848,26 @@ Also explore: PLM vs PPM, 1 vs. 2 vs. 3 iterations
 
 
 
-\subsection{Reacting Buoyant Bubble}
+\subsection{X-ray Burst}
 
-We next consider a buoyant, reacting bubble in a stratified,
-plane-parallel atmosphere.  This test exercises the treatment of
-hydrodynamical sources in the SDC integration.  We use the set of
-initial conditions that was first shown in \cite{ABNZ:III}.
+We next consider a flame propagating through an accreted helium layer on a neutron star,
+as described in \cite{harpole:2021}.
 
 \subsection{Sub-Chandra Double Detonation}
+
+We use a network with 28 nuclei and 96 rates that captures He burning
+with links for $(\alpha,p)(p,\gamma)$ reactions and the rates
+involving \isot{N}{14} to bypass
+$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$ as described in
+\cite{shenbildsten}.  The rates are taken from the ReacLib library
+\citep{reaclib} and the network is written by
+\pynucastro~\citep{pynucastro}.  The nuclei and links in the network are
+shown in Figure~\ref{fig:subch_network}.  The many reaction pathways in this network
+make it a good test for the SDC algorithm.
+
+The initial model is generated following the procedure described in \citep{subchandra}.
+For the present work, we are only concerned with the behavior of the time-integration strategy
+and not on the astrophysical implications of the physical setup we explore.  
 
 \begin{figure}[t]
 \centering
@@ -896,6 +909,7 @@ Nuclear Security Administration.
           matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
           NumPy \citep{numpy,numpy2},
           python (\url{https://www.python.org/}), 
+          \pynucastro\ \citep{pynucastro},
           SymPy \citep{sympy}
          }
 
