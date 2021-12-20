@@ -1,0 +1,9 @@
+run on inf with:
+
+EOS: /home/zingale/development/Microphysics/EOS/helmholtz
+NETWORK: /home/zingale/development/Microphysics/networks/aprox13
+
+Castro       git describe: 21.12-9-gd7a27ccd5
+AMReX        git describe: 21.12-64-gfde72340e
+Microphysics git describe: 21.12-12-g9595a34f
+
