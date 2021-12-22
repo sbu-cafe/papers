@@ -93,6 +93,10 @@
 \newcommand{\out}{{\rm out}}
 \newcommand{\inp}{{\rm in}}
 
+\newcommand{\atolspec}{{\epsilon_\mathrm{abs,spec}}}
+\newcommand{\rtolspec}{{\epsilon_\mathrm{rel,spec}}}
+\newcommand{\atolener}{{\epsilon_\mathrm{abs,ener}}}
+\newcommand{\rtolener}{{\epsilon_\mathrm{rel,ener}}}
 
 \setlength{\marginparwidth}{0.75in}
 \newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
@@ -875,10 +879,25 @@ and not on the astrophysical implications of the physical setup we explore.
 \caption{\label{fig:subch_network} Reaction network for the double detonation problem.}
 \end{figure}
 
-Do this in 1-d
-Show the amount of work needed for Strang vs. SDC
+We do a suite of runs with both Strang and the simplified-SDC
+integration, using CFL numbers of 0.2, 0.4, and 0.8 and reaction
+network tolerances of $\atolspec = \rtolspec = 10^{-5}$ and $\atolener
+= \rtolener = 10^{-6}$.  We also run two sets with tighter tolerances.
+The runs labeled ``mixed\_tols'' have $\atolspec = 10^{-8}$ and the runs
+labeled ``tol1.e-6'' have $\atolspec = \rtolspec = 10^{-6}$, with the other
+tolerances unchanged.
 
-Play around with the threshold where NSE kicks in
+Overview plots of CFL = 0.8
+
+Nonaka plots
+
+Zoom panels showing different runs
+
+Mass of different species (as a plot)
+
+1-d slices along x=0?
+
+
 
 \section{Summary}
 
