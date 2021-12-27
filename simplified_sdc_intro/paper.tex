@@ -459,14 +459,17 @@ using an implicit ODE solver described below.
 We explored this and other approaches (including not evolving an
 energy / temperature equation during the reaction step) in
 \citet{strang_rnaas} and showed that the above formulation gets second
-order convergence.  However, for very strong reactions, when using
-Strang splitting the state can drift significantly off of the smooth
-solution to the coupled reactive hydrodynamics equations, as shown
-graphically in \cite{astronum:2018} using an earlier version of the
-present algorithm.
-
-A variation on Strang splitting called (re-)balanced splitting was
-developed in \citet{speth:2013}.
+order convergence and showed that integrating an energy / temperature
+equation is needed to get second order accuracy (see also
+\citealt{muller:1986} for a discussion on stability).  We note however
+that some astrophysical simulation codes only evolve the species
+equations.  For very strong reactions, when using Strang splitting the
+state can drift significantly off of the smooth solution to the
+coupled reactive hydrodynamics equations, as shown graphically in
+\citet{astronum:2018} (using an earlier version of the present
+algorithm).  A variation on Strang splitting called (re-)balanced
+splitting was developed in \citet{speth:2013}, but we do not explore
+that here. \MarginPar{keep this sentence?}
 
 
 \subsection{Timestep Limiters and Retry Mechanism}
@@ -478,16 +481,23 @@ as compared to a method-of-lines approach (see
 \citealt{ppmunsplit}).  In addition to the standard CFL timestep
 limiter for explicit hydrodynamics, \castro\ can also enforce
 timestep limiters based on the energy generation or abundance changes
-over a timestep: 
-\begin{align}
-\label{eq:dt:nuce}
-\Delta t &\le f_e\, \min_{i} \left\{\frac{e_{i}}{\dot{S}_{i}}\right\} \\
-%
-\label{eq:dt:nucX}
-\Delta t &\le f_X\, \min_{i} \left\{\min_{k,X_k > \epsilon_X}\frac{{X_k}_{i}}{{\omegadot(X_k)_i}}\right\}
-\end{align}
-where $i$ is the zone index and $f_e$ and $f_X$ are runtime parameters
-used to control the allowed change, and only species for which $X_k > \epsilon_X$ are considered.
+over a timestep.  An energy limiter takes the form of either:
+\begin{equation}
+\label{eq:dt:nuce_I}
+\Delta t \le f_e\, \min_{i} \left\{\frac{e^n_{i}}{|\dot{S}_{i}^n|}\right\} \\
+\end{equation}
+or
+\begin{equation}
+\label{eq:dt:nuce_II}
+\Delta t \le f_e\, \min_{i} \left\{ \frac{e^n_i}{\int \dot{S}_i(t) dt} \right\}
+\end{equation}
+where $i$ is the zone index and $f_e$ is a parameter used to control
+the allowed change (e.g., $f_e = 0.5$ will limit the step such that
+reactions can only increase the internal energy by 50\%).  The two
+formulations differ in that Eq.~\ref{eq:dt:nuce_I} uses the
+instantaneous evaluation of the energy generation rate at the start of
+the timestep while Eq.~\ref{eq:dt:nuce_II} uses the integral of the
+energy generation rate over the entire step (or last Strang half).
 
 \castro\ has the ability to reject a timestep if it detects a failure
 and retry with smaller timesteps (subcycling to make up the original
