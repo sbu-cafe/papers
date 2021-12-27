@@ -145,9 +145,12 @@ corrections (SDC) coupling of explicit hydrodynamics and stiff
 reaction sources as an alternative to operator splitting or the more
 comprehensive SDC approach we demonstrated previously.  We apply the
 new method to some example problems with small and moderately-sized
-astrophysical nuclear reaction networks.  This is all done in the
-framework of the \castro\ hydrodynamics code, and all algorithm
-implementations are freely available.
+astrophysical nuclear reaction networks and explore the timestep size
+and reaction network tolerances to show that the simplified-SDC
+approach compares favorably with traditional Strang operator
+splitting.  This is all done in the framework of the
+\castro\ hydrodynamics code, and all algorithm implementations are
+freely available.
 \end{abstract}
 
 \keywords{hydrodynamics---methods: numerical}
@@ -160,7 +163,7 @@ implementations are freely available.
 Modeling astrophysical reacting flows can be challenging because of
 the disparity better the nuclear and hydrodynamics timescales.
 Reaction networks tend to be stiff, requiring implicit integration
-techniques to stably integrate the system.  In contrast, compressible
+techniques to stably integrate the system~\citep{BYRNE19871}.  In contrast, compressible
 hydrodynamics flows are limited by the (often much longer)
 sound-crossing time over a computational cell and can be solved using
 explicit time integration. Traditional methods of coupling
@@ -183,14 +186,15 @@ flow over the next timestep, as the code struggles to produce an
 equilibrium.  These large changes in abundances (and large alternately
 positive and negative energy generation rates) can be a challenge for
 a code.  The easiest way to improve the coupling is to cut the
-timestep, but this makes simulations prohibitively expensive.
-Sometimes the burning is simply halted on a zone-by-zone basis when
-NSE conditions are reached (e.g., as in \citealt{hedet}).
-Alternately, at high temperatures, a reaction network can be replaced
-with a table of NSE abundances and the zone's composition set through
-table look-ups (e.g.\ \citealt{ma:2013}).  The present work focuses on
-networks alone, but in a follow-on paper we will explore hybrid
-burning models consisting of networks and NSE tables.
+timestep (see, e.g., \citealt{couch:2015}), but this makes simulations
+prohibitively expensive.  Sometimes the burning is simply halted on a
+zone-by-zone basis when NSE conditions are reached (e.g., as in
+\citealt{hedet}).  Alternately, at high temperatures, a reaction
+network can be replaced with a table of NSE abundances and the zone's
+composition set through table look-ups (e.g.\ \citealt{ma:2013}).  The
+present work focuses on networks alone, but in a follow-on paper we
+will explore hybrid burning models consisting of networks and NSE
+tables.
 
 The \castro\ hydrodynamics code \citep{castro,castro_joss} is used for
 all of our numerical experiments.  \castro\ is a compressible
@@ -198,8 +202,8 @@ all of our numerical experiments.  \castro\ is a compressible
 mesh refinement (AMR) framework \citep{amrex_joss}.  \castro\ has been
 designed to be performance portable and runs on massively parallel CPU
 and GPU architectures \citep{castro_gpu}.  For hydrodynamics, the
-corner transport upwind (CTU) \citep{ppmunsplit} method with the
-piecewise parabolic method (PPM) \citep{ppm,millercolella:2002} is
+corner transport upwind (CTU; \citealt{ppmunsplit}) method with the
+piecewise parabolic method (PPM; \citealt{ppm,millercolella:2002}) is
 used.  \castro\ includes self-gravity, rotation, arbitrary equations
 of state and reaction networks, and has been used for modeling X-ray
 bursts and different models of thermonuclear, core-collapse, and
@@ -209,18 +213,20 @@ for coupling hydrodynamics and nuclear reaction networks based on
 spectral deferred corrections (SDC) methods, and demonstrated the
 method in a variety of test problems.
 
-The time-integration approach presented here is considerably simpler than
-the SDC method of \citet{castro_sdc}, but allows us to reuse the main CTU
-hydrodynamics construction and a largely similar ODE integration
-scheme, making this method easier to add to existing simulation codes.
-Furthermore, it also extends to adaptive mesh refinement with
-subcycling in a straightforward manner, avoiding the complications
-described in \citep{mccorquodalecolella} needed to fill ghost cells
-when using method-of-lines integration.  However, it is restricted to
+The time-integration approach presented here is considerably simpler
+than the SDC method of \citet{castro_sdc}, but allows us to reuse the
+main CTU \MarginPar{any cites to CCSE papers?}  hydrodynamics
+construction and a largely similar ODE integration scheme, making this
+method easier to add to existing simulation codes.  Furthermore, it
+also extends to adaptive mesh refinement with subcycling in a
+straightforward manner, avoiding the complications described in
+\citep{mccorquodalecolella} needed to fill ghost cells when using
+method-of-lines integration.  However, it is restricted to
 second-order accuracy overall.  We term this algorithm the
-``simplified SDC method''.  In this paper we describe the overall method, show its extension to NSE,
-and demonstrate it on several test problems using \castro.  All of the
-code to reproduce the results in this paper are in the \castro\ github
+``simplified-SDC method''.  In this paper we describe the overall
+method and demonstrate it on a test problem and astrophysical
+simulation using \castro.  All of the code to reproduce the results in
+this paper are in the \castro\ github
 repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 
 \section{Numerical Methodology}
@@ -241,7 +247,7 @@ include the CTU hydrodynamics scheme.  Our conserved variables are
 \end{equation}
 where $\rho$ is the mass density, $u$ is velocity, $E$ is specific
 total energy, $p$ is the pressure, and we carry nuclear species mass
-fractions, $X_k$, and auxiliary composition variables, $\alpha_l$.  The specific total
+fractions, $X_k$.  The specific total
 energy relates to the specific internal energy, $e$, as $E = e + u^2/2$,
 and we also separately evolve $e$, as part of a dual
 energy formulation (see \citealt{bryan:1995,wdmergerI}).
@@ -293,7 +299,6 @@ $\omegadot(X_k)$ is the creation rate for species $k$
 mass.  We note that the internal energy ``pdV'' work is not treated as
 a source term but is instead constructed with the hydrodynamical
 fluxes are computed in the CTU method.
-
 Aside from the $p\partial u/\partial x$ (``pdV'') term in the internal
 energy equation, this system is in conservative form with source
 terms.
@@ -392,17 +397,23 @@ reaction sources are stiff, and need to be integrated using implicit
 methods for stabilty.  Operator splitting (e.g., Strang) is
 traditionally employed here, and is used as a benchmark for comparison
 in this paper.  We'll discuss this traditional approach next before moving
-on to our new time-coupling method.  Figure~\ref{fig:flowchart} shows a graphical
+on to our new time-coupling method.  Figures~\ref{fig:flowchart_I} and \ref{fig:flowchart_II} show a graphical
 flowchart of the reaction and hydrodynamics advances in the two methods.
 
 \begin{figure}[t]
 \plotone{sdc_strang_flowchart_I}
-\caption{\label{fig:strang_flowchart} flowchart}
+\caption{\label{fig:strang_flowchart} Flowchart of the operator split,
+  Strang, time integration.  We first react for $\Delta t/2$, then
+  advect for $\Delta t$, and finally react for $\Delta t/2$.  Each
+  process uses the state left behind from the previous process.}
 \end{figure}
 
 \begin{figure}[t]
 \plotone{sdc_strang_flowchart_II}
-\caption{\label{fig:sdc_flowchart} flowchart}
+\caption{\label{fig:sdc_flowchart} Flowchart of the simplified-SDC
+  approach.  An iteratively-lagged advection term is used to update
+  the system to the new time, with each iteration improving the
+  coupling.}
 \end{figure}
 
 
@@ -443,15 +454,7 @@ densities:
 \odt{X_k} = \omegadot_k
 \end{equation}
 We integrate Equations (\ref{eq:strang:e}) and (\ref{eq:strang:X})
-using an implicit ODE solver designed for stiff systems of equations,
-based on VODE~\citep{vode}.  We use a modified version of the
-VODE~\citep{vode} integrator---ported to C++ with checks added to the
-timestep rejection logic that ensure that the species mass fractions
-stay between 0 and \MarginPar{we need to be clear that there is
-  different logic for SDC} 1\footnote{This modified version of VODE is
-available in our Microphysics repo:
-\url{https://github.com/starkiller-astro/Microphysics}.}.\MarginPar{discuss
-  tolerances}
+using an implicit ODE solver described below.
 
 We explored this and other approaches (including not evolving an
 energy / temperature equation during the reaction step) in
@@ -788,6 +791,47 @@ The basic time update algorithm proceeds as:
 
 \end{itemize}
 
+\subsection{Stiff ODE Integrator}
+
+We use a modified version of the VODE~\citep{vode} integrator,
+designed for stiff ODEs.  Our version has been ported C++, as a
+header-only library enabling it to run on GPUs.  We have also added
+checks to the timestep rejection logic that help prevent VODE from
+wandering too far off the solution\footnote{This modified version of
+VODE is available in our Microphysics repo:
+\url{https://github.com/starkiller-astro/Microphysics}.}  These have
+been shown empirically to improve the performance of VODE.
+
+VODE allows us to specific both relative and absolute tolerances
+for the species and energy during the integration.  They are combined
+into a weight that VODE uses to assess convergence of the step:
+\begin{equation}
+w_i = \epsilon_\mathrm{rel} |y_i| + \epsilon_\mathrm{abs}
+\end{equation}
+for integration variable $y_i$.  We will denote the species tolerances
+as $\rtolspec$ and $\atolspec$ and the energy tolerances as $\rtolener$ and
+$\atolener$.
+
+For Strang, we require that
+an individual mass fraction not change too much over a step:
+\begin{equation}
+\label{eq:vode_species_reject}
+\begin{array}{c}|X_k^{m+1}| < f |X_k^m| \\ |X_k^{m+1}| > \frac{1}{f} |X_k^m| \end{array} ~  \mbox{if}~ |X_k^m| > \eta \atolspec ~\mbox{and}~ |X_k^{m+1}| > \eta \atolspec 
+\end{equation}
+Here, $m$ is the current VODE solution and $m+1$ is the potential
+new-time solution.  We use $f = 4$ for the results here.  If these
+conditions are violated, then VODE will reject the timestep and retry
+with a smaller step.  We also require that the mass fractions are
+contained in $[0, 1]$ to a tolerance of $10^{-2}$.
+
+For SDC, we enforce these same constraints, but for
+Eq.~\ref{eq:vode_species_reject}, we only use the change from $m$ to
+$m+1$ due to reactions, by subtracting off the advective contribution
+over that substep.  We also require that:
+\begin{align}
+\rho^{m+1} &> 0 \\
+(\rho e)^{m+1} &> 0
+\end{align}
 
 
 
