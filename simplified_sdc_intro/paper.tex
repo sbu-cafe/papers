@@ -1,4 +1,5 @@
-\documentclass[times,modern]{aastex63}
+%\documentclass[times,modern]{aastex63}
+\documentclass[times,preprint]{aastex63}
 
 % these lines seem necessary for pdflatex to get the paper size right
 \pdfpagewidth 8.5in
@@ -503,16 +504,21 @@ energy generation rate over the entire step (or last Strang half).
 and retry with smaller timesteps (subcycling to make up the original
 required timestep).  Among the conditions that can trigger this are
 density falling below zero during advection, the ODE integration
-failing to converge in the implicit solve, or violation of one of the
-timestep limiters during the step.  This means that equations
-(\ref{eq:dt:nuce}) and (\ref{eq:dt:nucX}) are not reactive, but instead
-guaranteed to be met throughout the simulation, because the step is
-rejected if they are violated.  This contrasts to similar approaches
-used in other codes where conditions \ref{eq:dt:nuce} and
-\ref{eq:dt:nucX} are used to restrict the next timestep size, but the
-update over the current step is kept, which already violated the
-constraints. \MarginPar{would be nice to have a reference here} The retry mechanism in \castro\ works with both the
-Strang and simplified-SDC integration scheme.
+failing to converge in the implicit solve (due to too many steps or
+the internal timestep falling below a minimum), or violation of one of
+the timestep limiters during the step.  This means that equation
+(\ref{eq:dt:nuce_I}) or (\ref{eq:dt:nuce_II}) are not reactive, but
+instead guaranteed to be met throughout the simulation, because the
+step is rejected if they are violated.  This contrasts to similar
+approaches used in other codes where conditions \ref{eq:dt:nuce_I} or
+\ref{eq:dt:nuce_II} are used to restrict the next timestep size, but
+the update over the current step is kept, which already violated the
+constraints. \MarginPar{would be nice to have a reference here} The
+retry mechanism in \castro\ works with both the Strang and
+simplified-SDC integration scheme.  Retrying the step is much more
+stringent that simply adjusting the next step, so we put a cap on the
+number of retries allowed, aborting if we exceed the cap.
+
 
 
 \subsection{Spectral Deferred Corrections}
@@ -1106,7 +1112,7 @@ The final Jacobian is found by multiplying these two:
 \renewcommand{\arraystretch}{1}
 \end{equation}
 We note that the form of these entries is the same as one would arrive at if you start with the rates expressed as
-$\omega_k(\rho, T(\rho, X_j, e), X_j)$ and note that constant $e$ implies that
+$\omega_k(\rho, T(\rho, X_j, e), X_j)$ and recognize that constant $e$ implies that
 \begin{equation}
 \left . \frac{\partial T}{\partial X_k} \right |_{\rho, e} = - \frac{e_{X_k}}{c_v}
 \end{equation}
