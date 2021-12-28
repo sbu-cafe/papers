@@ -858,23 +858,37 @@ over that substep.  We also require that:
 
 
 
-\section{Simulations}
+\section{Tests}
 
 \subsection{Reacting convergence test problem}
 
 \cite{castro_sdc} introduced a test problem for measuring convergence
-of a reacting hydrodynamic algorithm.  We run that same test here with the
-simplified SDC algorithm.
+of a reacting hydrodynamic algorithm.  This is based on the acoustic
+pulse problem from \citep{mccorquodalecolella}, and was also used in
+\citep{strang_rnaas}.  A periodic domain with a uniform entropy is
+initialized with a pressure profile with a small perturbation.  This
+drives a low amplitude acoustic wave radially outward from the center.
+A simple reaction network with the triple-alpha and
+$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$ rates releases energy.  By
+running at different resolutions, with a fixed timestep that scales
+with resolution, we can compute the convergence rate.  In order to
+demonstrate second-order convergence, the problem must be smooth (so
+the slope limiters don't kick in severely), which means that the
+energy release cannot be so vigorous as to drive shocks.  test here
+with the simplified SDC algorithm.
 
-Also explore: PLM vs PPM, 1 vs. 2 vs. 3 iterations
 
-% run on 04-06-21
-% Castro       git describe: 21.04-dirty
-% AMReX        git describe: 21.03-58-g87c81d0ca
-% Microphysics git describe: 21.04-1-g33a4d0fe
+
+% EOS: /home/zingale/development/Microphysics/EOS/helmholtz
+% NETWORK: /home/zingale/development/Microphysics/networks/triple_alpha_plus_cago
+
+% Castro       git describe: 21.12-9-gd7a27ccd5
+% AMReX        git describe: 21.12-64-gfde72340e
+% Microphysics git describe: 21.12-12-g9595a34f
+
 
 \begin{deluxetable}{lllllll}
-\tablecaption{\label{table:react_convert_strang} Convergence ($L_1$ norm) for the reacting convergence problem using Strang splitting.}
+\tablecaption{\label{table:react_converge_strang} Convergence ($L_1$ norm) for the reacting convergence problem using Strang splitting.}
 \tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
            \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
            \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
@@ -893,38 +907,45 @@ Also explore: PLM vs PPM, 1 vs. 2 vs. 3 iterations
 \end{deluxetable}
 
 
-% run on 04-06-21
-% Castro       git describe: 21.04-dirty
-% AMReX        git describe: 21.03-58-g87c81d0ca
-% Microphysics git describe: 21.04-1-g33a4d0fe
 
 \begin{deluxetable}{lllllll}
-\tablecaption{\label{table:react_convert_sdc} Convergence ($L_1$ norm) for the reacting convergence problem using SDC integration (2 iterations).}
+\tablecaption{\label{table:react_converge_sdc} Convergence ($L_1$ norm) for the reacting convergence problem using SDC integration (2 iterations).}
 \tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
            \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
            \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
 \startdata
- $\rho$                      & $2.795 \times 10^{18}$  & 2.044  & $6.777 \times 10^{17}$  & 2.554  & $1.154 \times 10^{17}$  \\
- $\rho u$                    & $6.798 \times 10^{26}$  & 2.449  & $1.245 \times 10^{26}$  & 2.889  & $1.680 \times 10^{25}$  \\
- $\rho v$                    & $6.798 \times 10^{26}$  & 2.449  & $1.245 \times 10^{26}$  & 2.889  & $1.680 \times 10^{25}$  \\
- $\rho E$                    & $2.452 \times 10^{35}$  & 2.352  & $4.804 \times 10^{34}$  & 2.742  & $7.179 \times 10^{33}$  \\
- $\rho e$                    & $2.262 \times 10^{35}$  & 2.321  & $4.527 \times 10^{34}$  & 2.822  & $6.404 \times 10^{33}$  \\
- $T$                         & $2.236 \times 10^{21}$  & 1.691  & $6.927 \times 10^{20}$  & 2.481  & $1.240 \times 10^{20}$  \\
- $\rho X(\isotm{He}{4})$     & $2.879 \times 10^{18}$  & 2.020  & $7.096 \times 10^{17}$  & 2.529  & $1.229 \times 10^{17}$  \\
- $\rho X(\isotm{C}{12})$     & $1.697 \times 10^{17}$  & 1.950  & $4.393 \times 10^{16}$  & 2.231  & $9.357 \times 10^{15}$  \\
- $\rho X(\isotm{O}{16})$     & $1.686 \times 10^{14}$  & 1.659  & $5.338 \times 10^{13}$  & 1.957  & $1.375 \times 10^{13}$  \\
- $\rho X(\isotm{Fe}{56})$    & $2.795 \times 10^{8}$   & 2.044  & $6.777 \times 10^{7}$   & 2.554  & $1.154 \times 10^{7}$   \\
+ $\rho$                      & $2.784 \times 10^{18}$  & 2.048  & $6.734 \times 10^{17}$  & 2.558  & $1.143 \times 10^{17}$  \\
+ $\rho u$                    & $6.779 \times 10^{26}$  & 2.447  & $1.243 \times 10^{26}$  & 2.895  & $1.671 \times 10^{25}$  \\
+ $\rho v$                    & $6.779 \times 10^{26}$  & 2.447  & $1.243 \times 10^{26}$  & 2.895  & $1.671 \times 10^{25}$  \\
+ $\rho E$                    & $2.450 \times 10^{35}$  & 2.353  & $4.795 \times 10^{34}$  & 2.737  & $7.193 \times 10^{33}$  \\
+ $\rho e$                    & $2.256 \times 10^{35}$  & 2.320  & $4.518 \times 10^{34}$  & 2.817  & $6.414 \times 10^{33}$  \\
+ $T$                         & $2.232 \times 10^{21}$  & 1.695  & $6.893 \times 10^{20}$  & 2.484  & $1.233 \times 10^{20}$  \\
+ $\rho X(\isotm{He}{4})$     & $2.866 \times 10^{18}$  & 2.024  & $7.049 \times 10^{17}$  & 2.534  & $1.217 \times 10^{17}$  \\
+ $\rho X(\isotm{C}{12})$     & $1.695 \times 10^{17}$  & 1.959  & $4.357 \times 10^{16}$  & 2.236  & $9.250 \times 10^{15}$  \\
+ $\rho X(\isotm{O}{16})$     & $1.681 \times 10^{14}$  & 1.662  & $5.313 \times 10^{13}$  & 1.963  & $1.363 \times 10^{13}$  \\
+ $\rho X(\isotm{Fe}{56})$    & $2.784 \times 10^{8}$   & 2.048  & $6.734 \times 10^{7}$   & 2.558  & $1.143 \times 10^{7}$   \\
 \enddata
 \end{deluxetable}
 
-
-
-\subsection{X-ray Burst}
-
-We next consider a flame propagating through an accreted helium layer on a neutron star,
-as described in \cite{harpole:2021}.
+Tables \ref{table:react_converge_strang} and
+\ref{table:react_converge_sdc} show the Strang and simplified-SDC
+convergence respectively.  We see that both methods converge nearly
+second order, and agree well with each other.
 
 \subsection{Sub-Chandra Double Detonation}
+
+We next model a double detonation Type Ia
+supernova.  In this model, a detonation begins in the accreted helium
+layer on a sub-Chandrasekhar mass white dwarf and that detonation can
+either drive a compression wave into the core igniting a second
+detonation in the carbon / oxygen core, or burn through the interface
+at the base of the accreted layer producing an inward propagating
+carbon detonation.  Our goal here is not to explore the feasibility of
+the model or understand whether a detonation propagating through the
+He-C interface is physical, but rather to look at the coupling of the
+hydrodynamics and reactions.  For that reason, we explore only a
+single model and start off with a rather large temperature
+perturbation in the He layer.
 
 We use a network with 28 nuclei and 96 rates that captures He burning
 with links for $(\alpha,p)(p,\gamma)$ reactions and the rates
@@ -932,13 +953,12 @@ involving \isot{N}{14} to bypass
 $\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$ as described in
 \cite{shenbildsten}.  The rates are taken from the ReacLib library
 \citep{reaclib} and the network is written by
-\pynucastro~\citep{pynucastro}.  The nuclei and links in the network are
-shown in Figure~\ref{fig:subch_network}.  The many reaction pathways in this network
-make it a good test for the SDC algorithm.
-
-The initial model is generated following the procedure described in \citep{subchandra}.
-For the present work, we are only concerned with the behavior of the time-integration strategy
-and not on the astrophysical implications of the physical setup we explore.  
+\pynucastro~\citep{pynucastro} directly in the C++ format that our
+code requires.  The nuclei and links in the network are shown in
+Figure~\ref{fig:subch_network}.  This moderate-sized network with many
+reaction pathways (forward and reverse) make it a good test for the
+coupling between hydro and reactions.  An overview of the network is
+shown in Figure~\ref{fig:subch_network}.
 
 \begin{figure}[t]
 \centering
@@ -946,13 +966,36 @@ and not on the astrophysical implications of the physical setup we explore.
 \caption{\label{fig:subch_network} Reaction network for the double detonation problem.}
 \end{figure}
 
+
+The initial model is generated following the procedure described in
+\citep{subchandra}.  We use a $1.1~M_\odot$ carbon white dwarf with a
+$0.05~M_\odot$ He layer.  We seed the He layer with 1\% (by mass) of
+\isot{N}{14}.  The white dwarf is isothermal and the temperature ramps
+up at the base of the He layer and is then isentropic until the
+surface.  Figure~\ref{fig:subch_initial_model} shows the structure of
+the initial model.  We use 2d axisymmetric coordinates with a domain
+size of $1.024\times 10^9~\mathrm{cm} \times 2.048\times
+10^9~\mathrm{cm}$, a base grid of $256 \times 512$ zones and two
+levels of refinement (both jumping by $2\times$), giving a fine-grid
+resolution of $10~\mathrm{km}$.  Gravity is modeled as a monopole.
+
+\begin{figure}[t]
+\centering
+\plotone{initial_model}
+\caption{\label{fig:subch_initial_model} Initial model for the double detonation test problem.}
+\end{figure}
+
+An initial perturbation is placed on the symmetry axis of the form:
+
+
 We do a suite of runs with both Strang and the simplified-SDC
 integration, using CFL numbers of 0.2, 0.4, and 0.8 and reaction
 network tolerances of $\atolspec = \rtolspec = 10^{-5}$ and $\atolener
 = \rtolener = 10^{-6}$.  We also run two sets with tighter tolerances.
-The runs labeled ``mixed\_tols'' have $\atolspec = 10^{-8}$ and the runs
-labeled ``tol1.e-6'' have $\atolspec = \rtolspec = 10^{-6}$, with the other
-tolerances unchanged.
+The runs labeled ``mixed\_tols'' have $\atolspec = 10^{-8}$ and the
+runs labeled ``tol1.e-6'' have $\atolspec = \rtolspec = 10^{-6}$, with
+the other tolerances unchanged.  For the step rejection part of VODE,
+we use $f = 4$ and $\eta = 4$.
 
 Overview plots of CFL = 0.8
 
@@ -964,7 +1007,12 @@ Mass of different species (as a plot)
 
 1-d slices along x=0?
 
-
+We have not focused on performance or load-balancing the reactions in
+the tests that we ran, but these limited runs show that the
+simplified-SDC method runs as fast (or faster) than the Strang method
+for the same tolerances and CFL, despite having to do the advection
+twice.  We would expect similar behavior for any simulations that are
+dominated by the cost of reactions.
 
 \section{Summary}
 
