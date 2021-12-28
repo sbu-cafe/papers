@@ -20,7 +20,7 @@
 
 
 \newcommand{\castro}{{\sf Castro}}
-\newcommand{\maestro}{{\sf Maestro}}
+\newcommand{\maestroex}{{\sf MAESTROeX}}
 \newcommand{\pynucastro}{{\sf pynucastro}}
 \newcommand{\flash}{{\sf Flash}}
 \newcommand{\amrex}{{\sf AMReX}}
@@ -274,6 +274,7 @@ where for the special case of $(\rho e)$, we have an additional ``pdV'' term:
 
 We'll split the source term, $\Sc(\Uc)$ into pure hydrodynamic and reactive parts:
 \begin{equation}
+  \label{eq:cons_sources}
   \Hb(\Uc) = \left ( \begin{array}{c}
     0 \\
     0 \\
@@ -477,12 +478,13 @@ that here. \MarginPar{keep this sentence?}
 
 Since this method is based off of the CTU hydrodynamics scheme, it
 benefits from the larger timestep that method can take (when done with
-full corner coupling, the advective CFL condition is unity)
-as compared to a method-of-lines approach (see
-\citealt{ppmunsplit}).  In addition to the standard CFL timestep
-limiter for explicit hydrodynamics, \castro\ can also enforce
-timestep limiters based on the energy generation or abundance changes
-over a timestep.  An energy limiter takes the form of either:
+full corner coupling, the advective CFL condition is unity) as
+compared to a method-of-lines approach (see \citealt{ppmunsplit}).  In
+addition to the standard CFL timestep limiter for explicit
+hydrodynamics, timestep limiters based on
+the energy generation or abundance changes over a timestep, such as
+those introduced in \cite{prometheus}, are often used.  An energy limiter takes the
+form of either:
 \begin{equation}
 \label{eq:dt:nuce_I}
 \Delta t \le f_e\, \min_{i} \left\{\frac{e^n_{i}}{|\dot{S}_{i}^n|}\right\} \\
@@ -490,7 +492,7 @@ over a timestep.  An energy limiter takes the form of either:
 or
 \begin{equation}
 \label{eq:dt:nuce_II}
-\Delta t \le f_e\, \min_{i} \left\{ \frac{e^n_i}{\int \dot{S}_i(t) dt} \right\}
+\Delta t \le f_e\, \min_{i} \left\{ \frac{e^n_i}{|\int \dot{S}_i(t) dt|} \right\}
 \end{equation}
 where $i$ is the zone index and $f_e$ is a parameter used to control
 the allowed change (e.g., $f_e = 0.5$ will limit the step such that
@@ -534,7 +536,7 @@ integral, which is done using an iteratively-lagged solution.  This is the
 classic approach that we implemented in \cite{castro_sdc}.
 
 Our simplified-SDC approach is based on the method described in \citet{SDC-old} and
-a similar implementation in the \maestro\ simulation code.
+a similar (but unpublished) implementation in the \maestroex\ simulation code \cite{maestroex}.
 We again start by considering the update
 in integral form:
 \begin{equation}
@@ -565,7 +567,7 @@ The basic time update algorithm proceeds as:
   \item We need an approximation of how much the reactions alone
     changed the primitive variable state over the timestep, which we
     will denote $\Ic_q$ (this is basically an approximation of
-    $\Rb(q)$).
+    $\Rb(\qb)$).
 
     Since we do not have any information about the current
     timestep in the first iteration, we use the value from the last
@@ -588,7 +590,7 @@ The basic time update algorithm proceeds as:
   Iterate from $k = 1, \ldots, \smax$.  For second-order accuracy,
   $\smax = 2$ is sufficient.  In addition to denoting the time-level
   with a superscript (like $n$ or $n+1$), we'll use a second subscript
-  in parentheses to keep track of the iteration.  A single iteration
+  in parentheses to keep track of the iteration.  A single iteration, $k$,
   starts with $\Uc^n$ and results in the new time-level state for that
   iteration, $\Uc^{n+1,(k)}$.
 
@@ -707,15 +709,12 @@ The basic time update algorithm proceeds as:
       \odt{\Uc} = \Adv{\Uc}^{n+1/2,(k)} + \Rb(\Uc)
     \end{equation}
 
-    Looking at the form of Eq.~\ref{eq:react_source}, we see that only
-    the species, auxiliary quantities, and energies have source terms.
-    Since we are reacting, we will use the $X_k$ as the primary
-    composition variable and compute $\alpha_l$ as needed from them,
-    so we don't directly integrate the auxiliary quantities.
-    Likewise, the total and internal energies both provide the same
-    information, and integrating both overconstrains the system, so we
-    just integrate the internal energy.  We define the subset of variables
-    that are directly integrated as:
+    Looking at the form of Eq.~\ref{eq:cons_sources}, we see that only
+    the species and energies have source terms.  The total and
+    internal energies both provide the same information, and
+    integrating both overconstrains the system, so we just integrate
+    the internal energy.  We define the subset of variables that are
+    directly integrated as:
     \begin{equation}
       \Uc^\prime = \left ( \begin{array}{c} \rho X_k \\ \rho e \end{array} \right )
     \end{equation}
@@ -727,7 +726,7 @@ The basic time update algorithm proceeds as:
 
     We will need the density at times during the integration, which we construct as:
     \begin{equation}
-      \rho(t) = \rho^n + \Advss{\rho}^{n+1/2,(k)} \, t
+      \rho(t) = \rho^n + \Advss{\rho}^{n+1/2,(k)} \, (t - t^n)
     \end{equation}
     As we are integrating this system we need to get the temperature,
     $T$, for the rate evaluations.  We obtain this by directly from
@@ -763,7 +762,7 @@ The basic time update algorithm proceeds as:
       \Ic^{(k)}_{\Uc} = \frac{\Uc^{n+1,(k)} - \Uc^n}{\Delta t} - \Adv{\Uc}^{n+1/2,(k)}
     \end{equation}
     However, for our primitive variables, which are used in the
-    prediction, we need to construct the required source terms more
+    interface state prediction, we need to construct the required source terms more
     carefully.  We want:
     \begin{equation}
       \label{eq:Iq}
@@ -807,6 +806,8 @@ The basic time update algorithm proceeds as:
 
 \end{itemize}
 
+This completes the update of a single iteration.
+
 \subsection{Stiff ODE Integrator}
 
 We use a modified version of the VODE~\citep{vode} integrator,
@@ -835,10 +836,16 @@ an individual mass fraction not change too much over a step:
 \begin{array}{c}|X_k^{m+1}| < f |X_k^m| \\ |X_k^{m+1}| > \frac{1}{f} |X_k^m| \end{array} ~  \mbox{if}~ |X_k^m| > \eta \atolspec ~\mbox{and}~ |X_k^{m+1}| > \eta \atolspec 
 \end{equation}
 Here, $m$ is the current VODE solution and $m+1$ is the potential
-new-time solution.  We use $f = 4$ for the results here.  If these
-conditions are violated, then VODE will reject the timestep and retry
-with a smaller step.  We also require that the mass fractions are
-contained in $[0, 1]$ to a tolerance of $10^{-2}$.
+new-time solution.  The parameter $f$ is the factor a mass fraction is
+allowed to change per VODE step.  We use $f = 4$ for the results here.
+The parameter $\eta$ allows us to only use this condition for species
+with mass fractions above a threshold.  We use $\eta = 1$ by default,
+but $\eta = f$ sometimes helps prevent VODE from worrying about
+species that dip below the threshold during integration, since VODE
+uses a norm over all of the integrated variables to compute the total
+error.  If these conditions are violated, then VODE will reject the
+timestep and retry with a smaller step.  We also require that the mass
+fractions are contained in $[0, 1]$ to a tolerance of $10^{-2}$.
 
 For SDC, we enforce these same constraints, but for
 Eq.~\ref{eq:vode_species_reject}, we only use the change from $m$ to
