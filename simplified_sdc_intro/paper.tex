@@ -1,4 +1,4 @@
-%\documentclass[times,modern]{aastex63}
+\documentclass[times,modern]{aastex63}
 \documentclass[times,preprint]{aastex63}
 
 % these lines seem necessary for pdflatex to get the paper size right
@@ -856,6 +856,11 @@ over that substep.  We also require that:
 (\rho e)^{m+1} &> 0
 \end{align}
 
+For both Strang and simplified-SDC, we will use a numerical Jacobian.
+VODE computes it internally for Strang and we use the method from
+Appendix \ref{app:jacobian} for the simplified-SDC method.  VODE
+employs Jacobian-caching, so the Jacobian does not need to be
+re-evaluated each time it is used.
 
 
 \section{Tests}
@@ -947,7 +952,7 @@ hydrodynamics and reactions.  For that reason, we explore only a
 single model and start off with a rather large temperature
 perturbation in the He layer.
 
-We use a network with 28 nuclei and 96 rates that captures He burning
+We use a network with 28 nuclei and 96 rates that captures He burning \MarginPar{should I do a few aprox13 runs for comparison?}
 with links for $(\alpha,p)(p,\gamma)$ reactions and the rates
 involving \isot{N}{14} to bypass
 $\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$ as described in
@@ -958,7 +963,9 @@ code requires.  The nuclei and links in the network are shown in
 Figure~\ref{fig:subch_network}.  This moderate-sized network with many
 reaction pathways (forward and reverse) make it a good test for the
 coupling between hydro and reactions.  An overview of the network is
-shown in Figure~\ref{fig:subch_network}.
+shown in Figure~\ref{fig:subch_network}.  This network is available 
+as {\tt subch2} in \citep{microphysics}.
+
 
 \begin{figure}[t]
 \centering
@@ -1047,8 +1054,13 @@ attaining the correct equilibrium in these conditions.
 \caption{\label{fig:subch_sdc_cfl08_II}}
 \end{figure}
 
+We now look at the evolution of the state while burning by storing the
+thermodynamic state internal to VODE each substep as it evaluates the
+righthand side of the ODE system it is integrating.  We pick a point
+on the symmetry axis a few zones behind the inward moving shock.
+Figure~\ref{fig:nonaka_plot} shows the evolution of \isot{Ni}{56} over
+a single coarse-grid timestep (4 fine-grid timesteps).
 
-Nonaka plots
 
 Zoom panels showing different runs
 
@@ -1060,20 +1072,36 @@ simulations.
 
 1-d slices along x=0?
 
+
+\section{Summary}
+
+We presented a simplified spectral deferred corrections scheme for coupling
+hydrodynamics and reactions.  We demonstrated that for a moderate-sized reaction
+network, the simplified-SDC method 
+
 We have not focused on performance or load-balancing the reactions in
 the tests that we ran, but these limited runs show that the
 simplified-SDC method runs as fast (or faster) than the Strang method
 for the same tolerances and CFL, despite having to do the advection
 twice.  We would expect similar behavior for any simulations that are
-dominated by the cost of reactions.
+dominated by the cost of reactions.  If the results above a robust across
+different problems and networks, then this suggests that we can run 
+the SDC simulation with larger CFL and/or less strict reaction tolerances,
+which would translate into a large performance boost.
 
-\section{Summary}
+This new time-integration method is freely available in \castro, and
+we will continue to explore it on other problems.  We are particularly
+interested in massive star evolution with this method, where the
+vigorous shell burning leading up to core-collapse would be an ideal
+application for the simplified-SDC method.  In a follow-on paper, we
+will show how to couple this new integration method to a table for
+evaluating an NSE distribution in the iron core of a massive star.
 
-We presented a simplified spectral deferred corrections scheme for coupling
-hydrodynamics and reactions.
-
-Future work is to extend this methodology to MHD.
-
+Future work is to extend this methodology to MHD.  This is very
+straightforward since the simplified-SDC method operates solely on the
+thermodynamic state.  We will also explore how to couple radiation
+hydrodynamics, where we need to do an implicit update for the
+radiation energy.
 
 
 \acknowledgements \castro\ is freely available at
