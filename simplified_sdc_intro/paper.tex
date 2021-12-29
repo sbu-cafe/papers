@@ -1133,11 +1133,38 @@ shock.}
 \end{figure}
 
 
-To quantify this effect, we next looks at the total mass of some key species.
-This is often a desired diagnostic for supernova calculations, since 
-\isot{Ni}{56} powers the lightcurve.  Table \ref{table:masses} shows the total
-mass of \isot{He}{4}, \isot{Si}{28}, and \isot{Ni}{56} for each of the
-simulations.
+To quantify this effect, we next looks at the total mass of some key
+species.  This is often a desired diagnostic for supernova
+calculations, since \isot{Ni}{56} powers the lightcurve.  Table
+\ref{table:masses} shows the total mass of \isot{He}{4},
+\isot{Si}{28}, and \isot{Ni}{56} for each of the simulations.  For the
+Strang runs, there are large variations between the different
+simulations while the SDC simulations all agree to within a few
+percent.  Further, the Strang run with the tighter tolerances is in
+good agreement with the masses found by the SDC runs.  This supports
+the ideas described above that all of the SDC runs agree while only
+the Strang run with the tighter tolerances is reliable.
+
+\begin{deluxetable}{llll}
+\tablecaption{\label{table:masses} Species masses.}
+\tablehead{\colhead{simulation} & \colhead{$M_{\isotm{He}{4}}$} & \colhead{$M_{\isotm{Si}{28}}$} & \colhead{$M_{\isotm{Ni}{56}}$}}
+\startdata
+\multicolumn{4}{c}{Strang runs} \\
+\hline
+{\tt strang\_subch2\_cfl0.2}           & $6.10\times 10^{31}$ & $6.72\times 10^{31}$ & $5.29\times 10^{31}$ \\
+{\tt strang\_subch2\_cfl0.4}           & $5.20\times 10^{31}$ & $6.70\times 10^{31}$ & $6.02\times 10^{31}$ \\
+{\tt strang\_subch2\_cfl0.4\_mixedtol} & $3.05\times 10^{31}$ & $7.29\times 10^{31}$ & $7.80\times 10^{31}$ \\
+{\tt strang\_subch2\_cfl0.8}           & $4.59\times 10^{31}$ & $6.88\times 10^{31}$ & $6.27\times 10^{31}$ \\
+\hline
+\multicolumn{4}{c}{SDC runs} \\
+\hline
+{\tt sdc\_subch2\_cfl0.2}           & $3.35\times 10^{31}$  & $7.26\times 10^{31}$  & $8.27\times 10^{31}$ \\
+{\tt sdc\_subch2\_cfl0.4}           & $3.30\times 10^{31}$  & $7.27\times 10^{31}$  & $8.13\times 10^{31}$ \\
+{\tt sdc\_subch2\_cfl0.4\_mixedtol} & $3.09\times 10^{31}$  & $7.36\times 10^{31}$  & $8.08\times 10^{31}$ \\
+{\tt sdc\_subch2\_cfl0.4\_tol1.e-6} & $3.25\times 10^{31}$  & $7.27\times 10^{31}$  & $8.25\times 10^{31}$ \\
+{\tt sdc\_subch2\_cfl0.8}           & $3.18\times 10^{31}$  & $7.34\times 10^{31}$  & $7.83\times 10^{31}$ \\
+\enddata
+\end{deluxetable}
 
 
 1-d slices along x=0?
