@@ -1,4 +1,4 @@
-\documentclass[times,modern]{aastex63}
+%\documentclass[times,modern]{aastex63}
 \documentclass[times,preprint]{aastex63}
 
 % these lines seem necessary for pdflatex to get the paper size right
@@ -1057,9 +1057,32 @@ attaining the correct equilibrium in these conditions.
 We now look at the evolution of the state while burning by storing the
 thermodynamic state internal to VODE each substep as it evaluates the
 righthand side of the ODE system it is integrating.  We pick a point
-on the symmetry axis a few zones behind the inward moving shock.
+on the symmetry axis a few zones behind the inward moving shock and
+ran both a Strang and simplified-SDC simulation for a single
+coarse-grid timestep.  To ensure that we start off the same, both
+simulations were started from a checkpoint file from the
+simplified-SDC simulation a few steps before 0.1~s.
 Figure~\ref{fig:nonaka_plot} shows the evolution of \isot{Ni}{56} over
-a single coarse-grid timestep (4 fine-grid timesteps).
+a single coarse-grid timestep (4 fine-grid timesteps).  We see that
+the Strang solution is much more discontinuous, as the reactions and
+advection push the solution in different ways, because the processes
+are completely independent of one another.  If an equilibrium state is
+important to the nucleosynthesis, the large deviations in the Strang
+solution mean that we are evaluating the reaction network with a state
+out of equilibrium for much of the integration time. \MarginPar{need to double check the data---why are there points in the vertical part of Strang?}
+
+\begin{figure}
+\plotone{sdc_compare}
+\caption{\label{fig:nonaka_plot} Evolution of $X(\isotm{Ni}{56})$ over
+  4 fine-grid timesteps in a single zone behind the inward propagating
+  shock.  The Strang points (blue) show the first $\Delta t/2$ burn
+  bring the abundance away from equilibrium, then the advection
+  overcorrecting it, and finally the second $\Delta t/2$ bringing it
+  back toward the equilibrium.  The two simplified-SDC iterations
+  appear much smoother.  For the SDC runs, there are a few points
+  evaluated beyond the stop time---VODE can use data from outside the
+  integration range to interpolate to the final solution.}
+\end{figure}
 
 
 Zoom panels showing different runs
