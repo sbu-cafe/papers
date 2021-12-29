@@ -1085,10 +1085,57 @@ out of equilibrium for much of the integration time. \MarginPar{need to double c
 \end{figure}
 
 
-Zoom panels showing different runs
+We next look at how the structure seen in
+Figures~\ref{fig:subch_strang_cfl08_I} and \ref{fig:subch_sdc_cfl08_I}
+vary with CFL number and network tolerance.  We focus just on the
+region behind the inward propagating shock.
+Figures~\ref{fig:strang_enuc_summary} and
+\ref{fig:strang_abar_summary} show the nuclear energy generation rate
+and mean molecular weight for all of the Strang runs.  We see that
+changing the CFL number does little to affect the state behind the
+shock---it continues to take on the mottled appearance characteristic
+of not reaching a proper equilibrium.  For the {\tt mixedtol} case, we
+see that the state is greatly improved.  We were unable to run the
+{\tt tol1.e-6} case for Strang, as the code aborted with too many
+subcycles.  While reducing the tolerances does help, it greatly
+increases the cost of the simulation.
 
-For supernova calculations, we often want to know how much mass of
-\isot{Ni}{56} was produced.  Table \ref{table:masses} shows the total
+\begin{figure}
+\plotone{strang_enuc_summary_plot.pdf}
+\caption{\label{fig:strang_enuc_summary} Comparison of Strang runs showing
+the nuclear energy generation rate behind the inward propagating
+shock.}
+\end{figure}
+
+\begin{figure}
+\plotone{strang_abar_summary_plot.pdf}
+\caption{\label{fig:strang_abar_summary} Comparison of Strang runs showing
+the mean molecular weight behind the inward propagating
+shock.}
+\end{figure}
+
+The SDC comparisons are shown in Figures~\ref{fig:sdc_enuc_summary}
+and \ref{fig:sdc_abar_summary}.  We see that the state behind the
+shock looks great regardless of the CFL or integrator tolerances.
+
+\begin{figure}
+\plotone{sdc_enuc_summary_plot.pdf}
+\caption{\label{fig:sdc_enuc_summary} Comparison of simplified-SDC runs showing
+the nuclear energy generation rate behind the inward propagating
+shock.}
+\end{figure}
+
+\begin{figure}
+\plotone{sdc_abar_summary_plot.pdf}
+\caption{\label{fig:sdc_abar_summary} Comparison of simplified-SDC runs showing
+the mean molecular weight behind the inward propagating
+shock.}
+\end{figure}
+
+
+To quantify this effect, we next looks at the total mass of some key species.
+This is often a desired diagnostic for supernova calculations, since 
+\isot{Ni}{56} powers the lightcurve.  Table \ref{table:masses} shows the total
 mass of \isot{He}{4}, \isot{Si}{28}, and \isot{Ni}{56} for each of the
 simulations.
 
