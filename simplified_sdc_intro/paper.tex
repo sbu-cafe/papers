@@ -978,6 +978,9 @@ size of $1.024\times 10^9~\mathrm{cm} \times 2.048\times
 10^9~\mathrm{cm}$, a base grid of $256 \times 512$ zones and two
 levels of refinement (both jumping by $2\times$), giving a fine-grid
 resolution of $10~\mathrm{km}$.  Gravity is modeled as a monopole.
+Our choice of initial perturbation has the detonation propagate inward
+into the carbon white dwarf.  We run the simulation for 0.1 s---this
+is enough time for the carbon detonation to be well developed.
 
 \begin{figure}[t]
 \centering
@@ -997,13 +1000,63 @@ runs labeled ``tol1.e-6'' have $\atolspec = \rtolspec = 10^{-6}$, with
 the other tolerances unchanged.  For the step rejection part of VODE,
 we use $f = 4$ and $\eta = 4$.
 
-Overview plots of CFL = 0.8
+Figure \ref{fig:subch_strang_cfl08_I} shows the temperature, mean
+molecular weight, and nuclear energy generation rate for the strang
+CFL = 0.8 simulation ({\tt strang\_subch2\_cfl0.8}).  We see that the
+mean molecular weight appears mottled behind the inward propagating
+detonation in the white dwarf.  Comparing to the energy generation
+rate, we see that region is characterized by large energy releases of
+alternating signs checkerboarding thoughout the region.  This is
+characteristic of the nucleosynthesis struggling to come into
+equilibrium at high temperatures when the reverse rates can be
+important.  In Figure~\ref{fig:subch_strang_cfl08_II} we look at some
+important mass fractions for the same simulation.  Again we see that
+the abundances are not smooth behind the inward detonation.
+
+\begin{figure}
+\centering
+\plotone{strang_subch2_cfl0.8_state}
+\caption{\label{fig:subch_strang_cfl08_I}}
+\end{figure}
+
+\begin{figure}
+\centering
+\plotone{strang_subch2_cfl0.8_mass_fractions}
+\caption{\label{fig:subch_strang_cfl08_II}}
+\end{figure}
+
+We next look at the simplified-SDC version of this same case, {\tt
+  sdc\_subch2\_cfl0.8}.  Figure~\ref{fig:subch_sdc_cfl08_I} shows the
+temperature, mean molecular weight, and energy generation rate.
+Compared to Figure~\ref{fig:subch_strang_cfl08_I}, we see that the
+composition and energy generation rates are smooth, without any of the
+checkerboarding that plagued the Strang simulation.  The compositions
+plot (figure~\ref{fig:subch_sdc_cfl08_II}) shows the same behavior.
+This suggests that the simplified-SDC algorithm has an easier time
+attaining the correct equilibrium in these conditions.
+
+\begin{figure}
+\centering
+\plotone{sdc_subch2_cfl0.8_state}
+\caption{\label{fig:subch_sdc_cfl08_I}}
+\end{figure}
+
+\begin{figure}
+\centering
+\plotone{sdc_subch2_cfl0.8_mass_fractions}
+\caption{\label{fig:subch_sdc_cfl08_II}}
+\end{figure}
+
 
 Nonaka plots
 
 Zoom panels showing different runs
 
-Mass of different species (as a plot)
+For supernova calculations, we often want to know how much mass of
+\isot{Ni}{56} was produced.  Table \ref{table:masses} shows the total
+mass of \isot{He}{4}, \isot{Si}{28}, and \isot{Ni}{56} for each of the
+simulations.
+
 
 1-d slices along x=0?
 
