@@ -1,0 +1,211 @@
+%\documentclass[12pt, preprint]{aastex}
+\documentclass[preprint,times,tighten]{aastex63}
+
+\usepackage{epsf,color,amsmath}
+
+\usepackage{cancel}
+
+\newcommand{\sfrac}[2]{\mathchoice%
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}} {#1\!/#2}}
+
+\newcommand{\myhalf}{\sfrac{1}{2}}
+\newcommand{\nph}{{n+\myhalf}}
+\newcommand{\nmh}{{n-\myhalf}}
+
+\newcommand{\inp}{\mathrm{in}}
+\newcommand{\outp}{\mathrm{out}}
+
+% boldsymbol means bold italic
+\newcommand{\eb}{{\bf{e}}}
+\newcommand{\Ub}{{\bf{U}}}
+\newcommand{\xb}{{\bf{x}}}
+\newcommand{\kb}{{\bf{k}}}
+\newcommand{\Vb}{{\bf{V}}_n}
+\newcommand{\Vbhat}{{\bf{\widehat{V}}}_n}
+\newcommand{\Omegab}{{\bf{\Omega}}}
+\newcommand{\gb}{{\bf{g}}}
+\newcommand{\rb}{{\bf{r}}}
+
+\newcommand{\pb}{p_\mathrm{base}}
+\newcommand{\epsdot}{\dot{\epsilon}}
+\newcommand{\qburn}{q_\mathrm{burn}}
+\newcommand{\rt}{\tilde{r}_0}
+
+
+\newcommand{\nablab}{\mathbf{\nabla}}
+\newcommand{\dt}{\Delta\ t}
+
+\newcommand{\omegadot}{\dot{\omega}}
+
+\newcommand{\Hext}{H_{\rm ext}}
+\newcommand{\Hnuc}{H_{\rm nuc}}
+\newcommand{\kth}{k_{\rm th}}
+
+\newcommand{\Gammaonebar}{\overline{\Gamma}_1}
+\newcommand{\Sbar}{\overline{S}}
+
+\newcommand{\etarho}{\eta_\rho}
+\newcommand{\etarhoh}{\eta_{\rho~h}}
+
+\newcommand{\Ubt}{\widetilde{\Ub}}
+\newcommand{\wt}{\widetilde{w}}
+
+\newcommand{\He}{$^4$He}
+\newcommand{\C}{$^{12}$C}
+\newcommand{\Fe}{$^{56}$Fe}
+
+\newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\isotm}[2]{{}^{#2}\mathrm{#1}}
+
+\newcommand{\maestro}{{\sf MAESTRO}}
+\newcommand{\castro}{{\sf Castro}}
+\newcommand{\amrex}{{\sf AMReX}}
+\newcommand{\pynucastro}{{\sf pynucastro}}
+
+\newcommand{\avg}[1]{\overline{#1}}
+\newcommand{\avgtwod}[1]{\langle~#1 \rangle}
+\newcommand{\rms}[2]{\left(\delta#1\right)_{r_{#2}}}
+\newcommand{\mymax}[1]{\left(#1\right)_{\rm max}}
+
+\newcommand{\Tb}{\ensuremath{T_\mathrm{base}}}
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\cms}{\mathrm{cm~s^{-1} }}
+
+\newcommand{\half}{\frac{1}{2}}
+
+\setlength{\marginparwidth}{0.5in}
+
+\newcommand{\MarginPar}[1]{
+    \marginpar{\vskip-\baselineskip%
+               \raggedright%
+               \tiny\sffamily%
+               {\color{red}\hrule%
+               \smallskip%
+               #1\par%
+               \smallskip%
+               \hrule}}%
+}
+
+\newcommand{\AssignTo}[1]{
+    \marginpar{\vskip-\baselineskip%
+               \raggedright%
+               \tiny\sffamily%
+               {\color{blue}\hrule%
+               \smallskip%
+               #1\par%
+               \smallskip%
+               \hrule}}%
+}
+
+\begin{document}
+%======================================================================
+% Title
+%======================================================================
+\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. IV. Mixed H/He Flames}
+
+\shorttitle{Lateral Flame Dynamics IV}
+%% \shortauthors{Harpole et al.}
+
+%% \author[0000-0002-1530-781X]{Alice Harpole}
+%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+%%              Stony Brook, NY 11794-3800}
+
+%% \author[0000-0001-6191-4285]{Kiran Eiden}
+%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+%%              Stony Brook, NY 11794-3800}
+
+%% \author[0000-0001-8401-030X]{Michael Zingale}
+%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+%%              Stony Brook, NY 11794-3800}
+
+%% \author[0000-0003-2300-5165]{Donald Willcox}
+%% \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
+
+%% \author{Yuri Cavecchi}
+%% \affiliation{Mathematical Sciences and STAG Research Centre, University of Southampton, SO17 1BJ}
+
+%% \author[0000-0003-0439-4556]{Max P.\ Katz}
+%% \affiliation{NVIDIA Corp}
+
+%% \author[0000-0001-8092-1974]{Weiqun Zhang}
+%% \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
+
+
+%% \correspondingauthor{Alice Harpole}
+%% \email{alice.harpolee@stonybrook.edu}
+
+
+%======================================================================
+% Abstract and Keywords
+%======================================================================
+\begin{abstract}
+We continue to investigate laterally propagating flames in XRBs...
+\end{abstract}
+
+\keywords{convection---hydrodynamics---methods: numerical---stars: neutron---X-rays: bursts}
+
+%======================================================================
+% Introduction
+%======================================================================
+\section{Introduction}\label{Sec:Introduction}
+
+
+%======================================================================
+% Numerical Approach
+%======================================================================
+\section{Numerical Approach}\label{Sec:numerics}
+
+
+%======================================================================
+% Results
+%======================================================================
+\section{Simulations and Results}\label{Sec:results}
+
+
+
+\acknowledgements \castro\ is open-source and freely available at
+\url{http://github.com/AMReX-Astro/Castro}.  The problem setups used
+here are available in the git repo as {\tt flame} and {\tt
+  flame\_wave}.  The work at Stony Brook was supported by DOE/Office
+of Nuclear Physics grant DE-FG02-87ER40317.  This research used
+resources of the National Energy Research Scientific Computing Center,
+a DOE Office of Science User Facility supported by the Office of
+Science of the U.~S.\ Department of Energy under Contract
+No.\ DE-AC02-05CH11231.  This research used resources of the Oak Ridge
+Leadership Computing Facility at the Oak Ridge National Laboratory,
+which is supported by the Office of Science of the U.S. Department of
+Energy under Contract No. DE-AC05-00OR22725, awarded through the DOE
+INCITE program.  We thank NVIDIA Corporation for the donation of a
+Titan X and Titan V GPU through their academic grant program.  This
+research has made use of NASA's Astrophysics Data System Bibliographic
+Services.
+
+\facilities{NERSC, OLCF}
+
+\software{AMReX \citep{amrex_joss},
+          Castro \citep{castro},
+          GCC (\url{https://gcc.gnu.org/}),
+          linux (\url{https://www.kernel.org/}),
+          matplotlib (\citealt{Hunter:2007}, \url{http://matplotlib.org/}),
+          NumPy \citep{numpy,numpy2},
+          python (\url{https://www.python.org/}),
+          valgrind \citep{valgrind},
+          VODE \citep{vode},
+          yt \citep{yt}}
+
+
+
+%======================================================================
+% References
+%======================================================================
+
+\bibliographystyle{aasjournal}
+\bibliography{ws}
+
+
+\end{document}
