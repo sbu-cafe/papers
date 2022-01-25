@@ -1,5 +1,4 @@
-%\documentclass[12pt, preprint]{aastex}
-\documentclass[preprint,times,tighten]{aastex63}
+\documentclass[preprint,times,tighten]{aastex631}
 
 \usepackage{epsf,color,amsmath}
 
@@ -106,7 +105,7 @@
 %======================================================================
 % Title
 %======================================================================
-\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. III. Mixed H/He Flames}
+\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. III. Three-Dimensional Flames}
 
 \shorttitle{Lateral Flame Dynamics III}
 %% \shortauthors{Harpole et al.}
@@ -160,6 +159,8 @@ We continue to investigate laterally propagating flames in XRBs...
 %======================================================================
 \section{Numerical Approach}\label{Sec:numerics}
 
+We use the \castro\ \citep{castro,castro_joss} simulation code, following
+the same numerical approach described in \citet{eiden:2020,harpole:2021}.
 
 %======================================================================
 % Results
@@ -168,7 +169,8 @@ We continue to investigate laterally propagating flames in XRBs...
 
 
 
-\acknowledgements \castro\ is open-source and freely available at
+\begin{acknowledgements}
+\castro\ is open-source and freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The problem setups used
 here are available in the git repo as {\tt flame} and {\tt
   flame\_wave}.  The work at Stony Brook was supported by DOE/Office
@@ -184,11 +186,12 @@ INCITE program.  We thank NVIDIA Corporation for the donation of a
 Titan X and Titan V GPU through their academic grant program.  This
 research has made use of NASA's Astrophysics Data System Bibliographic
 Services.
+\end{acknowledgements}
 
 \facilities{NERSC, OLCF}
 
 \software{AMReX \citep{amrex_joss},
-          Castro \citep{castro},
+          Castro \citep{castro,castro_joss},
           GCC (\url{https://gcc.gnu.org/}),
           linux (\url{https://www.kernel.org/}),
           matplotlib (\citealt{Hunter:2007}, \url{http://matplotlib.org/}),
