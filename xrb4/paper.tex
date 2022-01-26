@@ -1,3 +1,4 @@
+%\documentclass[12pt, preprint]{aastex}
 \documentclass[preprint,times,tighten]{aastex631}
 
 \usepackage{epsf,color,amsmath}
@@ -105,9 +106,9 @@
 %======================================================================
 % Title
 %======================================================================
-\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. III. Three-Dimensional Flames}
+\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. IV. Mixed H/He Flames}
 
-\shorttitle{Lateral Flame Dynamics III}
+\shorttitle{Lateral Flame Dynamics IV}
 %% \shortauthors{Harpole et al.}
 
 %% \author[0000-0002-1530-781X]{Alice Harpole}
@@ -143,8 +144,7 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-We continue to investigate laterally propagating flames in XRBs,
-comparing the dynamics between two- and three-dimensions.
+We continue to investigate laterally propagating flames in XRBs...
 \end{abstract}
 
 \keywords{convection---hydrodynamics---methods: numerical---stars: neutron---X-rays: bursts}
@@ -154,95 +154,44 @@ comparing the dynamics between two- and three-dimensions.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-X-ray bursts result from thermonuclear burning of an accreted H/He or
-He layer on a neutron star \citep{galloway:2017}.  Observations of
-brightness oscillations in the rise of the lightcurve suggest that the
-burning begins localized and then spreads across the neutron star.
-One-dimensional simulations of X-ray bursts reproduce the lightcurve
-and recurrence time \citep{woosley-xrb} and can use large reaction
-networks to explore rp-process nucleosynthesis.
 
-To understand how the burning front propagates across the surface, we
-need to do multidimensional simulations.  The work of
-\citet{cavecchi:2013,art-2015-cavecchi-etal,art-2016-cavecchi-etal}
+%======================================================================
+% Numerical Approach
+%======================================================================
+\section{Numerical Approach}\label{Sec:numerics}
 
-The three-dimensional study by \citet{Cavecchi2019} showed...
-
-We have been performing simulations of flame spreading on a neutron
-star resolving the flame structure using realistic reaction networks.  Our two-dimensional studies \citep{eiden:2020,harpole:2021} demonstrated our open-source framework for modeling X-ray bursts using 
-
-We use the \castro\ \citep{castro,castro_joss} simulation code, following
-the same numerical approach described in \citet{eiden:2020,harpole:2021}.
+We use \citep{castro}
 
 %======================================================================
 % Results
 %======================================================================
 \section{Simulations and Results}\label{Sec:results}
 
-In \citet{harpole:2021}, we explored several different rotation rates
-and initial model thermal structures.  We found that a model with a
-neutron star crust temperature of $3\times 10^8~\mathrm{K}$ resulted
-in a flame that accelerated quickly as it spread across the neutron
-star surface.  We adopt this model for the 3D simulation presented
-here, since it requires the least amount of simulation time to yield a
-developed flame.  Moving to 3D is very expensive, so to further reduce
-the computational expense, we use a slightly lower resolution of 25 cm
-instead of 20 cm from \citet{harpole:2021}.  We pick a rotation rate
-of 1000 Hz.
 
-Our 3D simulation used a base grid of $1024^2 \times 128$ zones with 2
-levels of refinement, the first jumping by a factor of 4 and the next
-by a factor of 2.  The domain has a size $(2.048\times
-10^5~\mathrm{cm})^2 \times 2.56\times 10^4~\mathrm{cm}$, giving a fine
-grid resolution of $25~\mathrm{cm}$.  The initial model and other
-simulation parameters are identical to those used in
-\citet{harpole:2021}.  We used static mesh refinement, to achieve
-better load balancing, fully refining the atmosphere below a height of
-$3600~\mathrm{cm}$.  These simulations used the 7-isotope He-burning
-network used in \citet{eiden:2020}.  The simulations were run on the
-OLCF Summit supercomputer, on 342 to 1366 nodes, with 6 NVIDIA V100
-GPUs per node.  The entire computation was offloaded to GPUs following
-the strategy described in \citet{castro_gpu}.
-
-Things to show:
-
-Slice plot compared to 2-d simulation
-
-Phase plot comparisons
-
-Volume renderings
-
-
-\section{Summary}
-
-We have extended our simulation framework to three-dimensions, and
-explored the differences between a two-dimensional axisymmetric
-simulation and a fully three-dimensional simulation.
-
-Future work will explore mixed H/He bursts, using this same framework.
 
 \begin{acknowledgements}
 \castro\ is open-source and freely available at
-\url{http://github.com/AMReX-Astro/Castro}.  The problem setup used
-here is available in the git repo as {\tt flame\_wave}.  The work at
-Stony Brook was supported by DOE/Office of Nuclear Physics grant
-DE-FG02-87ER40317.  This research used resources of the National
-Energy Research Scientific Computing Center, a DOE Office of Science
-User Facility supported by the Office of Science of the
-U.~S.\ Department of Energy under Contract No.\ DE-AC02-05CH11231.
-This research used resources of the Oak Ridge Leadership Computing
-Facility at the Oak Ridge National Laboratory, which is supported by
-the Office of Science of the U.S. Department of Energy under Contract
-No. DE-AC05-00OR22725, awarded through the DOE INCITE program.  We
-thank NVIDIA Corporation for the donation of a Titan X and Titan V GPU
-through their academic grant program.  This research has made use of
-NASA's Astrophysics Data System Bibliographic Services.
+\url{http://github.com/AMReX-Astro/Castro}.  The problem setups used
+here are available in the git repo as {\tt flame} and {\tt
+  flame\_wave}.  The work at Stony Brook was supported by DOE/Office
+of Nuclear Physics grant DE-FG02-87ER40317.  This research used
+resources of the National Energy Research Scientific Computing Center,
+a DOE Office of Science User Facility supported by the Office of
+Science of the U.~S.\ Department of Energy under Contract
+No.\ DE-AC02-05CH11231.  This research used resources of the Oak Ridge
+Leadership Computing Facility at the Oak Ridge National Laboratory,
+which is supported by the Office of Science of the U.S. Department of
+Energy under Contract No. DE-AC05-00OR22725, awarded through the DOE
+INCITE program.  We thank NVIDIA Corporation for the donation of a
+Titan X and Titan V GPU through their academic grant program.  This
+research has made use of NASA's Astrophysics Data System Bibliographic
+Services.
 \end{acknowledgements}
 
 \facilities{NERSC, OLCF}
 
 \software{AMReX \citep{amrex_joss},
-          Castro \citep{castro,castro_joss},
+          Castro \citep{castro},
           GCC (\url{https://gcc.gnu.org/}),
           linux (\url{https://www.kernel.org/}),
           matplotlib (\citealt{Hunter:2007}, \url{http://matplotlib.org/}),
