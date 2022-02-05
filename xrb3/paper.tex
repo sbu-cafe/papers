@@ -105,7 +105,7 @@
 %======================================================================
 % Title
 %======================================================================
-\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. III. Three-Dimensional Flames}
+\title{Dynamics of Laterally Propagating Flames in X-ray Bursts. III. Comparing Hotspot Evolution in Two and Three Dimensions}
 
 \shorttitle{Lateral Flame Dynamics III}
 %% \shortauthors{Harpole et al.}
@@ -202,7 +202,12 @@ $3600~\mathrm{cm}$.  These simulations used the 7-isotope He-burning
 network used in \citet{eiden:2020}.  The simulations were run on the
 OLCF Summit supercomputer, on 342 to 1366 nodes, with 6 NVIDIA V100
 GPUs per node.  The entire computation was offloaded to GPUs following
-the strategy described in \citet{castro_gpu}.
+the strategy described in \citet{castro_gpu}.  Overall, about 370,000
+node-hours were used for the calculation.  The full state of the
+calculation was output only every 0.005 s, as each output file is 2.7 TB
+in size (for single precision data).  We output a few fields more
+frequently for visualization.  We ran a 2D simulation with the same
+resolution and refinement strategy to compare with here.
 
 Things to show:
 
@@ -212,6 +217,28 @@ Phase plot comparisons
 
 Volume renderings
 
+Because the 3D flame does not stay perfectly circular, it is difficult
+to define the flame speed using the same method employed in
+\citet{eiden:2020}.  Instead, we will look at the mass of the ash
+material to assess how quickly the burning is taking place.
+Figure~\ref{fig:mass_plot} shows the mass of the different species as
+a function of time, for the 2D and 3D calculation.  The axisymmetric
+2D calculation has slightly less volume than the 3D domain, since
+rotating about the symmetry axis produces a cylindrical domain
+inscribed in the 3D domain.  To compensate for this, we scale the
+masses by the initial \isot{He}{4} mass.  This plot shows that the
+masses of the heavy species , especially \isot{C}{12} and
+\isot{Si}{28} grow quickly with time, but the 2D simulation appears to
+burn faster than the 3D simulation.  This is because the assumption of
+axisymmetry there does not allow for the complex structure we see in
+the evolution of composition in the 3D flame.  This suggests that the
+3D flame speed is slower than the 2D flame speed.
+
+\begin{figure}[t]
+\centering
+\plotone{mass_plot}
+\caption{\label{fig:mass_plot} Mass of species scaled to initial He mass as a function of time.  The 3D simulation is shown as the solid lines and the 2D simulation is shown as the dashed lines.}
+\end{figure}
 
 \section{Summary}
 

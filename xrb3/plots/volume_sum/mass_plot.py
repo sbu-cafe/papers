@@ -50,5 +50,5 @@ ax.set_ylabel("mass / initial He mass")
 fig.set_size_inches(7.0, 7.0)
 
 fig.tight_layout()
-fig.savefig("mass_plot.png")
+fig.savefig("mass_plot.pdf")
 
