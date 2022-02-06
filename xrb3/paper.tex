@@ -144,7 +144,8 @@
 %======================================================================
 \begin{abstract}
 We continue to investigate laterally propagating flames in XRBs,
-comparing the dynamics between two- and three-dimensions.
+comparing the early evolution and structure of a burning hotspot
+between two- and three-dimensions.
 \end{abstract}
 
 \keywords{convection---hydrodynamics---methods: numerical---stars: neutron---X-rays: bursts}
@@ -185,10 +186,17 @@ neutron star crust temperature of $3\times 10^8~\mathrm{K}$ resulted
 in a flame that accelerated quickly as it spread across the neutron
 star surface.  We adopt this model for the 3D simulation presented
 here, since it requires the least amount of simulation time to yield a
-developed flame.  Moving to 3D is very expensive, so to further reduce
-the computational expense, we use a slightly lower resolution of 25 cm
-instead of 20 cm from \citet{harpole:2021}.  We pick a rotation rate
-of 1000 Hz.
+developed flame.  
+
+
+Moving to 3D is very expensive, so to further reduce the computational
+expense, we use a slightly lower resolution of 25 cm instead of 20 cm
+from \citet{harpole:2021}.  We pick a rotation rate of 1000 Hz.
+Because the hotspot is placed in the center of the domain, the size of
+the domain also becomes a constraint, and as a result, the evolution
+time we can reach will become limited by the time it takes the burning
+to approach the edge of the domain.  As a result, we focus here on the
+early evolution.
 
 Our 3D simulation used a base grid of $1024^2 \times 128$ zones with 2
 levels of refinement, the first jumping by a factor of 4 and the next
@@ -244,7 +252,18 @@ the evolution of composition in the 3D flame.  This suggests that the
 
 We have extended our simulation framework to three-dimensions, and
 explored the differences between a two-dimensional axisymmetric
-simulation and a fully three-dimensional simulation.
+simulation and a fully three-dimensional hydrodynamical simulation.
+
+The main limitation of this study is that computational resources
+limited the size of the domain and resolution we could use.  To
+improve simulations for the future, there are several avenues to
+pursue.  First, the main expense of the current simulations is the
+reaction network.  We need to work more on optimization of the
+network.  Second, while additional resolution will be expensive, we
+can go higher order, as demonstrated with the 4th order accurate
+coupling of hydro, diffusion, and reactions in \cite{castro-sdc}.  The
+main outstanding issue with applying that work to the present problem
+is the multilevel time integration.
 
 Future work will explore mixed H/He bursts, using this same framework.
 
