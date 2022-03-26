@@ -1359,6 +1359,159 @@ minimize numerical noise.  We then use the equation of state to
 compute $e_{X_k}$ and $c_v$ and construct the entries of the final
 Jacobian.
 
+\section{Reaction Network}
+
+Our reaction network includes the nuclei: $\mathrm{n}$,
+${}^{1}\mathrm{H}$, ${}^{4}\mathrm{He}$, ${}^{12}\mathrm{C}$,
+${}^{14}\mathrm{C}$, ${}^{13}\mathrm{N}$, ${}^{14}\mathrm{N}$,
+${}^{16}\mathrm{O}$, ${}^{18}\mathrm{O}$, ${}^{18}\mathrm{F}$,
+${}^{20}\mathrm{Ne}$, ${}^{21}\mathrm{Ne}$, ${}^{22}\mathrm{Ne}$,
+${}^{22}\mathrm{Na}$, ${}^{23}\mathrm{Na}$, ${}^{23}\mathrm{Mg}$,
+${}^{24}\mathrm{Mg}$, ${}^{27}\mathrm{Al}$, ${}^{27}\mathrm{Si}$,
+${}^{28}\mathrm{Si}$, ${}^{31}\mathrm{P}$, ${}^{31}\mathrm{S}$,
+${}^{32}\mathrm{S}$, ${}^{35}\mathrm{Cl}$, ${}^{36}\mathrm{Ar}$,
+${}^{39}\mathrm{K}$, ${}^{40}\mathrm{Ca}$, ${}^{43}\mathrm{Sc}$,
+${}^{44}\mathrm{Ti}$, ${}^{47}\mathrm{V}$, ${}^{48}\mathrm{Cr}$,
+${}^{51}\mathrm{Mn}$, ${}^{52}\mathrm{Fe}$, ${}^{55}\mathrm{Co}$,
+${}^{56}\mathrm{Ni}$.
+
+
+
+The rates linking them are:
+
+\startlongtable
+\begin{deluxetable}{ll}
+\tablecaption{\label{table:react_converge_strang} Convergence ($L_1$ norm) for the reacting convergence problem using Strang splitting.}
+\tablehead{\colhead{forward reaction} & \colhead{reverse reaction}}
+\startdata
+${}^{4}\mathrm{He} + {}^{4}\mathrm{He} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C}$ & 
+  ${}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{4}\mathrm{He} + {}^{4}\mathrm{He}$ \\
+${}^{12}\mathrm{C} + {}^{1}\mathrm{H} \rightarrow {}^{13}\mathrm{N}$ & 
+  ${}^{13}\mathrm{N} \rightarrow {}^{1}\mathrm{H} + {}^{12}\mathrm{C}$ \\
+${}^{12}\mathrm{C} + {}^{4}\mathrm{He} \rightarrow {}^{16}\mathrm{O}$ & 
+  ${}^{16}\mathrm{O} \rightarrow {}^{4}\mathrm{He} + {}^{12}\mathrm{C}$ \\
+${}^{12}\mathrm{C} + {}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{20}\mathrm{Ne}$ & 
+  ${}^{20}\mathrm{Ne} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C} + {}^{12}\mathrm{C}$ \\
+${}^{12}\mathrm{C} + {}^{12}\mathrm{C} \rightarrow {}^{1}\mathrm{H} + {}^{23}\mathrm{Na}$ & 
+  ${}^{23}\mathrm{Na} + {}^{1}\mathrm{H} \rightarrow {}^{12}\mathrm{C} + {}^{12}\mathrm{C}$ \\
+${}^{14}\mathrm{C} + {}^{4}\mathrm{He} \rightarrow {}^{18}\mathrm{O}$ & 
+  ${}^{18}\mathrm{O} \rightarrow {}^{4}\mathrm{He} + {}^{14}\mathrm{C}$ \\
+${}^{14}\mathrm{C} \rightarrow {}^{14}\mathrm{N}$ & 
+                                         \\
+${}^{13}\mathrm{N} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{16}\mathrm{O}$ & 
+  ${}^{16}\mathrm{O} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{13}\mathrm{N}$ \\
+${}^{14}\mathrm{N} + {}^{4}\mathrm{He} \rightarrow {}^{18}\mathrm{F}$ & 
+  ${}^{18}\mathrm{F} \rightarrow {}^{4}\mathrm{He} + {}^{14}\mathrm{N}$ \\
+${}^{16}\mathrm{O} + {}^{4}\mathrm{He} \rightarrow {}^{20}\mathrm{Ne}$ & 
+  ${}^{20}\mathrm{Ne} \rightarrow {}^{4}\mathrm{He} + {}^{16}\mathrm{O}$ \\
+${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{24}\mathrm{Mg}$ & 
+  ${}^{24}\mathrm{Mg} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C} + {}^{16}\mathrm{O}$ \\
+${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow {}^{1}\mathrm{H} + {}^{27}\mathrm{Al}$ & 
+  ${}^{27}\mathrm{Al} + {}^{1}\mathrm{H} \rightarrow {}^{12}\mathrm{C} + {}^{16}\mathrm{O}$ \\
+${}^{16}\mathrm{O} + {}^{16}\mathrm{O} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ & 
+  ${}^{28}\mathrm{Si} + {}^{4}\mathrm{He} \rightarrow {}^{16}\mathrm{O} + {}^{16}\mathrm{O}$ \\
+${}^{16}\mathrm{O} + {}^{16}\mathrm{O} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ & 
+  ${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{16}\mathrm{O} + {}^{16}\mathrm{O}$ \\
+${}^{16}\mathrm{O} + {}^{16}\mathrm{O} \rightarrow \mathrm{n} + {}^{31}\mathrm{S}$ & 
+                                         \\
+${}^{18}\mathrm{O} + {}^{4}\mathrm{He} \rightarrow {}^{22}\mathrm{Ne}$ & 
+  ${}^{22}\mathrm{Ne} \rightarrow {}^{4}\mathrm{He} + {}^{18}\mathrm{O}$ \\
+${}^{18}\mathrm{F} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{21}\mathrm{Ne}$ & 
+  ${}^{21}\mathrm{Ne} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{18}\mathrm{F}$ \\
+${}^{18}\mathrm{F} + {}^{4}\mathrm{He} \rightarrow {}^{22}\mathrm{Na}$ & 
+  ${}^{22}\mathrm{Na} \rightarrow {}^{4}\mathrm{He} + {}^{18}\mathrm{F}$ \\
+${}^{18}\mathrm{F} \rightarrow {}^{18}\mathrm{O}$ & 
+                                         \\
+${}^{20}\mathrm{Ne} + {}^{4}\mathrm{He} \rightarrow {}^{24}\mathrm{Mg}$ & 
+  ${}^{24}\mathrm{Mg} \rightarrow {}^{4}\mathrm{He} + {}^{20}\mathrm{Ne}$ \\
+${}^{20}\mathrm{Ne} + {}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ & 
+  ${}^{28}\mathrm{Si} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C} + {}^{20}\mathrm{Ne}$ \\
+${}^{20}\mathrm{Ne} + {}^{12}\mathrm{C} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ & 
+  ${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{12}\mathrm{C} + {}^{20}\mathrm{Ne}$ \\
+${}^{21}\mathrm{Ne} + {}^{1}\mathrm{H} \rightarrow {}^{22}\mathrm{Na}$ & 
+  ${}^{22}\mathrm{Na} \rightarrow {}^{1}\mathrm{H} + {}^{21}\mathrm{Ne}$ \\
+${}^{22}\mathrm{Ne} + {}^{1}\mathrm{H} \rightarrow {}^{23}\mathrm{Na}$ & 
+  ${}^{23}\mathrm{Na} \rightarrow {}^{1}\mathrm{H} + {}^{22}\mathrm{Ne}$ \\
+${}^{22}\mathrm{Na} \rightarrow {}^{22}\mathrm{Ne}$ & 
+                                         \\
+${}^{23}\mathrm{Na} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{20}\mathrm{Ne}$ & 
+  ${}^{20}\mathrm{Ne} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{23}\mathrm{Na}$ \\
+${}^{23}\mathrm{Na} + {}^{1}\mathrm{H} \rightarrow {}^{24}\mathrm{Mg}$ & 
+  ${}^{24}\mathrm{Mg} \rightarrow {}^{1}\mathrm{H} + {}^{23}\mathrm{Na}$ \\
+${}^{23}\mathrm{Na} + {}^{4}\mathrm{He} \rightarrow {}^{27}\mathrm{Al}$ & 
+  ${}^{27}\mathrm{Al} \rightarrow {}^{4}\mathrm{He} + {}^{23}\mathrm{Na}$ \\
+${}^{23}\mathrm{Mg} + \mathrm{n} \rightarrow {}^{24}\mathrm{Mg}$ & 
+                                         \\
+${}^{24}\mathrm{Mg} + {}^{4}\mathrm{He} \rightarrow {}^{28}\mathrm{Si}$ & 
+  ${}^{28}\mathrm{Si} \rightarrow {}^{4}\mathrm{He} + {}^{24}\mathrm{Mg}$ \\
+${}^{27}\mathrm{Al} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{24}\mathrm{Mg}$ & 
+  ${}^{24}\mathrm{Mg} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{27}\mathrm{Al}$ \\
+${}^{27}\mathrm{Al} + {}^{1}\mathrm{H} \rightarrow {}^{28}\mathrm{Si}$ & 
+  ${}^{28}\mathrm{Si} \rightarrow {}^{1}\mathrm{H} + {}^{27}\mathrm{Al}$ \\
+${}^{27}\mathrm{Al} + {}^{4}\mathrm{He} \rightarrow {}^{31}\mathrm{P}$ & 
+  ${}^{31}\mathrm{P} \rightarrow {}^{4}\mathrm{He} + {}^{27}\mathrm{Al}$ \\
+${}^{27}\mathrm{Si} + \mathrm{n} \rightarrow {}^{28}\mathrm{Si}$ & 
+                                         \\
+${}^{28}\mathrm{Si} + {}^{4}\mathrm{He} \rightarrow {}^{32}\mathrm{S}$ & 
+  ${}^{32}\mathrm{S} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ \\
+${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ & 
+  ${}^{28}\mathrm{Si} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ \\
+${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{32}\mathrm{S}$ & 
+  ${}^{32}\mathrm{S} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ \\
+${}^{31}\mathrm{P} + {}^{4}\mathrm{He} \rightarrow {}^{35}\mathrm{Cl}$ & 
+  ${}^{35}\mathrm{Cl} \rightarrow {}^{4}\mathrm{He} + {}^{31}\mathrm{P}$ \\
+${}^{31}\mathrm{S} + \mathrm{n} \rightarrow {}^{32}\mathrm{S}$ & 
+                                         \\
+${}^{32}\mathrm{S} + {}^{4}\mathrm{He} \rightarrow {}^{36}\mathrm{Ar}$ & 
+  ${}^{36}\mathrm{Ar} \rightarrow {}^{4}\mathrm{He} + {}^{32}\mathrm{S}$ \\
+${}^{35}\mathrm{Cl} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{32}\mathrm{S}$ & 
+  ${}^{32}\mathrm{S} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{35}\mathrm{Cl}$ \\
+${}^{35}\mathrm{Cl} + {}^{1}\mathrm{H} \rightarrow {}^{36}\mathrm{Ar}$ & 
+  ${}^{36}\mathrm{Ar} \rightarrow {}^{1}\mathrm{H} + {}^{35}\mathrm{Cl}$ \\
+${}^{35}\mathrm{Cl} + {}^{4}\mathrm{He} \rightarrow {}^{39}\mathrm{K}$ & 
+  ${}^{39}\mathrm{K} \rightarrow {}^{4}\mathrm{He} + {}^{35}\mathrm{Cl}$ \\
+${}^{36}\mathrm{Ar} + {}^{4}\mathrm{He} \rightarrow {}^{40}\mathrm{Ca}$ & 
+  ${}^{40}\mathrm{Ca} \rightarrow {}^{4}\mathrm{He} + {}^{36}\mathrm{Ar}$ \\
+${}^{39}\mathrm{K} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{36}\mathrm{Ar}$ & 
+  ${}^{36}\mathrm{Ar} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{39}\mathrm{K}$ \\
+${}^{39}\mathrm{K} + {}^{1}\mathrm{H} \rightarrow {}^{40}\mathrm{Ca}$ & 
+  ${}^{40}\mathrm{Ca} \rightarrow {}^{1}\mathrm{H} + {}^{39}\mathrm{K}$ \\
+${}^{39}\mathrm{K} + {}^{4}\mathrm{He} \rightarrow {}^{43}\mathrm{Sc}$ & 
+  ${}^{43}\mathrm{Sc} \rightarrow {}^{4}\mathrm{He} + {}^{39}\mathrm{K}$ \\
+${}^{40}\mathrm{Ca} + {}^{4}\mathrm{He} \rightarrow {}^{44}\mathrm{Ti}$ & 
+  ${}^{44}\mathrm{Ti} \rightarrow {}^{4}\mathrm{He} + {}^{40}\mathrm{Ca}$ \\
+${}^{43}\mathrm{Sc} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{40}\mathrm{Ca}$ & 
+  ${}^{40}\mathrm{Ca} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{43}\mathrm{Sc}$ \\
+${}^{43}\mathrm{Sc} + {}^{1}\mathrm{H} \rightarrow {}^{44}\mathrm{Ti}$ & 
+  ${}^{44}\mathrm{Ti} \rightarrow {}^{1}\mathrm{H} + {}^{43}\mathrm{Sc}$ \\
+${}^{43}\mathrm{Sc} + {}^{4}\mathrm{He} \rightarrow {}^{47}\mathrm{V}$ & 
+  ${}^{47}\mathrm{V} \rightarrow {}^{4}\mathrm{He} + {}^{43}\mathrm{Sc}$ \\
+${}^{44}\mathrm{Ti} + {}^{4}\mathrm{He} \rightarrow {}^{48}\mathrm{Cr}$ & 
+  ${}^{48}\mathrm{Cr} \rightarrow {}^{4}\mathrm{He} + {}^{44}\mathrm{Ti}$ \\
+${}^{47}\mathrm{V} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{44}\mathrm{Ti}$ & 
+  ${}^{44}\mathrm{Ti} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{47}\mathrm{V}$ \\
+${}^{47}\mathrm{V} + {}^{1}\mathrm{H} \rightarrow {}^{48}\mathrm{Cr}$ & 
+  ${}^{48}\mathrm{Cr} \rightarrow {}^{1}\mathrm{H} + {}^{47}\mathrm{V}$ \\
+${}^{47}\mathrm{V} + {}^{4}\mathrm{He} \rightarrow {}^{51}\mathrm{Mn}$ & 
+  ${}^{51}\mathrm{Mn} \rightarrow {}^{4}\mathrm{He} + {}^{47}\mathrm{V}$ \\
+${}^{48}\mathrm{Cr} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{51}\mathrm{Mn}$ & 
+  ${}^{51}\mathrm{Mn} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{48}\mathrm{Cr}$ \\
+${}^{48}\mathrm{Cr} + {}^{4}\mathrm{He} \rightarrow {}^{52}\mathrm{Fe}$ & 
+  ${}^{52}\mathrm{Fe} \rightarrow {}^{4}\mathrm{He} + {}^{48}\mathrm{Cr}$ \\
+${}^{51}\mathrm{Mn} + {}^{1}\mathrm{H} \rightarrow {}^{52}\mathrm{Fe}$ & 
+  ${}^{52}\mathrm{Fe} \rightarrow {}^{1}\mathrm{H} + {}^{51}\mathrm{Mn}$ \\
+${}^{51}\mathrm{Mn} + {}^{4}\mathrm{He} \rightarrow {}^{55}\mathrm{Co}$ & 
+  ${}^{55}\mathrm{Co} \rightarrow {}^{4}\mathrm{He} + {}^{51}\mathrm{Mn}$ \\
+${}^{52}\mathrm{Fe} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{55}\mathrm{Co}$ & 
+  ${}^{55}\mathrm{Co} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{52}\mathrm{Fe}$ \\
+${}^{52}\mathrm{Fe} + {}^{4}\mathrm{He} \rightarrow {}^{56}\mathrm{Ni}$ & 
+  ${}^{56}\mathrm{Ni} \rightarrow {}^{4}\mathrm{He} + {}^{52}\mathrm{Fe}$ \\
+${}^{55}\mathrm{Co} + {}^{1}\mathrm{H} \rightarrow {}^{56}\mathrm{Ni}$ & 
+  ${}^{56}\mathrm{Ni} \rightarrow {}^{1}\mathrm{H} + {}^{55}\mathrm{Co}$ \\
+ &  ${}^{12}\mathrm{C} + {}^{12}\mathrm{C} \rightarrow \mathrm{n} + {}^{23}\mathrm{Mg}$ \\
+ &  ${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow \mathrm{n} + {}^{27}\mathrm{Si}$ \\
+\enddata
+\end{deluxetable}
 
 %======================================================================
 % References
