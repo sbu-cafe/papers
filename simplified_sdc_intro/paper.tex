@@ -1,5 +1,6 @@
 %\documentclass[times,modern]{aastex63}
-\documentclass[times,preprint]{aastex63}
+%\documentclass[times,preprint]{aastex63}
+\documentclass{aastex63}
 
 % these lines seem necessary for pdflatex to get the paper size right
 \pdfpagewidth 8.5in
@@ -968,13 +969,6 @@ shown in Figure~\ref{fig:subch_network}.  This network is available
 as {\tt subch2} in \citep{microphysics}.
 
 
-\begin{figure}[t]
-\centering
-\plotone{subch2}
-\caption{\label{fig:subch_network} Reaction network for the double detonation problem.}
-\end{figure}
-
-
 The initial model is generated following the procedure described in
 \citep{subchandra}.  We use a $1.1~M_\odot$ carbon white dwarf with a
 $0.05~M_\odot$ He layer.  We seed the He layer with 1\% (by mass) of
@@ -1361,27 +1355,48 @@ Jacobian.
 
 \section{Reaction Network}
 
-Our reaction network includes the nuclei: $\mathrm{n}$,
-${}^{1}\mathrm{H}$, ${}^{4}\mathrm{He}$, ${}^{12}\mathrm{C}$,
-${}^{14}\mathrm{C}$, ${}^{13}\mathrm{N}$, ${}^{14}\mathrm{N}$,
-${}^{16}\mathrm{O}$, ${}^{18}\mathrm{O}$, ${}^{18}\mathrm{F}$,
-${}^{20}\mathrm{Ne}$, ${}^{21}\mathrm{Ne}$, ${}^{22}\mathrm{Ne}$,
-${}^{22}\mathrm{Na}$, ${}^{23}\mathrm{Na}$, ${}^{23}\mathrm{Mg}$,
-${}^{24}\mathrm{Mg}$, ${}^{27}\mathrm{Al}$, ${}^{27}\mathrm{Si}$,
-${}^{28}\mathrm{Si}$, ${}^{31}\mathrm{P}$, ${}^{31}\mathrm{S}$,
-${}^{32}\mathrm{S}$, ${}^{35}\mathrm{Cl}$, ${}^{36}\mathrm{Ar}$,
-${}^{39}\mathrm{K}$, ${}^{40}\mathrm{Ca}$, ${}^{43}\mathrm{Sc}$,
-${}^{44}\mathrm{Ti}$, ${}^{47}\mathrm{V}$, ${}^{48}\mathrm{Cr}$,
-${}^{51}\mathrm{Mn}$, ${}^{52}\mathrm{Fe}$, ${}^{55}\mathrm{Co}$,
-${}^{56}\mathrm{Ni}$.
+We build a reaction network that approximates an $\alpha$-chain,
+including all $\isotm{He}{4}$, and all of the $\alpha$ nuclei from
+$\isotm{C}{12}$ to $\isotm{Ni}{56}$.  We want to capture both the
+$(\alpha,\gamma)$ and $(\alpha,p)(p,\gamma)$ links, so we include the
+intermediate nuclei from the $(\alpha,p)$ rate instead of
+approximating these links assuming proton equilibriation.  
+Following \citet{shenbildsten}, we include the sequences
+$\isotm{C}{13}(\alpha,\gamma)\isotm{O}{18}(\alpha,\gamma)\isotm{Ne}{22}$
+and $\isotm{N}{14}(\alpha,\gamma)\isotm{F}{18}(\alpha,
+p)\isotm{Ne}{21}$, which produce the protons that can allow for
+$\isotm{C}{12}(p, \gamma)\isotm{N}{13}(\alpha, p)\isotm{O}{16}$ to compete
+with $\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$.  We add $\isotm{Na}{22}$
+to link the $\isotm{Ne}{21}$ produced back to the $\alpha$-chain.  We grab
+all of the ReacLib \citep{reaclib} reaction rates linking these nuclei using \pynucastro~\citep{pynucastro}.
+We are missing one rate each for $\isotm{C}{12} + \isotm{C}{12}$,
+$\isotm{C}{12} + \isotm{O}{16}$, and $\isotm{O}{16} + \isotm{O}{16}$
+    involving neutron production followed by a capture back to one of
+    our $\alpha$-chain nuclei, so we explicitly add these rates as
+    well.
 
-
-
-The rates linking them are:
+Our final set of nuclei are $\mathrm{n}$, ${}^{1}\mathrm{H}$,
+${}^{4}\mathrm{He}$, ${}^{12}\mathrm{C}$, ${}^{14}\mathrm{C}$,
+${}^{13}\mathrm{N}$, ${}^{14}\mathrm{N}$, ${}^{16}\mathrm{O}$,
+${}^{18}\mathrm{O}$, ${}^{18}\mathrm{F}$, ${}^{20}\mathrm{Ne}$,
+${}^{21}\mathrm{Ne}$, ${}^{22}\mathrm{Ne}$, ${}^{22}\mathrm{Na}$,
+${}^{23}\mathrm{Na}$, ${}^{23}\mathrm{Mg}$, ${}^{24}\mathrm{Mg}$,
+${}^{27}\mathrm{Al}$, ${}^{27}\mathrm{Si}$, ${}^{28}\mathrm{Si}$,
+${}^{31}\mathrm{P}$, ${}^{31}\mathrm{S}$, ${}^{32}\mathrm{S}$,
+${}^{35}\mathrm{Cl}$, ${}^{36}\mathrm{Ar}$, ${}^{39}\mathrm{K}$,
+${}^{40}\mathrm{Ca}$, ${}^{43}\mathrm{Sc}$, ${}^{44}\mathrm{Ti}$,
+${}^{47}\mathrm{V}$, ${}^{48}\mathrm{Cr}$, ${}^{51}\mathrm{Mn}$,
+${}^{52}\mathrm{Fe}$, ${}^{55}\mathrm{Co}$, ${}^{56}\mathrm{Ni}$.  The 119
+rates linking them are given in table ~\ref{table:rates}, with the
+forward rates having a positive $Q$ value and the reverse having a
+negative $Q$ value.  We add screening to the rates using the prescription
+from The C++ code for the network is output by \pynucastro\
+directly for \castro.  A graphical overview of the network showing the links
+between the nuclei is shown in figure~\ref{fig:subch_network}.
 
 \startlongtable
 \begin{deluxetable}{ll}
-\tablecaption{\label{table:react_converge_strang} Convergence ($L_1$ norm) for the reacting convergence problem using Strang splitting.}
+\tablecaption{\label{table:rates} Reaction rates included in our network.}
 \tablehead{\colhead{forward reaction} & \colhead{reverse reaction}}
 \startdata
 ${}^{4}\mathrm{He} + {}^{4}\mathrm{He} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C}$ & 
@@ -1512,6 +1527,16 @@ ${}^{55}\mathrm{Co} + {}^{1}\mathrm{H} \rightarrow {}^{56}\mathrm{Ni}$ &
  &  ${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow \mathrm{n} + {}^{27}\mathrm{Si}$ \\
 \enddata
 \end{deluxetable}
+
+
+\begin{figure}[t]
+\centering
+\plotone{subch2}
+\caption{\label{fig:subch_network} Reaction network for the double detonation problem.}
+\end{figure}
+
+
+
 
 %======================================================================
 % References
