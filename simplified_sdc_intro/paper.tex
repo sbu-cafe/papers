@@ -1360,20 +1360,23 @@ including all $\isotm{He}{4}$, and all of the $\alpha$ nuclei from
 $\isotm{C}{12}$ to $\isotm{Ni}{56}$.  We want to capture both the
 $(\alpha,\gamma)$ and $(\alpha,p)(p,\gamma)$ links, so we include the
 intermediate nuclei from the $(\alpha,p)$ rate instead of
-approximating these links assuming proton equilibriation.  
-Following \citet{shenbildsten}, we include the sequences
-$\isotm{C}{13}(\alpha,\gamma)\isotm{O}{18}(\alpha,\gamma)\isotm{Ne}{22}$
-and $\isotm{N}{14}(\alpha,\gamma)\isotm{F}{18}(\alpha,
-p)\isotm{Ne}{21}$, which produce the protons that can allow for
-$\isotm{C}{12}(p, \gamma)\isotm{N}{13}(\alpha, p)\isotm{O}{16}$ to compete
-with $\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$.  We add $\isotm{Na}{22}$
-to link the $\isotm{Ne}{21}$ produced back to the $\alpha$-chain.  We grab
-all of the ReacLib \citep{reaclib} reaction rates linking these nuclei using \pynucastro~\citep{pynucastro}.
-We are missing one rate each for $\isotm{C}{12} + \isotm{C}{12}$,
-$\isotm{C}{12} + \isotm{O}{16}$, and $\isotm{O}{16} + \isotm{O}{16}$
-    involving neutron production followed by a capture back to one of
-    our $\alpha$-chain nuclei, so we explicitly add these rates as
-    well.
+approximating these links assuming proton equilibriation.  Following
+\citet{shenbildsten}, we include the sequence
+$\isotm{N}{14}(\alpha,\gamma)\isotm{F}{18}(\alpha, p)\isotm{Ne}{21}$,
+which produce the protons that can allow for $\isotm{C}{12}(p,
+\gamma)\isotm{N}{13}(\alpha, p)\isotm{O}{16}$ to compete with
+$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$.  We add $\isotm{Na}{22}$
+to link the $\isotm{Ne}{21}$ produced back to the $\alpha$-chain.  We
+grab all of the ReacLib \citep{reaclib} reaction rates linking these
+nuclei using \pynucastro~\citep{pynucastro}.  We are missing one rate
+each for $\isotm{C}{12} + \isotm{C}{12}$, $\isotm{C}{12} +
+\isotm{O}{16}$, and $\isotm{O}{16} + \isotm{O}{16}$.  These are
+the sequences $\isotm{C}{12}(\isotm{C}{12}, \mathrm{n})\isotm{Mg}{23}(n, \gamma)\isotm{Mg}{24}$,
+$\isotm{O}{16}(\isotm{C}{12}, \mathrm{n})\isotm{Si}{27}(n, \gamma)\isotm{Si}{28}$, and
+$\isotm{O}{16}(\isotm{O}{16}, \mathrm{n})\isotm{S}{31}(n, \gamma)\isotm{S}{32}$,involving neutron
+production followed by a capture back to one of our $\alpha$-chain
+nuclei.  These are the only rates we approximate here, assuming
+that the subsequent neutron capture is instantaneous.
 
 Our final set of 28 nuclei are ${}^{1}\mathrm{H}$, ${}^{4}\mathrm{He}$, ${}^{12}\mathrm{C}$, ${}^{13}\mathrm{N}$, ${}^{14}\mathrm{N}$, ${}^{16}\mathrm{O}$, ${}^{18}\mathrm{F}$, ${}^{20}\mathrm{Ne}$, ${}^{21}\mathrm{Ne}$, ${}^{22}\mathrm{Na}$, ${}^{23}\mathrm{Na}$, ${}^{24}\mathrm{Mg}$, ${}^{27}\mathrm{Al}$, ${}^{28}\mathrm{Si}$, ${}^{31}\mathrm{P}$, ${}^{32}\mathrm{S}$, ${}^{35}\mathrm{Cl}$, ${}^{36}\mathrm{Ar}$, ${}^{39}\mathrm{K}$, ${}^{40}\mathrm{Ca}$, ${}^{43}\mathrm{Sc}$, ${}^{44}\mathrm{Ti}$, ${}^{47}\mathrm{V}$, ${}^{48}\mathrm{Cr}$, ${}^{51}\mathrm{Mn}$, ${}^{52}\mathrm{Fe}$, ${}^{55}\mathrm{Co}$, ${}^{56}\mathrm{Ni}$.  The 107
 rates linking them are given in table~\ref{table:rates}, with the
