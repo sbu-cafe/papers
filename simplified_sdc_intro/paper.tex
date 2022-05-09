@@ -1,6 +1,6 @@
 %\documentclass[times,modern]{aastex63}
-%\documentclass[times,preprint]{aastex63}
-\documentclass{aastex63}
+\documentclass[times,preprint]{aastex63}
+%\documentclass{aastex63}
 
 % these lines seem necessary for pdflatex to get the paper size right
 \pdfpagewidth 8.5in
@@ -126,11 +126,12 @@
 \author[0000-0003-1791-0265]{A.~J.~Nonaka}
 \affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
 
-\author[0000-0002-1530-781X]{Alice Harpole}
+\author[0000-0002-1530-781X]{A.~Harpole}
 \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
-             Stony Brook, NY 11794-3800}
+  Stony Brook, NY 11794-3800}
 
-\author{Melissa Rasmussen}
+\author{M.~Rasmussen}
+\affiliation{Utah State University, Logan UT 84322}
 
 \correspondingauthor{Michael Zingale}
 \email{michael.zingale@stonybrook.edu}
@@ -1203,21 +1204,25 @@ of Advanced Scientific Computing Research and Office of Nuclear Physics,
 Scientific Discovery through Advanced Computing (SciDAC) program under Award
 Number DE-SC0017955.  This research was supported by the Exascale Computing
 Project (17-SC-20-SC), a collaborative effort of the U.S. Department of Energy
-Office of Science and the National Nuclear Security Administration.  This
+Office of Science and the National Nuclear Security Administration.  MR was supported
+via an NSF REU grant to Stony Brook, NSF 1852143.  This
 research used resources of the National Energy Research Scientific Computing
 Center (NERSC), a U.S. Department of Energy Office of Science User Facility
-located at Lawrence Berkeley National Laboratory, operated under Contract No.
+located at Lawrence Berkeley National Laboratory, operated under Contract No.\
 DE-AC02-05CH11231 using NERSC award NP-ERCAP0020354.
 
 \software{\amrex\ \citep{amrex_joss},
           \castro\ \citep{castro},
           GNU Compiler Collection (\url{https://gcc.gnu.org/}),
           Linux (\url{https://www.kernel.org}),
-          matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
+          matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/}),
+          NetworkX \citep{networkx},
           NumPy \citep{numpy,numpy2},
           python (\url{https://www.python.org/}),
           \pynucastro\ \citep{pynucastro},
-          SymPy \citep{sympy}
+          pytest \citep{pytest},
+          SymPy \citep{sympy},
+          yt \citep{yt}
          }
 
 
