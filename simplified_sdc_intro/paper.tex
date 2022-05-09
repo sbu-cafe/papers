@@ -286,10 +286,10 @@ We'll split the source term, $\Sc(\Uc)$ into pure hydrodynamic and reactive part
      \rho \omegadot(X_k) \\
      0 \\
      \rho \dot{S} \\
-     \rho \dot{S} 
+     \rho \dot{S}
   \end{array} \right )
 \end{equation}
-with 
+with
 \begin{equation}
   \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc).
 \end{equation}
@@ -396,7 +396,7 @@ reaction sources are stiff, and need to be integrated using implicit
 methods for stabilty.  Operator splitting (e.g., Strang) is
 traditionally employed here, and is used as a benchmark for comparison
 in this paper.  We'll discuss this traditional approach next before moving
-on to our new time-coupling method. 
+on to our new time-coupling method.
 
 
 
@@ -414,7 +414,7 @@ in Figure~\ref{fig:strang_flowchart}.
     advect for $\Delta t$, and finally react for $\Delta t/2$.  Each
     process uses the state left behind from the previous process.}
   \end{figure}
-  
+
 
 In the absence of advective terms, our reaction system appears as just
 $d\Uc/dt = \Rb(\Uc)$, or:
@@ -437,7 +437,7 @@ are unchanged by reactions (when Strang splitting), our energy equation becomes:
 The reaction rates are typically expressed as $\omegadot_k(\rho, T, X_k)$
 when we evolve this system, which requires us to get temperature from
 the equation of state each
-time we need to evaluate the reactive terms.  
+time we need to evaluate the reactive terms.
 
 We also typically integrate mass fraction itself, instead of partial
 densities:
@@ -527,7 +527,7 @@ in integral form:
 \begin{equation}
 \Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
 \end{equation}
-In this approach, we 
+In this approach, we
 approximate the advective term
 piecewise constant in time, using the value at the midpoint in time,
 to achieve second-order accuracy, giving us:
@@ -641,13 +641,13 @@ The basic time update algorithm proceeds as:
       for the general case, and
       \begin{align}
         \Advsst{\rho e}^{n+1/2,(k)}_{i} =
-          &- \frac{F\left((\rho e)^{n+1/2,(k)}_{i+1/2}\right) - F\left((\rho e)^{n+1/2,(k)}_{i-1/2}\right)}{\Delta x} \\
+          &- \frac{F\left((\rho e)^{n+1/2,(k)}_{i+1/2}\right) - F\left((\rho e)^{n+1/2,(k)}_{i-1/2}\right)}{\Delta x} \nonumber \\
           &- \left (\frac{p_{i+1/2}^{n+1/2,(k)} + p_{i-1/2}^{n+1/2,(k)}}{2} \right )\frac{u_{i+1/2}^{n+1/2,(k)} - u_{i-1/2}^{n+1/2,(k)}}{\Delta x}
       \end{align}
       for $(\rho e)$.
 
     Now the conservative hydrodynamics source terms are computed by first updating to the
-    new state with advection and the old-time source term applied for the full $\Delta t$ as: 
+    new state with advection and the old-time source term applied for the full $\Delta t$ as:
     \begin{equation}
       \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)} + \Delta t \Hb(\Uc^n)
     \end{equation}
@@ -764,7 +764,7 @@ The basic time update algorithm proceeds as:
       \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^n}{\Delta t} - \Adv{\qb}^{n+1/2,(k)}
     \end{equation}
     but we need the advective update for $\qb$, which we have not
-    constructed.  We note that $\Ic^{(k)}_\qb$ is an approximation to the integral of 
+    constructed.  We note that $\Ic^{(k)}_\qb$ is an approximation to the integral of
     Eq.~\ref{eq:prim_sources} over the timestep.  Additionally, we cannot simply use the equation of
     state on $\Ic^{(k)}_{\Uc}$ since this is a time-derivative and
     does not represent a well-defined state in itself.  Instead, we
@@ -828,7 +828,7 @@ For Strang, we require that
 an individual mass fraction not change too much over a step:
 \begin{equation}
 \label{eq:vode_species_reject}
-\begin{array}{c}|X_k^{m+1}| < f |X_k^m| \\ |X_k^{m+1}| > \frac{1}{f} |X_k^m| \end{array} ~  \mbox{if}~ |X_k^m| > \eta \atolspec ~\mbox{and}~ |X_k^{m+1}| > \eta \atolspec 
+\begin{array}{c}|X_k^{m+1}| < f |X_k^m| \\ |X_k^{m+1}| > \frac{1}{f} |X_k^m| \end{array} ~  \mbox{if}~ |X_k^m| > \eta \atolspec ~\mbox{and}~ |X_k^{m+1}| > \eta \atolspec
 \end{equation}
 Here, $m$ is the current VODE solution and $m+1$ is the potential
 new-time solution.  The parameter $f$ is the factor a mass fraction is
@@ -884,7 +884,7 @@ running at different resolutions, with a fixed timestep that scales
 with resolution, we can compute the convergence rate.  In order to
 demonstrate second-order convergence, the problem must be smooth (so
 the slope limiters don't kick in severely), which means that the
-energy release cannot be so vigorous as to drive shocks. 
+energy release cannot be so vigorous as to drive shocks.
 
 
 
@@ -898,8 +898,8 @@ energy release cannot be so vigorous as to drive shocks.
 
 \begin{deluxetable}{lllllll}
 \tablecaption{\label{table:react_converge_strang} Convergence ($L_1$ norm) for the reacting convergence problem using Strang splitting.}
-\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
+\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} &
+           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} &
            \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
 \startdata
  $\rho$                      & $2.794 \times 10^{18}$  & 2.044  & $6.777 \times 10^{17}$  & 2.554  & $1.154 \times 10^{17}$  \\
@@ -919,8 +919,8 @@ energy release cannot be so vigorous as to drive shocks.
 
 \begin{deluxetable}{lllllll}
 \tablecaption{\label{table:react_converge_sdc} Convergence ($L_1$ norm) for the reacting convergence problem using SDC integration (2 iterations).}
-\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} & 
-           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} & 
+\tablehead{\colhead{field} & \colhead{$\epsilon_{64 \rightarrow 128}$} &
+           \colhead{rate} & \colhead{$\epsilon_{128\rightarrow 256}$} &
            \colhead{rate} & \colhead{$\epsilon_{256\rightarrow 512}$}}
 \startdata
  $\rho$                      & $2.784 \times 10^{18}$  & 2.048  & $6.734 \times 10^{17}$  & 2.558  & $1.143 \times 10^{17}$  \\
@@ -965,7 +965,7 @@ to bypass $\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$ as described in
 directly in the C++ format that our code requires.  The details of the network
 are given in Appendix \ref{sec:app:reactionnet}. This moderate-sized network
 with many reaction pathways (forward and reverse) make it a good test for the
-coupling between hydro and reactions.  
+coupling between hydro and reactions.
 
 
 The initial model is generated following the procedure described in
@@ -976,9 +976,9 @@ up at the base of the He layer and is then isentropic until the
 surface.  Figure~\ref{fig:subch_initial_model} shows the structure of
 the initial model.  We use 2d axisymmetric coordinates with a domain
 size of $1.024\times 10^9~\mathrm{cm} \times 2.048\times
-10^9~\mathrm{cm}$, a base grid of $256 \times 512$ zones and two
-levels of refinement (both jumping by $2\times$), giving a fine-grid
-resolution of $10~\mathrm{km}$.  Gravity is modeled as a monopole.
+10^9~\mathrm{cm}$, a base grid of $256 \times 512$ zones and a single
+level of refinement (jumping by $2\times$), giving a fine-grid
+resolution of $20~\mathrm{km}$.  Gravity is modeled as a monopole.
 Our choice of initial perturbation has the detonation propagate inward
 into the carbon white dwarf.  We run the simulation for 0.1 s---this
 is enough time for the carbon detonation to be well developed.
@@ -991,7 +991,7 @@ is enough time for the carbon detonation to be well developed.
 
 An initial perturbation is placed on the symmetry axis of the form:
 \begin{equation}
-  T = T_0 \left [ 1 + X(\isotm{He}{4}) f (1 + \tanh(2 - r1)) \right ]
+  T = T_0 \left [ 1 + X(\isotm{He}{4}) f (1 + \tanh(2 - r_1)) \right ]
 \end{equation}
 where
 \begin{equation}
@@ -1010,56 +1010,42 @@ is $f = 12$ and the scale of the perturbation is $\lambda = 200~\mathrm{km}$.
 
 We do a suite of runs with both Strang and the simplified-SDC integration, using
 CFL numbers of 0.1, 0.2, and 0.4 and reaction network tolerances of $\atolspec =
-\rtolspec = 10^{-5}$ and $\atolener = \rtolener = 10^{-65$.  We also run the CFL
+\rtolspec = 10^{-5}$ and $\atolener = \rtolener = 10^{-5}$.  We also run the CFL
 = 0.2 case with a tighter tolerance, using  $\atolspec = 10^{-8}$.  For the step
 rejection part of VODE, we use $f = 4$ and $\eta = 4$.
 
-Figure \ref{fig:subch_strang_cfl08_I} shows the temperature, mean
+Figure \ref{fig:subch_strang_cfl02} shows the temperature, mean
 molecular weight, and nuclear energy generation rate for the strang
-CFL = 0.8 simulation ({\tt strang\_subch2\_cfl0.8}).  We see that the
+CFL = 0.82 simulation ({\tt strang\_subch2\_cfl0.2}).  We see that the
 mean molecular weight appears mottled behind the inward propagating
 detonation in the white dwarf.  Comparing to the energy generation
 rate, we see that region is characterized by large energy releases of
 alternating signs checkerboarding thoughout the region.  This is
 characteristic of the nucleosynthesis struggling to come into
 equilibrium at high temperatures when the reverse rates can be
-important.  In Figure~\ref{fig:subch_strang_cfl08_II} we look at some
-important mass fractions for the same simulation.  Again we see that
-the abundances are not smooth behind the inward detonation.
+important.
 
 \begin{figure}
 \centering
-\plotone{strang_subch2_cfl0_8_state}
-\caption{\label{fig:subch_strang_cfl08_I}}
-\end{figure}
-
-\begin{figure}
-\centering
-\plotone{strang_subch2_cfl0_8_mass_fractions}
-\caption{\label{fig:subch_strang_cfl08_II}}
+\plotone{strang_subch2_cfl0.2_tols_slice}
+\caption{\label{fig:subch_strang_cfl02}}
 \end{figure}
 
 We next look at the simplified-SDC version of this same case, {\tt
-  sdc\_subch2\_cfl0.8}.  Figure~\ref{fig:subch_sdc_cfl08_I} shows the
+  sdc\_subch2\_cfl0.2}.  Figure~\ref{fig:subch_sdc_cfl02} shows the
 temperature, mean molecular weight, and energy generation rate.
-Compared to Figure~\ref{fig:subch_strang_cfl08_I}, we see that the
+Compared to Figure~\ref{fig:subch_strang_cfl02}, we see that the
 composition and energy generation rates are smooth, without any of the
-checkerboarding that plagued the Strang simulation.  The compositions
-plot (figure~\ref{fig:subch_sdc_cfl08_II}) shows the same behavior.
+checkerboarding that plagued the Strang simulation.
 This suggests that the simplified-SDC algorithm has an easier time
 attaining the correct equilibrium in these conditions.
 
 \begin{figure}
 \centering
-\plotone{sdc_subch2_cfl0_8_state}
-\caption{\label{fig:subch_sdc_cfl08_I}}
+\plotone{sdc_subch2_cfl0.2_tols_slice}
+\caption{\label{fig:subch_sdc_cfl02}}
 \end{figure}
 
-\begin{figure}
-\centering
-\plotone{sdc_subch2_cfl0_8_mass_fractions}
-\caption{\label{fig:subch_sdc_cfl08_II}}
-\end{figure}
 
 We now look at the evolution of the state while burning by storing the
 thermodynamic state internal to VODE each substep as it evaluates the
@@ -1093,7 +1079,7 @@ out of equilibrium for much of the integration time. \MarginPar{need to double c
 
 
 We next look at how the structure seen in
-Figures~\ref{fig:subch_strang_cfl08_I} and \ref{fig:subch_sdc_cfl08_I}
+Figures~\ref{fig:subch_strang_cfl02} and \ref{fig:subch_sdc_cfl02}
 vary with CFL number and network tolerance.  We focus just on the
 region behind the inward propagating shock.
 Figures~\ref{fig:strang_enuc_summary} and
@@ -1101,21 +1087,18 @@ Figures~\ref{fig:strang_enuc_summary} and
 and mean molecular weight for all of the Strang runs.  We see that
 changing the CFL number does little to affect the state behind the
 shock---it continues to take on the mottled appearance characteristic
-of not reaching a proper equilibrium.  For the {\tt mixedtol} case, we
-see that the state is greatly improved.  We were unable to run the
-{\tt tol1.e-6} case for Strang, as the code aborted with too many
-subcycles.  While reducing the tolerances does help, it greatly
-increases the cost of the simulation.
+of not reaching a proper equilibrium.  For the case with tight tolerances, we
+see that the state is greatly improved.
 
 \begin{figure}
-\plotone{strang_enuc_summary_plot.pdf}
+\plotone{strang_enuc_summary_plot}
 \caption{\label{fig:strang_enuc_summary} Comparison of Strang runs showing
 the nuclear energy generation rate behind the inward propagating
 shock.}
 \end{figure}
 
 \begin{figure}
-\plotone{strang_abar_summary_plot.pdf}
+\plotone{strang_abar_summary_plot}
 \caption{\label{fig:strang_abar_summary} Comparison of Strang runs showing
 the mean molecular weight behind the inward propagating
 shock.}
@@ -1126,14 +1109,14 @@ and \ref{fig:sdc_abar_summary}.  We see that the state behind the
 shock looks great regardless of the CFL or integrator tolerances.
 
 \begin{figure}
-\plotone{sdc_enuc_summary_plot.pdf}
+\plotone{sdc_enuc_summary_plot}
 \caption{\label{fig:sdc_enuc_summary} Comparison of simplified-SDC runs showing
 the nuclear energy generation rate behind the inward propagating
 shock.}
 \end{figure}
 
 \begin{figure}
-\plotone{sdc_abar_summary_plot.pdf}
+\plotone{sdc_abar_summary_plot}
 \caption{\label{fig:sdc_abar_summary} Comparison of simplified-SDC runs showing
 the mean molecular weight behind the inward propagating
 shock.}
@@ -1179,15 +1162,19 @@ the Strang run with the tighter tolerances is reliable.
 
 We presented a simplified spectral deferred corrections scheme for coupling
 hydrodynamics and reactions.  We demonstrated that for a moderate-sized reaction
-network, the simplified-SDC method 
+network, the simplified-SDC method compares well against Strang for the double
+detonation problem---getting a better solution at looser reaction tolerances,
+and consistent results across a range of CFL numbers.  The benefits of this new
+integration scheme are likely problem and network dependent, and we will explore
+it on other science problemsin future papers.
 
 We have not focused on performance or load-balancing the reactions in
-the tests that we ran, but these limited runs show that the
-simplified-SDC method runs as fast (or faster) than the Strang method
-for the same tolerances and CFL, despite having to do the advection
+the tests that we ran, but for the simulations shown here,
+the simplified-SDC method runs as fast (or faster) than the Strang method
+for the same tolerances and CFL, despite having to do the advection and reactions
 twice.  We would expect similar behavior for any simulations that are
 dominated by the cost of reactions.  If the results above a robust across
-different problems and networks, then this suggests that we can run 
+different problems and networks, then this suggests that we can run
 the SDC simulation with larger CFL and/or less strict reaction tolerances,
 which would translate into a large performance boost.
 
@@ -1207,17 +1194,20 @@ radiation energy.
 
 
 \acknowledgements \castro\ is freely available at
-\url{http://github.com/AMReX-Astro/Castro}.  All of the code and
-problem setups used here are available in the git repo.  The work at
-Stony Brook was supported by DOE/Office of Nuclear Physics grant
-DE-FG02-87ER40317.  This material is based upon work supported by the
-U.S. Department of Energy, Office of Science, Office of Advanced
-Scientific Computing Research and Office of Nuclear Physics,
-Scientific Discovery through Advanced Computing (SciDAC) program under
-Award Number DE-SC0017955.  This research was supported by the
-Exascale Computing Project (17-SC-20-SC), a collaborative effort of
-the U.S. Department of Energy Office of Science and the National
-Nuclear Security Administration.
+\url{http://github.com/AMReX-Astro/Castro}.  All of the code and problem setups
+used here are available in the git repo.  The double detonation problem is in
+{\tt Castro/Exec/science/subchandra}.  The work at Stony Brook was supported by
+DOE/Office of Nuclear Physics grant DE-FG02-87ER40317.  This material is based
+upon work supported by the U.S. Department of Energy, Office of Science, Office
+of Advanced Scientific Computing Research and Office of Nuclear Physics,
+Scientific Discovery through Advanced Computing (SciDAC) program under Award
+Number DE-SC0017955.  This research was supported by the Exascale Computing
+Project (17-SC-20-SC), a collaborative effort of the U.S. Department of Energy
+Office of Science and the National Nuclear Security Administration.  This
+research used resources of the National Energy Research Scientific Computing
+Center (NERSC), a U.S. Department of Energy Office of Science User Facility
+located at Lawrence Berkeley National Laboratory, operated under Contract No.
+DE-AC02-05CH11231 using NERSC award NP-ERCAP0020354.
 
 \software{\amrex\ \citep{amrex_joss},
           \castro\ \citep{castro},
@@ -1225,7 +1215,7 @@ Nuclear Security Administration.
           Linux (\url{https://www.kernel.org}),
           matplotlib (\citealt{Hunter:2007},  \url{http://matplotlib.org/})
           NumPy \citep{numpy,numpy2},
-          python (\url{https://www.python.org/}), 
+          python (\url{https://www.python.org/}),
           \pynucastro\ \citep{pynucastro},
           SymPy \citep{sympy}
          }
@@ -1263,7 +1253,7 @@ in terms of $(\rho e)$, consistent with the Strang method described in \cite{str
 %% of temperature, we can convert as:
 %% \begin{equation}
 %% \left . \frac{\partial \phi}{\partial T} \right |_\rho =
-%%   \left . \frac{\partial \phi}{\partial e} \right |_\rho 
+%%   \left . \frac{\partial \phi}{\partial e} \right |_\rho
 %%   \left . \frac{\partial e}{\partial T} \right |_\rho =
 %%   c_v \left . \frac{\partial \phi}{\partial e} \right |_\rho
 %% \end{equation}
@@ -1314,7 +1304,7 @@ these derivatives.  The Jacobian is computed as $\partial \Rb/\partial
 \frac{\partial \Rb}{\partial {\bf w}} = \left (
   \begin{array}{ccc}
      \rho \frac{\partial \omegadot_\alpha}{\partial X_\alpha} &
-     \rho \frac{\partial \omegadot_\alpha}{\partial X_\beta} & 
+     \rho \frac{\partial \omegadot_\alpha}{\partial X_\beta} &
      \rho \frac{\partial \omegadot_\alpha}{\partial T} \\
       %
      \rho \frac{\partial \omegadot_\beta}{\partial X_\alpha} &
@@ -1352,16 +1342,19 @@ The final Jacobian is found by multiplying these two:
 We note that the form of these entries is the same as one would arrive at if you start with the rates expressed as
 $\omega_k(\rho, T(\rho, X_j, e), X_j)$ and recognize that constant $e$ implies that
 \begin{equation}
-\left . \frac{\partial T}{\partial X_k} \right |_{\rho, e} = - \frac{e_{X_k}}{c_v}
+\left . \frac{\partial T}{\partial X_k} \right |_{\rho, e,X_{j,j\ne k}} = - \frac{e_{X_k}}{c_v}
 \end{equation}
 
-While VODE can compute the entire Jacobian, ${\bf J}$ numerically via
-differencing, we found that does not give reliable results.  Instead,
-we compute compute the derivatives with respect to $X_k$ and $T$
-one-sided differencing, following the algorithm in \cite{lsode} to
-minimize numerical noise.  We then use the equation of state to
-compute $e_{X_k}$ and $c_v$ and construct the entries of the final
-Jacobian.
+Finally we note that one implication of this formulation is that the Jacobian is no longer sparse.  Future
+work will explore alternate formulations and approximate Jacobians.
+
+% While VODE can compute the entire Jacobian, ${\bf J}$ numerically via
+% differencing, we found that does not give reliable results.  Instead,
+% we compute compute the derivatives with respect to $X_k$ and $T$
+% one-sided differencing, following the algorithm in \cite{lsode} to
+% minimize numerical noise.  We then use the equation of state to
+% compute $e_{X_k}$ and $c_v$ and construct the entries of the final
+% Jacobian.
 
 \section{Reaction Network}
 \label{sec:app:reactionnet}
@@ -1410,115 +1403,115 @@ in figure~\ref{fig:subch_network}.
 \tablecaption{\label{table:rates} Reaction rates included in our network.}
 \tablehead{\colhead{forward reaction} & \colhead{reverse reaction}}
 \startdata
-${}^{4}\mathrm{He} + {}^{4}\mathrm{He} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C}$ & 
+${}^{4}\mathrm{He} + {}^{4}\mathrm{He} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C}$ &
   ${}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{4}\mathrm{He} + {}^{4}\mathrm{He}$ \\
-${}^{12}\mathrm{C} + {}^{1}\mathrm{H} \rightarrow {}^{13}\mathrm{N}$ & 
+${}^{12}\mathrm{C} + {}^{1}\mathrm{H} \rightarrow {}^{13}\mathrm{N}$ &
   ${}^{13}\mathrm{N} \rightarrow {}^{1}\mathrm{H} + {}^{12}\mathrm{C}$ \\
-${}^{12}\mathrm{C} + {}^{4}\mathrm{He} \rightarrow {}^{16}\mathrm{O}$ & 
+${}^{12}\mathrm{C} + {}^{4}\mathrm{He} \rightarrow {}^{16}\mathrm{O}$ &
   ${}^{16}\mathrm{O} \rightarrow {}^{4}\mathrm{He} + {}^{12}\mathrm{C}$ \\
-${}^{12}\mathrm{C} + {}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{20}\mathrm{Ne}$ & 
+${}^{12}\mathrm{C} + {}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{20}\mathrm{Ne}$ &
   ${}^{20}\mathrm{Ne} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C} + {}^{12}\mathrm{C}$ \\
-${}^{12}\mathrm{C} + {}^{12}\mathrm{C} \rightarrow {}^{1}\mathrm{H} + {}^{23}\mathrm{Na}$ & 
+${}^{12}\mathrm{C} + {}^{12}\mathrm{C} \rightarrow {}^{1}\mathrm{H} + {}^{23}\mathrm{Na}$ &
   ${}^{23}\mathrm{Na} + {}^{1}\mathrm{H} \rightarrow {}^{12}\mathrm{C} + {}^{12}\mathrm{C}$ \\
-${}^{12}\mathrm{C} + {}^{12}\mathrm{C} \rightarrow {}^{24}\mathrm{Mg}$ & 
+${}^{12}\mathrm{C} + {}^{12}\mathrm{C} \rightarrow {}^{24}\mathrm{Mg}$ &
                                          \\
-${}^{13}\mathrm{N} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{16}\mathrm{O}$ & 
+${}^{13}\mathrm{N} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{16}\mathrm{O}$ &
   ${}^{16}\mathrm{O} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{13}\mathrm{N}$ \\
-${}^{14}\mathrm{N} + {}^{4}\mathrm{He} \rightarrow {}^{18}\mathrm{F}$ & 
+${}^{14}\mathrm{N} + {}^{4}\mathrm{He} \rightarrow {}^{18}\mathrm{F}$ &
   ${}^{18}\mathrm{F} \rightarrow {}^{4}\mathrm{He} + {}^{14}\mathrm{N}$ \\
-${}^{16}\mathrm{O} + {}^{4}\mathrm{He} \rightarrow {}^{20}\mathrm{Ne}$ & 
+${}^{16}\mathrm{O} + {}^{4}\mathrm{He} \rightarrow {}^{20}\mathrm{Ne}$ &
   ${}^{20}\mathrm{Ne} \rightarrow {}^{4}\mathrm{He} + {}^{16}\mathrm{O}$ \\
-${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{24}\mathrm{Mg}$ & 
+${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{24}\mathrm{Mg}$ &
   ${}^{24}\mathrm{Mg} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C} + {}^{16}\mathrm{O}$ \\
-${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow {}^{1}\mathrm{H} + {}^{27}\mathrm{Al}$ & 
+${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow {}^{1}\mathrm{H} + {}^{27}\mathrm{Al}$ &
   ${}^{27}\mathrm{Al} + {}^{1}\mathrm{H} \rightarrow {}^{12}\mathrm{C} + {}^{16}\mathrm{O}$ \\
-${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow {}^{28}\mathrm{Si}$ & 
+${}^{16}\mathrm{O} + {}^{12}\mathrm{C} \rightarrow {}^{28}\mathrm{Si}$ &
                                          \\
-${}^{16}\mathrm{O} + {}^{16}\mathrm{O} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ & 
+${}^{16}\mathrm{O} + {}^{16}\mathrm{O} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ &
   ${}^{28}\mathrm{Si} + {}^{4}\mathrm{He} \rightarrow {}^{16}\mathrm{O} + {}^{16}\mathrm{O}$ \\
-${}^{16}\mathrm{O} + {}^{16}\mathrm{O} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ & 
+${}^{16}\mathrm{O} + {}^{16}\mathrm{O} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ &
   ${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{16}\mathrm{O} + {}^{16}\mathrm{O}$ \\
-${}^{16}\mathrm{O} + {}^{16}\mathrm{O} \rightarrow {}^{32}\mathrm{S}$ & 
+${}^{16}\mathrm{O} + {}^{16}\mathrm{O} \rightarrow {}^{32}\mathrm{S}$ &
                                          \\
-${}^{18}\mathrm{F} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{21}\mathrm{Ne}$ & 
+${}^{18}\mathrm{F} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{21}\mathrm{Ne}$ &
   ${}^{21}\mathrm{Ne} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{18}\mathrm{F}$ \\
-${}^{18}\mathrm{F} + {}^{4}\mathrm{He} \rightarrow {}^{22}\mathrm{Na}$ & 
+${}^{18}\mathrm{F} + {}^{4}\mathrm{He} \rightarrow {}^{22}\mathrm{Na}$ &
   ${}^{22}\mathrm{Na} \rightarrow {}^{4}\mathrm{He} + {}^{18}\mathrm{F}$ \\
-${}^{20}\mathrm{Ne} + {}^{4}\mathrm{He} \rightarrow {}^{24}\mathrm{Mg}$ & 
+${}^{20}\mathrm{Ne} + {}^{4}\mathrm{He} \rightarrow {}^{24}\mathrm{Mg}$ &
   ${}^{24}\mathrm{Mg} \rightarrow {}^{4}\mathrm{He} + {}^{20}\mathrm{Ne}$ \\
-${}^{20}\mathrm{Ne} + {}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ & 
+${}^{20}\mathrm{Ne} + {}^{12}\mathrm{C} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ &
   ${}^{28}\mathrm{Si} + {}^{4}\mathrm{He} \rightarrow {}^{12}\mathrm{C} + {}^{20}\mathrm{Ne}$ \\
-${}^{20}\mathrm{Ne} + {}^{12}\mathrm{C} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ & 
+${}^{20}\mathrm{Ne} + {}^{12}\mathrm{C} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ &
   ${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{12}\mathrm{C} + {}^{20}\mathrm{Ne}$ \\
-${}^{21}\mathrm{Ne} + {}^{1}\mathrm{H} \rightarrow {}^{22}\mathrm{Na}$ & 
+${}^{21}\mathrm{Ne} + {}^{1}\mathrm{H} \rightarrow {}^{22}\mathrm{Na}$ &
   ${}^{22}\mathrm{Na} \rightarrow {}^{1}\mathrm{H} + {}^{21}\mathrm{Ne}$ \\
-${}^{23}\mathrm{Na} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{20}\mathrm{Ne}$ & 
+${}^{23}\mathrm{Na} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{20}\mathrm{Ne}$ &
   ${}^{20}\mathrm{Ne} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{23}\mathrm{Na}$ \\
-${}^{23}\mathrm{Na} + {}^{1}\mathrm{H} \rightarrow {}^{24}\mathrm{Mg}$ & 
+${}^{23}\mathrm{Na} + {}^{1}\mathrm{H} \rightarrow {}^{24}\mathrm{Mg}$ &
   ${}^{24}\mathrm{Mg} \rightarrow {}^{1}\mathrm{H} + {}^{23}\mathrm{Na}$ \\
-${}^{23}\mathrm{Na} + {}^{4}\mathrm{He} \rightarrow {}^{27}\mathrm{Al}$ & 
+${}^{23}\mathrm{Na} + {}^{4}\mathrm{He} \rightarrow {}^{27}\mathrm{Al}$ &
   ${}^{27}\mathrm{Al} \rightarrow {}^{4}\mathrm{He} + {}^{23}\mathrm{Na}$ \\
-${}^{24}\mathrm{Mg} + {}^{4}\mathrm{He} \rightarrow {}^{28}\mathrm{Si}$ & 
+${}^{24}\mathrm{Mg} + {}^{4}\mathrm{He} \rightarrow {}^{28}\mathrm{Si}$ &
   ${}^{28}\mathrm{Si} \rightarrow {}^{4}\mathrm{He} + {}^{24}\mathrm{Mg}$ \\
-${}^{27}\mathrm{Al} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{24}\mathrm{Mg}$ & 
+${}^{27}\mathrm{Al} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{24}\mathrm{Mg}$ &
   ${}^{24}\mathrm{Mg} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{27}\mathrm{Al}$ \\
-${}^{27}\mathrm{Al} + {}^{1}\mathrm{H} \rightarrow {}^{28}\mathrm{Si}$ & 
+${}^{27}\mathrm{Al} + {}^{1}\mathrm{H} \rightarrow {}^{28}\mathrm{Si}$ &
   ${}^{28}\mathrm{Si} \rightarrow {}^{1}\mathrm{H} + {}^{27}\mathrm{Al}$ \\
-${}^{27}\mathrm{Al} + {}^{4}\mathrm{He} \rightarrow {}^{31}\mathrm{P}$ & 
+${}^{27}\mathrm{Al} + {}^{4}\mathrm{He} \rightarrow {}^{31}\mathrm{P}$ &
   ${}^{31}\mathrm{P} \rightarrow {}^{4}\mathrm{He} + {}^{27}\mathrm{Al}$ \\
-${}^{28}\mathrm{Si} + {}^{4}\mathrm{He} \rightarrow {}^{32}\mathrm{S}$ & 
+${}^{28}\mathrm{Si} + {}^{4}\mathrm{He} \rightarrow {}^{32}\mathrm{S}$ &
   ${}^{32}\mathrm{S} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ \\
-${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ & 
+${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{28}\mathrm{Si}$ &
   ${}^{28}\mathrm{Si} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ \\
-${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{32}\mathrm{S}$ & 
+${}^{31}\mathrm{P} + {}^{1}\mathrm{H} \rightarrow {}^{32}\mathrm{S}$ &
   ${}^{32}\mathrm{S} \rightarrow {}^{1}\mathrm{H} + {}^{31}\mathrm{P}$ \\
-${}^{31}\mathrm{P} + {}^{4}\mathrm{He} \rightarrow {}^{35}\mathrm{Cl}$ & 
+${}^{31}\mathrm{P} + {}^{4}\mathrm{He} \rightarrow {}^{35}\mathrm{Cl}$ &
   ${}^{35}\mathrm{Cl} \rightarrow {}^{4}\mathrm{He} + {}^{31}\mathrm{P}$ \\
-${}^{32}\mathrm{S} + {}^{4}\mathrm{He} \rightarrow {}^{36}\mathrm{Ar}$ & 
+${}^{32}\mathrm{S} + {}^{4}\mathrm{He} \rightarrow {}^{36}\mathrm{Ar}$ &
   ${}^{36}\mathrm{Ar} \rightarrow {}^{4}\mathrm{He} + {}^{32}\mathrm{S}$ \\
-${}^{35}\mathrm{Cl} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{32}\mathrm{S}$ & 
+${}^{35}\mathrm{Cl} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{32}\mathrm{S}$ &
   ${}^{32}\mathrm{S} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{35}\mathrm{Cl}$ \\
-${}^{35}\mathrm{Cl} + {}^{1}\mathrm{H} \rightarrow {}^{36}\mathrm{Ar}$ & 
+${}^{35}\mathrm{Cl} + {}^{1}\mathrm{H} \rightarrow {}^{36}\mathrm{Ar}$ &
   ${}^{36}\mathrm{Ar} \rightarrow {}^{1}\mathrm{H} + {}^{35}\mathrm{Cl}$ \\
-${}^{35}\mathrm{Cl} + {}^{4}\mathrm{He} \rightarrow {}^{39}\mathrm{K}$ & 
+${}^{35}\mathrm{Cl} + {}^{4}\mathrm{He} \rightarrow {}^{39}\mathrm{K}$ &
   ${}^{39}\mathrm{K} \rightarrow {}^{4}\mathrm{He} + {}^{35}\mathrm{Cl}$ \\
-${}^{36}\mathrm{Ar} + {}^{4}\mathrm{He} \rightarrow {}^{40}\mathrm{Ca}$ & 
+${}^{36}\mathrm{Ar} + {}^{4}\mathrm{He} \rightarrow {}^{40}\mathrm{Ca}$ &
   ${}^{40}\mathrm{Ca} \rightarrow {}^{4}\mathrm{He} + {}^{36}\mathrm{Ar}$ \\
-${}^{39}\mathrm{K} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{36}\mathrm{Ar}$ & 
+${}^{39}\mathrm{K} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{36}\mathrm{Ar}$ &
   ${}^{36}\mathrm{Ar} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{39}\mathrm{K}$ \\
-${}^{39}\mathrm{K} + {}^{1}\mathrm{H} \rightarrow {}^{40}\mathrm{Ca}$ & 
+${}^{39}\mathrm{K} + {}^{1}\mathrm{H} \rightarrow {}^{40}\mathrm{Ca}$ &
   ${}^{40}\mathrm{Ca} \rightarrow {}^{1}\mathrm{H} + {}^{39}\mathrm{K}$ \\
-${}^{39}\mathrm{K} + {}^{4}\mathrm{He} \rightarrow {}^{43}\mathrm{Sc}$ & 
+${}^{39}\mathrm{K} + {}^{4}\mathrm{He} \rightarrow {}^{43}\mathrm{Sc}$ &
   ${}^{43}\mathrm{Sc} \rightarrow {}^{4}\mathrm{He} + {}^{39}\mathrm{K}$ \\
-${}^{40}\mathrm{Ca} + {}^{4}\mathrm{He} \rightarrow {}^{44}\mathrm{Ti}$ & 
+${}^{40}\mathrm{Ca} + {}^{4}\mathrm{He} \rightarrow {}^{44}\mathrm{Ti}$ &
   ${}^{44}\mathrm{Ti} \rightarrow {}^{4}\mathrm{He} + {}^{40}\mathrm{Ca}$ \\
-${}^{43}\mathrm{Sc} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{40}\mathrm{Ca}$ & 
+${}^{43}\mathrm{Sc} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{40}\mathrm{Ca}$ &
   ${}^{40}\mathrm{Ca} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{43}\mathrm{Sc}$ \\
-${}^{43}\mathrm{Sc} + {}^{1}\mathrm{H} \rightarrow {}^{44}\mathrm{Ti}$ & 
+${}^{43}\mathrm{Sc} + {}^{1}\mathrm{H} \rightarrow {}^{44}\mathrm{Ti}$ &
   ${}^{44}\mathrm{Ti} \rightarrow {}^{1}\mathrm{H} + {}^{43}\mathrm{Sc}$ \\
-${}^{43}\mathrm{Sc} + {}^{4}\mathrm{He} \rightarrow {}^{47}\mathrm{V}$ & 
+${}^{43}\mathrm{Sc} + {}^{4}\mathrm{He} \rightarrow {}^{47}\mathrm{V}$ &
   ${}^{47}\mathrm{V} \rightarrow {}^{4}\mathrm{He} + {}^{43}\mathrm{Sc}$ \\
-${}^{44}\mathrm{Ti} + {}^{4}\mathrm{He} \rightarrow {}^{48}\mathrm{Cr}$ & 
+${}^{44}\mathrm{Ti} + {}^{4}\mathrm{He} \rightarrow {}^{48}\mathrm{Cr}$ &
   ${}^{48}\mathrm{Cr} \rightarrow {}^{4}\mathrm{He} + {}^{44}\mathrm{Ti}$ \\
-${}^{47}\mathrm{V} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{44}\mathrm{Ti}$ & 
+${}^{47}\mathrm{V} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{44}\mathrm{Ti}$ &
   ${}^{44}\mathrm{Ti} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{47}\mathrm{V}$ \\
-${}^{47}\mathrm{V} + {}^{1}\mathrm{H} \rightarrow {}^{48}\mathrm{Cr}$ & 
+${}^{47}\mathrm{V} + {}^{1}\mathrm{H} \rightarrow {}^{48}\mathrm{Cr}$ &
   ${}^{48}\mathrm{Cr} \rightarrow {}^{1}\mathrm{H} + {}^{47}\mathrm{V}$ \\
-${}^{47}\mathrm{V} + {}^{4}\mathrm{He} \rightarrow {}^{51}\mathrm{Mn}$ & 
+${}^{47}\mathrm{V} + {}^{4}\mathrm{He} \rightarrow {}^{51}\mathrm{Mn}$ &
   ${}^{51}\mathrm{Mn} \rightarrow {}^{4}\mathrm{He} + {}^{47}\mathrm{V}$ \\
-${}^{48}\mathrm{Cr} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{51}\mathrm{Mn}$ & 
+${}^{48}\mathrm{Cr} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{51}\mathrm{Mn}$ &
   ${}^{51}\mathrm{Mn} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{48}\mathrm{Cr}$ \\
-${}^{48}\mathrm{Cr} + {}^{4}\mathrm{He} \rightarrow {}^{52}\mathrm{Fe}$ & 
+${}^{48}\mathrm{Cr} + {}^{4}\mathrm{He} \rightarrow {}^{52}\mathrm{Fe}$ &
   ${}^{52}\mathrm{Fe} \rightarrow {}^{4}\mathrm{He} + {}^{48}\mathrm{Cr}$ \\
-${}^{51}\mathrm{Mn} + {}^{1}\mathrm{H} \rightarrow {}^{52}\mathrm{Fe}$ & 
+${}^{51}\mathrm{Mn} + {}^{1}\mathrm{H} \rightarrow {}^{52}\mathrm{Fe}$ &
   ${}^{52}\mathrm{Fe} \rightarrow {}^{1}\mathrm{H} + {}^{51}\mathrm{Mn}$ \\
-${}^{51}\mathrm{Mn} + {}^{4}\mathrm{He} \rightarrow {}^{55}\mathrm{Co}$ & 
+${}^{51}\mathrm{Mn} + {}^{4}\mathrm{He} \rightarrow {}^{55}\mathrm{Co}$ &
   ${}^{55}\mathrm{Co} \rightarrow {}^{4}\mathrm{He} + {}^{51}\mathrm{Mn}$ \\
-${}^{52}\mathrm{Fe} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{55}\mathrm{Co}$ & 
+${}^{52}\mathrm{Fe} + {}^{4}\mathrm{He} \rightarrow {}^{1}\mathrm{H} + {}^{55}\mathrm{Co}$ &
   ${}^{55}\mathrm{Co} + {}^{1}\mathrm{H} \rightarrow {}^{4}\mathrm{He} + {}^{52}\mathrm{Fe}$ \\
-${}^{52}\mathrm{Fe} + {}^{4}\mathrm{He} \rightarrow {}^{56}\mathrm{Ni}$ & 
+${}^{52}\mathrm{Fe} + {}^{4}\mathrm{He} \rightarrow {}^{56}\mathrm{Ni}$ &
   ${}^{56}\mathrm{Ni} \rightarrow {}^{4}\mathrm{He} + {}^{52}\mathrm{Fe}$ \\
-${}^{55}\mathrm{Co} + {}^{1}\mathrm{H} \rightarrow {}^{56}\mathrm{Ni}$ & 
+${}^{55}\mathrm{Co} + {}^{1}\mathrm{H} \rightarrow {}^{56}\mathrm{Ni}$ &
   ${}^{56}\mathrm{Ni} \rightarrow {}^{1}\mathrm{H} + {}^{55}\mathrm{Co}$ \\
 \enddata
 \end{deluxetable}
