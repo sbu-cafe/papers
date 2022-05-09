@@ -190,15 +190,13 @@ flow over the next timestep, as the code struggles to produce an
 equilibrium.  These large changes in abundances (and large alternately
 positive and negative energy generation rates) can be a challenge for
 a code.  The easiest way to improve the coupling is to cut the
-timestep (see, e.g., \citealt{couch:2015}), but this makes simulations
+timestep (see, e.g., \citealt{couch:2015}), but this can make simulations
 prohibitively expensive.  Sometimes the burning is simply halted on a
 zone-by-zone basis when NSE conditions are reached (e.g., as in
-\citealt{hedet}).  Alternately, at high temperatures, a reaction
-network can be replaced with a table of NSE abundances and the zone's
-composition set through table look-ups (e.g.\ \citealt{ma:2013}).  The
+\citealt{hedet}).  The
 present work focuses on networks alone, but in a follow-on paper we
-will explore hybrid burning models consisting of networks and NSE
-tables.
+will explore hybrid burning models consisting of networks and tables for
+nuclear statistical equilibrium.
 
 The \castro\ hydrodynamics code \citep{castro,castro_joss} is used for
 all of our numerical experiments.  \castro\ is a compressible
@@ -226,7 +224,7 @@ also extends to adaptive mesh refinement with subcycling in a
 straightforward manner, avoiding the complications described in
 \citep{mccorquodalecolella} needed to fill ghost cells when using
 method-of-lines integration.  However, it is restricted to
-second-order accuracy overall.  We term this algorithm the
+second-order accuracy in time overall.  We term this algorithm the
 ``simplified-SDC method''.  In this paper we describe the overall
 method and demonstrate it on a test problem and astrophysical
 simulation using \castro.  All of the code to reproduce the results in
@@ -239,7 +237,7 @@ repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 We solve the Euler equations for compressible, reacting flow.  For ease
 of exposition we describe the one-dimensional case;
 multidimensional extensions are a straightforward modification to
-include the CTU hydrodynamics scheme.  Our conserved variables are
+include in the CTU hydrodynamics scheme.  Our conserved variables are
 \begin{equation}
   \Uc = \left ( \begin{array}{c}
            \rho \\
@@ -254,8 +252,7 @@ fractions, $X_k$.  The specific total
 energy relates to the specific internal energy, $e$, as $E = e + u^2/2$,
 and we also separately evolve $e$, as part of a dual
 energy formulation (see \citealt{bryan:1995,wdmergerI}).
- The mass fractions are constrained to sum to 1, $\sum_k X_k = 1$, but
- no such constraint exists on the auxiliary variables. 
+ The mass fractions are constrained to sum to 1, $\sum_k X_k = 1$.
 Defining the hydrodynamical fluxes:
 \begin{equation}
   \Fb(\Uc) = \left ( \begin{array}{c}
@@ -318,9 +315,7 @@ for the general case, with the $(\rho e)$ component again having the extra
 \end{equation}
 
 
-To close the system, we need the equation of state.  For a system
-where the composition is completely specified by the mass fractions,
-$X_k$, the equation of state would take the form:
+To close the system, we need the equation of state of the form:
 \begin{equation}
 p = p(\rho, X_k, e)
 \end{equation}
@@ -401,24 +396,7 @@ reaction sources are stiff, and need to be integrated using implicit
 methods for stabilty.  Operator splitting (e.g., Strang) is
 traditionally employed here, and is used as a benchmark for comparison
 in this paper.  We'll discuss this traditional approach next before moving
-on to our new time-coupling method.  Figures~\ref{fig:flowchart_I} and \ref{fig:flowchart_II} show a graphical
-flowchart of the reaction and hydrodynamics advances in the two methods.
-
-\begin{figure}[t]
-\plotone{sdc_strang_flowchart_I}
-\caption{\label{fig:strang_flowchart} Flowchart of the operator split,
-  Strang, time integration.  We first react for $\Delta t/2$, then
-  advect for $\Delta t$, and finally react for $\Delta t/2$.  Each
-  process uses the state left behind from the previous process.}
-\end{figure}
-
-\begin{figure}[t]
-\plotone{sdc_strang_flowchart_II}
-\caption{\label{fig:sdc_flowchart} Flowchart of the simplified-SDC
-  approach.  An iteratively-lagged advection term is used to update
-  the system to the new time, with each iteration improving the
-  coupling.}
-\end{figure}
+on to our new time-coupling method. 
 
 
 
@@ -426,7 +404,17 @@ flowchart of the reaction and hydrodynamics advances in the two methods.
 
 In Strang splitting, we first integrate the system with reactions terms only (no advection)
 over $\Delta t/2$, then integrate the advection terms only (no reactions) over $\Delta t$,
-and finally integrate the reaction terms only over $\Delta t/2$.
+and finally integrate the reaction terms only over $\Delta t/2$.  This flow is illustrated
+in Figure~\ref{fig:strang_flowchart}.
+
+\begin{figure}[t]
+  \plotone{sdc_strang_flowchart_I}
+  \caption{\label{fig:strang_flowchart} Flowchart of the operator split,
+    Strang, time integration.  We first react for $\Delta t/2$, then
+    advect for $\Delta t$, and finally react for $\Delta t/2$.  Each
+    process uses the state left behind from the previous process.}
+  \end{figure}
+  
 
 In the absence of advective terms, our reaction system appears as just
 $d\Uc/dt = \Rb(\Uc)$, or:
@@ -503,25 +491,20 @@ formulations differ in that Eq.~\ref{eq:dt:nuce_I} uses the
 instantaneous evaluation of the energy generation rate at the start of
 the timestep while Eq.~\ref{eq:dt:nuce_II} uses the integral of the
 energy generation rate over the entire step (or last Strang half).
+Usually these limiters are used in a reactive manner---the next step will see
+a smaller timestep based on what happened during the current step, but the
+current step is still accepted, even if it violated these conditions.
 
-\castro\ has the ability to reject a timestep if it detects a failure
-and retry with smaller timesteps (subcycling to make up the original
-required timestep).  Among the conditions that can trigger this are
-density falling below zero during advection, the ODE integration
-failing to converge in the implicit solve (due to too many steps or
-the internal timestep falling below a minimum), or violation of one of
-the timestep limiters during the step.  This means that equation
-(\ref{eq:dt:nuce_I}) or (\ref{eq:dt:nuce_II}) are not reactive, but
-instead guaranteed to be met throughout the simulation, because the
-step is rejected if they are violated.  This contrasts to similar
-approaches used in other codes where conditions \ref{eq:dt:nuce_I} or
-\ref{eq:dt:nuce_II} are used to restrict the next timestep size, but
-the update over the current step is kept, which already violated the
-constraints. \MarginPar{would be nice to have a reference here} The
-retry mechanism in \castro\ works with both the Strang and
-simplified-SDC integration scheme.  Retrying the step is much more
-stringent that simply adjusting the next step, so we put a cap on the
-number of retries allowed, aborting if we exceed the cap.
+\castro\ has the ability to reject a timestep if it detects a failure and retry
+with smaller timesteps (subcycling to make up the original required timestep).
+Among the conditions that can trigger this are density falling below zero during
+advection, the ODE integration failing to converge in the implicit solve (due to
+too many steps or the internal timestep falling below a minimum), or violation
+of one of the timestep limiters during the step.  This means that the timestep
+constraints are proactive instead of reactive.  The retry mechanism in \castro\
+works with both the Strang and simplified-SDC integration scheme.  Retrying the
+step is much more stringent that simply adjusting the next step, so we put a cap
+on the number of retries allowed, aborting if we exceed the cap.
 
 
 
@@ -555,7 +538,17 @@ to achieve second-order accuracy, giving us:
 The \castro\ version of the simplified-SDC algorithm
 differs from the previous versions due to the need to do some operations
 on the conserved variable state and some on the primitive variable
-state. 
+state.   The overall flow of the simplified-SDC algorithm is shown
+in Figure~\ref{fig:flowchart_II}.
+
+
+\begin{figure}[t]
+\plotone{sdc_strang_flowchart_II}
+\caption{\label{fig:sdc_flowchart} Flowchart of the simplified-SDC
+  approach.  An iteratively-lagged advection term is used to update
+  the system to the new time, with each iteration improving the
+  coupling.}
+\end{figure}
 
 The basic time update algorithm proceeds as:
 
@@ -818,7 +811,7 @@ header-only library enabling it to run on GPUs.  We have also added
 checks to the timestep rejection logic that help prevent VODE from
 wandering too far off the solution\footnote{This modified version of
 VODE is available in our Microphysics repo:
-\url{https://github.com/starkiller-astro/Microphysics}.}  These have
+\url{https://github.com/amrex-astro/Microphysics}.}  These have
 been shown empirically to improve the performance of VODE.
 
 VODE allows us to specific both relative and absolute tolerances
@@ -848,21 +841,31 @@ uses a norm over all of the integrated variables to compute the total
 error.  If these conditions are violated, then VODE will reject the
 timestep and retry with a smaller step.  We also require that the mass
 fractions are contained in $[0, 1]$ to a tolerance of $10^{-2}$.
-
 For SDC, we enforce these same constraints, but for
-Eq.~\ref{eq:vode_species_reject}, we only use the change from $m$ to
-$m+1$ due to reactions, by subtracting off the advective contribution
-over that substep.  We also require that:
+Eq.~\ref{eq:vode_species_reject}, we only use the change from $m$ to $m+1$ due
+to reactions, by subtracting off the advective contribution over that substep.
+We also require that:
 \begin{align}
 \rho^{m+1} &> 0 \\
 (\rho e)^{m+1} &> 0
 \end{align}
 
-For both Strang and simplified-SDC, we will use a numerical Jacobian.
-VODE computes it internally for Strang and we use the method from
-Appendix \ref{app:jacobian} for the simplified-SDC method.  VODE
-employs Jacobian-caching, so the Jacobian does not need to be
-re-evaluated each time it is used.
+Finally, some of the rates in \citet{reaclib} increase by 100s of orders of
+magnitude at low temperature, presumably because the interpolant fit was done at
+higher temperatures.  Since VODE can take exploratory righthand side evaluations
+outside of the nominal time range, it can encounter these poorly-behaved rates
+and it can cause the integration to fail (by generating {\tt inf}s).  To prevent
+this behavior, we set a lower temperature limit of the reaction rates, below
+which we zero them out.  For the simulations here, we choose a cutoff of
+$5\times 10^7~\mathrm{K}$.
+
+
+For both Strang and simplified-SDC, we will use a numerical Jacobian that VODE
+computes internally (following the algorithm in \citealt{lsode}).  For
+completeness, we derive the analytic form of the Jacobian in Appendix
+\ref{sec:app:jacobian} for the simplified-SDC method. VODE employs
+Jacobian-caching, so the Jacobian does not need to be re-evaluated each time it
+is used.
 
 
 \section{Tests}
@@ -881,8 +884,7 @@ running at different resolutions, with a fixed timestep that scales
 with resolution, we can compute the convergence rate.  In order to
 demonstrate second-order convergence, the problem must be smooth (so
 the slope limiters don't kick in severely), which means that the
-energy release cannot be so vigorous as to drive shocks.  test here
-with the simplified SDC algorithm.
+energy release cannot be so vigorous as to drive shocks. 
 
 
 
@@ -937,36 +939,33 @@ with the simplified SDC algorithm.
 Tables \ref{table:react_converge_strang} and
 \ref{table:react_converge_sdc} show the Strang and simplified-SDC
 convergence respectively.  We see that both methods converge nearly
-second order, and agree well with each other.
+second order, and agree well with each other.  This demonstrates that both
+methods are working as designed.
 
 \subsection{Sub-Chandra Double Detonation}
 
-We next model a double detonation Type Ia
-supernova.  In this model, a detonation begins in the accreted helium
-layer on a sub-Chandrasekhar mass white dwarf and that detonation can
-either drive a compression wave into the core igniting a second
-detonation in the carbon / oxygen core, or burn through the interface
-at the base of the accreted layer producing an inward propagating
-carbon detonation.  Our goal here is not to explore the feasibility of
-the model or understand whether a detonation propagating through the
-He-C interface is physical, but rather to look at the coupling of the
-hydrodynamics and reactions.  For that reason, we explore only a
-single model and start off with a rather large temperature
-perturbation in the He layer.
+We next model a double detonation Type Ia supernova.  In this model, a
+detonation begins in the accreted helium layer on a sub-Chandrasekhar mass white
+dwarf and that detonation can either drive a compression wave into the core
+igniting a second detonation in the carbon / oxygen core, or burn through the
+interface at the base of the accreted layer producing an inward propagating
+carbon detonation (see, e.g., \citealt{fink:2007}).  Our goal here is not to
+explore the feasibility of the model or understand whether a detonation
+propagating through the He-C interface is physical, but rather to look at the
+coupling of the hydrodynamics and reactions.  We want to drive vigorous burning
+and directly compare Strang and simplified-SDC time integration on this problem.
+For that reason, we explore only a single model and start off with a rather
+large temperature perturbation in the He layer.
 
-We use a network with 28 nuclei and 96 rates that captures He burning \MarginPar{should I do a few aprox13 runs for comparison?}
-with links for $(\alpha,p)(p,\gamma)$ reactions and the rates
-involving \isot{N}{14} to bypass
-$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$ as described in
+We use a network with 28 nuclei and 107 rates that captures He burning with
+links for $(\alpha,p)(p,\gamma)$ reactions and the rates involving \isot{N}{14}
+to bypass $\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$ as described in
 \cite{shenbildsten}.  The rates are taken from the ReacLib library
-\citep{reaclib} and the network is written by
-\pynucastro~\citep{pynucastro} directly in the C++ format that our
-code requires.  The nuclei and links in the network are shown in
-Figure~\ref{fig:subch_network}.  This moderate-sized network with many
-reaction pathways (forward and reverse) make it a good test for the
-coupling between hydro and reactions.  An overview of the network is
-shown in Figure~\ref{fig:subch_network}.  This network is available 
-as {\tt subch2} in \citep{microphysics}.
+\citep{reaclib} and the network is written by \pynucastro~\citep{pynucastro}
+directly in the C++ format that our code requires.  The details of the network
+are given in Appendix \ref{sec:app:reactionnet}. This moderate-sized network
+with many reaction pathways (forward and reverse) make it a good test for the
+coupling between hydro and reactions.  
 
 
 The initial model is generated following the procedure described in
@@ -991,16 +990,29 @@ is enough time for the carbon detonation to be well developed.
 \end{figure}
 
 An initial perturbation is placed on the symmetry axis of the form:
+\begin{equation}
+  T = T_0 \left [ 1 + X(\isotm{He}{4}) f (1 + \tanh(2 - r1)) \right ]
+\end{equation}
+where
+\begin{equation}
+  r_1 = \left [ x^2 + (y - r_0)^2 \right ]^{1/2} / \lambda
+\end{equation}
+and
+\begin{equation}
+  r_0 = r_\mathrm{pert} + r_\mathrm{base}
+\end{equation}
+Here, $r_\mathrm{base}$ is the radius at which the helium layer begins
+and $r_\mathrm{pert}$ is the distance above the base to put the perturbation.  We
+choose $r_\mathrm{pert} = 100~\mathrm{km}$.  The temperature is pertubed above
+the initial model value, denoted as $T_0$ here.  The amplitude of the perturbation
+is $f = 12$ and the scale of the perturbation is $\lambda = 200~\mathrm{km}$.
 
 
-We do a suite of runs with both Strang and the simplified-SDC
-integration, using CFL numbers of 0.2, 0.4, and 0.8 and reaction
-network tolerances of $\atolspec = \rtolspec = 10^{-5}$ and $\atolener
-= \rtolener = 10^{-6}$.  We also run two sets with tighter tolerances.
-The runs labeled ``mixed\_tols'' have $\atolspec = 10^{-8}$ and the
-runs labeled ``tol1.e-6'' have $\atolspec = \rtolspec = 10^{-6}$, with
-the other tolerances unchanged.  For the step rejection part of VODE,
-we use $f = 4$ and $\eta = 4$.
+We do a suite of runs with both Strang and the simplified-SDC integration, using
+CFL numbers of 0.1, 0.2, and 0.4 and reaction network tolerances of $\atolspec =
+\rtolspec = 10^{-5}$ and $\atolener = \rtolener = 10^{-65$.  We also run the CFL
+= 0.2 case with a tighter tolerance, using  $\atolspec = 10^{-8}$.  For the step
+rejection part of VODE, we use $f = 4$ and $\eta = 4$.
 
 Figure \ref{fig:subch_strang_cfl08_I} shows the temperature, mean
 molecular weight, and nuclear energy generation rate for the strang
@@ -1146,23 +1158,21 @@ the Strang run with the tighter tolerances is reliable.
 \startdata
 \multicolumn{4}{c}{Strang runs} \\
 \hline
-{\tt strang\_subch2\_cfl0.1}           & 1.059\times 10^{32}  &  3.804\times 10^{31}  &  1.092\times 10^{32} \\
-{\tt strang\_subch2\_cfl0.2}           & 9.114\times 10^{31}  &  4.174\times 10^{31}  &  1.078\times 10^{32} \\
-{\tt strang\_subch2\_cfl0.2\_tol1.e-8} & 7.222\times 10^{31}  &  8.623\times 10^{31}  &  4.041\times 10^{31} \\
-{\tt strang\_subch2\_cfl0.4}           & 7.819\times 10^{31}  &  4.208\times 10^{31}  &  1.045\times 10^{32} \\
+{\tt strang\_subch2\_cfl0.1}           & $1.059\times 10^{32}$  &  $3.804\times 10^{31}$  &  $1.092\times 10^{32}$ \\
+{\tt strang\_subch2\_cfl0.2}           & $9.114\times 10^{31}$  &  $4.174\times 10^{31}$  &  $1.078\times 10^{32}$ \\
+{\tt strang\_subch2\_cfl0.2\_tol1.e-8} & $7.222\times 10^{31}$  &  $8.623\times 10^{31}$  &  $4.041\times 10^{31}$ \\
+{\tt strang\_subch2\_cfl0.4}           & $7.819\times 10^{31}$  &  $4.208\times 10^{31}$  &  $1.045\times 10^{32}$ \\
 \hline
 \multicolumn{4}{c}{SDC runs} \\
 \hline
-{\tt sdc\_subch2\_cfl0.1}           & 7.319\times 10^{31}  &  9.147\times 10^{31}  &  3.765\times 10^{31} \\
-{\tt sdc\_subch2\_cfl0.2}           & 7.208\times 10^{31}  &  9.151\times 10^{31}  &  3.783\times 10^{31} \\
-{\tt sdc\_subch2\_cfl0.2\_tol1.e-8} & 7.376\times 10^{31}  &  9.220\times 10^{31}  &  3.513\times 10^{31} \\
-{\tt sdc\_subch2\_cfl0.4}           & 7.203\times 10^{31}  &  8.843\times 10^{31}  &  3.754\times 10^{31} \\
+{\tt sdc\_subch2\_cfl0.1}           & $7.319\times 10^{31}$  &  $9.147\times 10^{31}$  &  $3.765\times 10^{31}$ \\
+{\tt sdc\_subch2\_cfl0.2}           & $7.208\times 10^{31}$  &  $9.151\times 10^{31}$  &  $3.783\times 10^{31}$ \\
+{\tt sdc\_subch2\_cfl0.2\_tol1.e-8} & $7.376\times 10^{31}$  &  $9.220\times 10^{31}$  &  $3.513\times 10^{31}$ \\
+{\tt sdc\_subch2\_cfl0.4}           & $7.203\times 10^{31}$  &  $8.843\times 10^{31}$  &  $3.754\times 10^{31}$ \\
 \hline
 \enddata
 \end{deluxetable}
 
-
-1-d slices along x=0?
 
 
 \section{Summary}
@@ -1354,7 +1364,7 @@ compute $e_{X_k}$ and $c_v$ and construct the entries of the final
 Jacobian.
 
 \section{Reaction Network}
-
+\label{sec:app:reactionnet}
 We build a reaction network that approximates an $\alpha$-chain,
 including all $\isotm{He}{4}$, and all of the $\alpha$ nuclei from
 $\isotm{C}{12}$ to $\isotm{Ni}{56}$.  We want to capture both the
@@ -1378,13 +1388,22 @@ production followed by a capture back to one of our $\alpha$-chain
 nuclei.  These are the only rates we approximate here, assuming
 that the subsequent neutron capture is instantaneous.
 
-Our final set of 28 nuclei are ${}^{1}\mathrm{H}$, ${}^{4}\mathrm{He}$, ${}^{12}\mathrm{C}$, ${}^{13}\mathrm{N}$, ${}^{14}\mathrm{N}$, ${}^{16}\mathrm{O}$, ${}^{18}\mathrm{F}$, ${}^{20}\mathrm{Ne}$, ${}^{21}\mathrm{Ne}$, ${}^{22}\mathrm{Na}$, ${}^{23}\mathrm{Na}$, ${}^{24}\mathrm{Mg}$, ${}^{27}\mathrm{Al}$, ${}^{28}\mathrm{Si}$, ${}^{31}\mathrm{P}$, ${}^{32}\mathrm{S}$, ${}^{35}\mathrm{Cl}$, ${}^{36}\mathrm{Ar}$, ${}^{39}\mathrm{K}$, ${}^{40}\mathrm{Ca}$, ${}^{43}\mathrm{Sc}$, ${}^{44}\mathrm{Ti}$, ${}^{47}\mathrm{V}$, ${}^{48}\mathrm{Cr}$, ${}^{51}\mathrm{Mn}$, ${}^{52}\mathrm{Fe}$, ${}^{55}\mathrm{Co}$, ${}^{56}\mathrm{Ni}$.  The 107
-rates linking them are given in table~\ref{table:rates}, with the
-forward rates having a positive $Q$ value and the reverse having a
-negative $Q$ value.  We add screening to the rates using the prescription
-from \citet{graboske:1973,alastuey:1978,itoh:1979}.  The C++ code for the network is output by \pynucastro\
-directly for \castro.  A graphical overview of the network showing the links
-between the nuclei is shown in figure~\ref{fig:subch_network}.
+Our final set of 28 nuclei are ${}^{1}\mathrm{H}$, ${}^{4}\mathrm{He}$,
+${}^{12}\mathrm{C}$, ${}^{13}\mathrm{N}$, ${}^{14}\mathrm{N}$,
+${}^{16}\mathrm{O}$, ${}^{18}\mathrm{F}$, ${}^{20}\mathrm{Ne}$,
+${}^{21}\mathrm{Ne}$, ${}^{22}\mathrm{Na}$, ${}^{23}\mathrm{Na}$,
+${}^{24}\mathrm{Mg}$, ${}^{27}\mathrm{Al}$, ${}^{28}\mathrm{Si}$,
+${}^{31}\mathrm{P}$, ${}^{32}\mathrm{S}$, ${}^{35}\mathrm{Cl}$,
+${}^{36}\mathrm{Ar}$, ${}^{39}\mathrm{K}$, ${}^{40}\mathrm{Ca}$,
+${}^{43}\mathrm{Sc}$, ${}^{44}\mathrm{Ti}$, ${}^{47}\mathrm{V}$,
+${}^{48}\mathrm{Cr}$, ${}^{51}\mathrm{Mn}$, ${}^{52}\mathrm{Fe}$,
+${}^{55}\mathrm{Co}$, ${}^{56}\mathrm{Ni}$.  The 107 rates linking them are
+given in table~\ref{table:rates}, with the forward rates having a positive $Q$
+value and the reverse having a negative $Q$ value.  We add screening to the
+rates using the prescription from \citet{graboske:1973,alastuey:1978,itoh:1979}.
+The C++ code for the network is output by \pynucastro\ directly for \castro.  A
+graphical overview of the network showing the links between the nuclei is shown
+in figure~\ref{fig:subch_network}.
 
 \startlongtable
 \begin{deluxetable}{ll}
