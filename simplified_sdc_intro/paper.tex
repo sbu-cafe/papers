@@ -149,8 +149,8 @@ develop a simplified approach based on the ideas of spectral deferred
 corrections (SDC) coupling of explicit hydrodynamics and stiff
 reaction sources as an alternative to operator splitting or the more
 comprehensive SDC approach we demonstrated previously.  We apply the
-new method to some example problems with small and moderately-sized
-astrophysical nuclear reaction networks and explore the timestep size
+new method to a double detonation problem with a moderately-sized
+astrophysical nuclear reaction network and explore the timestep size
 and reaction network tolerances to show that the simplified-SDC
 approach compares favorably with traditional Strang operator
 splitting.  This is all done in the framework of the
@@ -403,7 +403,7 @@ on to our new time-coupling method.
 
 \subsection{Strang Splitting}
 
-In Strang splitting, we first integrate the system with reactions terms only (no advection)
+In the Strang splitting~\cite{strang:1968} flavor of operator splitting, we first integrate the system with reactions terms only (no advection)
 over $\Delta t/2$, then integrate the advection terms only (no reactions) over $\Delta t$,
 and finally integrate the reaction terms only over $\Delta t/2$.  This flow is illustrated
 in Figure~\ref{fig:strang_flowchart}.
@@ -452,7 +452,7 @@ using an implicit ODE solver described below.
 We explored this and other approaches (including not evolving an
 energy / temperature equation during the reaction step) in
 \citet{strang_rnaas} and showed that the above formulation gets second
-order convergence and showed that integrating an energy / temperature
+order convergence and that in particular, integrating an energy / temperature
 equation is needed to get second order accuracy (see also
 \citealt{muller:1986} for a discussion on stability).  We note however
 that some astrophysical simulation codes only evolve the species
@@ -494,7 +494,9 @@ the timestep while Eq.~\ref{eq:dt:nuce_II} uses the integral of the
 energy generation rate over the entire step (or last Strang half).
 Usually these limiters are used in a reactive manner---the next step will see
 a smaller timestep based on what happened during the current step, but the
-current step is still accepted, even if it violated these conditions.
+current step is still accepted, even if it violated these conditions.  Our
+goal is to avoid the need for these limiters by doing the coupling of hydrodynamics
+and reactions better.
 
 \castro\ has the ability to reject a timestep if it detects a failure and retry
 with smaller timesteps (subcycling to make up the original required timestep).
@@ -505,7 +507,7 @@ of one of the timestep limiters during the step.  This means that the timestep
 constraints are proactive instead of reactive.  The retry mechanism in \castro\
 works with both the Strang and simplified-SDC integration scheme.  Retrying the
 step is much more stringent that simply adjusting the next step, so we put a cap
-on the number of retries allowed, aborting if we exceed the cap.
+on the number of retries allowed, aborting if we exceed the cap. \MarginPar{describe in more detail?}
 
 
 
@@ -519,12 +521,12 @@ used to update the state from one time node to the next.  The method
 uses iteration to successively improve the solution and the ultimate
 accuracy is determined by the quadrature method used to evaluate the
 integral, which is done using an iteratively-lagged solution.  This is the
-classic approach that we implemented in \cite{castro_sdc}.
+classic approach that we implemented in Castro in \citet{castro_sdc}.
 
-Our simplified-SDC approach is based on the method described in \citet{SDC-old} and
-a similar (but unpublished) implementation in the \maestroex\ simulation code \cite{maestroex}.
-We again start by considering the update
-in integral form:
+Our simplified-SDC approach is based on the method described in \citet{SDC-old}
+and a similar (but unpublished) implementation in the \maestroex\ simulation
+code \citep{maestroex}. We again start by considering the update in integral
+form:
 \begin{equation}
 \Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
 \end{equation}
@@ -540,7 +542,7 @@ The \castro\ version of the simplified-SDC algorithm
 differs from the previous versions due to the need to do some operations
 on the conserved variable state and some on the primitive variable
 state.   The overall flow of the simplified-SDC algorithm is shown
-in Figure~\ref{fig:flowchart_II}.
+in Figure~\ref{sdc_flowchart}.
 
 
 \begin{figure}[t]
@@ -845,19 +847,19 @@ fractions are contained in $[0, 1]$ to a tolerance of $10^{-2}$.
 For SDC, we enforce these same constraints, but for
 Eq.~\ref{eq:vode_species_reject}, we only use the change from $m$ to $m+1$ due
 to reactions, by subtracting off the advective contribution over that substep.
-We also require that:
+Finally, we enforce that:
 \begin{align}
 \rho^{m+1} &> 0 \\
 (\rho e)^{m+1} &> 0
 \end{align}
 
-Finally, some of the rates in \citet{reaclib} increase by 100s of orders of
+Some of the rates in \citet{reaclib} increase by 100s of orders of
 magnitude at low temperature, presumably because the interpolant fit was done at
 higher temperatures.  Since VODE can take exploratory righthand side evaluations
 outside of the nominal time range, it can encounter these poorly-behaved rates
 and it can cause the integration to fail (by generating {\tt inf}s).  To prevent
 this behavior, we set a lower temperature limit of the reaction rates, below
-which we zero them out.  For the simulations here, we choose a cutoff of
+which we zero them out.  For the simulations in section~\ref{sec:dd}, we choose a cutoff of
 $5\times 10^7~\mathrm{K}$.
 
 
@@ -873,10 +875,10 @@ is used.
 
 \subsection{Reacting convergence test problem}
 
-\cite{castro_sdc} introduced a test problem for measuring convergence
+\citet{castro_sdc} introduced a test problem for measuring convergence
 of a reacting hydrodynamic algorithm.  This is based on the acoustic
-pulse problem from \citep{mccorquodalecolella}, and was also used in
-\citep{strang_rnaas}.  A periodic domain with a uniform entropy is
+pulse problem from \citet{mccorquodalecolella}, and was also used in
+\citet{strang_rnaas}.  A periodic domain with a uniform entropy is
 initialized with a pressure profile with a small perturbation.  This
 drives a low amplitude acoustic wave radially outward from the center.
 A simple reaction network with the triple-alpha and
@@ -937,13 +939,15 @@ energy release cannot be so vigorous as to drive shocks.
 \enddata
 \end{deluxetable}
 
-Tables \ref{table:react_converge_strang} and
-\ref{table:react_converge_sdc} show the Strang and simplified-SDC
-convergence respectively.  We see that both methods converge nearly
+Tables \ref{table:react_converge_strang} and \ref{table:react_converge_sdc} show
+the Strang and simplified-SDC convergence respectively.  The convergence rate is
+is computed by taking log-base-2 of the ratio of adjacent errors.  A rate of 2.0
+indicates second order convergence.  We see that both methods converge nearly
 second order, and agree well with each other.  This demonstrates that both
 methods are working as designed.
 
 \subsection{Sub-Chandra Double Detonation}
+\label{sec:dd}
 
 We next model a double detonation Type Ia supernova.  In this model, a
 detonation begins in the accreted helium layer on a sub-Chandrasekhar mass white
@@ -1013,11 +1017,18 @@ We do a suite of runs with both Strang and the simplified-SDC integration, using
 CFL numbers of 0.1, 0.2, and 0.4 and reaction network tolerances of $\atolspec =
 \rtolspec = 10^{-5}$ and $\atolener = \rtolener = 10^{-5}$.  We also run the CFL
 = 0.2 case with a tighter tolerance, using  $\atolspec = 10^{-8}$.  For the step
-rejection part of VODE, we use $f = 4$ and $\eta = 4$.
+rejection part of VODE, we use $f = 4$ and $\eta = 4$.  The runs are labeled with
+the prefix {\tt sdc\_} or {\tt strang\_} to detonate the integrator, and also include
+the CFL number in the name.  Finally, the runs with the tighter tolerances have
+the suffix {\tt \_tol1.e-8}.  We note that both the Strang and the SDC runs encounter
+VODE integration failures occassionally and utilize the \castro\ step retry functionality.
 
 Figure \ref{fig:subch_strang_cfl02} shows the temperature, mean
 molecular weight, and nuclear energy generation rate for the strang
-CFL = 0.82 simulation ({\tt strang\_subch2\_cfl0.2}).  We see that the
+CFL = 0.2 simulation ({\tt strang\_subch2\_cfl0.2}).  At this point
+in the evolution, the helium detonation has wrapped more than halfway
+across the surface and the ingoing carbon detonation is approaching the
+center of the star.  We see that the
 mean molecular weight appears mottled behind the inward propagating
 detonation in the white dwarf.  Comparing to the energy generation
 rate, we see that region is characterized by large energy releases of
@@ -1029,54 +1040,60 @@ important.
 \begin{figure}
 \centering
 \plotone{strang_subch2_cfl0.2_tols_slice}
-\caption{\label{fig:subch_strang_cfl02}}
+\caption{\label{fig:subch_strang_cfl02} Temperature, mean molecular weight, and
+energy generation rate for the Strang CFL = 0.2 run with normal tolerances ({\tt
+strang_subch2\_cfl0.2}) at 0.1 s.}
 \end{figure}
 
 We next look at the simplified-SDC version of this same case, {\tt
-  sdc\_subch2\_cfl0.2}.  Figure~\ref{fig:subch_sdc_cfl02} shows the
-temperature, mean molecular weight, and energy generation rate.
-Compared to Figure~\ref{fig:subch_strang_cfl02}, we see that the
-composition and energy generation rates are smooth, without any of the
-checkerboarding that plagued the Strang simulation.
-This suggests that the simplified-SDC algorithm has an easier time
-attaining the correct equilibrium in these conditions.
+sdc\_subch2\_cfl0.2}.  Figure~\ref{fig:subch_sdc_cfl02} shows the temperature,
+mean molecular weight, and energy generation rate. Compared to
+Figure~\ref{fig:subch_strang_cfl02}, we see that the composition and energy
+generation rates are smooth, without any of the checkerboarding that plagued the
+Strang simulation.  This suggests that the simplified-SDC algorithm has an
+easier time attaining the correct equilibrium in these conditions. More
+strikingly, we see that the inward propagating carbon detonation has not
+progressed as far into the white dwarf at this time.  The two integration
+methods are giving very different results here.
 
 \begin{figure}
 \centering
 \plotone{sdc_subch2_cfl0.2_tols_slice}
-\caption{\label{fig:subch_sdc_cfl02}}
+\caption{\label{fig:subch_sdc_cfl02} Temperature, mean molecular weight, and
+energy generation rate for the simplified-SDC CFL = 0.2 run with normal tolerances ({\tt
+sdc_subch2\_cfl0.2}) at 0.1 s.}
 \end{figure}
 
 
-We now look at the evolution of the state while burning by storing the
-thermodynamic state internal to VODE each substep as it evaluates the
-righthand side of the ODE system it is integrating.  We pick a point
-on the symmetry axis a few zones behind the inward moving shock and
-ran both a Strang and simplified-SDC simulation for a single
-coarse-grid timestep.  To ensure that we start off the same, both
-simulations were started from a checkpoint file from the
-simplified-SDC simulation a few steps before 0.1~s.
-Figure~\ref{fig:nonaka_plot} shows the evolution of \isot{Ni}{56} over
-a single coarse-grid timestep (4 fine-grid timesteps).  We see that
-the Strang solution is much more discontinuous, as the reactions and
-advection push the solution in different ways, because the processes
-are completely independent of one another.  If an equilibrium state is
-important to the nucleosynthesis, the large deviations in the Strang
-solution mean that we are evaluating the reaction network with a state
-out of equilibrium for much of the integration time. \MarginPar{need to double check the data---why are there points in the vertical part of Strang?}
+% We now look at the evolution of the state while burning by storing the
+% thermodynamic state internal to VODE each substep as it evaluates the
+% righthand side of the ODE system it is integrating.  We pick a point
+% on the symmetry axis a few zones behind the inward moving shock and
+% ran both a Strang and simplified-SDC simulation for a single
+% coarse-grid timestep.  To ensure that we start off the same, both
+% simulations were started from a checkpoint file from the
+% simplified-SDC simulation a few steps before 0.1~s.
+% Figure~\ref{fig:nonaka_plot} shows the evolution of \isot{Ni}{56} over
+% a single coarse-grid timestep (4 fine-grid timesteps).  We see that
+% the Strang solution is much more discontinuous, as the reactions and
+% advection push the solution in different ways, because the processes
+% are completely independent of one another.  If an equilibrium state is
+% important to the nucleosynthesis, the large deviations in the Strang
+% solution mean that we are evaluating the reaction network with a state
+% out of equilibrium for much of the integration time. \MarginPar{need to double check the data---why are there points in the vertical part of Strang?}
 
-\begin{figure}
-\plotone{sdc_compare}
-\caption{\label{fig:nonaka_plot} Evolution of $X(\isotm{Ni}{56})$ over
-  4 fine-grid timesteps in a single zone behind the inward propagating
-  shock.  The Strang points (blue) show the first $\Delta t/2$ burn
-  bring the abundance away from equilibrium, then the advection
-  overcorrecting it, and finally the second $\Delta t/2$ bringing it
-  back toward the equilibrium.  The two simplified-SDC iterations
-  appear much smoother.  For the SDC runs, there are a few points
-  evaluated beyond the stop time---VODE can use data from outside the
-  integration range to interpolate to the final solution.}
-\end{figure}
+% \begin{figure}
+% \plotone{sdc_compare}
+% \caption{\label{fig:nonaka_plot} Evolution of $X(\isotm{Ni}{56})$ over
+%   4 fine-grid timesteps in a single zone behind the inward propagating
+%   shock.  The Strang points (blue) show the first $\Delta t/2$ burn
+%   bring the abundance away from equilibrium, then the advection
+%   overcorrecting it, and finally the second $\Delta t/2$ bringing it
+%   back toward the equilibrium.  The two simplified-SDC iterations
+%   appear much smoother.  For the SDC runs, there are a few points
+%   evaluated beyond the stop time---VODE can use data from outside the
+%   integration range to interpolate to the final solution.}
+% \end{figure}
 
 
 We next look at how the structure seen in
@@ -1089,7 +1106,8 @@ and mean molecular weight for all of the Strang runs.  We see that
 changing the CFL number does little to affect the state behind the
 shock---it continues to take on the mottled appearance characteristic
 of not reaching a proper equilibrium.  For the case with tight tolerances, we
-see that the state is greatly improved.
+see that the state is greatly improved.  Furthermore, it gets the inward
+propagating carbon detonation in the same position as the SDC runs.
 
 \begin{figure}
 \plotone{strang_enuc_summary_plot}
@@ -1108,6 +1126,8 @@ shock.}
 The SDC comparisons are shown in Figures~\ref{fig:sdc_enuc_summary}
 and \ref{fig:sdc_abar_summary}.  We see that the state behind the
 shock looks great regardless of the CFL or integrator tolerances.
+This demonstrates that the simplified-SDC integration algorithm is more
+robust than Strang integration for this problem.
 
 \begin{figure}
 \plotone{sdc_enuc_summary_plot}
@@ -1167,20 +1187,21 @@ network, the simplified-SDC method compares well against Strang for the double
 detonation problem---getting a better solution at looser reaction tolerances,
 and consistent results across a range of CFL numbers.  The benefits of this new
 integration scheme are likely problem and network dependent, and we will explore
-it on other science problemsin future papers.
+it on other science problems in future papers.
 
 We have not focused on performance or load-balancing the reactions in
 the tests that we ran, but for the simulations shown here,
 the simplified-SDC method runs as fast (or faster) than the Strang method
-for the same tolerances and CFL, despite having to do the advection and reactions
+for the same tolerances and CFL number, despite having to do the advection and reactions
 twice.  We would expect similar behavior for any simulations that are
-dominated by the cost of reactions.  If the results above a robust across
+dominated by the cost of reactions.  If the results above are robust across
 different problems and networks, then this suggests that we can run
 the SDC simulation with larger CFL and/or less strict reaction tolerances,
 which would translate into a large performance boost.
 
 This new time-integration method is freely available in \castro, and
-we will continue to explore it on other problems.  We are particularly
+we will continue to explore it on other problems.  Although these simulations
+were run on CPUs, the entire simplified-SDC algorithm also runs on GPUs.
 interested in massive star evolution with this method, where the
 vigorous shell burning leading up to core-collapse would be an ideal
 application for the simplified-SDC method.  In a follow-on paper, we
