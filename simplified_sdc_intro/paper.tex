@@ -1,5 +1,5 @@
 %\documentclass[times,modern]{aastex63}
-\documentclass[times,preprint]{aastex63}
+\documentclass[times,preprint]{aastex631}
 %\documentclass{aastex63}
 
 % these lines seem necessary for pdflatex to get the paper size right
@@ -542,7 +542,7 @@ The \castro\ version of the simplified-SDC algorithm
 differs from the previous versions due to the need to do some operations
 on the conserved variable state and some on the primitive variable
 state.   The overall flow of the simplified-SDC algorithm is shown
-in Figure~\ref{sdc_flowchart}.
+in Figure~\ref{fig:sdc_flowchart}.
 
 
 \begin{figure}[t]
@@ -1215,7 +1215,8 @@ hydrodynamics, where we need to do an implicit update for the
 radiation energy.
 
 
-\acknowledgements \castro\ is freely available at
+\begin{acknowledgments} 
+\castro\ is freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  All of the code and problem setups
 used here are available in the git repo.  The double detonation problem is in
 {\tt Castro/Exec/science/subchandra}.  The work at Stony Brook was supported by
@@ -1231,6 +1232,7 @@ research used resources of the National Energy Research Scientific Computing
 Center (NERSC), a U.S. Department of Energy Office of Science User Facility
 located at Lawrence Berkeley National Laboratory, operated under Contract No.\
 DE-AC02-05CH11231 using NERSC award NP-ERCAP0020354.
+\end{acknowledgments}
 
 \software{\amrex\ \citep{amrex_joss},
           \castro\ \citep{castro},
