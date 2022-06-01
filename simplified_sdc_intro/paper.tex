@@ -51,7 +51,7 @@
 
 \newcommand{\Ic}{{\boldsymbol{\mathcal{I}}}}
 \newcommand{\Ics}{{\mathcal{I}}}
-\newcommand{\smax}{{s_\mathrm{max}}}
+\newcommand{\kmax}{{k_\mathrm{max}}}
 \newcommand{\kth}{k_\mathrm{th}}
 \usepackage{bm}
 
@@ -72,8 +72,7 @@
 \newcommand{\Sqhydro}{{\Sq^{\mathrm{hydro}}}}
 \newcommand{\qb}{{\bf q}}
 
-\newcommand{\Shydro}{{{\bf H}}}
-\newcommand{\Hb}{{\bf H}}
+\newcommand{\Gb}{{\bf G}}
 \newcommand{\Rb}{{\bf R}}
 \newcommand{\Rq}{{\bf R}}
 \newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
@@ -121,16 +120,13 @@
   Stony Brook, NY 11794-3800}
 
 \author[0000-0003-0439-4556]{M.~P.~Katz}
-\affiliation{Nvidia Corp}
-
-\author[0000-0003-1791-0265]{A.~J.~Nonaka}
-\affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
-
-\author[0000-0002-1530-781X]{A.~Harpole}
 \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
   Stony Brook, NY 11794-3800}
 
-\author{M.~Rasmussen}
+\author[0000-0003-1791-0265]{A.~Nonaka}
+\affiliation{Center for Computational Sciences and Engineering, Lawrence Berkeley National Laboratory, Berkeley, CA  94720}
+
+\author[0000-0002-0297-0313]{M.~Rasmussen}
 \affiliation{Utah State University, Logan UT 84322}
 
 \correspondingauthor{Michael Zingale}
@@ -145,14 +141,16 @@ Reacting astrophysical flows can be challenging to model because of
 the difficulty in accurately coupling hydrodynamics and reactions.
 This can be particularly acute during explosive burning or at high
 temperatures where nuclear statistical equilibrium is established.  We
-develop a simplified approach based on the ideas of spectral deferred
+develop a new approach based on the ideas of spectral deferred
 corrections (SDC) coupling of explicit hydrodynamics and stiff
-reaction sources as an alternative to operator splitting or the more
+reaction sources as an alternative to operator splitting that is simpler
+than the more
 comprehensive SDC approach we demonstrated previously.  We apply the
 new method to a double detonation problem with a moderately-sized
 astrophysical nuclear reaction network and explore the timestep size
 and reaction network tolerances to show that the simplified-SDC
-approach compares favorably with traditional Strang operator
+approach provides improved coupling with decreased computational
+expense compared to traditional Strang operator
 splitting.  This is all done in the framework of the
 \castro\ hydrodynamics code, and all algorithm implementations are
 freely available.
@@ -166,7 +164,7 @@ freely available.
 \section{Introduction}\label{Sec:Introduction}
 
 Modeling astrophysical reacting flows can be challenging because of
-the disparity better the nuclear and hydrodynamics timescales.
+the disparity between the nuclear and hydrodynamics timescales.
 Reaction networks tend to be stiff, requiring implicit integration
 techniques to stably integrate the system~\citep{BYRNE19871}.  In contrast, compressible
 hydrodynamics flows are limited by the (often much longer)
@@ -188,10 +186,10 @@ reverse rates of reaction should balance leading to an equilibrium.
 With operator splitting, an NSE region will have a large positive flow
 through the network in a zone in one step followed by a large negative
 flow over the next timestep, as the code struggles to produce an
-equilibrium.  These large changes in abundances (and large alternately
-positive and negative energy generation rates) can be a challenge for
+equilibrium. 
+These large changes in abundances (and large alternately positive and negative energy generation rates) can be a challenge for
 a code.  The easiest way to improve the coupling is to cut the
-timestep (see, e.g., \citealt{couch:2015}), but this can make simulations
+timestep (see, e.g., \citealt{couch:2015,rivas:2022}), but this can make simulations
 prohibitively expensive.  Sometimes the burning is simply halted on a
 zone-by-zone basis when NSE conditions are reached (e.g., as in
 \citealt{hedet}).  The
@@ -203,33 +201,36 @@ The \castro\ hydrodynamics code \citep{castro,castro_joss} is used for
 all of our numerical experiments.  \castro\ is a compressible
 (magneto-, radiation-) hydrodynamics code built on the AMReX adaptive
 mesh refinement (AMR) framework \citep{amrex_joss}.  \castro\ has been
-designed to be performance portable and runs on massively parallel CPU
-and GPU architectures \citep{castro_gpu}.  For hydrodynamics, the
+designed to be performance portable and runs on massively parallel CPU,
+multicore, and GPU architectures \citep{castro_gpu}.  For hydrodynamics, the
 corner transport upwind (CTU; \citealt{ppmunsplit}) method with the
 piecewise parabolic method (PPM; \citealt{ppm,millercolella:2002}) is
 used.  \castro\ includes self-gravity, rotation, arbitrary equations
 of state and reaction networks, and has been used for modeling X-ray
 bursts and different models of thermonuclear, core-collapse, and
 pair-instability supernovae.  Recently in \citet{castro_sdc}, we
-developed second- and fourth-order accurate methods in space and time
-for coupling hydrodynamics and nuclear reaction networks based on
-spectral deferred corrections (SDC) methods, and demonstrated the
-method in a variety of test problems.
+developed second- and fourth-order accurate in space and time
+method-of-lines approaches for coupling hydrodynamics and nuclear reaction networks based on
+spectral deferred corrections (SDC), and demonstrated these
+methods using a variety of test problems.
 
 The time-integration approach presented here is considerably simpler
 than the SDC method of \citet{castro_sdc}, but allows us to reuse the
-main CTU \MarginPar{any cites to CCSE papers?}  hydrodynamics
-construction and a largely similar ODE integration scheme, making this
+piecewise-linear or piecewise-parabolic CTU hydrodynamics
+construction \citep{saltzman1994,millercolella:2002}
+used in the the original \castro\ paper
+%\MarginPar{any cites to CCSE papers? - you would want Colella90 (2D CTU), Saltzman94 (3D CTU), Miller/Colella02 (2D/3D PPM)}
+and a largely similar ODE integration scheme, making this
 method easier to add to existing simulation codes.  Furthermore, it
 also extends to adaptive mesh refinement with subcycling in a
 straightforward manner, avoiding the complications described in
-\citep{mccorquodalecolella} needed to fill ghost cells when using
+\cite{mccorquodalecolella} needed to fill ghost cells when using
 method-of-lines integration.  However, it is restricted to
 second-order accuracy in time overall.  We term this algorithm the
 ``simplified-SDC method''.  In this paper we describe the overall
 method and demonstrate it on a test problem and astrophysical
 simulation using \castro.  All of the code to reproduce the results in
-this paper are in the \castro\ github
+this paper are in the \castro\ GitHub
 repository\footnote{\url{https://github.com/amrex-astro/Castro/}}.
 
 \section{Numerical Methodology}
@@ -267,62 +268,53 @@ We can write the system in conservative form for all state variables aside from 
 \begin{equation}
   \ddt{\Uc} + \ddx{\Fb(\Uc)} = \Sc(\Uc)
 \end{equation}
-where for the special case of $(\rho e)$, we have an additional ``pdV'' term:
+where for the special case of $(\rho e)$, we have an additional ``$p\, dV$'' term:
 \begin{equation}
-\ddt{(\rho e)} + \ddx{F(\rho e)} + p \ddx{u} = S(\rho e)
+\ddt{(\rho e)} + \ddx{F_{\rho e}} + p \ddx{u} = S_{\rho e}
 \end{equation}
-
-We'll split the source term, $\Sc(\Uc)$ into pure hydrodynamic and reactive parts:
+We split the source term into gravitational and reactive parts, $\Sc(\Uc) = \Gb(\Uc) + \Rb(\Uc)$, with
 \begin{equation}
   \label{eq:cons_sources}
-  \Hb(\Uc) = \left ( \begin{array}{c}
+  \Gb(\Uc) = \left ( \begin{array}{c}
     0 \\
     0 \\
     \rho g \\
     \rho u g \\
-    0 \end{array} \right )
+    0 \end{array} \right ),
   \qquad
   \Rb(\Uc) = \left ( \begin{array}{c}
      0 \\
-     \rho \omegadot(X_k) \\
+     \rho \dot\omega_{X_k} \\
      0 \\
      \rho \dot{S} \\
      \rho \dot{S}
-  \end{array} \right )
+  \end{array} \right ).
 \end{equation}
-with
-\begin{equation}
-  \Sc(\Uc) = \Hb(\Uc) + \Rb(\Uc).
-\end{equation}
-Here, gravity, represented by the gravitational acceleration $g$
-appears as a pure hydrodynamical source term.  From reactions,
-$\omegadot(X_k)$ is the creation rate for species $k$
+From reactions,
+$\dot\omega_{X_k}$ is the creation rate for species $k$
  and $\dot{S}$ is the energy generation rate per unit
-mass.  We note that the internal energy ``pdV'' work is not treated as
+mass.  We note that the internal energy $p\partial u/\partial x$ (``$p\, dV$'')
+work is not treated as
 a source term but is instead constructed with the hydrodynamical
-fluxes are computed in the CTU method.
-Aside from the $p\partial u/\partial x$ (``pdV'') term in the internal
+fluxes that are computed in the CTU method.
+Aside from the ``$p\, dV$'' term in the internal
 energy equation, this system is in conservative form with source
 terms.
 
-We'll define the advective terms with hydrodynamic sources, $\Advs{\Uc}$ as
+We define the advective terms with gravitational sources, $\Advs{\Uc}$, as
 \begin{equation}
-\Advs{\Uc} = -\ddx{\Fb(\Uc)} + \Hb(\Uc)
+\Advs{\Uc} = -\ddx{\Fb(\Uc)} + \Gb(\Uc)
 \end{equation}
 for the general case, with the $(\rho e)$ component again having the extra
-``pdV'' term:
+``$p\, dV$'' term:
 \begin{equation}
-\mathcal{A}(\rho e) = -\ddx{F(\rho e)} -p \ddx{u} + H(\rho e)
+\mathcal{A}_{\rho e} = -\ddx{F_{\rho e}} -p \ddx{u} + G_{\rho e}
 \end{equation}
-
-
-To close the system, we need the equation of state of the form:
+To close the system, we need an equation of state of the form:
 \begin{equation}
-p = p(\rho, X_k, e)
+p = p(\rho, {\bf X}, e).
 \end{equation}
-
-
-Sometimes it is preferable to work with the primitive variables,
+Sometimes it is preferable to work with the primitive variables:
 \begin{equation}
 \qb = \left ( \begin{array}{c}
   \rho \\
@@ -357,29 +349,29 @@ Note, the primitive state has two thermodynamic quantities, $p$
 and $(\rho e)$, to more efficiently handle the general equation of
 state in the Riemann solver, as described in \citet{castro}, but
 alternate formulations are possible \citep{colellaglaz:1985}.
-The source term vector, $\Sc(\qb)$, can again be decomposed into hydrodynamic
+The source term vector, $\Sc(\qb)$, can again be decomposed into gravitational
 sources (now in terms of the primitive variables) and reaction terms,
 \begin{equation}
-  \Sc(\qb) = \Hb(\qb) + \Rb(\qb)
+  \Sc(\qb) = \Gb(\qb) + \Rb(\qb),
 \end{equation}
 with
 \begin{equation}
 \label{eq:prim_sources}
-\Hb(\qb) = \left ( \begin{array}{c}
+\Gb(\qb) = \left ( \begin{array}{c}
      0 \\
      0 \\
      g \\
      0 \\
      0 \\
-   \end{array} \right )
+   \end{array} \right ),
 \qquad
 \Rb(\qb) = \left ( \begin{array}{c}
      0 \\
-     \omegadot(X_k) \\
+     \dot\omega_{X_k} \\
      0 \\
      \Gamma_1 p \sigma \Sdot \\
      \rho \Sdot
-   \end{array} \right )
+   \end{array} \right ),
 \end{equation}
 where
 \begin{equation}
@@ -388,7 +380,7 @@ where
 and $c_p$ is the specific heat at constant pressure, $c_p = \partial
 h/\partial T |_p$.  A derivation of this source for the pressure
 equation can be found in \cite{ABNZ:III}.  We note that this source is
-algebraically identical to that shown in Eq.~25 of \cite{castro}.
+algebraically identical to that shown in Equation (25) of \cite{castro}.
 
 The CTU+PPM method for hydrodynamics is second-order accurate in space
 and time.  We want to couple the reactive sources to the hydrodynamics
@@ -396,22 +388,21 @@ to be second-order in time as well.  As discussed above, nuclear
 reaction sources are stiff, and need to be integrated using implicit
 methods for stabilty.  Operator splitting (e.g., Strang) is
 traditionally employed here, and is used as a benchmark for comparison
-in this paper.  We'll discuss this traditional approach next before moving
+in this paper.  We discuss this traditional approach next before moving
 on to our new time-coupling method.
 
 
 
 \subsection{Strang Splitting}
 
-In the Strang splitting~\cite{strang:1968} flavor of operator splitting, we first integrate the system with reactions terms only (no advection)
+In the Strang splitting~\citep{strang:1968} flavor of operator splitting, we first integrate the system with reactions terms only (no advection)
 over $\Delta t/2$, then integrate the advection terms only (no reactions) over $\Delta t$,
 and finally integrate the reaction terms only over $\Delta t/2$.  This flow is illustrated
 in Figure~\ref{fig:strang_flowchart}.
 
 \begin{figure}[t]
   \plotone{sdc_strang_flowchart_I}
-  \caption{\label{fig:strang_flowchart} Flowchart of the operator split,
-    Strang, time integration.  We first react for $\Delta t/2$, then
+  \caption{\label{fig:strang_flowchart} Flowchart of the operator split (Strang) time integration.  We first react for $\Delta t/2$, then
     advect for $\Delta t$, and finally react for $\Delta t/2$.  Each
     process uses the state left behind from the previous process.}
   \end{figure}
@@ -421,10 +412,11 @@ In the absence of advective terms, our reaction system appears as just
 $d\Uc/dt = \Rb(\Uc)$, or:
 \begin{align}
 \odt{\rho} & = 0 \\
-\odt{(\rho X_k)} &= \rho \omegadot(X_k) \\
+\odt{(\rho X_k)} &= \rho \dot\omega_{X_k} \\
 \odt{(\rho u)} &= 0 \\
 \odt{(\rho E)} &= \rho \Sdot
 \end{align}
+Notice that in the Strang formulation density is held constant when reacting.
 We can write the energy equation as:
 \begin{equation}
 \odt{(\rho E)} = \odt{(\rho e)} + \odt{K} = \rho \Sdot
@@ -435,12 +427,12 @@ are unchanged by reactions (when Strang splitting), our energy equation becomes:
 \label{eq:strang:e}
 \odt{(\rho e)} = \rho \odt{e} = \rho \Sdot
 \end{equation}
-The reaction rates are typically expressed as $\omegadot_k(\rho, T, X_k)$
+The reaction rates are typically expressed as $\omegadot_k(\rho, T, {\bf X})$
 when we evolve this system, which requires us to get temperature from
 the equation of state each
 time we need to evaluate the reactive terms.
 
-We also typically integrate mass fraction itself, instead of partial
+We also typically integrate mass fractions, instead of partial
 densities:
 \begin{equation}
 \label{eq:strang:X}
@@ -460,9 +452,10 @@ equations.  For very strong reactions, when using Strang splitting the
 state can drift significantly off of the smooth solution to the
 coupled reactive hydrodynamics equations, as shown graphically in
 \citet{astronum:2018} (using an earlier version of the present
-algorithm).  A variation on Strang splitting called (re-)balanced
-splitting was developed in \citet{speth:2013}, but we do not explore
-that here. \MarginPar{keep this sentence?}
+algorithm).  
+%A variation on Strang splitting called (re-)balanced
+%splitting was developed in \citet{speth:2013}, but we do not explore
+%that here. \MarginPar{keep this sentence? MK: Don't think it's needed.}
 
 
 \subsection{Timestep Limiters and Retry Mechanism}
@@ -470,7 +463,7 @@ that here. \MarginPar{keep this sentence?}
 Since this method is based off of the CTU hydrodynamics scheme, it
 benefits from the larger timestep that method can take (when done with
 full corner coupling, the advective CFL condition is unity) as
-compared to a method-of-lines approach (see \citealt{ppmunsplit}).  In
+compared to a method-of-lines approach; see \cite{ppmunsplit}.  In
 addition to the standard CFL timestep limiter for explicit
 hydrodynamics, timestep limiters based on
 the energy generation or abundance changes over a timestep, such as
@@ -488,15 +481,15 @@ or
 where $i$ is the zone index and $f_e$ is a parameter used to control
 the allowed change (e.g., $f_e = 0.5$ will limit the step such that
 reactions can only increase the internal energy by 50\%).  The two
-formulations differ in that Eq.~\ref{eq:dt:nuce_I} uses the
+formulations differ in that Equation (\ref{eq:dt:nuce_I}) uses the
 instantaneous evaluation of the energy generation rate at the start of
-the timestep while Eq.~\ref{eq:dt:nuce_II} uses the integral of the
+the timestep while Equation (\ref{eq:dt:nuce_II}) uses the integral of the
 energy generation rate over the entire step (or last Strang half).
 Usually these limiters are used in a reactive manner---the next step will see
 a smaller timestep based on what happened during the current step, but the
 current step is still accepted, even if it violated these conditions.  Our
-goal is to avoid the need for these limiters by doing the coupling of hydrodynamics
-and reactions better.
+goal is to avoid the need for these limiters by improving the coupling of hydrodynamics
+and reactions.
 
 \castro\ has the ability to reject a timestep if it detects a failure and retry
 with smaller timesteps (subcycling to make up the original required timestep).
@@ -507,44 +500,75 @@ of one of the timestep limiters during the step.  This means that the timestep
 constraints are proactive instead of reactive.  The retry mechanism in \castro\
 works with both the Strang and simplified-SDC integration scheme.  Retrying the
 step is much more stringent that simply adjusting the next step, so we put a cap
-on the number of retries allowed, aborting if we exceed the cap. \MarginPar{describe in more detail?}
+on the number of retries allowed, aborting if we exceed the cap. 
+%\MarginPar{describe in more detail? MK: While I do want us to evangelize the retry scheme, it %seems slightly out of place in this paper.  MZ: I do note later that the retry kicked in for %both Strang and SDC, so that's why I added it here.}
 
 
 
 \subsection{Spectral Deferred Corrections}
 
-The basic idea of spectral deferred corrections \MarginPar{ref} is to express the
-update as an integral and divide the time-update into a number of
-discrete time nodes.  The integral is then approximated using a
-quadrature rule over these time nodes and low order approximations are
-used to update the state from one time node to the next.  The method
-uses iteration to successively improve the solution and the ultimate
-accuracy is determined by the quadrature method used to evaluate the
-integral, which is done using an iteratively-lagged solution.  This is the
-classic approach that we implemented in Castro in \citet{castro_sdc}.
+The basic idea of spectral deferred corrections \citep{dutt:2000} is to divide each time step into sub-steps defined by high-order quadrature points (e.g.~Gauss-Lobatto) and iteratively correct the solution at each temporal node in order to reduce the integration error.
+Each correction equation can be formulated using low-order integration techniques, such as forward or backward-Euler, with additional terms on each right-hand-side arising from integrating the residual over the sub-step from the previous iteration using high-order temporal integration.
+Each iteration over all sub-steps increases the overall order of accuracy of the method by one, up to the underlying order of accuracy of the quadrature over the entire time step.
+A number of SDC approaches have been developed
+over the years targeting tighter multiphysics coupling, such as 
+\cite{bourlioux2003high,SDC-old}.  In these approaches, different physical processes can be treated with different approaches (such as forward-Euler for advection and backward-Euler for reactions), and furthermore different physical processes can be sub-stepped between temporal nodes.
 
-Our simplified-SDC approach is based on the method described in \citet{SDC-old}
+The approach that we implemented in \citet{castro_sdc} is based off a
+multi-implicit, method of lines approach in \citet{bourlioux2003high}.
+In contrast to those works, the focus of this paper is not higher-order integration, but tighter coupling
+between advection and reactions in a second-order framework.
+Thus, our simplified-SDC approach is based on the method described in \citet{SDC-old}
 and a similar (but unpublished) implementation in the \maestroex\ simulation
-code \citep{maestroex}. We again start by considering the update in integral
-form:
-\begin{equation}
-\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
-\end{equation}
-In this approach, we
-approximate the advective term
-piecewise constant in time, using the value at the midpoint in time,
-to achieve second-order accuracy, giving us:
-\begin{equation}
-\label{eq:integral:simplesdc}
-\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left \{ \Adv{\Uc}^{n+1/2} + \Rb(\Uc) \right \} dt
-\end{equation}
-The \castro\ version of the simplified-SDC algorithm
-differs from the previous versions due to the need to do some operations
-on the conserved variable state and some on the primitive variable
-state.   The overall flow of the simplified-SDC algorithm is shown
-in Figure~\ref{fig:sdc_flowchart}.
+code \citep{maestroex}.
+The key point in this approach is that we are re-using the same numerical kernels 
+for advection and reactions that are used in a Strang splitting approach,
+but we are able to include, rather than exclude, the effects of the other 
+physical processes in each correction equation solve.
 
+We begin with the general form of a multi-implicit SDC correction equation with two physical processes, as originally presented in \cite{bourlioux2003high}.
+Using $(k)$ to denote the iterate, we have
+\begin{eqnarray}
+\Uc^{(k)}(t) = \Uc^n &+& \int_{t^n}^t \left [ \Advs{\Uc^{(k)}} + \Rb\left(\Uc^{(k)}\right) - \Advs{\Uc^{(k-1)}} - \Rb\left(\Uc^{(k-1)}\right) \right ] dt \nonumber\\
+&+& \int_{t^n}^t \left [ \Advs{\Uc^{(k-1)}} + \Rb\left(\Uc^{(k-1)}\right) \right ] dt.
+\end{eqnarray}
+In the spirit of \cite{SDC-old}, we treat each advection term as piecewise constant over the time step,
+and equal to a time-centered advection term evaluated with the Godunov integrator.
+We note that this is a departure from the approach in \cite{bourlioux2003high} that uses a method of lines approach, where 
+the advection terms are computed at each node, rather than the midpoint between nodes, using spatial extrapolation only.
+Using $\boldsymbol{\mathcal{A}}(\Uc^{n+1/2})$ to denote the advection term, we have
+\begin{eqnarray}
+\Uc^{(k)}(t) = \Uc^n &+& \int_{t^n}^t \left [ \Advs{\Uc^{n+1/2,(k)}} + \Rb\left(\Uc^{(k)}\right) - \Advs{\Uc^{n+1/2,(k-1)}} - \Rb\left(\Uc^{(k-1)}\right) \right ] dt \nonumber\\
+&+& \int_{t^n}^t \left [ \Advs{\Uc^{n+1/2,(k-1)}} + \Rb\left(\Uc^{(k-1)}\right) \right ] dt.
+\end{eqnarray}
+Also following \cite{SDC-old}, we differentiate this equation in time
+\begin{eqnarray}
+\frac{\partial\Uc^{(k)}}{\partial t} = && \left [ \Advs{\Uc^{n+1/2,(k)}} + \Rb\left(\Uc^{(k)}\right) - \Advs{\Uc^{n+1/2,(k-1)}} - \Rb\left(\Uc^{(k-1)}\right) \right]\nonumber\\
+&+& \left [ \Advs{\Uc^{n+1/2,(k-1)}} + \Rb\left(\Uc^{(k-1)}\right) \right].
+\end{eqnarray}
+We combine terms, and arrive at a system of ODEs at each cell,
+\begin{equation}
+\frac{\partial\Uc^{(k)}}{\partial t} =  \left [ \Advs{\Uc^{n+1/2,(k)}} + \Rb\left(\Uc^{(k)}\right) \right].\label{eq:sdcupdate}
+\end{equation}
+We integrate this system from $t^n$ to $t^{n+1}$ using a modified version
+of the VODE~\citep{vode} integrator, as described in Section \ref{sec:VODE}.
+Thus, we are effectively using two temporal nodes ($t^n$ and $t^{n+1}$) 
+and the overall integration is second-order accurate.
+In order to properly couple reactions into the computation of the advection terms, 
+we use an iteratively lagged reaction source term,
+denoted $\Ic_q$ (this is basically an approximation of $\Rb(\qb)$).
+The overall flow of the simplified-SDC algorithm is shown in Figure~\ref{fig:sdc_flowchart}.
 
+%We start by considering the update in integral form:
+%\begin{equation}
+%\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left [ \Advs{\Uc} + \Rb(\Uc) \right ] dt,
+%\end{equation}
+%In this approach, we approximate the advective term piecewise constant in time, using the value at the midpoint in time, to achieve second-order accuracy, giving us:
+%\begin{equation}
+%\label{eq:integral:simplesdc}
+%\Uc^{n+1} = \Uc^n + \int_t^{t+\Delta t} \left \{ \Adv{\Uc^{n+1/2}} + \Rb(\Uc) \right \} dt
+%\end{equation}
+%The \castro\ version of the simplified-SDC algorithm differs from the previous versions due to the need to do some operations on the conserved variable state and some on the primitive variable state. 
 \begin{figure}[t]
 \plotone{sdc_strang_flowchart_II}
 \caption{\label{fig:sdc_flowchart} Flowchart of the simplified-SDC
@@ -553,26 +577,29 @@ in Figure~\ref{fig:sdc_flowchart}.
   coupling.}
 \end{figure}
 
-The basic time update algorithm proceeds as:
+\subsection{Time Advancement Scheme}
+The basic time update algorithm proceeds as follows.
+We begin with the state at $t^n$, denoted $\Uc^n$, and proceed as follows:
 
 \begin{itemize}
 
-\item {\em Initialization}
+%\item {\em Initialization}
 
-\label{sec:initialization}
+%\label{sec:initialization}
 
-  \begin{itemize}
-  \item We need an approximation of how much the reactions alone
-    changed the primitive variable state over the timestep, which we
-    will denote $\Ic_q$ (this is basically an approximation of
-    $\Rb(\qb)$).
+%  \begin{itemize}
+%  \item We need an approximation of how much the reactions alone
+%    changed the primitive variable state over the timestep, which we
+%    will denote $\Ic_q$ (this is basically an approximation of
+%    $\Rb(\qb)$).
 
-    Since we do not have any information about the current
-    timestep in the first iteration, we use the value from the last
-    iteration of the previous timestep:
-    \begin{equation}
-      \Ic^{n+1/2,(0)}_{\qb} = \Ic^{n-1/2,(\smax)}_{\qb}
-    \end{equation}
+%    Since we do not have any information about the current
+%    timestep in the first iteration, we use the value from the last
+%    iteration of the previous timestep:
+%    \begin{equation}
+%      \Ic^{n+1/2,(0)}_{\qb} = \Ic^{n-1/2,(\kmax)}_{\qb}
+%    \end{equation}
+
   %% \item Solve the Poisson problem for the initial gravitational potential:
   %%   \begin{equation}
   %%     \nabla^2 \Phi^n = 4\pi G \rho^n
@@ -581,33 +608,37 @@ The basic time update algorithm proceeds as:
   %% \item Set the first guess at the new time potential as
   %%   $\Phi^{n+1,(0)} = \Phi^n$.
 
-  \end{itemize}
+  %\end{itemize}
 
 \item {\em Iterate}
 
-  Iterate from $k = 1, \ldots, \smax$.  For second-order accuracy,
-  $\smax = 2$ is sufficient.  In addition to denoting the time-level
-  with a superscript (like $n$ or $n+1$), we'll use a second subscript
+  Iterate from $k = 1, \ldots, \kmax$.  For second-order accuracy,
+  $\kmax = 2$ is sufficient; further SDC iterations will continue to decrease the splitting error,
+  but not increase the formal order of accuracy of the method.  In addition to denoting the time-level
+  with a superscript (like $n$ or $n+1$), we use a second superscript
   in parentheses to keep track of the iteration.  A single iteration, $k$,
   starts with $\Uc^n$ and results in the new time-level state for that
   iteration, $\Uc^{n+1,(k)}$.
 
   \begin{itemize}
-  \item {\em Create the advective update term, $\Adv{\Uc}^{n+1/2,(k)}$}
+  \item {\em Step 1: Create the advective update term, $\Adv{\Uc}^{n+1/2,(k)}$}
 
     \begin{itemize}
-    \item convert $\Uc \rightarrow \qb$.  This is an algebraic transformation,
-      but will require the EOS.
+    \item Convert $\Uc \rightarrow \qb$.  This is an algebraic transformation,
+      that utilizes the equation of state.
 
-    \item predict $\qb$ to the interfaces at $t^{n+1/2}$ using the CTU PPM
+    \item Predict $\qb$ to the interfaces at $t^{n+1/2}$ using the CTU PPM
       method.  The source terms, $\Sq$, used in the prediction are:
       \begin{equation}
-        \Sc(\qb) = \Hb(\qb) + \Ic_\qb^{n+1/2,(k-1)}
+        \Sc(\qb) = \Gb(\qb) + \Ic_\qb^{n+1/2,(k-1)}
       \end{equation}
-      Here we use the iteratively lagged integrals of the primitive variable
-      terms accounting only for reactions, $\Ic_\qb^{n+1/2,(k-1)}$, as the
-      reactive source.  This is in contrast to Strang-splitting, where no
-      explicit reactive source terms are seen by the hydrodynamics update.
+      $\Ic_\qb^{n+1/2,(k-1)}$ is a numerical approximation for the effect of
+      reactions from the previous iterate, which is computed at the end of each iterate 
+      as described below.
+      The use of this term contrasts with Strang-splitting, where no
+      reactive source terms are included in the hydrodynamics update.
+      If $k=1$, we instead use the value from the last iteration of the previous
+      time step, $\Ic^{n-1/2,(\kmax)}_{\qb}$.
 %%       Any hydrodynamic source terms are time-centered
 %%       using the previous iteration:
 %% \MarginPar{Formally both $t^n$ or $t^{n+1/2}$ sources give you 2nd-order since they are CTU predictor source terms.  I've never found this type of iteration for this term to amount to any benefit}
@@ -622,37 +653,38 @@ The basic time update algorithm proceeds as:
       predictor (for example, doing characteristic tracing as
       described in \citealt{ppm}) or after all of the transverse flux
       corrections are made.  Both are second-order accurate.  For the
-      hydrodynamics sources, we do those in the normal predictor.
+      gravitational sources, we do those in the normal predictor.
       However, for the reactive sources, we found that it is most
       reliable to add them at the end of the interface state
       construction, after the transverse flux corrections.  This is
       because we want to ensure that sum over species of $\Ic_\qb$ is
       zero, and characteristic tracing or the various flux corrections
-      may not preserve this.  We enforce that the species interface
+      in general do not preserve this.  We enforce that the species interface
       states remain in $[0, 1]$ after adding the reactive source.
 
 
-    \item solve the Riemann problem at each interface to get a unique
-      conserved state on each interface, $\Uc^{n+1/2,(k)}_{i+1/2}$
+    \item Solve the Riemann problem at each interface to get a unique
+      conserved state on each interface, $\Uc^{n+1/2,(k)}_{i+1/2}$.
 
-    \item construct the advective update terms, $\Advt{\Uc}^{n+1/2,(k)}_{i}$,
-      by first ignoring the hydrodynamics sources,
+    \item Construct the advective update terms, $\Advt{\Uc}^{n+1/2,(k)}_{i}$,
+      first without the gravitational sources,
       \begin{equation}
         \Advt{\Uc}^{n+1/2,(k)}_{i} =
           - \frac{\Fb^\xv(\Uc^{n+1/2,(k)}_{i+1/2}) - \Fb^\xv(\Uc^{n+1/2,(k)}_{i-1/2})}{\Delta x}
       \end{equation}
       for the general case, and
-      \begin{align}
-        \Advsst{\rho e}^{n+1/2,(k)}_{i} =
-          &- \frac{F\left((\rho e)^{n+1/2,(k)}_{i+1/2}\right) - F\left((\rho e)^{n+1/2,(k)}_{i-1/2}\right)}{\Delta x} \nonumber \\
-          &- \left (\frac{p_{i+1/2}^{n+1/2,(k)} + p_{i-1/2}^{n+1/2,(k)}}{2} \right )\frac{u_{i+1/2}^{n+1/2,(k)} - u_{i-1/2}^{n+1/2,(k)}}{\Delta x}
-      \end{align}
+      \begin{eqnarray}
+        \left(\tilde{\mathcal{A}}_{\rho e}^{n+1/2,(k)}\right)_{i} &=&
+          - \frac{\left(F_{\rho e}^{n+1/2,(k)}\right)_{i+1/2} - \left(F_{\rho e}^{n+1/2,(k)}\right)_{i-1/2}}{\Delta x} \nonumber \\
+          &&- \left (\frac{p_{i+1/2}^{n+1/2,(k)} + p_{i-1/2}^{n+1/2,(k)}}{2} \right )
+          \left(\frac{u_{i+1/2}^{n+1/2,(k)} - u_{i-1/2}^{n+1/2,(k)}}{\Delta x}\right)
+      \end{eqnarray}
       for $(\rho e)$.
 
-    Now the conservative hydrodynamics source terms are computed by first updating to the
+    Now the gravitational source terms, $\Gb(\Uc)$, are computed by first updating to the
     new state with advection and the old-time source term applied for the full $\Delta t$ as:
     \begin{equation}
-      \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)} + \Delta t \Hb(\Uc^n)
+      \Uc^{\star\star} = \Uc^n + \Delta t \Advt{\Uc}^{n+1/2,(k)} + \Delta t \Gb(\Uc^n)\label{eq:grav_pred}
     \end{equation}
     %% first updating the density to the new state with advection only as:
     %% \begin{equation}
@@ -674,41 +706,47 @@ The basic time update algorithm proceeds as:
     We then evaluate the source terms with $\Uc^{\star\star}$ and
     correct the advective term so that we have a time-centered
     source.
-    The final advective update term is then\footnote{For a source like gravity, this update can be done first for $\rho$ and then define the new momentum source using $\rho^{\star\star}$ and likewise for energy}:
+    The final advective update term is then\footnote{For a source like gravity, this update can be done first for $\rho$ and then define the new momentum source using $\rho^{\star\star}$ and likewise for energy.}:
     \begin{equation}
       \Adv{\Uc}^{n+1/2,(k)}_{i} = \Advt{\Uc}^{n+1/2,(k)}_{i} +
-      \frac{\Delta t}{2} \left (\Shydro(\Uc^n) + \Shydro(\Uc^{\star\star}) \right )
+      \frac{\Delta t}{2} \left [\Gb(\Uc^n) + \Gb(\Uc^{\star\star}) \right ]\label{eq:grav_corr}
     \end{equation}
 
     %% with
     %% \begin{equation}
-    %%   \Shydro^{n+1/2} = \left ( \begin{array}{c}
+    %%   \Gb^{n+1/2} = \left ( \begin{array}{c}
     %%                  0 \\ 0 \\ 0 \\
     %%                 {\bf S}_{\rho\Ub}^{n+1/2} \cdot \ex \\
     %%                 S_{\rho E}^{n+1/2} \end{array} \right )
     %% \end{equation}
 
-    We note that this procedure works because the source terms here do
-    not depend on the outcome of the reactions.
+    Formally, per \cite{SDC-old}, an alternative strategy would be to skip Equation (\ref{eq:grav_pred}) and instead
+    perform only Equation (\ref{eq:grav_corr}) but with $\Gb(\Uc^{n+1,(k-1)})$ replacing $\Gb(\Uc^{\star\star})$.
+    In the future we will explore the efficacy of both approaches.
+    %\MarginPar{AJN: rewrote this; ok?  If the alternative works it's actually much better since %fewer gravity solves are required.}
+    %We note that this procedure works because the source terms here do not depend on the outcome of the reactions.   In \cite{SDC-old}, instead of using $\Gb(\Uc^{\star\star})$, $\Gb(\Uc^{n+1,(k-1)})$ is used.  For the conservative gravity formulation in \cite{wdmergerI}, we prefer the former formulation since the source terms are computed using the result of the Riemann solver.\MarginPar{MK: I think this should be written to say that we are *assuming* the source terms do not depend on the outcome of the reactions, or clarify that it is in fact true specifically in Castro that we only use source terms where this is true. But actually, wouldn't thermal diffusion depend on the outcome of reactions? MZ: I am not sure anymore what the intent was here.  I think we should just remove this sentence.  I don't think that it affects diffusion.  I think it meant that $\omegadot$ does not explicitly appear..}
 
     \end{itemize}
 
-  \item {\em Update the System Using a Method of Lines Integration}
+  \item {\em Step 2: Integrate Using VODE}
+  %\MarginPar{Need to change this.  The point of this paper is we are NOT using method of lines (that was the older castro sdc paper).  This simplified approach is NOT method of lines.}
 
-    We update the state by doing the integral in equation
-    (\ref{eq:integral:simplesdc}).  Since we are approximating the
-    advective term as piecewise constant in time, we can simply use an
+    We update the state by integrating equation
+    (\ref{eq:sdcupdate}) over the full time step.  Since we are approximating
+    $\boldsymbol{\mathcal{A}}(\Uc)$ as piecewise constant in time, we can use an
     ODE integrator to integrate this, just as we do with the reaction
-    system in Strang splitting.  The difference here being that we are
+    system in Strang splitting.  The difference here is that we are
     integrating the conserved variables and the state sees the effect
-    of advection as we integrate the reactions.  So rather than use
-    $d\Uc/dt = \Rb(\Uc)$, the ODE form we use is
+    of advection and gravity as we integrate the reactions.  So rather than use
+    $d\Uc/dt = \Rb(\Uc)$ as in the Strang case, the ODE form we use is
     \begin{equation}
       \odt{\Uc} = \Adv{\Uc}^{n+1/2,(k)} + \Rb(\Uc)
     \end{equation}
-
-    Looking at the form of Eq.~\ref{eq:cons_sources}, we see that only
-    the species and energies have source terms.  The total and
+    The details of the VODE~\citep{vode} integrator we use are
+    described in Section \ref{sec:VODE}.
+    
+    Looking at the form of Equation (\ref{eq:cons_sources}), we see that only
+    the species and energies have non-zero terms in $\Rb$.  The total and
     internal energies both provide the same information, and
     integrating both overconstrains the system, so we just integrate
     the internal energy.  We define the subset of variables that are
@@ -724,54 +762,53 @@ The basic time update algorithm proceeds as:
 
     We will need the density at times during the integration, which we construct as:
     \begin{equation}
-      \rho(t) = \rho^n + \Advss{\rho}^{n+1/2,(k)} \, (t - t^n)
+      \rho(t) = \rho^n + \mathcal{A}_\rho^{n+1/2,(k)} \, (t - t^n)
     \end{equation}
     As we are integrating this system we need to get the temperature,
-    $T$, for the rate evaluations.  We obtain this by directly from
+    $T$, for the rate evaluations.  We obtain this directly from
     internal energy, composition, and density using the equation of
     state.
 
     Our integrator also needs the Jacobian of the system, in terms of
-    the $\Uc^\prime$.  This is different than the form of the
+    $\Uc^\prime$.  This is different than the form of the
     Jacobian usually used in reaction networks.  We describe the form
-    of the Jacobian in appendix \ref{sec:app:jacobian}.
+    of the Jacobian in Appendix \ref{sec:app:jacobian}.
 
 
     At the end of the integration, we can do the conservative update of momentum
     and energy.  Momentum is straightforward, since there are no reactive sources:
     \begin{equation}
-      (\rho u)^{n+1} = (\rho u)^n + \Delta t \Advss{\rho u}^{n+1/2,(k)}
+      (\rho u)^{n+1,(k)} = (\rho u)^n + \Delta t \mathcal{A}_{\rho u}^{n+1/2,(k)}
     \end{equation}
     For total energy, we first need to isolate the reactive source for energy:
     \begin{equation}
-      (\rho \Sdot)^{n+1/2} = \frac{(\rho e)^{n+1} - (\rho e)^n}{\Delta t} - \Advss{\rho e}^{n+1/2,(k)}
+      (\rho \Sdot)^{n+1/2,(k)} = \frac{(\rho e)^{n+1,(k)} - (\rho e)^n}{\Delta t} - \mathcal{A}_{\rho e}^{n+1/2,(k)}
     \end{equation}
     Then the update is
     \begin{equation}
-      (\rho E)^{n+1} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2,(k)} + \Delta t (\rho \Sdot)^{n+1/2}
+      (\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \mathcal{A}_{\rho E}^{n+1/2,(k)} + \Delta t (\rho \Sdot)^{n+1/2,(k)}
     \end{equation}
 
-  \item {\em Compute the Reactive Source Terms.}
+  \item {\em Step 3: Compute the Reactive Source Terms, $\Ic^{n+1/2,(k)}$}
 
     We now seek the $\Ic$'s that capture the effect of just the
     reaction sources on the state variables for the next iteration.
     For the conserved quantities, these would simply be:
     \begin{equation}
-      \Ic^{(k)}_{\Uc} = \frac{\Uc^{n+1,(k)} - \Uc^n}{\Delta t} - \Adv{\Uc}^{n+1/2,(k)}
+      \Ic^{n+1/2,(k)}_{\Uc} = \frac{\Uc^{n+1,(k)} - \Uc^n}{\Delta t} - \Adv{\Uc}^{n+1/2,(k)}
     \end{equation}
     However, for our primitive variables, which are used in the
     interface state prediction, we need to construct the required source terms more
     carefully.  We want:
     \begin{equation}
-      \label{eq:Iq}
-      \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^n}{\Delta t} - \Adv{\qb}^{n+1/2,(k)}
+      \Ic^{n+1/2,(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^n}{\Delta t} - \Adv{\qb}^{n+1/2,(k)}\label{eq:Iq_prim}
     \end{equation}
     but we need the advective update for $\qb$, which we have not
-    constructed.  We note that $\Ic^{(k)}_\qb$ is an approximation to the integral of
-    Eq.~\ref{eq:prim_sources} over the timestep.  Additionally, we cannot simply use the equation of
-    state on $\Ic^{(k)}_{\Uc}$ since this is a time-derivative and
+    constructed.  We note that $\Ic^{n+1/2,(k)}_\qb$ is an approximation to the integral of
+    Equation (\ref{eq:prim_sources}) over the timestep.  Additionally, we cannot simply use the equation of
+    state on $\Ic^{n+1/2,(k)}_{\Uc}$ since this is a time-derivative and
     does not represent a well-defined state in itself.  Instead, we
-    derive $\Ic^{(k)}_{\qb}$ via a multi-step process.  We first find
+    derive $\Ic^{n+1/2,(k)}_{\qb}$ via a multi-step process.  We first find
     the conservative state as if it were updated only with advection:
     \begin{equation}
       \Uc^\star = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2,(k)}
@@ -780,15 +817,14 @@ The basic time update algorithm proceeds as:
     $\Uc^\star \rightarrow \qb^\star$.
     This allows us to define the advective update for $\qb$ as:
     \begin{equation}
-      \Adv{\qb}^{n+1/2,(k)} = \frac{\qb^\star - \qb^n}{\Delta t}
+      \Adv{\qb}^{n+1/2,(k)} = \frac{\qb^\star - \qb^n}{\Delta t}\label{eq:Aq_prim}
     \end{equation}
     Defining the primitive state corresponding to the fully-updated
     conserved state via an algebraic transform, $\Uc^{n+1,(k)}
-    \rightarrow \qb^{n+1,(k)}$, we can construct $\Ic^{(k)}_{\qb}$ as given
-    in Equation (\ref{eq:Iq}).
-    Putting all of this together, we see:
+    \rightarrow \qb^{n+1,(k)}$, we can construct $\Ic^{n+1/2,(k)}_{\qb}$ by
+    combining Equations (\ref{eq:Iq_prim}) and (\ref{eq:Aq_prim}),
     \begin{equation}
-      \Ic^{(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^\star}{\Delta t}
+      \Ic^{n+1/2,(k)}_{\qb} = \frac{\qb^{n+1,(k)} - \qb^\star}{\Delta t}.
     \end{equation}
 
 
@@ -806,18 +842,17 @@ The basic time update algorithm proceeds as:
 
 This completes the update of a single iteration.
 
-\subsection{Stiff ODE Integrator}
+\subsection{Stiff ODE Integrator}\label{sec:VODE}
 
 We use a modified version of the VODE~\citep{vode} integrator,
-designed for stiff ODEs.  Our version has been ported C++, as a
+designed for stiff ODEs.  Our version has been ported to C++, as a
 header-only library enabling it to run on GPUs.  We have also added
 checks to the timestep rejection logic that help prevent VODE from
 wandering too far off the solution\footnote{This modified version of
 VODE is available in our Microphysics repo:
-\url{https://github.com/amrex-astro/Microphysics}.}  These have
-been shown empirically to improve the performance of VODE.
+\url{https://github.com/AMReX-Astro/Microphysics}.}.  We have found empirically that these checks improve the performance of VODE.
 
-VODE allows us to specific both relative and absolute tolerances
+VODE allows us to specify both relative and absolute tolerances
 for the species and energy during the integration.  They are combined
 into a weight that VODE uses to assess convergence of the step:
 \begin{equation}
@@ -827,7 +862,7 @@ for integration variable $y_i$.  We will denote the species tolerances
 as $\rtolspec$ and $\atolspec$ and the energy tolerances as $\rtolener$ and
 $\atolener$.
 
-For Strang, we require that
+For Strang splitting, we require that
 an individual mass fraction not change too much over a step:
 \begin{equation}
 \label{eq:vode_species_reject}
@@ -845,7 +880,7 @@ error.  If these conditions are violated, then VODE will reject the
 timestep and retry with a smaller step.  We also require that the mass
 fractions are contained in $[0, 1]$ to a tolerance of $10^{-2}$.
 For SDC, we enforce these same constraints, but for
-Eq.~\ref{eq:vode_species_reject}, we only use the change from $m$ to $m+1$ due
+Equation (\ref{eq:vode_species_reject}), we only use the change from $m$ to $m+1$ due
 to reactions, by subtracting off the advective contribution over that substep.
 Finally, we enforce that:
 \begin{align}
@@ -853,9 +888,9 @@ Finally, we enforce that:
 (\rho e)^{m+1} &> 0
 \end{align}
 
-Some of the rates in \citet{reaclib} increase by 100s of orders of
+Some of the rates in \citet{reaclib} increase by hundreds of orders of
 magnitude at low temperature, presumably because the interpolant fit was done at
-higher temperatures.  Since VODE can take exploratory righthand side evaluations
+higher temperatures.  Since VODE can take exploratory right-hand side evaluations
 outside of the nominal time range, it can encounter these poorly-behaved rates
 and it can cause the integration to fail (by generating {\tt inf}s).  To prevent
 this behavior, we set a lower temperature limit of the reaction rates, below
@@ -863,7 +898,7 @@ which we zero them out.  For the simulations in section~\ref{sec:dd}, we choose 
 $5\times 10^7~\mathrm{K}$.
 
 
-For both Strang and simplified-SDC, we will use a numerical Jacobian that VODE
+For both Strang splitting and simplified-SDC, we use a numerical Jacobian that VODE
 computes internally (following the algorithm in \citealt{lsode}).  For
 completeness, we derive the analytic form of the Jacobian in Appendix
 \ref{sec:app:jacobian} for the simplified-SDC method. VODE employs
@@ -883,13 +918,11 @@ initialized with a pressure profile with a small perturbation.  This
 drives a low amplitude acoustic wave radially outward from the center.
 A simple reaction network with the triple-alpha and
 $\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$ rates releases energy.  By
-running at different resolutions, with a fixed timestep that scales
-with resolution, we can compute the convergence rate.  In order to
-demonstrate second-order convergence, the problem must be smooth (so
+running at different spatial resolutions with a fixed CFL number so that the timestep scales
+with resolution, we can compute the convergence rate in space and time.
+In order to demonstrate second-order convergence, the problem must be smooth (so
 the slope limiters don't kick in severely), which means that the
 energy release cannot be so vigorous as to drive shocks.
-
-
 
 % EOS: /home/zingale/development/Microphysics/EOS/helmholtz
 % NETWORK: /home/zingale/development/Microphysics/networks/triple_alpha_plus_cago
@@ -940,7 +973,7 @@ energy release cannot be so vigorous as to drive shocks.
 \end{deluxetable}
 
 Tables \ref{table:react_converge_strang} and \ref{table:react_converge_sdc} show
-the Strang and simplified-SDC convergence respectively.  The convergence rate is
+the Strang splitting and simplified-SDC convergence respectively.  The convergence rate 
 is computed by taking log-base-2 of the ratio of adjacent errors.  A rate of 2.0
 indicates second order convergence.  We see that both methods converge nearly
 second order, and agree well with each other.  This demonstrates that both
@@ -949,6 +982,7 @@ methods are working as designed.
 \subsection{Sub-Chandra Double Detonation}
 \label{sec:dd}
 
+%\MarginPar{AJN: do you have any wall-clock, or RHS-count, or Nonaka-plot performance metrics?  SDC should not only give better scientific results, but should be faster as well...  I address this with the new plots in the last section now.}
 We next model a double detonation Type Ia supernova.  In this model, a
 detonation begins in the accreted helium layer on a sub-Chandrasekhar mass white
 dwarf and that detonation can either drive a compression wave into the core
@@ -958,7 +992,7 @@ carbon detonation (see, e.g., \citealt{fink:2007}).  Our goal here is not to
 explore the feasibility of the model or understand whether a detonation
 propagating through the He-C interface is physical, but rather to look at the
 coupling of the hydrodynamics and reactions.  We want to drive vigorous burning
-and directly compare Strang and simplified-SDC time integration on this problem.
+and directly compare Strang splitting and simplified-SDC time integration on this problem.
 For that reason, we explore only a single model and start off with a rather
 large temperature perturbation in the He layer.
 
@@ -975,12 +1009,12 @@ coupling between hydro and reactions.
 
 The initial model is generated following the procedure described in
 \citep{subchandra}.  We use a $1.1~M_\odot$ carbon white dwarf with a
-$0.05~M_\odot$ He layer.  We seed the He layer with 1\% (by mass) of
+$0.05~M_\odot$ He layer.  We choose a pure \isot{C}{12} white dwarf to make the reactions more vigorous, consistent with our focus on the coupling of hydrodynamics and reactions.  We seed the He layer with 1\% (by mass) of
 \isot{N}{14}.  The white dwarf is isothermal and the temperature ramps
 up at the base of the He layer and is then isentropic until the
 surface.  Figure~\ref{fig:subch_initial_model} shows the structure of
-the initial model.  We use 2d axisymmetric coordinates with a domain
-size of $1.024\times 10^9~\mathrm{cm} \times 2.048\times
+the initial model.  We use 2D axisymmetric coordinates with a domain
+size of $1.024\times 10^9~\mathrm{cm}$ by $2.048\times
 10^9~\mathrm{cm}$, a base grid of $256 \times 512$ zones and a single
 level of refinement (jumping by $2\times$), giving a fine-grid
 resolution of $20~\mathrm{km}$.  Gravity is modeled as a monopole.
@@ -1008,23 +1042,23 @@ and
 \end{equation}
 Here, $r_\mathrm{base}$ is the radius at which the helium layer begins
 and $r_\mathrm{pert}$ is the distance above the base to put the perturbation.  We
-choose $r_\mathrm{pert} = 100~\mathrm{km}$.  The temperature is pertubed above
+choose $r_\mathrm{pert} = 100~\mathrm{km}$.  The temperature is perturbed above
 the initial model value, denoted as $T_0$ here.  The amplitude of the perturbation
 is $f = 12$ and the scale of the perturbation is $\lambda = 200~\mathrm{km}$.
 
 
-We do a suite of runs with both Strang and the simplified-SDC integration, using
+We do a suite of runs with both Strang splitting and the simplified-SDC integration, using
 CFL numbers of 0.1, 0.2, and 0.4 and reaction network tolerances of $\atolspec =
 \rtolspec = 10^{-5}$ and $\atolener = \rtolener = 10^{-5}$.  We also run the CFL
 = 0.2 case with a tighter tolerance, using  $\atolspec = 10^{-8}$.  For the step
 rejection part of VODE, we use $f = 4$ and $\eta = 4$.  The runs are labeled with
-the prefix {\tt sdc\_} or {\tt strang\_} to detonate the integrator, and also include
+the prefix {\tt sdc\_} or {\tt strang\_} to denote the integrator, and also include
 the CFL number in the name.  Finally, the runs with the tighter tolerances have
 the suffix {\tt \_tol1.e-8}.  We note that both the Strang and the SDC runs encounter
-VODE integration failures occassionally and utilize the \castro\ step retry functionality.
+VODE integration failures occasionally and utilize the \castro\ step retry functionality.
 
 Figure \ref{fig:subch_strang_cfl02} shows the temperature, mean
-molecular weight, and nuclear energy generation rate for the strang
+molecular weight, and nuclear energy generation rate for the Strang splitting
 CFL = 0.2 simulation ({\tt strang\_subch2\_cfl0.2}).  At this point
 in the evolution, the helium detonation has wrapped more than halfway
 across the surface and the ingoing carbon detonation is approaching the
@@ -1050,8 +1084,8 @@ sdc\_subch2\_cfl0.2}.  Figure~\ref{fig:subch_sdc_cfl02} shows the temperature,
 mean molecular weight, and energy generation rate. Compared to
 Figure~\ref{fig:subch_strang_cfl02}, we see that the composition and energy
 generation rates are smooth, without any of the checkerboarding that plagued the
-Strang simulation.  This suggests that the simplified-SDC algorithm has an
-easier time attaining the correct equilibrium in these conditions. More
+Strang simulation.  This suggests that the simplified-SDC algorithm more accurately
+attains the correct equilibrium in these conditions. More
 strikingly, we see that the inward propagating carbon detonation has not
 progressed as far into the white dwarf at this time.  The two integration
 methods are giving very different results here.
@@ -1098,7 +1132,7 @@ sdc\_subch2\_cfl0.2}) at 0.1 s.}
 
 We next look at how the structure seen in
 Figures~\ref{fig:subch_strang_cfl02} and \ref{fig:subch_sdc_cfl02}
-vary with CFL number and network tolerance.  We focus just on the
+varies with CFL number and network tolerance.  We focus just on the
 region behind the inward propagating shock.
 Figures~\ref{fig:strang_enuc_summary} and
 \ref{fig:strang_abar_summary} show the nuclear energy generation rate
@@ -1106,8 +1140,8 @@ and mean molecular weight for all of the Strang runs.  We see that
 changing the CFL number does little to affect the state behind the
 shock---it continues to take on the mottled appearance characteristic
 of not reaching a proper equilibrium.  For the case with tight tolerances, we
-see that the state is greatly improved.  Furthermore, it gets the inward
-propagating carbon detonation in the same position as the SDC runs.
+see that the state is greatly improved with a smoother gradient.  Furthermore, the inwardly
+propagating carbon detonation reaches the same position as in the SDC runs.
 
 \begin{figure}
 \plotone{strang_enuc_summary_plot}
@@ -1125,7 +1159,7 @@ shock.}
 
 The SDC comparisons are shown in Figures~\ref{fig:sdc_enuc_summary}
 and \ref{fig:sdc_abar_summary}.  We see that the state behind the
-shock looks great regardless of the CFL or integrator tolerances.
+shock looks smoother and more consistent regardless of the CFL number or integrator tolerances.
 This demonstrates that the simplified-SDC integration algorithm is more
 robust than Strang integration for this problem.
 
@@ -1144,7 +1178,7 @@ shock.}
 \end{figure}
 
 
-To quantify this effect, we next looks at the total mass of some key
+To quantify this effect, we next look at the total mass of some key
 species.  This is often a desired diagnostic for supernova
 calculations, since \isot{Ni}{56} powers the lightcurve.  Table
 \ref{table:masses} shows the total mass of \isot{He}{4},
@@ -1177,32 +1211,52 @@ the Strang run with the tighter tolerances is reliable.
 \enddata
 \end{deluxetable}
 
+Finally, we can ask how many right-hand side evaluations each integration method required, as a measure of computational cost; when an integration uses many RHS evaluations, it often implies difficulty around equilibrium.  We stored this in the plotfiles every $0.001~\mathrm{s}$, and on the finest level, for zones that were burning, we compute the L1, L2, and L-inf norms of the number of right-hand side calls (the L1 norm is the same as the average and the L-inf is the same as the maximum here).  This includes the calls that were made to evaluate the numerical Jacobian.  Figure~\ref{fig:strang_nrhs} shows the results for the {\tt strang\_subch2\_cfl0.2} run.  We see a steady
+increase in the cost of the reactions as time progresses.  Note that the L-inf norm curve is much higher than the other curves, but this is dominated by only a few zones right at the detonation.  The other norms give a better sense of the total work in reactions.
+Figure~\ref{fig:sdc_nrhs} shows the corresponding plot for the simplified-SDC case ({\tt sdc\_subch2\_cfl0.2}).  While the L-inf
+norm is of the same magnitude, it fluctuates much more.  However,
+both the L1 and L2 norms are smaller, indicating that the integration does not need to work as hard with the simplified-SDC integration as compared to Strang.
+%\MarginPar{AJN: add a note about the 1e-8 tol strang run (that gives same looking results as %SDC) probably is even MORE expensive?}
 
+\begin{figure}[t]
+\plotone{strang_nrhs}
+\caption{\label{fig:strang_nrhs} Number of righthand side evaluations for {\tt strang\_subch2\_cfl0.2} showing the L1 norm/average (solid), L2 norm (dashed), and L-inf/maximum (dotted)
+for both halves of the Strang integration.}
+\end{figure}
 
+\begin{figure}[t]
+\plotone{sdc_nrhs}
+\caption{\label{fig:sdc_nrhs} Number of righthand side evaluations for {\tt sdc\_subch2\_cfl0.2} showing the L1 norm/average (solid), L2 norm (dashed), and L-inf/maximum (dotted)
+for 2 iterations of the simplified-SDC integration.}
+\end{figure}
 \section{Summary}
 
 We presented a simplified spectral deferred corrections scheme for coupling
 hydrodynamics and reactions.  We demonstrated that for a moderate-sized reaction
 network, the simplified-SDC method compares well against Strang for the double
 detonation problem---getting a better solution at looser reaction tolerances,
-and consistent results across a range of CFL numbers.  The benefits of this new
+consistent results across a range of CFL numbers, and is more computationally efficient.
+The benefits of this new
 integration scheme are likely problem and network dependent, and we will explore
 it on other science problems in future papers.
 
 We have not focused on performance or load-balancing the reactions in
 the tests that we ran, but for the simulations shown here,
-the simplified-SDC method runs as fast (or faster) than the Strang method
-for the same tolerances and CFL number, despite having to do the advection and reactions
-twice.  We would expect similar behavior for any simulations that are
+the simplified-SDC method runs as fast (or faster) than the Strang splitting method
+for the same tolerances and CFL number.
+%, despite having to do the advection and reactions
+%twice.
+%\MarginPar{AJN: I would delete "despite having to to the advection and reactions twice".  %Strang already does reactions twice, but advection once.  But advection is cheap, right?}
+We would expect similar behavior for any simulations that are
 dominated by the cost of reactions.  If the results above are robust across
 different problems and networks, then this suggests that we can run
-the SDC simulation with larger CFL and/or less strict reaction tolerances,
+the SDC simulation with larger CFL number and/or less strict reaction tolerances,
 which would translate into a large performance boost.
 
 This new time-integration method is freely available in \castro, and
 we will continue to explore it on other problems.  Although these simulations
 were run on CPUs, the entire simplified-SDC algorithm also runs on GPUs.
-interested in massive star evolution with this method, where the
+We are interested in massive star evolution with this method, where the
 vigorous shell burning leading up to core-collapse would be an ideal
 application for the simplified-SDC method.  In a follow-on paper, we
 will show how to couple this new integration method to a table for
@@ -1217,10 +1271,12 @@ radiation energy.
 
 \begin{acknowledgments} 
 \castro\ is freely available at
-\url{http://github.com/AMReX-Astro/Castro}.  All of the code and problem setups
+\url{https://github.com/AMReX-Astro/Castro}.  All of the code and problem setups
 used here are available in the git repo.  The double detonation problem is in
-{\tt Castro/Exec/science/subchandra}.  The work at Stony Brook was supported by
-DOE/Office of Nuclear Physics grant DE-FG02-87ER40317.  This material is based
+{\tt Castro/Exec/science/subchandra}.  The reaction network used
+here is available at \url{https://github.com/AMReX-Astro/Microphysics} as the {\tt subch2} network.  The work at Stony Brook was supported by
+DOE/Office of Nuclear Physics grant DE-FG02-87ER40317.  We thank Alice Harpole
+for her contributions to the AMReX Astrophysics suite.  This material is based
 upon work supported by the U.S. Department of Energy, Office of Science, Office
 of Advanced Scientific Computing Research and Office of Nuclear Physics,
 Scientific Discovery through Advanced Computing (SciDAC) program under Award
@@ -1404,7 +1460,7 @@ each for $\isotm{C}{12} + \isotm{C}{12}$, $\isotm{C}{12} +
 \isotm{O}{16}$, and $\isotm{O}{16} + \isotm{O}{16}$.  These are
 the sequences $\isotm{C}{12}(\isotm{C}{12}, \mathrm{n})\isotm{Mg}{23}(n, \gamma)\isotm{Mg}{24}$,
 $\isotm{O}{16}(\isotm{C}{12}, \mathrm{n})\isotm{Si}{27}(n, \gamma)\isotm{Si}{28}$, and
-$\isotm{O}{16}(\isotm{O}{16}, \mathrm{n})\isotm{S}{31}(n, \gamma)\isotm{S}{32}$,involving neutron
+$\isotm{O}{16}(\isotm{O}{16}, \mathrm{n})\isotm{S}{31}(n, \gamma)\isotm{S}{32}$, involving neutron
 production followed by a capture back to one of our $\alpha$-chain
 nuclei.  These are the only rates we approximate here, assuming
 that the subsequent neutron capture is instantaneous.
@@ -1420,7 +1476,8 @@ ${}^{43}\mathrm{Sc}$, ${}^{44}\mathrm{Ti}$, ${}^{47}\mathrm{V}$,
 ${}^{48}\mathrm{Cr}$, ${}^{51}\mathrm{Mn}$, ${}^{52}\mathrm{Fe}$,
 ${}^{55}\mathrm{Co}$, ${}^{56}\mathrm{Ni}$.  The 107 rates linking them are
 given in table~\ref{table:rates}, with the forward rates having a positive $Q$
-value and the reverse having a negative $Q$ value.  We add screening to the
+value and the reverse having a negative $Q$ value.  We do not recompute the reverse
+rates via detailed balance or correct them with high-temperature partition functions---this will be considered in a future science-focused paper.  We add screening to the
 rates using the prescription from \citet{graboske:1973,alastuey:1978,itoh:1979}.
 The C++ code for the network is output by \pynucastro\ directly for \castro.  A
 graphical overview of the network showing the links between the nuclei is shown
