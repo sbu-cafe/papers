@@ -89,6 +89,7 @@ Convenience?
   The reason is simply that that's the way they were always done.  In
   the original PPM paper (Colella & Woodward 1984) the gravitational
   source terms are traced as part of the characteristic projection.
+  A note and cite was added to that sentence.
 
 10) Line 262-263 -- "This is different than the form..." This is an
 odd construction for a piece of information that should be somewhat

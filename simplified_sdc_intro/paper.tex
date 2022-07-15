@@ -175,7 +175,7 @@ splitting---each physical process acts on the output of the previous
 process in alternating fashion.  This makes it easy to use different
 time-integration methods for the different physics, and to build a
 simulation code in a modular way.  However, competition between the
-different physical processes can cause the coupling to \replaced{breakdown}{break down, since the reactions do not see the effects of the hydrodynamics and vice versa}.
+different physical processes can cause the coupling to \replaced{breakdown}{break down, since the reactions do not directly incorporate the effects of the hydrodynamics and vice versa}.
 These splitting errors can lead to loss of accuracy and further time
 step limitations.
 
@@ -188,7 +188,7 @@ through the network in a zone in one step followed by a large negative
 flow over the next timestep, as the code struggles to produce an
 equilibrium. 
 These large changes in abundances (and large alternately positive and negative energy generation rates) can be a challenge for
-\replaced{a code}{the integration method---it may take more steps than allowed, require a timestep below floating point accuracy, or fail to meet the tolerenaces}.  The easiest way to improve the coupling is to cut the
+\replaced{a code}{the integration method---it may take more steps than allowed by the ODE integrator, require a timestep below floating point accuracy, or fail to meet the tolerenaces}.  The easiest way to improve the coupling is to cut the
 timestep (see, e.g., \citealt{couch:2015,rivas:2022}), but this can make simulations
 prohibitively expensive.  Sometimes the burning is simply halted on a
 zone-by-zone basis when NSE conditions are reached (e.g., as in
@@ -400,7 +400,7 @@ splitting, we first integrate the system with reactions terms only (no
 advection) over $\Delta t/2$, then integrate the advection terms only
 (no reactions) over $\Delta t$, and finally integrate the reaction
 terms only over $\Delta t/2$.  \added{The staggering of the reactive update
-means the hydro implicitly sees a time-centgered reactive source, making
+means the hydro implicitly sees a time-centered reactive source, making
 the update second-order accurate in time.}  This flow is illustrated in
 Figure~\ref{fig:strang_flowchart}.
 
@@ -661,7 +661,8 @@ We begin with the state at $t^n$, denoted $\Uc^n$, and proceed as follows:
       predictor (for example, doing characteristic tracing as
       described in \citealt{ppm}) or after all of the transverse flux
       corrections are made.  Both are second-order accurate.  For the
-      gravitational sources, we do those in the normal predictor.
+      gravitational sources, we do those in the normal predictor\added{, consistent
+      with the formulation in \citet{ppm}.}
       However, for the reactive sources, we found that it is most
       reliable to add them at the end of the interface state
       construction, after the transverse flux corrections.  This is
