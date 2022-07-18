@@ -1,3 +1,9 @@
+Dear Dr. Timmes,
+
+We thank the referee for the detailed comments.  We have address them
+below and updated the paper manuscript with the AASTeX tracking-changed
+enabled.
+
 
 1) Lines 26-27 - breakdown --> break down. In addition, this sentence
 sets the stage for much of the rest of the paper, but is sort of
@@ -59,13 +65,15 @@ on simply cosmetic.
   are one way you can automate the timestep reduction.  The reason for
   this language is that while many papers will reference using
   reaction-based limiters, rarely (if ever) is there a discussion of
-  how they are implemented.  So while we don't have a concrete example
-  of the difference between the retry and a posthoc limiter, we felt
-  it was important have a discussion about how these are usually
-  implemented, since it is hard to find anything about them otherwise,
-  and many people who use these codes with a limiter may be unaware
-  that the limiter doesn't ensure the step achieves the energy
-  constraint, only that it will try to do better next step.
+  how they are implemented.  Our concern with the limiters is for the
+  cases where a zone is on the temperature cusp of a thermonuclear
+  ignition. If we take the ~CFL timestep, we may march over that
+  ignition in one step, and you may very well not want to do that,
+  because a tighter coupling of the hydro and the burning may affect
+  whether there even is an ignition and how an early detonation may
+  form. But the conditions at the start of the timestep may not reveal
+  that in the subsequent burn(s) in that timestep that the zone will
+  ignite.
 
 7) Line 170 -- "in" could be replaced with a parenthetical citation to
 Bourlioux et al. (2003).
@@ -144,3 +152,12 @@ to the "mottling" in the nuclear energy generation rate in Figures 4
 and 6. Can the authors exhibit differences in this mottling between
 strictly successive timesteps to fix the frequency at which the effect
 is occurring?
+
+   This is hard to see in detail.  One issue is that it can happen
+   within a single step, with each righthand side evaluation differing
+   in sign, but perhaps with an overall trend that would not be seen
+   in the plots.  Also, the fact that we do subcycling in time means
+   that we output at the frequency of the coarse grid timestep, so we
+   don't have information on the change from one fine grid step to the
+   next within a coarse subcycle.
+
