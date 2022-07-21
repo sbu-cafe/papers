@@ -153,11 +153,12 @@ and 6. Can the authors exhibit differences in this mottling between
 strictly successive timesteps to fix the frequency at which the effect
 is occurring?
 
-   This is hard to see in detail.  One issue is that it can happen
-   within a single step, with each righthand side evaluation differing
-   in sign, but perhaps with an overall trend that would not be seen
-   in the plots.  Also, the fact that we do subcycling in time means
-   that we output at the frequency of the coarse grid timestep, so we
-   don't have information on the change from one fine grid step to the
-   next within a coarse subcycle.
+   We've added a plot that attempts to show this behavior, that shows
+   the changing of sign at the detonaton front.  Note that the
+   fluctuations can happen within a single step, with each righthand
+   side evaluation differing in sign, but perhaps with an overall
+   trend that would not be seen in the plots.  Also, the fact that we
+   do subcycling in time means that we output at the frequency of the
+   coarse grid timestep, so we don't have information on the change
+   from one fine grid step to the next within a coarse subcycle.
 

@@ -1082,7 +1082,10 @@ rate, we see that region is characterized by large energy releases of
 alternating signs checkerboarding thoughout the region.  This is
 characteristic of the nucleosynthesis struggling to come into
 equilibrium at high temperatures when the reverse rates can be
-important.
+important.  \added{To highlight this, Figure~\ref{fig:strang_steps} shows the nuclear
+energy generation rate in a highly-zoomed region around the detonation over four
+consecutive coarse timesteps.  We see that on the detonation front itself, the
+sign of the energy generation rate changes from one step to the next in many zones.}
 
 \begin{figure}
 \centering
@@ -1090,6 +1093,15 @@ important.
 \caption{\label{fig:subch_strang_cfl02} Temperature, mean molecular weight, and
 energy generation rate for the Strang CFL = 0.2 run with normal tolerances ({\tt
 strang\_subch2\_cfl0.2}) at 0.1 s.}
+\end{figure}
+
+\begin{figure}
+\centering
+\plotone{strang_step_diff_summary_plot}
+\caption{\label{fig:strang_steps} Energy generation rate for the
+  Strang CFL = 0.2 run with normal tolerances ({\tt
+    strang\_subch2\_cfl0.2}) shown at 4 consecutive timesteps around
+  $t = 0.1~\mathrm{s}$ zoomed in at the inward propagating detonation.}
 \end{figure}
 
 We next look at the simplified-SDC version of this same case, {\tt
