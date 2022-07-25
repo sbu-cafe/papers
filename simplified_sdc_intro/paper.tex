@@ -175,7 +175,7 @@ splitting---each physical process acts on the output of the previous
 process in alternating fashion.  This makes it easy to use different
 time-integration methods for the different physics, and to build a
 simulation code in a modular way.  However, competition between the
-different physical processes can cause the coupling to \replaced{breakdown}{break down, since the reactions do not directly incorporate the effects of the hydrodynamics and vice versa}.
+different physical processes can cause the coupling to \edit1{break down, since the reactions do not directly incorporate the effects of the hydrodynamics and vice versa}.
 These splitting errors can lead to loss of accuracy and further time
 step limitations.
 
@@ -188,7 +188,7 @@ through the network in a zone in one step followed by a large negative
 flow over the next timestep, as the code struggles to produce an
 equilibrium. 
 These large changes in abundances (and large alternately positive and negative energy generation rates) can be a challenge for
-\replaced{a code}{the integration method---it may take more steps than allowed by the ODE integrator, require a timestep below floating point accuracy, or fail to meet the tolerances}.  The easiest way to improve the coupling is to cut the
+\edit1{the integration method---it may take more steps than allowed by the ODE integrator, require a timestep below floating point accuracy, or fail to meet the tolerances}.  The easiest way to improve the coupling is to cut the
 timestep (see, e.g., \citealt{couch:2015,rivas:2022}), but this can make simulations
 prohibitively expensive.  Sometimes the burning is simply halted on a
 zone-by-zone basis when NSE conditions are reached (e.g., as in
@@ -399,7 +399,7 @@ In the Strang splitting~\citep{strang:1968} flavor of operator
 splitting, we first integrate the system with reactions terms only (no
 advection) over $\Delta t/2$, then integrate the advection terms only
 (no reactions) over $\Delta t$, and finally integrate the reaction
-terms only over $\Delta t/2$.  \added{The staggering of the reactive update
+terms only over $\Delta t/2$.  \edit1{The staggering of the reactive update
 means the hydro implicitly sees a time-centered reactive source, making
 the update second-order accurate in time.}  This flow is illustrated in
 Figure~\ref{fig:strang_flowchart}.
@@ -447,7 +447,7 @@ using an implicit ODE solver described below.
 
 We explored this and other approaches (including not evolving an
 energy / temperature equation during the reaction step) in
-\citet{strang_rnaas} and showed that the above formulation \replaced{gets}{achieved} second
+\citet{strang_rnaas} and showed that the above formulation \edit1{achieved} second
 order convergence and that in particular, integrating an energy / temperature
 equation is needed to get second order accuracy (see also
 \citealt{muller:1986} for a discussion on stability).  We note however
@@ -530,7 +530,7 @@ for advection and reactions that are used in a Strang splitting approach,
 but we are able to include, rather than exclude, the effects of the other 
 physical processes in each correction equation solve.
 
-We begin with the general form of a multi-implicit SDC correction equation with two physical processes\deleted{, as originally presented in} \citep{bourlioux2003high}.
+We begin with the general form of a multi-implicit SDC correction equation with two physical processes.
 Using $(k)$ to denote the iterate, we have
 \begin{eqnarray}
 \Uc^{(k)}(t) = \Uc^n &+& \int_{t^n}^t \left [ \Advs{\Uc^{(k)}} + \Rb\left(\Uc^{(k)}\right) - \Advs{\Uc^{(k-1)}} - \Rb\left(\Uc^{(k-1)}\right) \right ] dt \nonumber\\
@@ -632,7 +632,7 @@ We begin with the state at $t^n$, denoted $\Uc^n$, and proceed as follows:
       that utilizes the equation of state.
 
     \item Predict $\qb$ to the interfaces at $t^{n+1/2}$ using the CTU
-      PPM method\added{---this involves taking the cell-centered
+      PPM method\edit1{---this involves taking the cell-centered
         primitive state and tracking all of the information that can
         reach the interface over a timestep, following the procedure
         from \citet{ppmunsplit,millercolella:2002}}.  The source
@@ -661,7 +661,7 @@ We begin with the state at $t^n$, denoted $\Uc^n$, and proceed as follows:
       predictor (for example, doing characteristic tracing as
       described in \citealt{ppm}) or after all of the transverse flux
       corrections are made.  Both are second-order accurate.  For the
-      gravitational sources, we do those in the normal predictor\added{, consistent
+      gravitational sources, we do those in the normal predictor\edit1{, consistent
       with the formulation in \citet{ppm}.}
       However, for the reactive sources, we found that it is most
       reliable to add them at the end of the interface state
@@ -780,7 +780,7 @@ We begin with the state at $t^n$, denoted $\Uc^n$, and proceed as follows:
 
     Our integrator also needs the Jacobian of the system, in terms of
     $\Uc^\prime$.  This is different than the form of the Jacobian
-    usually used in reaction networks \added{(we depend on $e$ instead of
+    usually used in reaction networks \edit1{(we depend on $e$ instead of
     $T$)}.  We describe the form of the Jacobian in Appendix
     \ref{sec:app:jacobian}.
 
@@ -855,8 +855,7 @@ This completes the update of a single iteration.
 \subsection{Stiff ODE Integrator}\label{sec:VODE}
 
 We use a modified version of the VODE~\citep{vode} integrator,
-designed for stiff ODEs.  Our version has been ported to \replaced{C++, as a
-header-only library enabling it to run on GPUs}{modern C++ and designed to run on GPUs}.  We have also added
+designed for stiff ODEs.  Our version has been ported to \edit1{modern C++ and designed to run on GPUs}.  We have also added
 checks to the timestep rejection logic that help prevent VODE from
 wandering too far off the solution\footnote{This modified version of
 VODE is available in our Microphysics repo:
@@ -984,12 +983,10 @@ energy release cannot be so vigorous as to drive shocks.
 
 Tables \ref{table:react_converge_strang} and
 \ref{table:react_converge_sdc} show the Strang splitting and
-simplified-SDC convergence respectively.  \added{We ran each integration method on a domain with $64^2$, $128^2$, $256^2$, $512^2$ zones.  An error is defined between successive resolutions by coarsening the higher resolution run and taking the L1 norm of the zone-by-zone difference of the two simulations---for example, $\epsilon_{64\rightarrow 128}$ is the error between the $64^2$ and $128^2$ simulations.}  \deleted{The convergence rate is
-computed by taking log-base-2 of the ratio of adjacent errors.}  \added{The convergence
+simplified-SDC convergence respectively.  \edit1{We ran each integration method on a domain with $64^2$, $128^2$, $256^2$, $512^2$ zones.  An error is defined between successive resolutions by coarsening the higher resolution run and taking the L1 norm of the zone-by-zone difference of the two simulations---for example, $\epsilon_{64\rightarrow 128}$ is the error between the $64^2$ and $128^2$ simulations.}  \edit1{The convergence
 rate from $\epsilon_{64\rightarrow 128}$ to $\epsilon_{128\rightarrow 256}$ is computed as $\log_2 \epsilon_{64\rightarrow 128}/\epsilon_{128\rightarrow 256}$ and is given in the column between those errors, and likewise for the higher-resolution case.}  A rate
 of 2.0 indicates second order convergence.  We see that both methods
-\replaced{converge nearly second order, and agree well with each
-  other}{exhibit convergence at roughly second-order and agree well.}.
+\edit1{exhibit convergence at roughly second-order and agree well.}.
 This demonstrates that both methods are working as designed.
 
 \subsection{Sub-Chandra Double Detonation}
@@ -1082,7 +1079,7 @@ rate, we see that region is characterized by large energy releases of
 alternating signs checkerboarding thoughout the region.  This is
 characteristic of the nucleosynthesis struggling to come into
 equilibrium at high temperatures when the reverse rates can be
-important.  \added{To highlight this, Figure~\ref{fig:strang_steps} shows the nuclear
+important.  \edit1{To highlight this, Figure~\ref{fig:strang_steps} shows the nuclear
 energy generation rate in a highly-zoomed region around the detonation over four
 consecutive coarse timesteps.  We see that on the detonation front itself, the
 sign of the energy generation rate changes from one step to the next in many zones.}
