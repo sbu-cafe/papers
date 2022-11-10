@@ -49,7 +49,36 @@
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-Retries are great \cite{katzzingale:2019}.
+Multiphysics simulation software is hard to implement robustly. One reason is that
+physics modules usually have one or more failure modes, and the code may have
+additional failure modes related to the coupling between modules. Some examples of
+simulation failure modes in our field of astrophysics include:
+\begin{itemize}
+  \item Numerical integration failures in the system of ordinary differential equations (ODEs) representing nuclear fusion
+  \item Numerical integration successes in coupled ODE systems that nevertheless result in nonphysical outcomes, like mass fraction > 1
+  \item Convergence failures in iterative linear solvers, such as those used to solve the Poisson equation
+  \item Convergence failures in iterative non-linear solvers, such as those used for radiation diffusion
+  \item Failures in non-linear root finding, such as in non-monotonic equations of state
+  \item Zones whose local velocity exceeds the CFL hydrodynamic stability criterion given the selected timestep
+  \item Negative density in a zone after a hydrodynamic update
+\end{itemize}
+All of these failure modes (and more) are represented in the simulation code Castro \citep{castro_joss}.
+In our experience, any useful science simulation will almost inevitably hit one of these failure modes.
+
+There are (at least) three possible responses to such failures. First, the application can abort and tell the user
+to restart from the latest checkpoint with some modified parameters in the hope of making the failure less likely.
+This is undesirable because it can be very disruptive to a long-running simulation, and also because it may not be
+clear what step will actually resolve the problem. Second, the application can attempt to patch over the issue.
+For example, a negative density may be replaced by a small positive density, or a flux limiter could be applied
+to prevent it from occurring in the first place \citep{positivity_preserving}. While this can often keep the
+simulation going, it creates unphysical distortions in the simulation. Our anecdotal experience is that most
+simulation codes use these first two approaches to deal with such failures.
+
+A third approach, which we believe is generally more robust and less distortionary, is to retry a timestep
+that encounters one of these failure modes. Typically one will use a smaller $\Delta t$ on the retry, although
+other options exist, such as modifying the spatial resolution when using an adaptive mesh. One astrophysics
+application that successfully does this, which we drew inspiration from for this work, is the stellar evolution
+code MESA \citep{MESA}.
 
 %======================================================================
 % References
