@@ -62,7 +62,7 @@ simulation failure modes in our field of astrophysics include:
   \item Zones whose local velocity exceeds the CFL hydrodynamic stability criterion given the selected timestep
   \item Negative density in a zone after a hydrodynamic update
 \end{itemize}
-All of these failure modes (and more) are represented in the simulation code Castro \citep{castro_joss}.
+All of these failure modes (and more) are represented in the simulation code \castro\ \citep{castro_joss}.
 In our experience, any useful science simulation will almost inevitably hit one of these failure modes.
 
 There are (at least) three possible responses to such failures. First, the application can abort and tell the user
@@ -78,7 +78,35 @@ A third approach, which we believe is generally more robust and less distortiona
 that encounters one of these failure modes. Typically one will use a smaller $\Delta t$ on the retry, although
 other options exist, such as modifying the spatial resolution when using an adaptive mesh. One astrophysics
 application that successfully does this, which we drew inspiration from for this work, is the stellar evolution
-code MESA \citep{MESA}.
+code MESA \citep{MESA}. MESA also has the notion of a ``backup'': a retry can be defined as a second attempt at
+the current timestep, while a backup involves returning to an earlier timestep.
+
+\section{Implementation Details}\label{Sec:Implementation}
+
+A functional retry mechanism requires a decision scheme and associated code infrastructure for when to perform
+a second attempt at the timestep. A retry scheme effectively turns a timestep into a \texttt{while} loop: attempt
+an advance by $\Delta t$, and if it fails then attempt an advance by $\Delta t / 2$, and keep going until you have
+reached $t_{i} + \Delta t$ where $t_{i}$ is the starting simulation time. So in both principle and practice,
+implementing a retry mechanism is actually quite straightforward, with two complications as noted next.
+
+First, depending on context, this scheme may require saving application state and then restoring that application
+state at a later point. For example, \castro\ is a multi-level mesh refinement code where the fine levels are
+subcycled with respect to the coarse levels \citep{castro,berger_colella}, and so fine levels typically need to
+interpolate coarse data between time levels $t_{i}$ and $t_{i} + \Delta t$, where $\Delta t$ is the coarse grid
+timestep. \castro\ does this by maintaining both an ``old'' state and a ``new'' state corresponding to those two
+time levels. But subcycling within a given level due to retries will mean that at the end of the coarse step, the
+``old'' state data will be at some later time, such as $t_{i} + 3\Delta t / 4$ in the case of two failures. This
+needs to be reset back to the initial ``old'' state at $t_{i}$ for valid interpolation onto the fine grid. In \castro\
+we handle this by making a backup copy of the data\footnote{For the GPU build of \castro, we save this backup copy
+in host pinned memory since we are typically GPU memory constrained} at $t_{i}$ if (and only if) we encounter an
+advance failure on the first try.
+
+Second, this scheme may involve refactoring physics modules that perform irrevocable changes to application
+state. One way to guarantee that the scheme works is for the sequence of physics modules corresponding to an
+advance to be written as an idempotent operator: given an input ``old'' state at $t_{i}$, the advance updates
+only the ``new'' state at $t_{i} + \Delta t$, and only in a way that if you re-run the timestep you get the same
+result in the ``new'' state. This makes a retry scheme trivial: if you detect a failure, exit from the advance
+immediately, and then retry the advance with a smaller timestep.
 
 %======================================================================
 % References
