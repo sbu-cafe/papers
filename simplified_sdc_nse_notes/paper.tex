@@ -1,0 +1,408 @@
+\documentclass[times,modern]{aastex63}
+
+% these lines seem necessary for pdflatex to get the paper size right
+\pdfpagewidth 8.5in
+\pdfpageheight 11.0in
+
+\usepackage[T1]{fontenc}
+\usepackage{epsf,color,amsmath}
+
+\usepackage{cancel}
+\usepackage{tcolorbox}
+
+\newcommand{\sfrac}[2]{\mathchoice%
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}} {#1\!/#2}}
+
+
+\newcommand{\castro}{{\sf Castro}}
+\newcommand{\maestro}{{\sf Maestro}}
+\newcommand{\flash}{{\sf Flash}}
+\newcommand{\amrex}{{\sf AMReX}}
+
+\newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\isotm}[2]{{}^{#2}\mathrm{#1}}
+
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\cms}{\mathrm{cm~s^{-1} }}
+
+\newcommand{\nablab}{{\mathbf{\nabla}}}
+\newcommand{\Ub}{\mathbf{U}}
+\newcommand{\gb}{\mathbf{g}}
+\newcommand{\omegadot}{\dot{\omega}}
+\newcommand{\Sdot}{\dot{S}}
+\newcommand{\ddx}[1]{{\frac{{\partial#1}}{\partial x}}}
+\newcommand{\ddxs}[1]{{\frac{{\partial}}{\partial x}}#1}
+\newcommand{\ddt}[1]{{\frac{{\partial#1}}{\partial t}}}
+\newcommand{\odt}[1]{{\frac{{d#1}}{dt}}}
+\newcommand{\divg}[1]{{\nablab \cdot \left (#1\right)}}
+\newcommand{\dedr}{\left . {\partial{}e}/{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedrd}{\left . \frac{\partial{}e}{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedX}{\left . {\partial{}e}/{\partial{}X_k} \right |_{\rho, T}}
+\newcommand{\dedXd}{\left . \frac{\partial{}e}{\partial{}X_k} \right |_{\rho, T, X_{j,j\ne k}}}
+\newcommand{\dedT}{\left . {\partial{}e}/{\partial{}T} \right |_{\rho,X_k}}
+\newcommand{\dedTd}{\left . \frac{\partial{}e}{\partial{}T} \right |_{\rho,X_k}}
+
+\newcommand{\Ic}{{\boldsymbol{\mathcal{I}}}}
+\newcommand{\Ics}{{\mathcal{I}}}
+\newcommand{\smax}{{s_\mathrm{max}}}
+\newcommand{\kth}{k_\mathrm{th}}
+\usepackage{bm}
+
+\newcommand{\Uc}{{\,\bm{\mathcal{U}}}}
+\newcommand{\Fb}{\mathbf{F}}
+\newcommand{\Sc}{\mathbf{S}}
+
+\newcommand{\xv}{{(x)}}
+\newcommand{\yv}{{(y)}}
+\newcommand{\zv}{{(z)}}
+
+\newcommand{\ex}{{\bf e}_x}
+\newcommand{\ey}{{\bf e}_y}
+\newcommand{\ez}{{\bf e}_z}
+
+\newcommand{\Ab}{{\bf A}}
+\newcommand{\Sq}{{\bf S}_\qb}
+\newcommand{\Sqhydro}{{\Sq^{\mathrm{hydro}}}}
+\newcommand{\qb}{{\bf q}}
+
+\newcommand{\Shydro}{{{\bf H}}}
+\newcommand{\Hb}{{\bf H}}
+\newcommand{\Rb}{{\bf R}}
+\newcommand{\Rq}{{\bf R}}
+\newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
+\newcommand{\Advt}[1]{{\left [\boldsymbol{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
+\newcommand{\Advss}[1]{{\left [{\mathcal{{A}}} \left(#1\right)\right]}}
+\newcommand{\Advsst}[1]{{\left [{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
+\newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
+
+\newcommand{\avg}[1]{{\left \langle #1 \right \rangle}}
+
+\newcommand{\nse}[1]{{\mathtt{NSE}( #1 )}}
+
+\newcommand{\rhonse}{{\rho_\mathrm{nse}}}
+\newcommand{\tnse}{{T_\mathrm{nse}}}
+\newcommand{\Anse}{{A_\mathrm{nse}}}
+\newcommand{\Bnse}{{B_\mathrm{nse}}}
+\newcommand{\Cnse}{{C_\mathrm{nse}}}
+
+\newcommand{\out}{{\rm out}}
+\newcommand{\inp}{{\rm in}}
+
+
+\setlength{\marginparwidth}{0.75in}
+\newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
+
+\begin{document}
+%======================================================================
+% Title
+%======================================================================
+%\title{A Simplified Spectral Deferred Correction Method for Coupling Hydrodynamics with Reaction Networks and Nuclear Statistical Equilibrium}
+\title{Notes on Extending Simplified SDC to Nuclear Statistical Equilibrium}
+
+
+%======================================================================
+% Abstract and Keywords
+%======================================================================
+\begin{abstract}
+\end{abstract}
+
+\keywords{hydrodynamics---methods: numerical}
+
+
+\section{Reaction Networks and Nuclear Statistical Equilibrium}
+
+The NSE table requires:
+\begin{equation}
+  \label{eq:aux:ye}
+  Y_e = \sum_k \frac{Z_k X_k}{A_k}
+\end{equation}
+(where $A_k$ and $Z_k$ are the atomic weight and atomic number of nucleus $k$) and provides
+\begin{align}
+\label{eq:aux:abar}
+\bar{A} &= \left [ \sum_k \frac{X_k}{A_k} \right ]^{-1} \\
+\label{eq:aux:bea}
+\left (\frac{B}{A} \right ) &= \sum_k \frac{B_k X_k}{A_k}
+\end{align}
+where $B_k$ is the binding energy of nucleus $k$.  In our simulations,
+we store these 3 quantities as auxiliary data that is carried along
+with the rest of the fluid state in each zone.  The table also returns
+values of the mass fractions mapped onto the 19-isotopes we carry, $X_k$, and the time-derivative of $Y_e$, $dY_e/dt$.
+We use the notation:
+\begin{equation}
+\nse{\rho,T,Y_e} \rightarrow \bar{A}, X_k, (B/A), dY_e/dt
+\end{equation}
+to represent the NSE table call and its inputs and outputs.
+
+We can derive evolution equations for each of these composition quantities as:
+\begin{align}
+\frac{DY_e}{Dt} &= \sum_k \frac{Z_k}{A_k} \frac{DX_k}{Dt} = \sum_k \frac{Z_k}{A_k} \omegadot_k \\
+\frac{D\bar{A}}{Dt} &= -\bar{A}^2 \sum_k \frac{1}{A_k} \frac{DX_k}{Dt} = -\bar{A}^2 \sum_k \frac{1}{A_k} \omegadot_k \\
+\frac{D}{Dt} \left (\frac{B}{A} \right ) &= \sum_k \frac{B_k}{A_k} \frac{DX_k}{Dt} = \sum_k \frac{B_k}{A_k} \omegadot_k
+\end{align}
+For Strang split coupling of hydro and reactions, $DX_k/Dt = 0$,
+therefore each of these auxillary equations obeys an advection
+equation in the hydro part of the advancement.  In the SDC algorithm,
+there will be a reactive source (an $\Ic_q$) for each of these that is
+computed in the same manner as above.  We note that our NSE table
+provides the evolution of $Y_e$ due to reactions ($DY_e/Dt$) directly.
+
+The compositional quantities
+it carries, $\bar{A}$ and $Y_e$ are not representable from the 19
+isotopes we carry in the main network. For this reason, when we are
+using the NSE network, we always provide these two composition quantities as
+inputs to the EOS rather than using the $X_k$ directly.
+the EOS directly from the auxiliary state in each zone instead of
+using the $X_k$ directly.
+Our equation of state needs the mean charge per nucleus, $\bar{Z}$, in addition
+to the auxiliary quantities, which is computed as
+\begin{equation}
+\bar{Z} = \bar{A} \sum_k \frac{Z_k X_k}{A_k} = \bar{A} Y_e
+\end{equation}
+(see, e.g., \citealt{flash}).
+
+
+
+\subsection{Strang-split algorithm for NSE}
+
+For Strang splitting, we alternate the reaction and hydrodynamics,
+with each operation working on the output of the previous operation.
+If we define an advection operator over a timestep $\Delta t$ acting on $\Uc$ as
+$\mathbb{A}_{\Delta t}(\Uc)$ and a reaction operator over a timestep of
+$\Delta t/2$ acting on $\Uc$ as $\mathbb{R}_{\Delta t/2}(\Uc)$, then the advance appears
+as:
+\begin{align}
+  \Uc^\star &= \mathbb{R}_{\Delta t/2}(\Uc^n) \\
+  \Uc^{n+1,\star} &= \mathbb{A}_{\Delta t}(\Uc^\star) \\
+  \Uc^{n+1} &= \mathbb{R}_{\Delta t/2}(\Uc^{n+1,\star})
+\end{align}
+Tthe hydrodynamic and reactive substeps over
+the overall time-advancemenet scheme using the aprox19 + NSE network
+are as follows:
+\begin{itemize}
+
+\item {\em Hydrodynamics update}
+  
+  At the beginning of each hydrodynamic update we have an input state,
+  $\Uc_{\rm in}$ that we wish to integrate over $\Delta t$ to obtain $\Uc_{\rm out}$
+  The hydrodynamics update proceeds as normal, but with an advection
+  equation for each of the auxiliary composition variables:
+  \begin{align}
+    \ddt{(\rho Y_e)} + \ddx{(\rho Y_e u)} &= 0 \\
+    \ddt{(\rho \bar{A})} + \ddx{(\rho \bar{A} u)} &= 0 \\
+    \ddt{[\rho (B/A)]} + \ddx{[\rho (B/A) u]} &= 0 
+  \end{align}
+
+
+\item {\em Reactive update}
+
+  At the beginning of each reactive update we have an input state,
+  $\Uc_{\rm in}$ that we wish to integrate over $\Delta t/2$ to obtain $\Uc_{\rm out}$.
+  
+  \begin{itemize}
+
+    \item For a zone that is in NSE:
+
+      The goal is to update the composition and thermodynamics due to the 
+      change in the nuclei abundances over the (half-)timestep.  \citet{ma:2013}
+      uses a first-order in time difference to get the new composition state
+      and evaluates the energy release from the change in binding energy in the NSE
+      state.  They only apply a fraction (0.3) of the energy release to the internal
+      energy in a zone, to avoid a potential instability that can arise if too much
+      energy is added to a zone in a single timestep.  We prefer to deal with this
+      issue through the retry mechanism already built into \castro.
+
+      The approach we use begins with calling the NSE table with the input state:
+      \begin{equation}
+        \nse{\rho_\inp, T_\inp, (Y_e)_\inp} \rightarrow \bar{A}^\star, (X_k)^\star, (B/A)^\star, dY_e/dt
+        \end{equation}
+      We indicate with a $\star$ that most of those values are
+      provisional, and we will seek a better value in the corrector step.
+      We only update $Y_e$ from this call:
+      \begin{equation}
+        (Y_e)_\out = (Y_e)_\inp + \Delta t \frac{dY_e}{dt}
+      \end{equation}
+      and then we use the table again, but with the updated $Y_e$
+      (note that $\rho_{\rm out}=\rho_{\rm in}$ in the Strang reaction formulation):
+      \begin{equation}
+        \nse{\rho_\out, T_\inp, (Y_e)_\out} \rightarrow \bar{A}_\out, (X_k)_\out, (B/A)_\out, dY_e/dt
+      \end{equation}
+      In this formulation, we have not updated the temperature. 
+      This corrects the composition so that it is consistent with the updated
+      $Y_e$.  We use these values $\bar{A}_\out$, $(X_k)_\out$, and $(B/A)_\out$ to then complete the update, computing the energy release, $\Sdot$ as:
+      \begin{equation}
+        \label{eq:nse_energy}
+        \Sdot = \left [ \left ( \frac{B}{A} \right )_\out -
+          \left ( \frac{B}{A} \right )_\inp \right ] N_A \frac{1}{\Delta t}
+      \end{equation}
+
+    \item For zones not in NSE:
+
+    \begin{itemize}
+    \item Integrate the full reaction network (Eqs.~\ref{eq:strang:e} and \ref{eq:strang:X}) as usual for Strang splitting
+    \item Update the aux quantities at the end of the burn using Eqs.~\ref{eq:aux:ye}, \ref{eq:aux:abar}, and \ref{eq:aux:bea} with the new mass fractions, $X_k$.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{SDC-NSE Coupling Approach I}
+
+This is the approach on the {\tt development} branch.
+
+With SDC evolution, when we are in NSE, we need to do the advective
+and reactive updates together.  We want to compute:
+\begin{equation}
+\Uc^{n+1,(k)} = \Uc^n + \Delta t \Adv{\Uc}^{n+1/2,(k)} + \Delta t \left [\Rb (\Uc) \right ]^{n+1/2,(k)}
+\end{equation}
+For density and momentum, we can do this update already, since there
+are no reactive sources.  That gives us $\rho^{n+1,(k)}$ and $(\rho
+\Ub)^{n+1,(k)}$.  For the other quantities, the NSE table gives only the
+instantaneous values. aside from $Y_e$.  We therefore do an iterative
+update.
+
+Calling the NSE table on the starting state gives us:
+\begin{equation}
+\nse{\rho^n, T^n, (Y_e)^n} \rightarrow \bar{A}^n, (X_k)^n, (B/A)^n, (dY_e/dt)^n
+\end{equation}
+We now compute a first approximation to the reactive source:
+\begin{align}
+R^{(0)}(\rho e) &= 0 \\
+R^{(0)}(\rho Y_e) &= \rho^n (dY_e/dt)^n \\
+R^{(0)}(\rho \bar{A}) &= 0
+\end{align}
+
+Now we iterate $\xi = 0, \ldots N-1$, doing the following:
+
+\begin{itemize}
+\item Update the energy as:
+   \begin{equation}
+     (\rho e)^{n+1,(\xi)} = (\rho e)^n + \Delta t \Advss{\rho e}^{n+1/2,(k)} + \Delta t R^{(\xi)}(\rho e)
+   \end{equation}
+
+\item Update the auxiliary data as:
+   \begin{equation}
+     (\rho \alpha_l)^{n+1,(\xi)} = (\rho \alpha_l)^n + \Delta t \Advss{\rho \alpha_l}^{n+1/2,(k)} + \Delta t R^{(\xi)}(\rho \alpha_l)
+   \end{equation}
+
+\item Compute the updated temperature, $T^{n+1,(k)}$ as
+  \begin{equation}
+    T^{n+1,(\xi)} = T(\rho^{n+1,(k)},  \alpha^{n+1,(\xi)},  e^{n+1,(\xi)})
+  \end{equation}
+  where $\alpha^{n+1,(\xi)} = (\rho  \alpha)^{n+1,(\xi)} / \rho^{n+1,(k)}$ and $e^{n+1,(\xi)} = (\rho e)^{n+1,(\xi)} / \rho^{n+1,(k)}$.
+
+\item Call the NSE table to get the new NSE state
+  \begin{equation}
+    \nse{\rho^{n+1,(k)}, T^{n+1,(\xi)}, (Y_e)^{n+1,(\xi)}} \rightarrow \bar{A}^{n+1,(\xi)}, (X_k)^{n+1,(\xi)}, (B/A)^{n+1,(\xi)}, (dY_e/dt)^{n+1,(\xi)}
+  \end{equation}
+
+\item Recompute the reactive source terms for the next iteration.
+
+  The energy generation rate is found as:
+  \begin{equation}
+    (\rho \Sdot)^{n+1/2,(\xi)} = \frac{\rho^{n+1,(k)} + \rho^n}{2}
+    \left [ \left ( \frac{B}{A} \right )^{n+1,(\xi)} -
+      \left ( \frac{B}{A} \right )^n \right ] N_A \frac{1}{\Delta t}
+  \end{equation}
+  and our new auxiliary sources are:
+\begin{align}
+R^{(\xi+1)}(\rho e) &= (\rho \Sdot)^{n+1/2,(\xi)} \\
+R^{(\xi+1)}(\rho Y_e) &= \frac{\rho^{n+1,(k)} + \rho^n}{2} \frac{1}{2} \left [ \left (\frac{dY_e}{dt} \right )^n + \left (\frac{dY_e}{dt} \right )^{n+1,(\xi)} \right ] \\
+R^{(\xi+1)}(\rho \bar{A}) &= \frac{\rho^{n+1,(k)} + \rho^n}{2} \frac{1}{\Delta t} \left [ \bar{A}^{n+1,(\xi)} - \frac{(\rho \bar{A})^n}{\rho^n} \right ]
+\end{align}
+
+\end{itemize}
+
+With the iteration complete, we can do the final update of the total energy using last iterations prediction of the source (for iteration $N$):
+\begin{equation}
+(\rho E)^{n+1,(k)} = (\rho E)^n + \Delta t \Advss{\rho E}^{n+1/2} + \Delta t (\rho \Sdot)^{n+1/2,(N)}
+\end{equation}
+and we take the values of the auxiliary state and mass fractions from the last call to the NSE table:
+\begin{align}
+(\rho Y_e)^{n+1,(k)} &= \rho^{n+1,(k)} (Y_e)^{n+1,(N-1)} \\
+(\rho \bar{A})^{n+1,(k)} &= \rho^{n+1,(k)} (\bar{A})^{n+1,(N-1)} \\
+(\rho (B/A))^{n+1,(k)} &= \rho^{n+1,(k)} (B/A)^{n+1,(N-1)} \\
+(\rho Y_e)^{n+1,(k)} &= \rho^{n+1,(k)} (X_k)^{n+1,(N-1)}
+\end{align}
+
+We note that this update is not fully second order, however, the
+treatment of $Y_e$ is, and we expect that to have the dominant effect
+in the thermodynamic evolution through NSE.
+
+\begin{tcolorbox}
+{\bf Issues:} I think that when we call 
+\begin{equation}
+    \nse{\rho^{n+1,(k)}, T^{n+1,(\xi)}, (Y_e)^{n+1,(\xi)}} \rightarrow \bar{A}^{n+1,(\xi)}, (X_k)^{n+1,(\xi)}, (B/A)^{n+1,(\xi)}, (dY_e/dt)^{n+1,(\xi)}
+\end{equation}
+
+The inputs already have seen advection, so that means that the outputs know about advection.
+So when we use $(B/A)^{n+1,(\xi)}$ to compute the energy release, are we also including the
+change due to advection?
+\end{tcolorbox}
+
+\subsection{SDC-NSE Coupling Approach II}
+
+This is on {\tt older\_sdc\_fix} branch, PR 1092.
+
+It differs from above as in that it attempts to remove the advective
+part from the energy generation rate, addressing the issue above.
+
+Now we do compute a $(B/A)$ without advection:
+\begin{equation}
+   \widetilde{\rho \left ( \frac{B}{A} \right ) } = \left [ \rho \left ( \frac{B}{A} \right ) \right ]^{n+1,(\xi)} - \Advss{\rho (B/A)}^{n+1/2,(k)}
+\end{equation}
+and do the energy generation as:
+\begin{equation}
+   (\rho \Sdot)^{n+1/2,(\xi)} = 
+     \left \{ \widetilde{\rho \left ( \frac{B}{A} \right )} -
+       \left [ \rho \left ( \frac{B}{A} \right ) \right ]^n \right \} N_A \frac{1}{\Delta t}
+\end{equation}
+This will not include the advection.
+
+\subsection{SDC-NSE Coupling Approach III}
+
+This is the branch {\tt fix\_sdc\_nse} in PR 1090.
+
+This follows the approach from the original SDC paper, for $\mathcal{I}_q$,  by first
+predicting the update of $(B/A)$ with just advection, and using this to compute
+the change in $(B/A)$ from just reactions.
+\begin{equation}
+\left [ \rho \left ( \frac{B}{A} \right ) \right ]^\star = 
+   \left [ \rho \left ( \frac{B}{A} \right ) \right ]^n + \Delta t \Advss{\rho (B/A)}^{n+1/2}
+\end{equation}
+then we compute
+\begin{equation}
+\left (\frac{B}{A} \right )^\star = \left [ \rho \left ( \frac{B}{A} \right ) \right ]^\star  / \rho^{n+1}
+\end{equation}
+Then the energy generation is:
+\begin{equation}
+   (\rho \Sdot)^{n+1/2,(\xi)} =  \rho^{n+1/2}
+     \left [ \left ( \frac{B}{A} \right )^{n+1} -
+              \left ( \frac{B}{A} \right )^\star \right ] N_A \frac{1}{\Delta t}
+\end{equation}
+
+\subsection{Thoughts}
+
+\begin{itemize}
+
+\item Imagine that we evolve in a zone such that the NSE state does
+  not change, but density does (this would mean that the temperature
+  must have changed).  In that case the energy generation should be
+  zero, so writing is like:
+  \begin{equation}
+    \rho \Sdot = \rho^{n+1/2} \left [ \left ( \frac{B}{A} \right )^{n+1} - \left ( \frac{B}{A} \right )^n \right ] \frac{N_A}{\Delta t}
+  \end{equation}
+  captures that.
+\end{itemize}
+
+%======================================================================
+% References
+%======================================================================
+
+\bibliographystyle{aasjournal}
+\bibliography{ws}
+
+\end{document}
