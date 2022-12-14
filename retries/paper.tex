@@ -1,0 +1,118 @@
+\documentclass[times,modern]{elsarticle}
+
+% these lines seem necessary for pdflatex to get the paper size right
+\pdfpagewidth 8.5in
+\pdfpageheight 11.0in
+
+\usepackage[T1]{fontenc}
+\usepackage{epsf,color,amsmath}
+
+\usepackage{cancel}
+
+\newcommand{\Sb}{{\bf S}}
+
+\newcommand{\sfrac}[2]{\mathchoice%
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}} {#1\!/#2}}
+
+\newcommand{\castro}{{\sf Castro}}
+\newcommand{\amrex}{{\sf AMReX}}
+
+\usepackage{bm}
+
+\setlength{\marginparwidth}{0.75in}
+\newcommand{\MarginPar}[1]{\marginpar{\vskip-\baselineskip\raggedright\tiny\sffamily\hrule\smallskip{\color{red}#1}\par\smallskip\hrule}}
+
+\begin{document}
+%======================================================================
+% Title
+%======================================================================
+\title{Timestep Retries for Robust Simulations}
+
+\author{Max P. Katz}
+\author{Michael Zingale}
+
+\maketitle
+
+%======================================================================
+% Abstract and Keywords
+%======================================================================
+\begin{abstract}
+\end{abstract}
+
+%======================================================================
+% Introduction
+%======================================================================
+\section{Introduction}\label{Sec:Introduction}
+
+Multiphysics simulation software is hard to implement robustly. One reason is that
+physics modules usually have one or more failure modes, and the code may have
+additional failure modes related to the coupling between modules. Some examples of
+simulation failure modes in our field of astrophysics include:
+\begin{itemize}
+  \item Numerical integration failures in the system of ordinary differential equations (ODEs) representing nuclear fusion
+  \item Numerical integration successes in coupled ODE systems that nevertheless result in nonphysical outcomes, like mass fraction > 1
+  \item Convergence failures in iterative linear solvers, such as those used to solve the Poisson equation
+  \item Convergence failures in iterative non-linear solvers, such as those used for radiation diffusion
+  \item Failures in non-linear root finding, such as in non-monotonic equations of state
+  \item Zones whose local velocity exceeds the CFL hydrodynamic stability criterion given the selected timestep
+  \item Negative density in a zone after a hydrodynamic update
+\end{itemize}
+All of these failure modes (and more) are represented in the simulation code \castro\ \citep{castro_joss}.
+In our experience, any useful science simulation will almost inevitably hit one of these failure modes.
+
+There are (at least) three possible responses to such failures. First, the application can abort and tell the user
+to restart from the latest checkpoint with some modified parameters in the hope of making the failure less likely.
+This is undesirable because it can be very disruptive to a long-running simulation, and also because it may not be
+clear what step will actually resolve the problem. Second, the application can attempt to patch over the issue.
+For example, a negative density may be replaced by a small positive density, or a flux limiter could be applied
+to prevent it from occurring in the first place \citep{positivity_preserving}. While this can often keep the
+simulation going, it creates unphysical distortions in the simulation. Our anecdotal experience is that most
+simulation codes use these first two approaches to deal with such failures.
+
+A third approach, which we believe is generally more robust and less distortionary, is to retry a timestep
+that encounters one of these failure modes. Typically one will use a smaller $\Delta t$ on the retry, although
+other options exist, such as modifying the spatial resolution when using an adaptive mesh. One astrophysics
+application that successfully does this, which we drew inspiration from for this work, is the stellar evolution
+code MESA \citep{MESA}. MESA also has the notion of a ``backup'': a retry can be defined as a second attempt at
+the current timestep, while a backup involves returning to an earlier timestep.
+
+\section{Implementation Details}\label{Sec:Implementation}
+
+A functional retry mechanism requires a decision scheme and associated code infrastructure for when to perform
+a second attempt at the timestep. A retry scheme effectively turns a timestep into a \texttt{while} loop: attempt
+an advance by $\Delta t$, and if it fails then attempt an advance by $\Delta t / 2$, and keep going until you have
+reached $t_{i} + \Delta t$ where $t_{i}$ is the starting simulation time. So in both principle and practice,
+implementing a retry mechanism is actually quite straightforward, with two complications as noted next.
+
+First, depending on context, this scheme may require saving application state and then restoring that application
+state at a later point. For example, \castro\ is a multi-level mesh refinement code where the fine levels are
+subcycled with respect to the coarse levels \citep{castro,berger_colella}, and so fine levels typically need to
+interpolate coarse data between time levels $t_{i}$ and $t_{i} + \Delta t$, where $\Delta t$ is the coarse grid
+timestep. \castro\ does this by maintaining both an ``old'' state and a ``new'' state corresponding to those two
+time levels. But subcycling within a given level due to retries will mean that at the end of the coarse step, the
+``old'' state data will be at some later time, such as $t_{i} + 3\Delta t / 4$ in the case of two failures. This
+needs to be reset back to the initial ``old'' state at $t_{i}$ for valid interpolation onto the fine grid. In \castro\
+we handle this by making a backup copy of the data\footnote{For the GPU build of \castro, we save this backup copy
+in host pinned memory since we are typically GPU memory constrained} at $t_{i}$ if (and only if) we encounter an
+advance failure on the first try.
+
+Second, this scheme may involve refactoring physics modules that perform irrevocable changes to application
+state. One way to guarantee that the scheme works is for the sequence of physics modules corresponding to an
+advance to be written as an idempotent operator: given an input ``old'' state at $t_{i}$, the advance updates
+only the ``new'' state at $t_{i} + \Delta t$, and only in a way that if you re-run the timestep you get the same
+result in the ``new'' state. This makes a retry scheme trivial: if you detect a failure, exit from the advance
+immediately, and then retry the advance with a smaller timestep.
+
+%======================================================================
+% References
+%======================================================================
+
+\bibliographystyle{aasjournal}
+\bibliography{ws}
+
+\end{document}

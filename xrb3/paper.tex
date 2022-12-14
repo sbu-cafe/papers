@@ -110,43 +110,38 @@
 \shorttitle{Lateral Flame Dynamics III}
 %% \shortauthors{Harpole et al.}
 
+\author[0000-0001-8401-030X]{Michael Zingale}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+             Stony Brook, NY 11794-3800}
+
 %% \author[0000-0002-1530-781X]{Alice Harpole}
 %% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
 %%              Stony Brook, NY 11794-3800}
 
-%% \author[0000-0001-6191-4285]{Kiran Eiden}
-%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
-%%              Stony Brook, NY 11794-3800}
+\author[0000-0001-6191-4285]{Kiran Eiden}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+             Stony Brook, NY 11794-3800}
 
-%% \author[0000-0001-8401-030X]{Michael Zingale}
-%% \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
-%%              Stony Brook, NY 11794-3800}
 
 %% \author[0000-0003-2300-5165]{Donald Willcox}
 %% \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
 
-%% \author{Yuri Cavecchi}
-%% \affiliation{Mathematical Sciences and STAG Research Centre, University of Southampton, SO17 1BJ}
-
-%% \author[0000-0003-0439-4556]{Max P.\ Katz}
-%% \affiliation{NVIDIA Corp}
-
-%% \author[0000-0001-8092-1974]{Weiqun Zhang}
-%% \affiliation{Lawrence Berkeley National Laboratory, Berkeley, CA}
+\author[0000-0003-0439-4556]{Max P.\ Katz}
+\affiliation{NVIDIA Corp}
 
 
-%% \correspondingauthor{Alice Harpole}
-%% \email{alice.harpolee@stonybrook.edu}
+\correspondingauthor{Michael Zingale}
+\email{michael.zingale@stonybrook.edu}
 
 
 %======================================================================
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-We continue to investigate laterally propagating flames in XRBs,
-comparing the early evolution and structure of a burning hotspot
-between two- and three-dimensions.
-\end{abstract}
+We explore the early evolution of a hot spot and a flame ignition and
+spreading on the surface of a neutron star in three-dimensions.  We
+focus on the difference in the structure of the flame compared to
+previous two-dimensional simulations.\end{abstract}
 
 \keywords{convection---hydrodynamics---methods: numerical---stars: neutron---X-rays: bursts}
 
@@ -155,13 +150,22 @@ between two- and three-dimensions.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-X-ray bursts result from thermonuclear burning of an accreted H/He or
-He layer on a neutron star \citep{galloway:2017}.  Observations of
-brightness oscillations in the rise of the lightcurve suggest that the
-burning begins localized and then spreads across the neutron star.
-One-dimensional simulations of X-ray bursts reproduce the lightcurve
-and recurrence time \citep{woosley-xrb} and can use large reaction
-networks to explore rp-process nucleosynthesis.
+X-ray bursts (XRBs) result from thermonuclear burning of an accreted
+H/He or He layer on a neutron star \citep{galloway:2017}.
+Observations of brightness oscillations in the rise of the lightcurve
+suggest that the burning begins localized and then spreads across the
+neutron star.  This spreading is inherently a multi-dimensional
+phenomena, and hydrodynamic simulations that resolve the reactive zone
+and capture the scales over which rotation is important are needed to
+understand the flame propagation.  We show a first attempt at modeling
+the full three-dimensional ignition and spreading of a hot spot in an
+XRB.  This builds on our earlier two dimensional work
+\citep{eiden:2020,harpole:2021} that developed our simulation
+framework and explored how the acceleration of the burning front
+depends on the initial model structure.  As with those simulations, we
+use the freely-available \castro\ simulation code
+\citep{castro,castro_joss} simulation code.
+
 
 To understand how the burning front propagates across the surface, we
 need to do multidimensional simulations.  The work of
@@ -169,11 +173,9 @@ need to do multidimensional simulations.  The work of
 
 The three-dimensional study by \citet{Cavecchi2019} showed...
 
-We have been performing simulations of flame spreading on a neutron
-star resolving the flame structure using realistic reaction networks.  Our two-dimensional studies \citep{eiden:2020,harpole:2021} demonstrated our open-source framework for modeling X-ray bursts using 
-
-We use the \castro\ \citep{castro,castro_joss} simulation code, following
-the same numerical approach described in \citet{eiden:2020,harpole:2021}.
+The goal of this paper is to understand the challenges of a fully-resolved
+three-dimensional simulation and explore what is possible.  This will inform
+our follow-on simulations.
 
 %======================================================================
 % Results

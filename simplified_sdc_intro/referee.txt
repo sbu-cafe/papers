@@ -1,0 +1,164 @@
+Dear Dr. Timmes,
+
+We thank the referee for the detailed comments.  We have address them
+below and updated the paper manuscript with the AASTeX tracking-changed
+enabled.
+
+
+1) Lines 26-27 - breakdown --> break down. In addition, this sentence
+sets the stage for much of the rest of the paper, but is sort of
+caught between being very specific and the overly general. Better here
+would be a quantitative statement of what physical processes cause a
+"breakdown" of "coupling" and what those couplings are, in detail.
+
+  A little more context was added.
+
+2) Line 31 - Is it generally true that the oscillation exhibited in so
+many network-dependent simulations of the approach to NSE occurs from
+timestep to timestep? And only at that frequency? If so, this is a
+significant feature of the problem being attacked by this scheme. If
+it is not always true that the positive/negative excursions in the
+calculation of equilibrium using rate equations occurs on this
+distinct time scale, it would bear mentioning here.
+
+  As long as the nuclear timescale is much shorter than the hydro timescale,
+  then the oscillations should be seen between the first and second halves
+  of the Strang timestep.  The change in mass fraction in a single zone
+  behind a detonation was shown graphically in this paper (figure 3),
+  which generally supports this statement:
+  https://iopscience.iop.org/article/10.1088/1742-6596/1225/1/012005
+
+  We cited this in the Strang splitting section.
+
+  With regards to what this paper is attacking, I think the main thing
+  that we focus on is that we can do a better job at coupling at reduced
+  computational cost.  This algorithm will be explored further as we use
+  it on new applications -- not every problem that we work on involves NSE,
+  but the new scheme is still beneficial in terms of computational speed.
+
+3) Line 33 - "challenge for a code" is more than a bit nebulous in
+this context. What is the challenge? Is the code itself responsible
+for that challenge or the algorithm?
+
+  This was clarified to refer to the reaction integration and some examples
+  of failure modes were given.
+
+4) Line 110-112 - It has been alluded to that Strang splitting into
+half-timesteps specifically leads to second-order in time convergence,
+but explicit mention here, in the context of what is shown in Fig. 1
+would be a good addition.
+
+  A sentence was added stating this.
+
+5) Lines 130 and 131 - "gets" is oddly informal and inexact in this
+context. Better might be "achieves" or "leads to."
+
+  changed to "achieves"
+
+6) Line 150 - Any specific problems realized in practice by the "post
+hoc" implementation of the usual timestep limiter is, I think, pretty
+much essential here. Without such specificity (i.e., if this limiting,
+in general, works), improving the coupling to avoid their use borders
+on simply cosmetic.
+
+  Cutting the timestep certainly improves coupling.  These limiters
+  are one way you can automate the timestep reduction.  The reason for
+  this language is that while many papers will reference using
+  reaction-based limiters, rarely (if ever) is there a discussion of
+  how they are implemented.  Our concern with the limiters is for the
+  cases where a zone is on the temperature cusp of a thermonuclear
+  ignition. If we take the ~CFL timestep, we may march over that
+  ignition in one step, and you may very well not want to do that,
+  because a tighter coupling of the hydro and the burning may affect
+  whether there even is an ignition and how an early detonation may
+  form. But the conditions at the start of the timestep may not reveal
+  that in the subsequent burn(s) in that timestep that the zone will
+  ignite.
+
+7) Line 170 -- "in" could be replaced with a parenthetical citation to
+Bourlioux et al. (2003).
+
+  changed
+
+8) Line 210 -- Most ApJ readers would be most familiar with the CTU
+PPM method from, say, Gardiner & Stone (2005). The use of the
+construction, "predict q to the interfaces," would be less familiar to
+this audience.
+
+  We re-referenced the original CTU paper above and added a reference
+  to Miller & Colella 2002, since that is a better source of the CTU
+  PPM method than Gardiner & Stone (and more applicable here). A
+  sentence was added explaining what predicition means.
+
+9) Line 220 -- "For the gravitational sources..." Is there a reason
+for this choice of when the gravitational sources are applied?
+Convenience?
+
+  The reason is simply that that's the way they were always done.  In
+  the original PPM paper (Colella & Woodward 1984) the gravitational
+  source terms are traced as part of the characteristic projection.
+  A note and cite was added to that sentence.
+
+10) Line 262-263 -- "This is different than the form..." This is an
+odd construction for a piece of information that should be somewhat
+obvious to the reader. If the authors wish to stress that the Jacobian
+to be attacked is quite different from that found in typical nuclear
+network calculation, a little detail would be useful here to delineate
+what is different.
+
+  The purpose of appendix A is to explain how it differs, but another
+  sentence was added here.
+
+11) Line 293 -- "...as a header-only library enabling it to run on
+GPUs." Though the use of header-only libraries in C++ is a convenient
+way to perform a port to GPU-based architectures, it is not the only
+path (even when using C++!). As written, the less-engaged reader might
+assume otherwise.
+
+  Yes, this was unfortunate wording and was not meant to imply
+  header-only was needed.  We've dropped the header-only part and just
+  referred to modern C++.
+
+11) Line 336 -- "...converge nearly second order" --> "We see that
+both methods exhibit convergence at roughly second-order and agree
+well."
+
+   changed
+
+12) Table 1. -- The labels on the columns in this table need to be
+defined in the caption. Even more confusing is the lack of vertical
+delineation of what comparisons are being made in the "rate"
+columns. Either the errors from each resolution change should form the
+first 3 columns with the implied convergence rates being moved to last
+two columns, or some additional decoration should indicate the
+"interstitial" ratio that is being taken between resolution columns.
+
+   We adopted this format as the same style used in McCorquodale & Colella.
+   Some sentences explaining the columns were added to the text body (it is
+   not clear if ApJ allows long table captions).
+
+13) Line 369-370 -- Is it solely the form of the initial perturbation
+that causes the detonation to propagate inward into the WD?
+
+  In this case, it is both the fact that the perturbation is large
+  and the WD is pure C.  Smaller perturbations and mixed C/O would give
+  something more akin to the double detonation model.  We are exploring
+  those for a science paper.  But for this methods paper, we wanted the
+  reactions to be tough, hence we hit the star hard.
+
+14) Lines 382 & 394 -- We return to the frequency of positive/negative
+fluxes in the network flow as NSE is approached with these references
+to the "mottling" in the nuclear energy generation rate in Figures 4
+and 6. Can the authors exhibit differences in this mottling between
+strictly successive timesteps to fix the frequency at which the effect
+is occurring?
+
+   We've added a plot that attempts to show this behavior, that shows
+   the changing of sign at the detonaton front.  Note that the
+   fluctuations can happen within a single step, with each righthand
+   side evaluation differing in sign, but perhaps with an overall
+   trend that would not be seen in the plots.  Also, the fact that we
+   do subcycling in time means that we output at the frequency of the
+   coarse grid timestep, so we don't have information on the change
+   from one fine grid step to the next within a coarse subcycle.
+
