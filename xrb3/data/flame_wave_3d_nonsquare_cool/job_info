@@ -1,0 +1,363 @@
+==============================================================================
+ Castro Job Information
+==============================================================================
+job name: Castro
+
+inputs file: inputs.He.nonsquare.static.1000Hz.pslope.cool
+
+number of MPI processes: 2304
+
+hydro tile size:         (1048576,1048576,1048576)
+
+CPU time used since start of simulation (CPU-hours): 39.4685
+
+==============================================================================
+ Plotfile Information
+==============================================================================
+output date / time: Thu Aug 11 14:53:06 2022
+output dir:         /gpfs/alpine/ast106/proj-shared/new_xrb/flame_wave_3d_nonsquare_cool
+I/O time (s):       1.84953
+
+
+==============================================================================
+GPU Information:       
+==============================================================================
+GPU model name: Tesla V100-SXM2-16GB
+Number of GPUs used: 2304
+
+
+==============================================================================
+ Build Information
+==============================================================================
+build date:    2022-08-11 13:30:49.897848
+build machine: Linux login1 4.18.0-193.46.1.el8_2.ppc64le #1 SMP Thu Feb 18 09:47:51 EST 2021 ppc64le ppc64le ppc64le GNU/Linux
+build dir:     /autofs/nccs-svm1_home1/zingale/Castro/Exec/science/flame_wave
+AMReX dir:     /ccs/home/zingale/amrex
+
+COMP:          gnu
+COMP version:  10.2.0
+
+CUDA version:  11.4
+
+C++ compiler:  mpicxx
+C++ flags:     -ccbin=g++ -Xcompiler=' -Werror=return-type -g -O3 -std=c++17  -pthread  -std=c++17' --std=c++17 -Wno-deprecated-gpu-targets -m64 -arch=compute_70 -code=sm_70 -maxrregcount=255 --expt-relaxed-constexpr --expt-extended-lambda -Xcudafe --diag_suppress=esa_on_defaulted_function_ignored --Werror cross-execution-space-call -lineinfo --ptxas-options=-O3 --use_fast_math  --forward-unknown-to-host-compiler --Werror ext-lambda-captures-this --display-error-number --diag-error 20092 -x cu -dc  -DBL_USE_MPI -DAMREX_USE_MPI -DAMREX_MPI_THREAD_MULTIPLE -DBL_NO_FORT -DAMREX_USE_CUDA -DAMREX_USE_GPU -DBL_COALESCE_FABS -DAMREX_USE_GPU_RDC -DBL_SPACEDIM=3 -DAMREX_SPACEDIM=3 -DBL_FORT_USE_UNDERSCORE -DAMREX_FORT_USE_UNDERSCORE -DBL_Linux -DAMREX_Linux -DAMREX_DIMENSION_AGNOSTIC -DNDEBUG -DAMREX_NO_PROBINIT -DAMREX_USE_NVML -DAMREX_GPUS_PER_SOCKET=3 -DAMREX_GPUS_PER_NODE=6 -DAMREX_GPU_MAX_THREADS=256 -DSPONGE -DCXX_MODEL_PARSER -DNPTS_MODEL=10000 -DNUM_MODELS=2 -DGRAVITY -DREACTIONS -DCXX_REACTIONS -DDIFFUSION -DROTATION -DSTRANG -DCXX_REACTIONS -DSCREEN_METHOD=0 -DCONDUCTIVITY -DNETWORK_HAS_CXX_IMPLEMENTATION -DALLOW_JACOBIAN_CACHING -DINTEGRATOR_HAS_FORTRAN_IMPLEMENTATION -DSCREENING -DNUMSCREEN=10 -DNEUTRINOS -DNAUX_NET=0 -Itmp_build_dir/s/3d.gnu.MPI.CUDA.EXE -I. -I/ccs/home/zingale/amrex/Src/Base -I/ccs/home/zingale/amrex/Src/Base/Parser -I/ccs/home/zingale/amrex/Src/AmrCore -I/ccs/home/zingale/amrex/Src/Amr -I/ccs/home/zingale/amrex/Src/Boundary -I/ccs/home/zingale/amrex/Src/LinearSolvers/MLMG -I/ccs/home/zingale/Microphysics/util -I/ccs/home/zingale/Microphysics/util/gcem/include -I/ccs/home/zingale/Microphysics/integration/VODE -I/ccs/home/zingale/Microphysics/integration/utils -I/ccs/home/zingale/Microphysics/integration -I/ccs/home/zingale/Microphysics/rates -I/ccs/home/zingale/Microphysics/screening -I/ccs/home/zingale/Microphysics/neutrinos -I. -I../../../Source/driver -I../../../Source/hydro -I../../../Source/problems -I../../../Source/sources -I../../../Util/model_parser_cxx -I../../../Source/gravity -I../../../Source/scf -I../../../Source/reactions -I../../../Source/diffusion -I../../../Source/rotation -I/ccs/home/zingale/Microphysics/EOS -I/ccs/home/zingale/Microphysics/EOS/helmholtz -I/ccs/home/zingale/Microphysics/networks/iso7 -I/ccs/home/zingale/Microphysics/EOS -I/ccs/home/zingale/Microphysics/networks -I/ccs/home/zingale/Microphysics/interfaces -I/ccs/home/zingale/Microphysics/conductivity -I/ccs/home/zingale/Microphysics/conductivity/stellar -I/ccs/home/zingale/Microphysics/constants -I/ccs/home/zingale/Microphysics/nse -Itmp_build_dir/castro_sources/3d.gnu.MPI.CUDA.EXE -I/ccs/home/zingale/amrex/Tools/C_scripts -isystem /sw/summit/cuda/11.4.2/include
+
+Fortran comp:  mpif90
+Fortran flags:  -g -O3 -ffree-line-length-none -fno-range-check -fno-second-underscore -fimplicit-none 
+
+Link flags:    -L. -L/sw/summit/cuda/11.4.2/lib64 -L/sw/summit/cuda/11.4.2/lib64/stubs
+Libraries:      -lmpi_ibm_mpifh -lmpi_ibm -lcuda -lnvidia-ml -lgfortran
+
+EOS: /ccs/home/zingale/Microphysics/EOS/helmholtz
+NETWORK: /ccs/home/zingale/Microphysics/networks/iso7
+CONDUCTIVITY: /ccs/home/zingale/Microphysics/conductivity/stellar
+screening: screen5
+
+Castro       git describe: 22.08-8-g2409a13d7
+AMReX        git describe: 22.08-10-gd295f2299
+Microphysics git describe: 22.08-2-gd7421d4a
+
+
+==============================================================================
+ Grid Information
+==============================================================================
+ level: 0
+   number of boxes = 3456
+   maximum zones   = 768 768 192 
+
+ level: 1
+   number of boxes = 3456
+   maximum zones   = 3072 3072 768 
+
+ level: 2
+   number of boxes = 4608
+   maximum zones   = 6144 6144 1536 
+
+ Boundary conditions
+   -x: outflow
+   +x: outflow
+   -y: outflow
+   +y: outflow
+   -z: symmetry
+   +z: outflow
+
+
+ Domain geometry info
+     center: 98304 , 98304 , 12288
+
+     geometry.is_periodic: 0 0 0 
+     geometry.coord_sys:   0
+     geometry.prob_lo:     0 0 0 
+     geometry.prob_hi:     196608 196608 24576 
+     amr.n_cell:           768 768 192 
+     amr.max_level:        2
+     amr.ref_ratio:        4 2 
+
+
+==============================================================================
+ Species Information
+==============================================================================
+ index                         name              A              Z
+------------------------------------------------------------------------------
+     0                          He4              4              2
+     1                          C12             12              6
+     2                          O16             16              8
+     3                         Ne20             20             10
+     4                         Mg24             24             12
+     5                         Si28             28             14
+     6                         Ni56             56             28
+
+
+==============================================================================
+ Inputs File Parameters
+==============================================================================
+[*] castro.diffuse_temp = 1
+[*] castro.diffuse_cutoff_density = 20000
+[*] castro.diffuse_cutoff_density_hi = 50000
+    castro.diffuse_cond_scale_fac = 1
+    castro.sponge_lower_radius = -1
+    castro.sponge_upper_radius = -1
+[*] castro.sponge_lower_density = 1
+[*] castro.sponge_upper_density = 100
+    castro.sponge_lower_pressure = -1
+    castro.sponge_upper_pressure = -1
+    castro.sponge_lower_factor = 0
+    castro.sponge_upper_factor = 1
+    castro.sponge_target_x_velocity = 0
+    castro.sponge_target_y_velocity = 0
+    castro.sponge_target_z_velocity = 0
+[*] castro.sponge_timescale = 1e-07
+[*] castro.rotational_period = 0.001
+[*] castro.rotation_include_centrifugal = 0
+    castro.rotation_include_coriolis = 1
+    castro.rot_source_type = 4
+    castro.implicit_rotation_update = 1
+    castro.rot_axis = 3
+    castro.state_interp_order = 1
+    castro.lin_limit_state_interp = 0
+    castro.state_nghost = 0
+    castro.do_reflux = 1
+    castro.update_sources_after_reflux = 1
+[*] castro.allow_non_unit_aspect_zones = 1
+    castro.difmag = 0.1
+[*] castro.small_dens = 1e-05
+[*] castro.small_temp = 1e+06
+[*] castro.small_pres = 3.00153e+09
+[*] castro.small_ener = 8.28474e+14
+[*] castro.do_hydro = 1
+    castro.time_integration_method = 0
+    castro.limit_fourth_order = 1
+    castro.initialization_is_cell_average = 0
+    castro.use_reconstructed_gamma1 = 0
+    castro.add_ext_src = 0
+    castro.hybrid_hydro = 0
+    castro.ppm_type = 1
+    castro.mhd_limit_characteristic = 1
+    castro.ppm_temp_fix = 0
+    castro.plm_iorder = 2
+    castro.plm_limiter = 2
+    castro.hybrid_riemann = 0
+    castro.riemann_solver = 0
+    castro.cg_maxiter = 12
+    castro.cg_tol = 1e-05
+    castro.cg_blend = 2
+    castro.use_flattening = 1
+    castro.transverse_use_eos = 0
+    castro.transverse_reset_density = 1
+    castro.transverse_reset_rhoe = 0
+    castro.dual_energy_eta1 = 1
+    castro.dual_energy_eta2 = 0.0001
+[*] castro.use_pslope = 1
+[*] castro.pslope_cutoff_density = 10000
+    castro.limit_fluxes_on_small_dens = 0
+    castro.speed_limit = 0
+[*] castro.do_sponge = 1
+    castro.sponge_implicit = 1
+    castro.ext_src_implicit = 0
+    castro.source_term_predictor = 0
+    castro.first_order_hydro = 0
+    castro.xl_ext_bc_type = -1
+    castro.xr_ext_bc_type = -1
+    castro.yl_ext_bc_type = -1
+    castro.yr_ext_bc_type = -1
+    castro.zl_ext_bc_type = -1
+    castro.zr_ext_bc_type = -1
+    castro.hse_zero_vels = 0
+    castro.hse_interp_temp = 0
+    castro.hse_fixed_temp = -1e+200
+    castro.hse_reflect_vels = 0
+[*] castro.fill_ambient_bc = 1
+[*] castro.ambient_fill_dir = 2
+[*] castro.ambient_outflow_vel = 1
+    castro.clamp_ambient_temp = 0
+    castro.ambient_safety_factor = 1.1
+    castro.ambient_density = -1e+200
+    castro.ambient_temp = -1e+200
+    castro.ambient_energy = -1e+200
+    castro.sdc_order = 2
+    castro.sdc_quadrature = 0
+    castro.sdc_extra = 0
+    castro.sdc_solver = 1
+    castro.sdc_solver_tol_dens = 1e-06
+    castro.sdc_solver_tol_spec = 1e-06
+    castro.sdc_solver_tol_ener = 1e-06
+    castro.sdc_solver_atol = 1e-10
+    castro.sdc_solver_relax_factor = 1
+    castro.sdc_solve_for_rhoe = 1
+    castro.sdc_newton_use_analytic_jac = 1
+    castro.use_axisymmetric_geom_source = 1
+    castro.add_sdc_react_source_to_advection = 1
+[*] castro.hydro_memory_footprint_ratio = 3
+    castro.fixed_dt = -1
+    castro.initial_dt = -1
+    castro.dt_cutoff = 1e-12
+    castro.max_dt = 1e+200
+    castro.cfl = 0.8
+[*] castro.init_shrink = 0.1
+    castro.change_max = 1.1
+    castro.check_dt_before_advance = 1
+    castro.check_dt_after_advance = 1
+    castro.plot_per_is_exact = 0
+    castro.small_plot_per_is_exact = 0
+    castro.use_retry = 1
+    castro.retry_subcycle_factor = 0.5
+[*] castro.retry_small_density_cutoff = 10
+[*] castro.abundance_failure_tolerance = 0.1
+[*] castro.abundance_failure_rho_cutoff = 1
+    castro.use_post_step_regrid = 0
+[*] castro.max_subcycles = 16
+    castro.sdc_iters = 2
+    castro.stopping_criterion_field = 
+    castro.stopping_criterion_value = 1e+200
+    castro.dtnuc_e = 1e+200
+    castro.dtnuc_X = 1e+200
+    castro.dtnuc_X_threshold = 0.001
+[*] castro.do_react = 1
+[*] castro.react_T_min = 6e+07
+    castro.react_T_max = 1e+200
+[*] castro.react_rho_min = 100
+[*] castro.react_rho_max = 5e+06
+    castro.disable_shock_burning = 0
+    castro.T_guess = 1e+08
+    castro.drive_initial_convection = 0
+    castro.drive_initial_convection_tmax = 1e+200
+    castro.drive_initial_convection_reinit_period = 1e+200
+[*] castro.do_grav = 1
+    castro.moving_center = 0
+[*] castro.grav_source_type = 2
+[*] castro.do_rotation = 1
+    castro.do_acc = -1
+    castro.bndry_func_thread_safe = 1
+    castro.grown_factor = 1
+    castro.star_at_center = -1
+    castro.do_scf_initial_model = 0
+    castro.scf_maximum_density = -1e+06
+    castro.scf_equatorial_radius = -1e+09
+    castro.scf_polar_radius = -1e+09
+    castro.scf_relax_tol = 0.001
+    castro.scf_max_iterations = 30
+    castro.do_special_tagging = 0
+    castro.spherical_star = 0
+    castro.max_tagging_radius = 10
+[*] castro.verbose = 1
+    castro.dump_old = 0
+[*] castro.domain_is_plane_parallel = 1
+    castro.print_update_diagnostics = 0
+[*] castro.sum_interval = 10
+    castro.sum_per = -1
+    castro.job_name = Castro
+    castro.output_at_completion = 1
+    castro.reset_checkpoint_time = -1e+200
+    castro.reset_checkpoint_step = -1
+    castro.store_omegadot = 0
+    castro.store_burn_weights = 0
+    castro.abort_on_invalid_params = 0
+    castro.do_radiation = -1
+    castro.use_point_mass = 0
+    castro.point_mass = 0
+    castro.point_mass_fix_solution = 0
+    castro.gw_dist = 0
+    castro.point_mass_offset_is_true = 0
+    castro.point_mass_location_offset = 0
+[*] gravity.gravity_type = ConstantGrav
+[*] gravity.const_grav = -1.5e+14
+    gravity.direct_sum_bcs = 0
+    gravity.drdxfac = 1
+    gravity.lnum = 0
+    gravity.verbose = 0
+    gravity.no_sync = 0
+    gravity.no_composite = 0
+    gravity.do_composite_phi_correction = 1
+    gravity.max_solve_level = 14
+    gravity.get_g_from_phi = 0
+    gravity.mlmg_max_fmg_iter = 0
+    gravity.mlmg_agglomeration = 1
+    gravity.mlmg_consolidation = 1
+    gravity.mlmg_nsolve = 0
+    diffusion.verbose = 0
+    diffusion.mlmg_maxorder = 4
+[*] problem.dtemp = 1.2e+09
+[*] problem.x_half_max = 25600
+[*] problem.x_half_width = 2048
+    problem.X_min = 0.0001
+[*] problem.tag_by_density = 0
+    problem.cutoff_density = 500
+    problem.refine_height = 3600
+[*] problem.dx_model = 25
+[*] problem.T_hi = 2e+08
+[*] problem.T_star = 2e+08
+[*] problem.T_lo = 8e+06
+[*] problem.dens_base = 3.43e+06
+[*] problem.H_star = 2000
+[*] problem.atm_delta = 50
+    problem.fuel1_name = helium-4
+    problem.fuel2_name = 
+    problem.fuel3_name = 
+    problem.fuel4_name = 
+[*] problem.ash1_name = nickel-56
+    problem.ash2_name = 
+    problem.ash3_name = 
+    problem.fuel1_frac = 1
+    problem.fuel2_frac = 0
+    problem.fuel3_frac = 0
+    problem.fuel4_frac = 0
+    problem.ash1_frac = 1
+    problem.ash2_frac = 0
+    problem.ash3_frac = 0
+    problem.low_density_cutoff = 0.0001
+    problem.smallx = 1e-10
+    problem.x_refine_distance = 1e+30
+    problem.max_hse_tagging_level = 2
+[*] problem.max_base_tagging_level = 3
+    eos.use_eos_coulomb = 1
+    eos.eos_input_is_constant = 1
+    eos.eos_ttol = 1e-08
+    eos.eos_dtol = 1e-08
+    eos.prad_limiter_rho_c = -1
+    eos.prad_limiter_delta_rho = -1
+    network.small_x = 1e-30
+[*] network.use_tables = 1
+    network.use_c12ag_deboer17 = 0
+    integrator.sdc_burn_tol_factor = 1
+    integrator.X_reject_buffer = 1
+    integrator.call_eos_in_rhs = 1
+    integrator.integrate_energy = 1
+    integrator.jacobian = 1
+    integrator.burner_verbose = 0
+[*] integrator.rtol_spec = 1e-06
+    integrator.rtol_enuc = 1e-06
+[*] integrator.atol_spec = 1e-06
+    integrator.atol_enuc = 1e-06
+[*] integrator.abort_on_failure = 0
+    integrator.renormalize_abundances = 0
+    integrator.SMALL_X_SAFE = 1e-30
+    integrator.MAX_TEMP = 1e+11
+    integrator.react_boost = -1
+    integrator.ode_max_steps = 150000
+    integrator.ode_max_dt = 1e+30
+    integrator.use_jacobian_caching = 1
+    integrator.nonaka_i = 0
+    integrator.nonaka_j = 0
+    integrator.nonaka_k = 0
+    integrator.nonaka_level = 0
+    integrator.nonaka_file = nonaka_plot.dat
