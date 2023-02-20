@@ -183,28 +183,29 @@ our follow-on simulations.
 \section{Simulations and Results}\label{Sec:results}
 
 In \citet{harpole:2021}, we explored several different rotation rates
-and initial model thermal structures.  We found that a model with a
-neutron star crust temperature of $3\times 10^8~\mathrm{K}$ resulted
-in a flame that accelerated quickly as it spread across the neutron
-star surface.  We adopt this model for the 3D simulation presented
-here, since it requires the least amount of simulation time to yield a
-developed flame.  
-
+and initial model thermal structures.  We explored several different
+temperature structures in our initial model.  We choose a model with a
+neutron star crust temperature of $2\times 10^8~\mathrm{K}$.  We adopt
+this model for the 3D simulation presented here, since it gives a clean
+well-defined flame.
 
 Moving to 3D is very expensive, so to further reduce the computational
-expense, we use a slightly lower resolution of 25 cm instead of 20 cm
-from \citet{harpole:2021}.  We pick a rotation rate of 1000 Hz.
+expense, we use an aniostropic resolution, with 32 cm laterally and 16 cm resolution
+vertically.  This is finer vertically than done in 
+\citet{harpole:2021}.  We pick a rotation rate of 1000 Hz.
 Because the hotspot is placed in the center of the domain, the size of
 the domain also becomes a constraint, and as a result, the evolution
 time we can reach will become limited by the time it takes the burning
 to approach the edge of the domain.  As a result, we focus here on the
 early evolution.
 
-Our 3D simulation used a base grid of $1024^2 \times 128$ zones with 2
+Our 3D simulation used a base grid of $768^2 \times 192$ zones with 2
 levels of refinement, the first jumping by a factor of 4 and the next
-by a factor of 2.  The domain has a size $(2.048\times
-10^5~\mathrm{cm})^2 \times 2.56\times 10^4~\mathrm{cm}$, giving a fine
-grid resolution of $25~\mathrm{cm}$.  The initial model and other
+by a factor of 2.  The domain has a size $(1.96608\times
+10^5~\mathrm{cm})^2 \times 2.4576\times 10^4~\mathrm{cm}$, giving a
+fine grid resolution of $32~\mathrm{cm}$ laterally and
+$16~\mathrm{cm}$ vertically.  The vertical resolution is finer to help
+maintain hydrostatic equilibrium.  The initial model and other
 simulation parameters are identical to those used in
 \citet{harpole:2021}.  We used static mesh refinement, to achieve
 better load balancing, fully refining the atmosphere below a height of
@@ -212,10 +213,10 @@ $3600~\mathrm{cm}$.  These simulations used the 7-isotope He-burning
 network used in \citet{eiden:2020}.  The simulations were run on the
 OLCF Summit supercomputer, on 342 to 1366 nodes, with 6 NVIDIA V100
 GPUs per node.  The entire computation was offloaded to GPUs following
-the strategy described in \citet{castro_gpu}.  Overall, about 370,000
+the strategy described in \citet{castro_gpu}.  Overall, about 250,000
 node-hours were used for the calculation.  The full state of the
-calculation was output only every 0.005 s, as each output file is 2.7 TB
-in size (for single precision data).  We output a few fields more
+calculation was output only every 0.005 s, as each output file is 2.4 
+TB in size (for single precision data).  We output a few fields more
 frequently for visualization.  We ran a 2D simulation with the same
 resolution and refinement strategy to compare with here.
 
