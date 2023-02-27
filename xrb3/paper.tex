@@ -155,11 +155,11 @@ X-ray bursts (XRBs) result from thermonuclear burning of an accreted
 H/He or He layer on a neutron star \citep{galloway:2017}.
 Observations of brightness oscillations in the rise of the lightcurve
 suggest that the burning begins localized and then spreads across the
-neutron star.  This spreading is inherently a multi-dimensional
+neutron star \citep{bhattacharyya:2007}.  This spreading is inherently a multi-dimensional
 phenomena, and hydrodynamic simulations that resolve the reactive
 zone, use realistic reaction networks, and capture the scales over
 which rotation is important are needed to understand the flame
-propagation and nucleosynthesis.  We show a first attempt at modeling
+propagation and nucleosynthesis (especially rp-process in mixed H/He bursts \citealt{rpprocess}).  We show a first attempt at modeling
 the early evolution of a spreading hotspot in three dimensions.  This
 builds on our earlier two dimensional work
 \citep{eiden:2020,harpole:2021} that developed our simulation
@@ -255,7 +255,7 @@ from above.}
 Figure~\ref{fig:vr_abar} shows the a three-dimensional simulation via
 top-down volume rendering of the mean-molecular weight,
 \begin{equation}
-\bar{A} = \sum_k \frac{X_k}{A_k}
+\frac{1}{\bar{A}} = \sum_k \frac{X_k}{A_k}
 \end{equation}
 where $X_k$ is the mass fraction of species $k$ and $A_k$ is the
 atomic weight (in mass units).  The structure is shown at 10, 20, and
@@ -341,7 +341,7 @@ convective burning in the accreted layer should create turbulence that
 the flame will encounter as it propagates.  Although we have shown
 that for the flame in a Type Ia supernovae, the turbulence from the
 era of convection is not strong enough to disrupt the
-flame~\cite{wdturb}, the flame in an XRB is considerably slower and
+flame~\citep{wdturb}, the flame in an XRB is considerably slower and
 thicker, so it remains to be seen what effect it might have.  This can
 be assessed in a different geometry, like a long channel, which would
 allow us to trade domain size for resolution to increase the numerical
@@ -349,7 +349,7 @@ Reynolds number.  We also will consider higher-order simulation
 methodologies which could allow us to capture these effects at lower
 resolution.  We've already demonstrated a fully fourth-order accruate
 (in space and time) algorithm for coupling hydro, diffusion, and
-reactions in Castro \cite{castro-sdc} that could be used here.  The
+reactions in Castro \citep{castro-sdc} that could be used here.  The
 main outstanding issue with applying that work to the present problem
 is the multilevel time integration.
 
