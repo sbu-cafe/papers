@@ -138,11 +138,13 @@
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-We explore the early evolution of a hot spot and a flame ignition and
-spreading on the surface of a neutron star in three-dimensions.  We
-look at the nucleosynthesis and morphology of the burning front and
-compare to two-dimensional axisymmetric simulations.  Finally, we discuss
-the progress toward full-star resolved flame simulations.\end{abstract}
+We explore the early evolution of flame ignition and spreading on the
+surface of a neutron star in three-dimensions, in the context of X-ray
+bursts.  We look at the nucleosynthesis and morphology of the burning
+front and compare to two-dimensional axisymmetric simulations to gauge
+how important a full three-dimensional treatment of the flame is for
+the early dynamics.  Finally, we discuss the progress toward full-star
+resolved flame simulations.\end{abstract}
 
 \keywords{convection---hydrodynamics---methods: numerical---stars: neutron---X-rays: bursts}
 
@@ -166,7 +168,7 @@ builds on our earlier two dimensional work
 framework and explored how the acceleration of the burning front
 depends on the initial model structure.  As with those simulations, we
 use the freely-available \castro\ simulation code
-\citep{castro,castro_joss} simulation code, with all of the code
+\citep{castro,castro_joss}, with all of the code
 needed to run these simulations in our public github repos.
 
 Our simulations complement the multidimensional models of flames of
@@ -182,27 +184,34 @@ looking at the thermal transport and how affects the location where
 the hotspot ignites.  Together, all three approaches help build a
 comprehensive multi-dimensioanl picture of X-ray bursts.
 
-The goal of this paper is to understand the challenges of a fully-resolved
-three-dimensional simulation and explore what is possible.  This will inform
-our follow-on simulations.
+The goal of this paper is to understand the challenges of resolved
+three-dimensional hydrodynamical simulation and explore what is
+possible with today's resources.  This will inform our follow-on
+simulations.
 
 %======================================================================
 % Results
 %======================================================================
 \section{Simulations and Results}\label{Sec:results}
 
-In \citet{harpole:2021}, we explored several different rotation rates
-and initial model thermal structures.  We explored several different
-temperature structures in our initial model.  We choose a model with a
-neutron star crust temperature of $2\times 10^8~\mathrm{K}$.  We adopt
-this model for the 3D simulation presented here, since it gives a clean
-well-defined flame.  The model is constructed following the procedure
-described in \citet{eiden:2020,harpole:2021}.
+In \citet{eiden:2020}, we developed the simulation methodology for
+modeling laterally spreading flames through the accreted layer on the
+surface of a neutron star.  Building on this, in \citet{harpole:2021},
+we explored several different rotation rates and initial model thermal
+structures to understand how the flame speed depends on the thermal
+structure of the envelope.  Both of these papers used a
+two-dimensional axisymmetric geometry.  The three-dimensional
+simulations we present here build on these works.  We use a neutron
+star crust temperature of $2\times 10^8~\mathrm{K}$ and rotation rate
+of 1000~Hz, as followed in \citet{harpole:2021}.  This model was
+chosen here since it gives a clean well-defined flame.  The model is
+constructed following the same procedure described in
+\citet{eiden:2020,harpole:2021}.
 
 Moving to 3D is very expensive, so to further reduce the computational
-expense, we use an aniostropic resolution, with 32 cm laterally and 16
+expense, we use an aniostropic resolution, with 32 cm resolution laterally and 16
 cm resolution vertically.  This is finer vertically than done in
-\citet{harpole:2021}.  We pick a rotation rate of 1000 Hz.  Because
+\citet{harpole:2021}.  Because
 the hotspot is placed in the center of the domain, the size of the
 domain also becomes a constraint, and as a result, the evolution time
 we can reach will become limited by the time it takes the burning to
@@ -212,15 +221,13 @@ early evolution.
 Our 3D simulation used a base grid of $768^2 \times 192$ zones with 2
 levels of refinement, the first jumping by a factor of 4 and the next
 by a factor of 2.  The domain has a size $(1.96608\times
-10^5~\mathrm{cm})^2 \times 2.4576\times 10^4~\mathrm{cm}$, giving a
-fine grid resolution of $32~\mathrm{cm}$ laterally and
-$16~\mathrm{cm}$ vertically.  The vertical resolution is finer to help
-maintain hydrostatic equilibrium.  The simulation methodology and
+10^5~\mathrm{cm})^2 \times 2.4576\times 10^4~\mathrm{cm}$.  The simulation methodology and
 parameters are mostly identical to those used in \citet{harpole:2021}.
-We use an unsplit piecewise parabolic method \cite{ppmunsplit} for the
+We use an unsplit piecewise parabolic method \citep{ppmunsplit,millercolella:2002} for the
 advection and operator (Strang) splitting for the reactions, evolving
 an internal energy evolution equation during the burn, as described in
-\citet{strang_rnaas}.  The main difference with the previous
+\citet{strang_rnaas}.  These simulations used the 7-isotope He-burning
+network used in \citet{eiden:2020}.  The main difference with the previous
 simulations is that we switched from a hydrostatic to reflecting
 boundary at the bottom of the domain and used a simple well-balanced
 scheme (similar to \citealt{kappeli:2016} but adapted to deal with
@@ -229,18 +236,21 @@ Tests demonstrated that this boundary does a better job than our
 previous approach at supporting the atmosphere as the flame propagates
 for long times.
 
-We used static mesh refinement, to achieve better
-load balancing, fully refining the atmosphere below a height of
-$3600~\mathrm{cm}$.  These simulations used the 7-isotope He-burning
-network used in \citet{eiden:2020}.  The simulations were run on the
-OLCF Summit supercomputer, on 342 to 1366 nodes, with 6 NVIDIA V100
-GPUs per node.  The entire computation was offloaded to GPUs following
-the strategy described in \citet{castro_gpu}.  Overall, about 250,000
-node-hours were used for the calculation.  The full state of the
-calculation was output only every 0.005 s, as each output file is 2.4
-TB in size (for single precision data).  We output a few fields more
-frequently for visualization.  We ran a 2D simulation with the same
-resolution and refinement strategy to compare with here.
+We used static mesh refinement, to achieve better load balancing,
+fully refining the atmosphere below a height of $3600~\mathrm{cm}$.
+The simulations were run on the OLCF Summit supercomputer, on 342 to
+1366 nodes, with 6 NVIDIA V100 GPUs per node.  The entire computation
+was offloaded to GPUs following the strategy described in
+\citet{castro_gpu}.  GPU-offloading was critical to being able to
+perform these simulations, since we run more than an order of
+magnitude faster using all the GPUs on a node as compared to all of
+the CPUs on the node.  Overall, about 250,000 node-hours were used for
+the calculation.  The full state of the calculation was output only
+every 0.005 s, as each output file is 2.4 TB in size (for single
+precision data).  We output a few fields more frequently for
+visualization, and global diagnostics were output every timestep.  We
+ran a 2D simulation with the same resolution and refinement strategy
+to compare with here.
 
 \begin{figure}[t]
 \centering
@@ -266,12 +276,12 @@ domain as time evolves, and the simulation is halted once the flame
 nears the boundaries.  
 
 Figure~\ref{fig:2d_abar} shows the corresponding two-dimensional
-axisymmetric simulation.  The initial model and simulation parameters
-are identical to the three-dimensional case.  This simulation uses
-zones that are 32 cm wide and 16 cm tall, analogous to the lateral and
-vertical resolution of the three-dimensional simulation.  We see that
+axisymmetric simulation.  In the axisymemtric geometry, each zone is essentially
+a torus, rotated about the vertical axis.  The initial model and simulation parameters
+are identical to the three-dimensional case.  We see that
 the overall structure and evolution looks identical to that reported
-in \cite{harpole:2021}.
+in \cite{harpole:2021}.  We see that there is a well-defined flame in the simulation plane
+that spreads outward with time.
 
 
 \begin{figure*}[t]
@@ -301,7 +311,7 @@ a function of time, for the 2D and 3D calculation.  The axisymmetric
 2D calculation has slightly less volume than the 3D domain, since
 rotating about the symmetry axis produces a cylindrical domain
 inscribed in the 3D domain.  To compensate for this, we scale the
-masses by the initial \isot{He}{4} mass.  This plot shows that the
+masses by the total mass on the grid.  This plot shows that the
 masses of the heavy species, especially \isot{C}{12}, grow quickly
 with time.  The differences between the 2D and 3D simulations appear
 small---the burning is slightly faster in 2D, but the trends track
@@ -334,7 +344,12 @@ computational resources, this result suggests that we can continue to
 use two-dimensional axisymmetric simulations to explore the initial
 flame structure and spend our computational resources on increasing
 the size of our reaction networks to explore the sensitivity to
-network size and understand the overall nucleosynthesis.
+network size and understand the overall nucleosynthesis.  We can also
+do initial explorations of full star bursts in two-dimensions, perhaps
+using axisymmetric spherical coordinates (modeling an annular region
+in $r$-$\theta$).  In this geometry, point ignition requires starting
+at the poles, but this would allow us to see the effect of varying
+gravity with latitude (due to centrifugal forces).
 
 There is still a role for three-dimensional simulations---the
 convective burning in the accreted layer should create turbulence that
