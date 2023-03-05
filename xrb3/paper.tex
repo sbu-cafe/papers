@@ -187,17 +187,23 @@ simulations.
 
 In \citet{eiden:2020}, we developed the simulation methodology in
 \castro\ for modeling laterally spreading flames through the accreted
-layer on the surface of a neutron star.  Building on this, in
-\citet{harpole:2021}, we explored several different rotation rates and
-initial model thermal structures to understand how the flame speed
-depends on the thermal structure of the envelope.  Both of these
-papers used a two-dimensional axisymmetric geometry.  The
-three-dimensional simulations we present here build on these works.
-We use a neutron star crust temperature of $2\times 10^8~\mathrm{K}$
-and rotation rate of 1000~Hz, as followed in \citet{harpole:2021}.
-This model was chosen here since it gives a clean well-defined flame.
-The model is constructed following the same procedure described in
-\citet{eiden:2020,harpole:2021}.
+layer on the surface of a neutron star.  For these models,
+\castro\ evolves the compressible Euler equations with a Coriolis
+force arising from rotation, constant gravity (the plane-parallel
+approximation), reactive sources, and thermal diffusion (integrated
+explicitly).  We use a general stellar equation of state with
+radiation, ions as a perfect gas, and degenerate/relativistic
+electrons described in \citet{timmes_swesty:2000}.  Building on these
+first simulations, in \citet{harpole:2021}, we explored several
+different rotation rates and initial model thermal structures to
+understand how the flame speed depends on the thermal structure of the
+envelope.  Both of these papers used a two-dimensional axisymmetric
+geometry.  The three-dimensional simulations we present here build on
+these works.  We use a neutron star crust temperature of $2\times
+10^8~\mathrm{K}$ and rotation rate of 1000~Hz, as followed in
+\citet{harpole:2021}.  This model was chosen here since it gives a
+clean well-defined flame.  The model is constructed following the same
+procedure described in \citet{eiden:2020,harpole:2021}.
 
 Moving to 3D is very expensive, so to further reduce the computational
 expense, we use an aniostropic resolution, with 32 cm resolution laterally and 16
@@ -249,6 +255,7 @@ visualization, and global diagnostics were output every timestep.  We
 ran a 2D simulation with the same resolution and refinement strategy
 to compare with here.
 
+
 \begin{figure}[t]
 \centering
 %\epsscale{0.75}
@@ -272,19 +279,6 @@ form.  The panels show the flame spreading considerably through the
 domain as time evolves, and the simulation is halted once the flame
 nears the boundaries.  
 
-Figure~\ref{fig:2d_abar} shows the corresponding two-dimensional
-axisymmetric simulation.  In the axisymemtric geometry, each zone is
-essentially a torus, rotated about the vertical axis.  The initial
-model and simulation parameters are identical to the three-dimensional
-case.  We see that the overall structure and evolution looks identical
-to that reported in \cite{harpole:2021}.  We see that there is a
-well-defined flame in the simulation plane that spreads outward with
-time.  A vertical slice through the three-dimensional simulation (in
-the $x$-$z$ plane) is shown in Figure~\ref{fig:3dslice} at the final
-time, 40~ms.  Aside from the lack of reflection symmetry from the
-absence of axisymmetric geometry, it looks very similar to the two-dimensional case.
-
-
 \begin{figure*}[t]
 \centering
 \plotone{time_series}
@@ -303,6 +297,20 @@ two-thirds of the surface.}
 simulation showing the entire domain from the side.  The flame structure
 is clearly seen.}
 \end{figure*}
+
+
+Figure~\ref{fig:2d_abar} shows the corresponding two-dimensional
+axisymmetric simulation.  In the axisymemtric geometry, each zone is
+essentially a torus, rotated about the vertical axis.  The initial
+model and simulation parameters are identical to the three-dimensional
+case.  We see that the overall structure and evolution looks identical
+to that reported in \cite{harpole:2021}.  We see that there is a
+well-defined flame in the simulation plane that spreads outward with
+time.  A vertical slice through the three-dimensional simulation (in
+the $x$-$z$ plane) is shown in Figure~\ref{fig:3dslice} at the final
+time, 40~ms.  Aside from the lack of reflection symmetry from the
+absence of axisymmetric geometry, it looks very similar to the two-dimensional case.
+
 
 
 
