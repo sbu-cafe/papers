@@ -147,20 +147,27 @@ X-ray bursts (XRBs) result from thermonuclear burning of an accreted
 H/He or He layer on a neutron star \citep{galloway:2017}.
 Observations of brightness oscillations in the rise of the lightcurve
 suggest that the burning begins localized and then spreads across the
-neutron star \citep{bhattacharyya:2007}.  This spreading is inherently
-a multi-dimensional phenomena, and hydrodynamic simulations that
+neutron star \citep{bhattacharyya:2007}. {\color{red} The next sentence
+is long and it was hard to read on my initial pass over it. Could consider
+splitting the parenthetical note off as a separate sentence, and switching
+to active voice (write ``and we need hydrodynamic simulations" and replace
+``are needed" with ``in order").} 
+This spreading is inherently
+a multi-dimensional phenomenon, and hydrodynamic simulations that
 resolve the reactive zone, use realistic reaction networks, and
 capture the scales over which rotation is important are needed to
 understand the flame propagation and nucleosynthesis (especially
 rp-process in mixed H/He bursts, as discussed in \citealt{rpprocess}).
+{\color{red} Could split paragraph and start next sentence with
+"Here we show...".}
 We show a first attempt at modeling the early evolution of a spreading
-hotspot in three dimensions.  This builds on our earlier two
-dimensional work \citep{eiden:2020,harpole:2021} that developed our
+hotspot in three dimensions.  This builds on our earlier two-dimensional
+work \citep{eiden:2020,harpole:2021} that developed our
 simulation framework and explored how the acceleration of the burning
 front depends on the initial model structure.  As with those
 simulations, we use the freely-available \castro\ simulation code
 \citep{castro,castro_joss}, with all of the code needed to run these
-simulations in our public github repos.
+simulations in our public GitHub repositories.
 
 Our simulations complement the two- and three-dimensional models of flames of
 \citet{cavecchi:2013,art-2015-cavecchi-etal,art-2016-cavecchi-etal,Cavecchi2019}
@@ -173,7 +180,7 @@ understand how far we can push resolved XRB flame simulations.  The
 work by \citet{goodwin:2021} also explores multidimensional evolution,
 looking at the thermal transport and how affects the location where
 the hotspot ignites.  Together, all three approaches help build a
-comprehensive multi-dimensioanl picture of X-ray bursts.
+comprehensive multidimensional picture of X-ray bursts.
 
 The goal of this paper is to understand the challenges of resolved
 three-dimensional hydrodynamical simulation and explore what is
@@ -213,7 +220,8 @@ the hotspot is placed in the center of the domain, the size of the
 domain also becomes a constraint, and as a result, the evolution time
 we can reach will become limited by the time it takes the burning to
 approach the edge of the domain.  As a result, we focus here on the
-early evolution.
+early evolution. {\color{red} Very minor: could start previous sentence with
+``consequently" or ``therefore" since ``as a result" appears in the previous sentence.}
 
 \castro\ uses the the \amrex\ adaptive mesh refinement library
 \citep{amrex_joss} to manage the discretization and domain
@@ -263,7 +271,9 @@ to compare with here.
 %\epsscale{1.0}
 \caption{\label{fig:vr_abar} Volume rendering of the three-dimensional XRB
 simulation showing the mean molecular weight, $\bar{A}$.  The flame is viewed
-from above.}
+from above. {\color{red} It might be helpful to have the time for each panel either
+on the plots or in this caption.}
+}
 \end{figure}
 
 Figure~\ref{fig:vr_abar} shows the a three-dimensional simulation via
@@ -277,13 +287,12 @@ atomic weight (in mass units).  The structure is shown at 10, 20, and
 symmetry is broken and the flame structure takes on a more tenuous
 form.  The panels show the flame spreading considerably through the
 domain as time evolves, and the simulation is halted once the flame
-nears the boundaries.  
-
+nears the boundaries.
 \begin{figure*}[t]
 \centering
 \plotone{time_series}
 \caption{\label{fig:2d_abar} Time-sequence of the two-dimensional axisymmetric
-simualtion using the same setup as the three-dimensional simulation shown
+simulation using the same setup as the three-dimensional simulation shown
 in Figure~\ref{fig:vr_abar}.  The domain is zoomed in, showing only the left
 two-thirds of the surface.}
 \end{figure*}
@@ -294,17 +303,21 @@ two-thirds of the surface.}
 \plotone{flame_wave_1000Hz_25cm_smallplt174562_slice}
 %\epsscale{1.0}
 \caption{\label{fig:3dslice} A vertical slice through the three-dimensional
-simulation showing the entire domain from the side.  The flame structure
-is clearly seen.}
+simulation {\color{red} at 40~ms} showing the entire domain from the side.  The
+flame structure is clearly seen. {\color{red} The flame structure could probably
+be made a little clearer if this only showed the lower $10^4~\mathrm{cm}$ of the
+domain like the 2D plots. Could also try further reducing the peak $\bar{A}$ on the
+colorbar (e.g. to 5.5 or 5.25) both here and in the 2D plots to bring out the flame
+even more. I think the plots are still pretty clear with the current colorbar though.}}
 \end{figure*}
 
 
 Figure~\ref{fig:2d_abar} shows the corresponding two-dimensional
-axisymmetric simulation.  In the axisymemtric geometry, each zone is
+axisymmetric simulation.  In the axisymmetric geometry, each zone is
 essentially a torus, rotated about the vertical axis.  The initial
 model and simulation parameters are identical to the three-dimensional
 case.  We see that the overall structure and evolution looks identical
-to that reported in \cite{harpole:2021}.  We see that there is a
+to that reported in \cite{harpole:2021}.  We also see that there is a
 well-defined flame in the simulation plane that spreads outward with
 time.  A vertical slice through the three-dimensional simulation (in
 the $x$-$z$ plane) is shown in Figure~\ref{fig:3dslice} at the final
@@ -384,7 +397,7 @@ be assessed in a different geometry, like a long channel, which would
 allow us to trade domain size for resolution to increase the numerical
 Reynolds number.  We also will consider higher-order simulation
 methodologies which could allow us to capture these effects at lower
-resolution.  We've already demonstrated a fully fourth-order accruate
+resolution.  We've already demonstrated a fully fourth-order accurate
 (in space and time) algorithm for coupling hydro, diffusion, and
 reactions in \castro~\citep{castro-sdc} that could be used here.  The
 main outstanding issue with applying that work to the present problem
