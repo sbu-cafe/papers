@@ -147,20 +147,16 @@ X-ray bursts (XRBs) result from thermonuclear burning of an accreted
 H/He or He layer on a neutron star \citep{galloway:2017}.
 Observations of brightness oscillations in the rise of the lightcurve
 suggest that the burning begins localized and then spreads across the
-neutron star \citep{bhattacharyya:2007}. {\color{red} The next sentence
-is long and it was hard to read on my initial pass over it. Could consider
-splitting the parenthetical note off as a separate sentence, and switching
-to active voice (write ``and we need hydrodynamic simulations" and replace
-``are needed" with ``in order").} 
+neutron star \citep{bhattacharyya:2007}. 
 This spreading is inherently
-a multi-dimensional phenomenon, and hydrodynamic simulations that
-resolve the reactive zone, use realistic reaction networks, and
-capture the scales over which rotation is important are needed to
-understand the flame propagation and nucleosynthesis (especially
-rp-process in mixed H/He bursts, as discussed in \citealt{rpprocess}).
-{\color{red} Could split paragraph and start next sentence with
-"Here we show...".}
-We show a first attempt at modeling the early evolution of a spreading
+a multi-dimensional phenomenon, requiring hydrodynamic simulations that
+resolve the reactive zone, realistic reaction networks, and
+domain sizes that capture the scales over which rotation in order to
+understand the flame propagation and nucleosynthesis.  Detailed
+nuclear physics is especially important for understanding the 
+rp-process in mixed H/He bursts, as discussed in \citealt{rpprocess}.
+
+Here we show a first attempt at modeling the early evolution of a spreading
 hotspot in three dimensions.  This builds on our earlier two-dimensional
 work \citep{eiden:2020,harpole:2021} that developed our
 simulation framework and explored how the acceleration of the burning
@@ -213,15 +209,13 @@ clean well-defined flame.  The model is constructed following the same
 procedure described in \citet{eiden:2020,harpole:2021}.
 
 Moving to 3D is very expensive, so to further reduce the computational
-expense, we use an aniostropic resolution, with 32 cm resolution laterally and 16
-cm resolution vertically.  This is finer vertically than done in
-\citet{harpole:2021}.  Because
-the hotspot is placed in the center of the domain, the size of the
-domain also becomes a constraint, and as a result, the evolution time
-we can reach will become limited by the time it takes the burning to
-approach the edge of the domain.  As a result, we focus here on the
-early evolution. {\color{red} Very minor: could start previous sentence with
-``consequently" or ``therefore" since ``as a result" appears in the previous sentence.}
+expense, we use an aniostropic resolution, with 32 cm resolution
+laterally and 16 cm resolution vertically.  This is finer vertically
+than done in \citet{harpole:2021}.  Because the hotspot is placed in
+the center of the domain, the size of the domain also becomes a
+constraint, and as a result, the evolution time we can reach will
+become limited by the time it takes the burning to approach the edge
+of the domain.  Consequently, we focus here on the early evolution.
 
 \castro\ uses the the \amrex\ adaptive mesh refinement library
 \citep{amrex_joss} to manage the discretization and domain
@@ -271,9 +265,7 @@ to compare with here.
 %\epsscale{1.0}
 \caption{\label{fig:vr_abar} Volume rendering of the three-dimensional XRB
 simulation showing the mean molecular weight, $\bar{A}$.  The flame is viewed
-from above. {\color{red} It might be helpful to have the time for each panel either
-on the plots or in this caption.}
-}
+from above. The panels show the state at 10 ms, 20 ms, and 40 ms (from top to bottom).}
 \end{figure}
 
 Figure~\ref{fig:vr_abar} shows the a three-dimensional simulation via
@@ -304,11 +296,7 @@ two-thirds of the surface.}
 %\epsscale{1.0}
 \caption{\label{fig:3dslice} A vertical slice through the three-dimensional
 simulation {\color{red} at 40~ms} showing the entire domain from the side.  The
-flame structure is clearly seen. {\color{red} The flame structure could probably
-be made a little clearer if this only showed the lower $10^4~\mathrm{cm}$ of the
-domain like the 2D plots. Could also try further reducing the peak $\bar{A}$ on the
-colorbar (e.g. to 5.5 or 5.25) both here and in the 2D plots to bring out the flame
-even more. I think the plots are still pretty clear with the current colorbar though.}}
+flame structure is clearly seen. }
 \end{figure*}
 
 
