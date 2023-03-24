@@ -213,7 +213,7 @@ clean well-defined flame.  The model is constructed following the same
 procedure described in \citet{eiden:2020,harpole:2021}.
 
 Moving to 3D is very expensive, so to further reduce the computational
-expense, we use an aniostropic resolution, with 32 cm resolution
+expense, we use an anisotropic resolution, with 32 cm resolution
 laterally and 16 cm resolution vertically.  This is finer vertically
 than done in \citet{harpole:2021}.  Because the hotspot is placed in
 the center of the domain, the size of the domain also becomes a
@@ -249,11 +249,11 @@ for long times.
 
 The simulations were run on the OLCF Summit supercomputer, on 342 to
 1366 nodes, with 6 NVIDIA V100 GPUs per node.  The entire computation
-was offloaded to GPUs using the \amrex\ C++ lambda-capturing mechanism, as described in
-\citet{castro_gpu}.  GPU-offloading was critical to being able to
+was offloaded to GPUs using the \amrex\ C++ abstraction layer for parallel \texttt{for} loops, as described in
+\citet{castro_gpu}.  GPU offloading was critical to being able to
 perform these simulations, since we run more than an order of
 magnitude faster using all the GPUs on a node as compared to all of
-the CPUs on the node.  Overall, about 250,000 node-hours were used for
+the CPU cores on the node.  Overall, about 250,000 node-hours were used for
 the calculation.  The full state of the calculation was output only
 every 0.005 s, as each output file is 2.4 TB in size (for single
 precision data).  We output a few fields more frequently for
@@ -346,7 +346,7 @@ axisymmetry there does not allow for the complex structure we see in
 the evolution of composition in the 3D flame.  This strong agreement
 suggests that using 2D axisymmetric calculations is a good model for
 the early flame evolution.  And since they are so much less
-computationally expensive, we this will allow us to explore much more
+computationally expensive, this will allow us to explore much more
 complex reaction networks and understand the nucleosynthesis in more
 detail.
 
@@ -381,7 +381,7 @@ to centrifugal forces), as well as begin to consider lightcurve modeling.
 There is still a role for three-dimensional simulations---the
 convective burning in the accreted layer should create turbulence that
 the flame will encounter as it propagates.  Although we have shown
-that for the flame in a Type Ia supernovae, the turbulence from the
+that for the flame in a Type Ia supernova, the turbulence from the
 era of convection is not strong enough to disrupt the
 flame~\citep{wdturb}, the flame in an XRB is considerably slower and
 thicker, so it remains to be seen what effect it might have.  This can
