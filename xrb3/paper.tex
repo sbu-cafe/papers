@@ -1,4 +1,4 @@
-\documentclass[linenumbers]{aastex631}
+\documentclass[linenumbers,trackchanges]{aastex631}
 
 %\usepackage{xcolor,amsmath}
 
@@ -198,9 +198,31 @@ layer on the surface of a neutron star.  For these models,
 \castro\ evolves the compressible Euler equations with a Coriolis
 force arising from rotation, constant gravity (the plane-parallel
 approximation), reactive sources, and thermal diffusion (integrated
-explicitly).  We use a general stellar equation of state with
+explicitly)\edit1{:
+\begin{eqnarray}
+\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \Ub) &=& 0 \\
+\frac{\partial (\rho X_k)}{\partial t} + \nabla \cdot (\rho \Ub X_k) &=& \rho \omegadot_k \\
+\frac{\partial (\rho \Ub)}{\partial t} + \nabla \cdot (\rho \Ub \Ub) + \nabla p &=& \rho {\bf g} - 2 \rho {\bf \Omega} \times \Ub \\
+%% no centrifugal- \rho {\bf \Omega} \times ({\bf \Omega} \times {\bf r}) \\
+\frac{\partial (\rho E)}{\partial t} + \nabla \cdot (\rho \Ub E + p \Ub) &=& \rho \Ub \cdot {\bf g} + \nabla \cdot k_\mathrm{th} \nabla T + \rho \dot{\epsilon}
+%% no centrifugal - \rho (\Omegab \cdot \rb)(\Omegab \cdot \Ub) + \rho | \Omegab |^2 (\Ub \cdot r)
+\end{eqnarray}
+Here, $\rho$ is the mass density, $X_k$ are the mass fractions of the
+nuclear species with associated creation rates $\omegadot_k$, $\Ub$
+the velocity, $E$ is the specific total energy, $p$ is the pressure,
+${\bf g}$ is the gravitational
+acceleration, $\Omegab$ is the rotation vector, $k_\mathrm{th}$ is the thermal conductivity, and $T$ is the temperature.
+}
+ We use a general stellar equation of state with
 radiation, ions as a perfect gas, and degenerate/relativistic
-electrons described in \citet{timmes_swesty:2000}.  Building on these
+electrons described in \citet{timmes_swesty:2000} \edit1{which closes
+  the system:}
+\begin{eqnarray}
+E &=& e + \frac{1}{2} |\Ub|^2 \\
+p &=& p(\rho, e, X_k) \\
+T &=& T(\rho, e, X_k)
+\end{eqnarray}
+Building on these
 first simulations, in \citet{harpole:2021}, we explored several
 different rotation rates and initial model thermal structures to
 understand how the flame speed depends on the thermal structure of the
@@ -238,7 +260,8 @@ We use an unsplit piecewise parabolic method
 evolution equation during the burn, as described in
 \citet{strang_rnaas}.  These simulations used the 7-isotope He-burning
 network described in \citet{iso7}.  This was one of the networks used
-in \citet{eiden:2020}.  The main difference with the previous
+in \citet{eiden:2020}.  \edit1{Thermal diffusion is treated explicitly, using the conductivities from \citet{Timmes00}.
+The overall integration strategy is second-order accurate in space and time.}  The main difference with the previous
 simulations is that we switched from a hydrostatic to reflecting
 boundary at the bottom of the domain and used a simple well-balanced
 scheme (similar to \citealt{kappeli:2016} but adapted to deal with
@@ -266,13 +289,13 @@ to compare with here.
 \centering
 \plotone{full}
 \caption{\label{fig:vr_abar} Volume rendering of the three-dimensional XRB
-simulation showing the mean molecular weight, $\bar{A}$.  Two views
+simulation showing the mean molecular weight, $\bar{A}$.  \edit1{Two views
 are shown: the left column is viewed from above while the right column
 shows it from a shallow angle above the surface.  The panels show the state at 10 ms, 20 ms, and 40 ms (from top to bottom).
 The colorbar shows the value of $\bar{A}$ together with the opacity assigned for
 that value---this allows us to bring out some structure in the rendering.  A
 small triad in the upper right of the top panels shows the orientation,
-with red = $x$, green = $y$, and blue = $z$, our vertical direction.}
+with red = $x$, green = $y$, and blue = $z$, our vertical direction.}}
 \end{figure}
 
 Figure~\ref{fig:vr_abar} shows the a three-dimensional simulation via
@@ -283,7 +306,7 @@ top-down volume rendering of the mean-molecular weight,
 where $X_k$ is the mass fraction of species $k$ and $A_k$ is the
 atomic weight (in mass units).  The structure is shown at 10, 20, and
 40~ms of simulation time.  While initially quite symmetric, the axial
-symmetry is broken and the flame structure takes on a more tenuous
+symmetry is broken\edit1{, likely due to roundoff error,}  and the flame structure takes on a more tenuous
 form.  The panels show the flame spreading considerably through the
 domain as time evolves, and the simulation is halted once the flame
 nears the boundaries.
@@ -299,10 +322,10 @@ two-thirds of the surface.}
 \begin{figure*}[t]
 \centering
 %\epsscale{0.75}
-\plotone{flame_wave_1000Hz_25cm_smallplt174562_slice}
+\plotone{time_series_3D}
 %\epsscale{1.0}
-\caption{\label{fig:3dslice} A vertical slice through the three-dimensional
-simulation at 40~ms showing a region centered on the flame viewed from the side.  The
+\caption{\label{fig:3dslice} Vertical slices through the three-dimensional
+simulation \edit1{at the same times as in Figure~\ref{fig:2d_abar}}, showing a region centered on the flame viewed from the side.  The
 flame structure is clearly seen. }
 \end{figure*}
 
