@@ -1,0 +1,128 @@
+Dear Dr. Timmes,
+
+we thank the referee for their detailed report.  We have address their
+comments, as we detail below.
+
+
+- Since the composition is used for all the figures and it is used
+to asses the burning evolution, it would be nice to see some more
+details about the initial composition (and temperature profile),
+for example showing it by formulae.
+
+
+Some explicit details about the numerical scheme and the equations
+would also be useful, however they are less needed to follow the
+conclusions, so the authors can decide about this.
+
+  We've added the equations solved.
+
+  For the numerical scheme, we already state that we use an unsplit
+  PPM advection method (with cites to the papers) and strang splitting
+  for reactions (with a cite to one of our papers that shows the convergence
+  of the implementation).  We've added a sentence about the diffusion
+  operator, and a note that the overall method is second order accurate
+  in space and time.
+
+
+- On pg 2, ln 77 - 80, it is said that the flame looses symmetry in
+3D, as apparent from Fig 1. What is the reason for this? The
+numerical grid? Convection in the flame?
+The authors should add a comment on this in the text.
+Is this going to lead to more differences at later stages?
+
+  The likely reason is simply roundoff error.  A note about this
+  has been added.  As with any highly-nonlinear simulation, small
+  differences introduced by roundoff can amplify over the course
+  of a simulation, but we don't expect any qualititive differences
+  to arise.
+
+- Fig 1 is very nice and does convey the idea of the resolution and
+structure of the 3D flame. However, it is a bit cryptic: it is
+especially difficult to see the vertical structure, so that it
+would be nice to make it clearer.
+
+One possibility would be to add a second column, parallel to the one
+already present, changing the point of view and adding the
+orientation of the axes on the plot, so to have also another
+perspective on the structure, especially on the vertical structure.
+
+As for the colorbar, is the white line the opacity?
+It is not fundamental to understand the paper, so perhaps it could
+be removed (especially if the second column described above is
+added), but I leave this to authors to decide.
+
+   This figure has been updated.  A second column with a different
+   perspective has been added.  It is hard to show the colorbar
+   without the opacity line, without actually hacking on the yt
+   library itself, so we leave that line in.  Also we added a triad to
+   the upper right of the topmost image in each column that shows the
+   orientation, with red = x, green = y, and blue = z in a righthanded
+   coordinate system.
+
+- Fig 2 and 3 are very interesting, and contribute to support the main
+conclusion about the initial stages of the flame propagation being
+similar in 2D and 3D, while also helping seeing the differences.
+
+I suggest to plot both figures such that all panels have the same
+size on the page and also to show vertical slices of the 3D
+simulation for times 10 and 20, so to facilitate comparison between
+the two setups.
+
+This would also help understanding Fig 1.
+
+   It is difficult to make them the same size on the page since the
+   domain in the 3D run is twice as wide (because of the lack of
+   azimuthal symmetry enforced by the geometry).
+
+
+Perhaps the plots of the 2D simulation and the vertical slices of the
+3D simulations could be paired, but this is a decision of the authors.
+
+Further, possibly a zoom on the vertical scale would help as well,
+for example cutting at 0.5 10^4 cm.
+
+   I don't think that will help much, since the aspect ratio is constrained
+   by the horizontal scale.  We do not want to artifically distort the vertical
+   scale of the problem, since it is good to show the true dimensions of the
+   flame.
+
+Very minor:
+
+- pg 1, ln 13 - 14
+
+The reference to Galloway and Keek, 2017 should be updated, since
+the book is out.
+
+https://ui.adsabs.harvard.edu/abs/2021ASSL..461..209G/abstract
+
+   updated
+
+
+- pg 1, ln 30 - 31
+
+and how affects the location where the hotspot ignites
+
+and how IT affects the location where the hotspot ignites
+
+    fixed
+
+
+- Fig 4, caption:
+
+Mass of species scaled to initial He mass as a function of time.
+
+Total He mass, or total initial mass?
+Because if He mass, the He fraction should start at 1.
+If the initial mass if pure He, this could be specified,
+but in Eiden et al., 2020, the composition is a mixture
+of He and Ni, which is also what appears to be the case
+here from the figure.
+
+  It is total mass.  This has been fixed.
+
+- Pg 4, ln 108
+
+Specify what r and theta are.
+
+  This was reworded.
+
