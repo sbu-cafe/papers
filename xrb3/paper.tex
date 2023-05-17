@@ -1,8 +1,7 @@
 \documentclass[linenumbers]{aastex631}
 
-\usepackage{epsf,color,amsmath}
+%\usepackage{xcolor,amsmath}
 
-\usepackage{cancel}
 \usepackage[T1]{fontenc}
 
 \newcommand{\sfrac}[2]{\mathchoice%
@@ -265,14 +264,15 @@ to compare with here.
 
 \begin{figure}[t]
 \centering
-\epsscale{0.5}
-\plotone{abar_top_stack}
-\epsscale{1.0}
+\plotone{full}
 \caption{\label{fig:vr_abar} Volume rendering of the three-dimensional XRB
-simulation showing the mean molecular weight, $\bar{A}$.  The flame is viewed
-from above. The panels show the state at 10 ms, 20 ms, and 40 ms (from top to bottom).
+simulation showing the mean molecular weight, $\bar{A}$.  Two views
+are shown: the left column is viewed from above while the right column
+shows it from a shallow angle above the surface.  The panels show the state at 10 ms, 20 ms, and 40 ms (from top to bottom).
 The colorbar shows the value of $\bar{A}$ together with the opacity assigned for
-that value---this allows us to bring out some structure in the rendering.}
+that value---this allows us to bring out some structure in the rendering.  A
+small triad in the upper right of the top panels shows the orientation,
+with red = $x$, green = $y$, and blue = $z$, our vertical direction.}
 \end{figure}
 
 Figure~\ref{fig:vr_abar} shows the a three-dimensional simulation via
