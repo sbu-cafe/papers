@@ -232,7 +232,19 @@ these works.  We use a neutron star crust temperature of $2\times
 10^8~\mathrm{K}$ and rotation rate of 1000~Hz, as followed in
 \citet{harpole:2021}.  This model was chosen here since it gives a
 clean well-defined flame.  The model is constructed following the same
-procedure described in \citet{eiden:2020,harpole:2021}.
+procedure described in \citet{eiden:2020,harpole:2021}.  \edit1{We
+generate a hot and a cool model, and blend them laterally to setup
+an initial perturbation that is in hydrostatic equilibrium.  The
+structure of these models is shown
+shown in Figure~\ref{fig:initial model}.}
+
+\begin{figure}[t]
+\centering
+\plotone{initial_model_paper}
+\caption{\label{fig:initial model} Initial model structure for both
+the hot (dashed) and cool (solid) models, showing the density
+and temperature structure as well as the initial composition.}
+\end{figure}
 
 Moving to 3D is very expensive, so to further reduce the computational
 expense, we use an anisotropic resolution, with 32 cm resolution
