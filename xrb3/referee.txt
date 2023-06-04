@@ -9,6 +9,9 @@ to asses the burning evolution, it would be nice to see some more
 details about the initial composition (and temperature profile),
 for example showing it by formulae.
 
+  A figure showing this was added, since it helps more than the
+  formulae.  The formulae are still exactly those cited in the
+  previous papers.
 
 Some explicit details about the numerical scheme and the equations
 would also be useful, however they are less needed to follow the
