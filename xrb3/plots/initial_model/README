@@ -1,0 +1,2 @@
+fextract.gnu.ex -v "density Temp X(He4) X(Ni56)" -d 1 -s flame_wave_new_cool.out flame_wave_1000Hz_25cm_plt00000
+fextract.gnu.ex -l -v "density Temp X(He4) X(Ni56)" -d 1 -s flame_wave_new_hot.out flame_wave_1000Hz_25cm_plt00000
