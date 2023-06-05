@@ -165,7 +165,19 @@ Furthermore, we investigate the influence of different plasma screening routines
 An X-ray burst (XRB) is a thermonuclear runaway caused by the ignition of the accreted fuel on the surface of a neutron star. Through Roche-lobe overflow, accreted matter is transferred from the companion star's envelope to the surface of the neutron star. The companion star is likely to have a similar composition to the Sun, i.e.\ a mixture of hydrogen, helium, and a small fraction of carbon, nitrogen, and oxygen \citep{Galloway_2020_basics_of_xrb}. Nuclear explosions are directly affected by the initial composition of the accreted layer and the accretion rate. XRBs found with a mixture of hydrogen and helium fuel layers show bursts with $\sim 5$ sec rise time, while a pure helium layer is typically more explosive and shows bursts with shorter rise times ($\sim 1$ sec). If the shell is enriched with carbon rather than helium, then the explosion is likely to have an extended rise duration, from minutes to hours known as a superburst \citep{Kuulkers_2002,Cumming_2001,Gupta_2007}. 
 % This is in contrast to a few seconds in the case of regular type I XRBs, which are XRBs that have a rapid rise time followed by a gradual decline in the light curve. \MarginPar{this last sentence seems redundant}
 
-Since the timescale of accretion between each burst is in the order of $10^4$ secs while the rise time is in the order of $\sim 1 - 10$ sec \citep{Parikh_2013}, it is unlikely for the same thermodynamic condition to exist on the entire surface of the neutron star to start burning simultaneously \citep{Shara_1982}. Therefore, nuclear ignition is likely to begin in a localized region, and spread to the rest of the neutron star \citep{Spitkovsky_2002}. This asymmetrical burning leads to modulations in the observed flux during the rotation of neutron stars, which causes asymmetrical surface brightness during XRBs \citep{strohmayer_2009}. This explains burst oscillation behavior, a millisecond period variation of XRB intensity during rise time, and the double-peak light curve for non-photospheric-radius-expansion XRBs discovered and supported by observational data \citep{Altamirano_2010,Chakraborty_2014,Bhattacharyya_2006, Kaaret_2007,Smith_1997}.  
+Since the timescale of accretion between each burst is in the order of $10^4$ secs while the rise 
+time is in the order of $\sim 1 - 10$ sec \citep{Parikh_2013}, it is unlikely for the same 
+thermodynamic condition to exist on the entire surface of the neutron star to start burning 
+simultaneously \citep{Shara_1982}. {\color{red}Previous sentence seems to be missing a few words. 
+Could maybe add ``and for the entire surface" before ``to start burning"?} Therefore, nuclear 
+ignition is likely to begin in a 
+localized region, and spread to the rest of the neutron star \citep{Spitkovsky_2002}. This 
+asymmetrical burning leads to modulations in the observed flux during the rotation of neutron 
+stars, which causes asymmetrical surface brightness during XRBs \citep{strohmayer_2009}. This 
+explains burst oscillation behavior, a millisecond period variation of XRB intensity during rise 
+time, and the double-peak light curve for non-photospheric-radius-expansion XRBs discovered and 
+supported by observational data \citep{Altamirano_2010,Chakraborty_2014,Bhattacharyya_2006, 
+Kaaret_2007,Smith_1997}.  
 
 % On-sky observations and numerical simulations of XRBs are two approaches for studying the properties of the neutron star and the mechanism of XRBs. Even though there are many successes in constraining the equation of state and the structure of neutron stars through observational data of XRBs \citep{Ozel2016,Nattila2017,lattimer2014constraints,Steiner_2010}, numerical simulations are also critical to assist and complement the study of XRBs and neutron stars due to the limited events of XRBs and the limitations of observational techniques.\MarginPar{not sure we need this sentence justifying why we should do simulations}
 
@@ -200,7 +212,8 @@ operator-splitting.
 
 
 This paper investigates the effect of reaction networks on the flame.  We explore four different networks including a standard 13-isotope alpha chain as our reference network (see Sec.\ \ref{Sec:network}), two
-different plasma screening implementations (Sec.\ \ref{Sec:screening}), and how the reactions and hydro are coupled
+different plasma screening implementations (Sec.\ \ref{Sec:screening}), and how the reactions and 
+hydrodynamics are coupled
 together (Sec.\ \ref{Sec:integration}).
 
 
@@ -357,7 +370,10 @@ The 2D initial model is obtained by combining two 1D hydrostatic vertical profil
 \subsection{Nuclear Reaction Networks}\label{Sec:network}
 % Discuss APROX13, subch_full, subch_full_with_2rates_turned_off, subch_simple
 
-During an XRB, nucleosynthesis involves more than a thousand isotopes \citep{Woosley_2004,Koike_2004}. However, due to computational constraints, most multi-dimensional simulations incorporate fewer than 20 isotopes. Thus, this manuscript aims to understand how the different approximations used in the nuclear physics impact on the lateral thermonuclear flame in XRBs.
+During an XRB, nucleosynthesis involves more than a thousand isotopes 
+\citep{Woosley_2004,Koike_2004}. However, due to computational constraints, most multi-dimensional 
+simulations incorporate fewer than 20 isotopes. Thus, this manuscript aims to understand how the 
+different approximations used in the nuclear physics impact the lateral thermonuclear flame in XRBs.
 
 \subsubsection{\tt aprox13}
 
@@ -644,7 +660,13 @@ The energy generation rate (shown in Figure \ref{fig:network_enuc_50ms}) shows t
  
 In order to quantify how the flame changes over time, we look at the
 density-weighted profile of temperature and energy generation rate in the burning, similar to the procedure in \citet{harpole:2021}. 
-In order to filter out the burning regions, we selected cells that are in the 99th percentile for temperature or energy generation rate. A density-weighted average is then applied to temperature and energy generation rate using Equation \ref{Eq:weighted_equation}, where $\left<Q\right>_w$ is the weighted quantity, $C_{99}(Q)$ are cells where the quantity, $Q$, is in the 99th percentile, and $\rho(c_i)$ and $Q(c_i)$ are the density and the quantity in $c_i$ cell.
+In order to filter out the burning regions, we selected cells that are in the 99th percentile 
+{\color{red} or higher? (assuming same method)} for temperature or energy generation rate. A 
+density-weighted average is then applied to temperature and energy generation rate using Equation 
+\ref{Eq:weighted_equation}, where $\left<Q\right>_w$ is the weighted quantity, $C_{99}(Q)$ are 
+cells where the quantity, $Q$, is in the 99th percentile {\color{red} or higher}, and $\rho(c_i)$ 
+and $Q(c_i)$ are the 
+density and the quantity in $c_i$ cell.
 
 \begin{equation}\label{Eq:weighted_equation}
     \left<Q\right>_w = \frac{\sum\limits_{c_i}^{} \rho(c_i) Q(c_i)}{\sum\limits_{c_i} \rho(c_i)}; c_i \in C_{99}(Q)
@@ -678,7 +700,12 @@ In order to investigate the burning process in detail, Figure \ref{fig:network_a
 given the high temperature behind the flame.  Notably, there is an abundance of ${}^{12}$C, as {\tt aprox13} relies on the relatively slow $\alpha$-capture rate to convert ${}^{12}$C to ${}^{16}$O. Additionally, ${}^{16}$O is predominately transformed into ${}^{28}$Si, which is the primary end product of the network.
 
 
-With {\tt subch\_full}, we see that the ${}^{12}$C is much more depleted and there is much more production of heavy $\alpha$ chain isotopes through the $\alpha$-chain, particularly ${}^{28}$Si, at $t = 20$ ms. This phenomenon is consistent with the results of \cite{Weinberg_2006}. The burning path, ${}^{12}\mbox{C}(\mbox{p}, \gamma) {}^{13}\mbox{N}(\alpha, \mbox{p}){}^{16}\mbox{O}$, provides an efficient route for converting ${}^{12}$C to ${}^{16}$O compared to the $\alpha$-capture rate. 
+With {\tt subch\_full}, we see that the ${}^{12}$C is much more depleted {\color{red} in the 
+burning region} and there is much more production of heavy $\alpha$ chain isotopes through the 
+$\alpha$-chain, particularly ${}^{28}$Si, at $t = 20$ ms. This phenomenon is consistent with the 
+results of \cite{Weinberg_2006}. The burning path, ${}^{12}\mbox{C}(\mbox{p}, \gamma) 
+{}^{13}\mbox{N}(\alpha, \mbox{p}){}^{16}\mbox{O}$, provides an efficient route for converting 
+${}^{12}$C to ${}^{16}$O compared to the $\alpha$-capture rate. 
 %Consequently, when $T \sim 1.3 \times 10^9$ K, the flow from ${}^{12}$C to ${}^{16}$O can surpass the triple-$\alpha$ process, resulting in a depletion of ${}^{12}$C and an amplification in the nuclear energy generation rates. 
 %Consequently, it leads to the abundant production of heavy elements such as ${}^{28}$Si, as shown in Figure \ref{fig:network_subch_nuc}. 
 %The early depletion of ${}^{12}$C also causes a shortage of burning fuels during the later burning stage, corresponding to an overall decline in the energy generation rate following the outburst.
@@ -764,7 +791,7 @@ C
 
 We fit the flame front position with a simple function to estimate
 the flame speed.  For the {\tt aprox13} and {\tt subch\_full\_mod} networks, we use the same expression
-as in \citet{eiden:2020}:
+as in \citet{harpole:2021}:
 \begin{equation}\label{Eq:quadratic_fit}
     r(t) = \frac{1}{2}a_0 t^2 + v_0 t + r_0
 \end{equation}
@@ -772,7 +799,10 @@ For the {\tt subch\_full} and {\tt subch\_simple}, a hyperbolic tangent function
 \begin{equation}\label{Eq:tanh_fit}
     r(t) = A\tanh{\left(\frac{t}{B} + C\right)} + \frac{1}{2}a_0 t^2 + v_0 t + r_0
 \end{equation}
-Both fitting functions are applied for $t > 8$ ms, and the fitted parameters along with their respective errors are shown in Table \ref{Tab:network_fitted_param}. The errors are calculated by taking the square root of the diagonal of the covariance matrix. 
+Both fitting functions are applied for $t > 8$ ms, and the fitted parameters along with their 
+respective errors are shown in Table \ref{Tab:network_fitted_param}. The errors are calculated by 
+taking the square root of the diagonal of the covariance matrix. {\color{red} It might be worth 
+mentioning which fitting function/method was used if that isn't stated anywhere.}
 
 
 \begin{table*}
@@ -869,7 +899,14 @@ In order to give an overview of the computational expenses needed for each simul
 
 In this section, we present a comparison between the effects of {\tt SCREEN5} and {\tt CHUGUNOV2007} screening routines on the dynamics of the propagating flame in XRBs. Figure \ref{fig:screen_temp} shows the temperature for {\tt aprox13} and {\tt aprox13\_chu} at $t = 50$ ms, which suggests that there are no significant differences in the flame structure between the two models. Figure \ref{fig:screen_gamma_50ms} and \ref{fig:screen_gamma_100ms} show $\Gamma_e$, a measure to determine the approximate screening regime for the flame, at $t = 50$ ms and $t = 100$ ms. 
 
-Although a general trend of decreasing $\Gamma_e$ is observed as the flame progress, it is noteworthy that there are more fusion processes involving heavier nuclei at later stages of burning. Assuming triple-$\alpha$ process, it can inferred that $\Gamma \sim 0.05$ and $0.025$ for $t = 50$ ms and $t = 100$ ms. Meanwhile, for oxygen burning at $t = 50$ ms and 100 ms, $\Gamma \sim 0.48$ and $0.32$, respectively. These results indicate that helium burning occurs in the weak screening regime, while heavier nuclei burning processes occur in the intermediate screening regime and gradually transition into the weak regime.
+Although a general trend of decreasing $\Gamma_e$ is observed as the flame progress, it is 
+noteworthy that there are more fusion processes involving heavier nuclei at later stages of 
+burning. Assuming triple-$\alpha$ process, it can inferred that {\color{red}the Coulomb coupling 
+parameter (just for clarity)} $\Gamma \sim 0.05$ and $0.025$ for $t = 50$ ms and $t = 100$ ms. 
+Meanwhile, for oxygen 
+burning at $t = 50$ ms and 100 ms, $\Gamma \sim 0.48$ and $0.32$, respectively. These results 
+indicate that helium burning occurs in the weak screening regime, while heavier nuclei burning 
+processes occur in the intermediate screening regime and gradually transition into the weak regime.
 
 
 
@@ -886,7 +923,9 @@ The comparison between {\tt aprox13} and {\tt aprox13\_chu} regarding the weight
 % In order to assess the impact of plasma screening from the two models, we examine the time period $t \sim 10$ ms, when the temperature of the two models are approximately equal to mitigate the influence of temperature on the nuclear energy generation rate. Even during this time interval, the nuclear energy generation rate of {\tt aprox13} remains slightly higher than that of {\tt aprox13\_chu}, indicating that {\tt SCREEN5} provides a stronger screening effect during the initial flame propagation compared to {\tt CHUGUNOV2007}.
 
 
-This finding is in agreement with the results from \cite{Chugunov_2007}, where it was shown that the screening effect calculated by \cite{Alastuey_Jancovici:1978} is always greater than \cite{Chugunov_2007} when $\Gamma \lesssim 40$ (See Figure 4 in \cite{Chugunov_2007}). 
+This finding is in agreement with the results from \cite{Chugunov_2007}, where it was shown that 
+the screening effect calculated by \cite{Alastuey_Jancovici:1978} is always greater than 
+\cite{Chugunov_2007} when $\Gamma \lesssim 40$ (See Figure 4 in \citealt{Chugunov_2007}). 
 %As $\Gamma$ increases, the difference between the two methods gradually decreases (see Figure 4 in \cite{Chugunov_2007}).
 It should be emphasized that {\tt SCREEN5} uses calculation routines from \cite{Alastuey_Jancovici:1978} to formulate the intermediate screening function along with the calculations from \cite{Graboske_1973}. Therefore, reactions that fall within the intermediate screening regime experience a slightly higher screening effect from {\tt SCREEN5} compared to {\tt CHUGUNOV2007}. Consequently, the overall energy generation rates in the early time period are slightly higher for {\tt aprox13} compared to {\tt aprox13\_chu}. This phenomenon accelerates the increasing rate of temperature and the energy generation rate in the later stages of burning, amplifying the discrepancy between these two models as time progresses.
 
