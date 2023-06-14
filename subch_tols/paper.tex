@@ -212,7 +212,7 @@ can be very sensitive to how the simulation is run \MarginPar{refs}.
 Artifically limiting the rates \MarginPar{ref}
 
 Integration of reaction networks takes various forms in astrophysical
-simulation codes.  
+simulation codes.
 
 When using operator-splitting, the density remains constant, since there
 is no reaction source in the mass continuity equation.  The mass
@@ -248,12 +248,12 @@ be easily controlled by a code user at runtime.
 
 
 
-\citet{castro_simple_sdc} looked at an extreme version of the 
+\citet{castro_simple_sdc} looked at an extreme version of the
 double detonation scenario---a very large perturbation was applied
-to drive a detonation directly into the underlying 
+to drive a detonation directly into the underlying
 carbon-oxygen white dwarf.  We showed in that paper that the Strang
 split integration method had difficulty with the integration unless
-we used tighter tolerances 
+we used tighter tolerances
 
 Summary of the SDC subch results form the original paper
 
@@ -278,17 +278,61 @@ regions outside of the star, we use a sponge term on the momentum
 equation to prevent the very low density material that is not in
 hydrostatic equilibrium from raining down on the star.
 
+All simulations use the same network, a 22 nucleus network designed for
+He and C burning, using the ReacLib rates \cite{reaclib} and produced with
+\pynucastro \citep{pynucastro2}.  This network, called {\tt subch\_simple} was
+described in \cite{zhi2023}.
+
+The reaction system is integrated using a version of the VODE ODE integrator
+\citep{vode} ported to C++.  Our modifications to this integrator are described
+in \citet{castro_simple_sdc}.
+
 If during the advance of a timestep an error is generated (negative
 density, ODE integration fails, mass fractions don't sum to 1), the
 step is thrown-out and retied with a smaller timestep.  This is done
 on a level-by-level basis in the overall AMR subcycling hierarchy.
 
-The reaction system is integrating using a version of the VODE ODE integrator
-\citep{vode} ported to C++.  Our modifications to this integrator are described
-in \citet{castro_simple_sdc}.  
-
 We will run a suite of simulations all using the same initial model.
-The initial model is exactly the same as in \citep{castro_simple_sdc}.
+The initial model is constructed following the methodology in
+\citet{subchandra}.  We use an isothermal core of C/O of $1.1~M_\odot$
+with $T = 10^7~\mathrm{K}$ and a thin transition region where the
+temperature ramps up to $1.75\times 10^8~\mathrm{K}$ and the
+composition changes to 99\% \isot{He}{4} and 1\% \isot{N}{14}.  This
+added \isot{N}{14} helps produce protons via
+$\isotm{N}{14}(\alpha,\gamma)\isotm{F}{18}(\alpha,p)\isotm{Ne}{21}$
+which then allow for
+$\isotm{C}{12}(p,\gamma)\isotm{N}{13}(\alpha,p)\isotm{O}{16}$.  This
+sequence can be faster than
+$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$, as pointed out by
+\citet{shenbildsten} and is important for getting the detonation speed
+correctly.  This He envelope is then integrated isentropically.  The
+density of the transition from the underlying CO white dwarf to the He
+envelope was selected to yield an envelope mass of $0.05~M_\odot$.
+
+We place a small temperature perturbation in the He layer using the
+same form as in \citet{castro_simple_sdc}:
+\begin{equation}
+  T = T_0 \left [ 1 + X(\isotm{He}{4}) f (1 + \tanh(2 - r_1)) \right ]
+\end{equation}
+where
+\begin{equation}
+  r_1 = \left [ x^2 + (y - r_0)^2 \right ]^{1/2} / \lambda
+\end{equation}
+and
+\begin{equation}
+  r_0 = r_\mathrm{pert} + r_\mathrm{base}
+\end{equation}
+Here, $r_\mathrm{base}$ is the radius at which the helium layer begins
+and $r_\mathrm{pert}$ is the distance above the base to put the
+perturbation.  We choose $r_\mathrm{pert} = 100~\mathrm{km}$.  The
+temperature is perturbed above the initial model value, denoted as
+$T_0$ here.  The amplitude of the perturbation is $f = 3$ and the
+scale of the perturbation is $\lambda = 12.5~\mathrm{km}$, and
+$r_\mathrm{pert} = 100~\mathrm{km}$.  This is a very small
+perturbation, but enough to seed the initial He detonation in the
+envelope.
+
+
 
 The simulations are all run on the OLCF Frontier machine, using 4
 nodes / 32 AMD GPUs.  The data is moved to the GPUs at the start of
@@ -300,6 +344,19 @@ functionality to be performance portable.
 We run 3 different types of integration methods: traditional operator
 splitting, using Strang splitting, both with integration of the energy
 equation and without any temperature evolution during the burn.  \MarginPar{comment about the EOS}.  These methods are compared to the simplified-SDC integtation.
+
+\begin{figure*}[t]
+\centering
+\plotone{subch_Temp_sequence}
+\caption{\label{fig:temp_sequence} Time-sequence of the SDC run showing the temperature.}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\plotone{subch_lap_rho_sequence}
+\caption{\label{fig:lap_rho_sequence} Time-sequence of the SDC run showing the compression.}
+\end{figure*}
+
 
 We also vary the CFL number and the integration tolerances.
 
@@ -316,6 +373,7 @@ integrator tolerances is an important part of demonstrating
 convergence of simulations involving explosive reacting flows in
 astrophysics.
 
+The ignition of the carbon detonation remains numerically challenging for the ODE integrator, especially with large timesteps.  \MarginPar{add some info on why it fails}
 In the near future we will show how to include various nuclear
 statistical equilibrium approximations into the simplified-SDC
 formalism while retaining second-order accuracy.
