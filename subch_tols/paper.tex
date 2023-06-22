@@ -1,4 +1,4 @@
-\documentclass[linenumbers,trackchanges]{aastex631}
+\documentclass[modern]{aastex631}
 
 %\usepackage{xcolor,amsmath}
 
@@ -190,7 +190,16 @@ Stony Brook, NY 11794-3800, USA}
 %======================================================================
 \begin{abstract}
 We explore the coupling of hydrodynamics and reactions in simulations of
-the double detonation model for Type Ia supernovae.
+the double detonation model for Type Ia supernovae.  When assessing the
+convergence of simulations, the focus is usually on spatial resolution.
+However, the method of coupling the physics together as well as the
+tolerances used in integrating a reaction network also play an important role.
+In this paper, we explore how the choices made in integrating the reaction
+portion of a simulation of the double detonation model of Type Ia supernovae
+influences the nucleosynthesis.  We find that the stronger coupling
+afforded by the simplified spectral deferred corrections method introduced
+previously provides a more accurate and efficient result than standard
+operator splitting.
 \end{abstract}
 
 \keywords{convection---hydrodynamics---methods: numerical}
@@ -200,7 +209,18 @@ the double detonation model for Type Ia supernovae.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-The double detonation model
+There are many different progenitor models for Type Ia supernova that
+are currently being explored.  The double detonation model
+\citep{fink:2007} involves a sub-Chandrasekhar mass white dwarf with a
+thin accreted He layer.  A detonation in the He layer propagates
+around the star while sending a compression wave converging toward the
+center.  This compression wave ignites a carbon detonation that then
+propagates outward from the center of the white dwarf.  Many groups
+have modeled this scenario, varying the initial conditions,
+resolution \citep{rivas:2022}, and reaction networks to understand the robustness of this
+model as well as its connection to observations.
+
+\citep{townsley:2019} \citep{gronow:2020}, \citep{gronow:2021}, \citep{glasner:2018}, \citep{roy:2022}, \citep{shenbildsten:2014}, 
 
 
 These events are modeled using the Euler equations with reactive and
@@ -211,20 +231,53 @@ gravitational sources:
 \ddt{(\rho E)} + \nabla \cdot (\rho \Ub E + \Ub p) &=& \rho \Ub \cdot \gb + \rho \dot{S} \\
 \ddt{(\rho X_k)} + \nabla \cdot (\rho \Ub X_k) &=& \rho \omegadot_k
 \end{eqnarray*}
+where $\rho$ is the mass density, $\Ub$ is the velocity, $E$ is the specific
+total energy, $p$ is the pressure, and $X_k$ are the mass fractions
+of the nuclei that react.  The sources are the gravitational acceleration,
+$\gb$, which is obtained by solving the the Poisson equation
+\begin{equation}
+\nabla^2 \Phi = 4 \pi G \rho
+\end{equation}
+(where $G$ is Newton's constant) for the gravitational potential, $\Phi$, and defining $\gb = -\nabla \Phi$.
+The reaction network provides the species creation rate, $\omegadot$ and the energy generation rate, $\dot{S}$.
+Finally, the system is closed via the equation of state:
+\begin{equation}
+p = p(\rho, e, X_k)
+\end{equation}
+where $e$ is the specific internal energy, obtained as $e = E - |\Ub|^2/2$.
 
-Integration of reaction networks takes various forms in astrophysical
+Simulation codes use different methods to advance this system of equations.  For hydrodynamics,
+explicit-in-time integration is usually used, with the timestep, $\Delta t$, restricted by the Courant limit:
+\begin{equation}
+\Delta t = C \min_{i,j,k} \left \{ \frac{\Delta x}{|\Ub| + c} \right \}
+\end{equation}
+where $\Delta x$ is the width of a grid zone and $c$ is the sound
+speed, and the minimum is taken over all zones on the grid.  Here, the
+Courant number, $C$ is required to be $C < 1$ for stability.
+Reactions, on the other hand, tend to be stiff, and are usually evolved
+using implicit-in-time integration, with many small steps taken to
+make up the hydrodynamics timestep $\Delta t$.
+
+A key concern in modeling astrophysical reacting flows is the coupling
+of hydrodynamics and reactions.  If a large amount of energy is dumped
+into a zone, then a large flow will result to carry away this energy,
+requiring tight communication between the reaction and hydrodynamics
+solvers.  This coupling takes various forms in astrophysical
 simulation codes.  The most common method is via operator splitting:
 the advection and reactive terms are treated independently, with each
 process working on the result of the other.  Often, Strang-splitting
 \citep{strang:1968} is used, which alternates advection and reaction
-to yield second-order accuracy in time.
+to yield second-order accuracy in time.  The primary appeal of operator
+splitting is that it is easy to implement---the hydrodynamics and reaction
+solvers are largely independent of one another.
 
 When using operator-splitting, the density remains constant, since there
 is no reaction source in the mass continuity equation.  The mass
-fractions, $X_k$, evolve according to:
-\begin{equation}
-\frac{dX_k}{dt} = \omegadot_k
-\end{equation}
+fractions, $X_k$, and energy evolve according to:
+\begin{eqnarray}
+\frac{dX_k}{dt} &= \omegadot_k \\
+\frac{de}{dt} &= \dot{S} \\
+\end{eqnarray}
 where $\omegadot_k$ is the creation rate of species $k$ due to nuclear
 reaction.  In the simplest approximation of operator splitting, the
 evolution of the mass fractions is solved alone, without integrating
@@ -272,6 +325,7 @@ Summary of the SDC subch results form the original paper
 %======================================================================
 \section{Simulations and Results}\label{Sec:results}
 
+\subsection{Simulation setup}
 
 We use a 2d axisymmetric domain with a size of $5.12\times 10^9~\mathrm{cm}$ by $1.024\times 10^{10}~\mathrm{cm}$.  This is
 much larger than the initial size of the star, giving it plenty of
@@ -294,7 +348,7 @@ sometimes encounters problems \MarginPar{more}.
 
 All simulations use the same network, the {\tt subch\_simple} as
 described in \cite{zhi2023}.  This includes 22 nuclei and 94 rates
-(from ReacLib \citealt{reaclib}) and is produced with \pynucastro
+from ReacLib \citep{reaclib} and is produced with \pynucastro\
 \citep{pynucastro2}.  Importantly, we include
 $\isotm{N}{14}(\alpha,\gamma)\isotm{F}{18}(\alpha,p)\isotm{Ne}{21}$
 which creates protons to allow for
@@ -359,11 +413,6 @@ the simulation and all computation is done there.  Our GPU offloading
 strategy takes advantage of the \amrex\ C++ lambda-capturing
 functionality to be performance portable.
 
-
-We run 3 different types of integration methods: traditional operator
-splitting, using Strang splitting, both with integration of the energy
-equation and without any temperature evolution during the burn.  \MarginPar{comment about the EOS}.  These methods are compared to the simplified-SDC integtation.
-
 \begin{figure*}[t]
 \centering
 \plotone{subch_Temp_sequence}
@@ -375,6 +424,14 @@ equation and without any temperature evolution during the burn.  \MarginPar{comm
 \plotone{subch_lap_rho_sequence}
 \caption{\label{fig:lap_rho_sequence} Time-sequence of the SDC run showing the compression.}
 \end{figure*}
+
+
+\subsection{Time-integration and Nucleosynthesis}
+
+We run 3 different types of integration methods: traditional operator
+splitting, using Strang splitting, both with integration of the energy
+equation and without any temperature evolution during the burn.  \MarginPar{comment about the EOS}.  These methods are compared to the simplified-SDC integtation.
+
 
 
 Figure~\ref{fig:lap_rho_sequence} shows a Schlieren-style plot, which
@@ -392,9 +449,6 @@ $\isotm{C}{12}(p,\gamma)\isotm{N}{13}(\alpha,p)\isotm{O}{16}$
 sequence.
 
 
-We also vary the CFL number and the integration tolerances.
-
-Show Ni56 mass, intermediate mass
 
 \begin{figure}[t]
 \centering
@@ -402,14 +456,20 @@ Show Ni56 mass, intermediate mass
 \caption{\label{fig:ni56} \isot{Ni}{56} mass vs.\ time for the different simulations.}
 \end{figure}
 
+Figure~\ref{fig:ni56} shows the total amount of \isot{Ni}{56} as a function of time for
+a suite of simulations.  
+
+We also vary the CFL number and the integration tolerances.
+
+
 \begin{figure}[t]
 \centering
 \plotone{subch_cpu}
-\caption{\label{fig:cpu} MPI-hours of GPU time for the different simulations.}
+\caption{\label{fig:cpu} node hours of GPU time for the different simulations.}
 \end{figure}
 
 
-Show time-sequence + compression plot
+
 
 Figure~\ref{fig:cpu} shows the computational expense of the
 simulations, in terms of node hours.  All simulations were run on 4
@@ -424,6 +484,17 @@ correct.  All of the other Strang simulations are more costly than the
 baseline SDC simulation.  This shows that not only does the
 simplified-SDC simulation accurately evolve the nucleosynthesis, it
 does so in a very efficient fashion.
+
+\subsection{Spatial resolution}
+
+\begin{figure}[t]
+\centering
+\plotone{subch_ni56_res}
+\caption{\label{fig:res} \isot{Ni}{56} mass vs.\ time for 3 different spatial resolutions, using the simplified-SDC time integration method.}
+\end{figure}
+
+
+
 
 \section{Summary}
 
@@ -448,10 +519,7 @@ in the future.
 \begin{acknowledgements}
 \castro\ is open-source and freely available at
 \url{http://github.com/AMReX-Astro/Castro}.  The problem setup used
-here is available in the git repo as {\tt flame\_wave}. The metadata
-describing the build environment and the global diagnostic output
-files are available on Zenodo at \citet{xrb_data}.  We thank Alice
-Harpole for contributions to the AMReX Astrophysics suite.
+here is available in the git repo as {\tt subchandra}.  
 
 The work at Stony Brook was supported by DOE/Office of Nuclear
 Physics grant DE-FG02-87ER40317.  This research used resources of the
@@ -479,7 +547,9 @@ NASA's Astrophysics Data System Bibliographic Services.
           linux (\url{https://www.kernel.org/}),
           matplotlib (\citealt{Hunter:2007}, \url{http://matplotlib.org/}),
           NumPy \citep{numpy,numpy2},
+          pynucastro \citep{pynucastro,pynucastro2},
           python (\url{https://www.python.org/}),
+          SymPy \citep{sympy},
           valgrind \citep{valgrind},
           VODE \citep{vode},
           yt \citep{yt}}
