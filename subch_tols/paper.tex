@@ -425,15 +425,6 @@ functionality to be performance portable.
 \caption{\label{fig:lap_rho_sequence} Time-sequence of the SDC run showing the compression.}
 \end{figure*}
 
-
-\subsection{Time-integration and Nucleosynthesis}
-
-We run 3 different types of integration methods: traditional operator
-splitting, using Strang splitting, both with integration of the energy
-equation and without any temperature evolution during the burn.  \MarginPar{comment about the EOS}.  These methods are compared to the simplified-SDC integtation.
-
-
-
 Figure~\ref{fig:lap_rho_sequence} shows a Schlieren-style plot, which
 highlights density gradients.  It is constructed by plotting
 $\log_{10}(|\rho^{-1}\nabla^2\rho|)$.  This clearly shows the
@@ -449,6 +440,14 @@ $\isotm{C}{12}(p,\gamma)\isotm{N}{13}(\alpha,p)\isotm{O}{16}$
 sequence.
 
 
+\subsection{Time-integration and Nucleosynthesis}
+
+We run 3 different types of integration methods: traditional operator
+splitting, using Strang splitting, both with integration of the energy
+equation and without any temperature evolution during the
+burn.  \MarginPar{comment about the EOS}.  These methods are compared
+to the simplified-SDC integtation.  We also vary the CFL number and
+the integration tolerances.
 
 \begin{figure}[t]
 \centering
@@ -459,7 +458,15 @@ sequence.
 Figure~\ref{fig:ni56} shows the total amount of \isot{Ni}{56} as a function of time for
 a suite of simulations.  
 
-We also vary the CFL number and the integration tolerances.
+To understand the difference in the \isot{Ni}{56} mass between the SDC and Strang simulations at 
+CFL = 0.2, 
+
+\begin{figure}[t]
+\centering
+\plotone{sdc_strang_compare_abar_summary_plot}
+\caption{\label{fig:abar_sdc_strang} Comparison of the mean molecular weight between SDC and Strang (both run with CFL = 0.2) at $t = 0.2~\mathrm{s}$.}
+\end{figure}
+
 
 
 \begin{figure}[t]
