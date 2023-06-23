@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from mpl_toolkits.axes_grid1.inset_locator import (InsetPosition, inset_axes,
+                                                   mark_inset)
 
 sdc_files = [
 #    ("subch_sdc_cfl0.4/species_diag.out", "SDC CFL=0.4", "C0", "+"),
@@ -41,6 +43,26 @@ ax.grid(linestyle=":", which="both")
 
 ax.set_xlabel("time (s)")
 ax.set_ylabel("Ni56 mass (solar masses)")
+
+# Create a set of inset Axes: these should fill the bounding box allocated to
+# them.
+ax2 = plt.axes([0,0,1,1])
+# Manually set the position and relative size of the inset axes within ax1
+ip = InsetPosition(ax, [0.15,0.30,0.4,0.35])
+ax2.set_axes_locator(ip)
+# Mark the region corresponding to the inset axes on ax1 and draw lines
+# in grey linking the two axes.
+mark_inset(ax, ax2, loc1=1, loc2=3, fc="none", ec='0.5')
+
+for diag_file, label, color, ls in sdc_files + strang_files:
+    data = monotonize(np.loadtxt("subch_diags/" + diag_file))
+
+    ax2.plot(data[:,1], data[:,23], label=label, color=color, marker=ls, markevery=0.15)
+
+ax2.set_xlim(0.73, 0.7875)
+ax2.set_yscale("log")
+ax2.set_ylim(0.0175, 0.04)
+
 
 fig.set_size_inches((8, 8))
 fig.savefig("subch_ni56.pdf")
