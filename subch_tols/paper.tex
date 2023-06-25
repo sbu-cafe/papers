@@ -189,17 +189,21 @@ Stony Brook, NY 11794-3800, USA}
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-We explore the coupling of hydrodynamics and reactions in simulations of
+We study the coupling of hydrodynamics and reactions in simulations of
 the double detonation model for Type Ia supernovae.  When assessing the
-convergence of simulations, the focus is usually on spatial resolution.
-However, the method of coupling the physics together as well as the
+convergence of simulations, the focus is usually on spatial resolution, 
+however, the method of coupling the physics together as well as the
 tolerances used in integrating a reaction network also play an important role.
-In this paper, we explore how the choices made in integrating the reaction
-portion of a simulation of the double detonation model of Type Ia supernovae
-influences the nucleosynthesis.  We find that the stronger coupling
+In this paper, we explore how the choices made in both coupling and integrating the reaction
+portion of a simulation influences the accuracy, efficiency, and the nucleosynthesis
+of simulations of the double detonation model of Type Ia supernovae.
+We find that the stronger coupling between hydrodynamics and reactions,
 afforded by the simplified spectral deferred corrections method introduced
-previously provides a more accurate and efficient result than standard
-operator splitting.
+previousl,y provides a more accurate and efficient result than standard
+operator splitting.  We also find no need to limit reactions rates or reduce the
+simulation timestep to the reaction timescale.  The entire simulation
+methodology used here is freely available as part of the \castro\ simulation
+code.
 \end{abstract}
 
 \keywords{convection---hydrodynamics---methods: numerical}
@@ -209,8 +213,8 @@ operator splitting.
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
 
-There are many different progenitor models for Type Ia supernova that
-are currently being explored.  The double detonation model
+There are many different progenitor models for Type Ia supernova (SN Ia) that
+are currently being explored to explain the observed diversity of SN Ia explosions \cite{taubenberger:2017}.  The double detonation model
 \citep{fink:2007} involves a sub-Chandrasekhar mass white dwarf with a
 thin accreted He layer.  A detonation in the He layer propagates
 around the star while sending a compression wave converging toward the
@@ -220,17 +224,17 @@ have modeled this scenario, varying the initial conditions,
 resolution \citep{rivas:2022}, and reaction networks to understand the robustness of this
 model as well as its connection to observations.
 
-\citep{townsley:2019} \citep{gronow:2020}, \citep{gronow:2021}, \citep{glasner:2018}, \citep{roy:2022}, \citep{shenbildsten:2014}, 
+\citep{townsley:2019} \citep{gronow:2020}, \citep{gronow:2021}, \citep{glasner:2018}, \citep{roy:2022}, \citep{shenbildsten:2014}, \cite{polin:2019}, \citep{kushnirkatz:2020}
 
 
 These events are modeled using the Euler equations with reactive and
 gravitational sources:
-\begin{eqnarray*}
+\begin{eqnarray}
 \ddt{\rho} + \nabla \cdot (\rho \Ub) &=& 0 \\
 \ddt{(\rho \Ub)} + \nabla \cdot (\rho \Ub \Ub) + \nabla p &=& \rho \gb \\
 \ddt{(\rho E)} + \nabla \cdot (\rho \Ub E + \Ub p) &=& \rho \Ub \cdot \gb + \rho \dot{S} \\
 \ddt{(\rho X_k)} + \nabla \cdot (\rho \Ub X_k) &=& \rho \omegadot_k
-\end{eqnarray*}
+\end{eqnarray}
 where $\rho$ is the mass density, $\Ub$ is the velocity, $E$ is the specific
 total energy, $p$ is the pressure, and $X_k$ are the mass fractions
 of the nuclei that react.  The sources are the gravitational acceleration,
@@ -247,13 +251,17 @@ p = p(\rho, e, X_k)
 where $e$ is the specific internal energy, obtained as $e = E - |\Ub|^2/2$.
 
 Simulation codes use different methods to advance this system of equations.  For hydrodynamics,
-explicit-in-time integration is usually used, with the timestep, $\Delta t$, restricted by the Courant limit:
+explicit-in-time integration is usually used, with the timestep, $\Delta t$, restricted by the Courant limit.  In two-dimensions, this is:
 \begin{equation}
-\Delta t = C \min_{i,j,k} \left \{ \frac{\Delta x}{|\Ub| + c} \right \}
+\Delta t = C \min_{i,j} \left \{ \frac{\Delta x}{|u_{i,j}| + c_{i,j}}, \frac{\Delta y}{|v_{i,j}| + c_{i,j}}  \right \}
 \end{equation}
-where $\Delta x$ is the width of a grid zone and $c$ is the sound
+where $\Delta x$ and $\Delta y$ are the grid width in the $x$- and $y$-directions, $u$ and $v$
+are the $x$- and $y$-components of the velocity and $c$ is the sound
 speed, and the minimum is taken over all zones on the grid.  Here, the
-Courant number, $C$ is required to be $C < 1$ for stability.
+Courant number, $C$ is required to be $C < 1$ for stability.  We note that
+this is the form of the stability criterion for the corner transport upwind
+formulation \citep{ppmunsplit} of hydrodynamics we use.  Dimensionally-split
+or method-of-lines formulations will have a slighly more restrictive criteria.
 Reactions, on the other hand, tend to be stiff, and are usually evolved
 using implicit-in-time integration, with many small steps taken to
 make up the hydrodynamics timestep $\Delta t$.
@@ -275,23 +283,26 @@ When using operator-splitting, the density remains constant, since there
 is no reaction source in the mass continuity equation.  The mass
 fractions, $X_k$, and energy evolve according to:
 \begin{eqnarray}
-\frac{dX_k}{dt} &= \omegadot_k \\
-\frac{de}{dt} &= \dot{S} \\
+\frac{dX_k}{dt} &= \omegadot_k(\rho, T, X_k) \label{eq:stranga} \\
+\frac{de}{dt} &= \dot{S}(\rho, T, X_k) \\
+T &= T(\rho, e, X_k) \label{eq:strangc}
 \end{eqnarray}
-where $\omegadot_k$ is the creation rate of species $k$ due to nuclear
-reaction.  In the simplest approximation of operator splitting, the
+In the simplest approximation of operator splitting, the
 evolution of the mass fractions is solved alone, without integrating
-the temperature or energy.  This is the form that was used in FLASH
-\cite{flash}.  A more accurate operator splitting also includes the
-energy evolution (perhaps in terms of temperature).  This will require
+the temperature or energy.  This is the form that was used, e.g., in FLASH
+\citep{flash}.  A more accurate operator splitting also includes the
+energy evolution (perhaps in terms of temperature), solving the system Eqs.~\ref{eq:stranga}--\ref{eq:strangc}.  This will require
 calling the equation of state each time we evaluate the righthand side
-of the ODE system, increasing the cost.  However, as we showed in
+of the ODE system, potentially increasing the computational expense.  However, as we showed in
 \citet{strang_rnaas}, this is needed to get second-order convergence.
 
-Detonations can be difficult to model numerically.  Time step cuts \MarginPar{ref}.
-For the double detonation scenario, the ignition of the second detonation
-can be very sensitive to how the simulation is run \MarginPar{refs}.
-Artifically limiting the rates \MarginPar{ref}
+Detonations can be difficult to model numerically.  One common
+approach is to use a simultion timestep based on the reaction
+timescale, as discussed in \citet{prometheus}, instead of the
+hydrodynamics timescale.  For the double detonation scenario, the
+ignition of the second detonation can be very sensitive to how the
+simulation is run \MarginPar{refs}.  Artifically limiting the
+rates \MarginPar{ref}
 
 In \citet{castro_simple_sdc}, we introduced a method based on the
 ideas of spectral deferred corrections for coupling reactions and
@@ -301,13 +312,37 @@ explicit reactive source, and the reaction update evolving an ODE
 system that includes a piecewise-constant-in-time advective source,
 $\Adv{\Uc}^{n+1/2}$,
 \begin{equation}
+\label{eq:simplesdc}
 \ddt{\Uc} = \Rb(\Uc) + \Adv{\Uc}^{n+1/2}
 \end{equation}
+Here, $\Uc$ is the conserved state, $\Uc = (\rho, \rho \Ub, \rho E,
+\rho X_k)^\intercal$, $\Rb(\Uc)$ are the reactive sources, and
+$\Adv{\Uc}^{n+1/2}$ is an approximation to the advective update over
+the timestep, as computed by the corner transport upwind formulation
+of the piecewise parabolic method
+\citep{ppmunsplit,millercolella:2002,ppm}. Crucially, this advective
+term includes an explicit reaction source term and the update,
+Eq.~\ref{eq:simplesdc} means that the reactions will ``see'' what
+advection is doing as the reaction network is integrated.
 
 In addition to the time-integration strategy, integrating the reaction
-ODE system requires specifying tolerances.  Unfortunately, the tolerances
-used are not normally reported in papers, and in many cases, may not
-be easily controlled by a code user at runtime.
+ODE system requires specifying tolerances, usually both an absolute, $\epsilon_\mathrm{abs}$, and relative tolerance, $\epsilon_\mathrm{rel}$, that are combined together into a weight of the form:
+\begin{equation}
+w_i = \epsilon_{\mathrm{abs},i} + \epsilon_{\mathrm{rel},i} |y_i|
+\end{equation}
+where the $y_i$ is one of the variables being integrated by the ODE
+integrator and $i$ is the index, indicating that different tolerances
+can be used for each variable.  Traditionally one set of tolerances is
+used for the mass fractions and another for the energy (if it is
+integrated).  Unfortunately, the tolerances used by simulations are
+not normally reported in papers, and in many cases, may not be easily
+controlled by a code user at runtime (and therefore, users may not be
+aware of what they are using).  Some examples can be found in publicly
+available networks.  For example, the freely available version of the
+{\tt aprox13} network uses $\epsilon_\mathrm{rel} = 10^{-5}$ and a
+floor on the mass fractions corresponding to $\epsilon_\mathrm{abs} =
+10^{-6}$.  Since the simplified-SDC update works in terms of the
+conserved variables, $\Uc$, we apply a density weighting to the absolute tolerances when comparing to the values used in Strang integration.
 
 
 
@@ -561,6 +596,7 @@ NASA's Astrophysics Data System Bibliographic Services.
           helmeos \citep{timmes_swesty:2000},
           linux (\url{https://www.kernel.org/}),
           matplotlib (\citealt{Hunter:2007}, \url{http://matplotlib.org/}),
+          NetworkX \citep{networkx},
           NumPy \citep{numpy,numpy2},
           pynucastro \citep{pynucastro,pynucastro2},
           python (\url{https://www.python.org/}),
