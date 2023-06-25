@@ -166,6 +166,12 @@ Stony Brook University,
 Stony Brook, NY 11794-3800, USA}
 
 
+\author{Melissa Rasmussen}
+\affiliation{Stony Brook? Utah?}
+
+\author{Abigail Polin}
+\affiliation{Caltech}
+
 \author[0000-0003-0439-4556]{Max Katz}
 \affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
              Stony Brook, NY 11794-3800, USA}
@@ -455,8 +461,9 @@ perturbation.  We choose $R_\mathrm{pert} = 100~\mathrm{km}$.  The
 temperature is perturbed above the initial model value, denoted as
 $T_0$ here.  The amplitude of the perturbation is $f = 3$ and the
 scale of the perturbation is $\lambda = 12.5~\mathrm{km}$.  This is a
-very small perturbation, but enough to seed the initial He detonation
-in the envelope.  \MarginPar{give the peak temperature}
+very small perturbation, with a peak temperature of about $1.1\times
+10^9~\mathrm{K}$, but enough to seed the initial He detonation in the
+envelope.
 
 Our base simulation uses the simplified-SDC integration, a CFL number
 of $0.2$, and sets $\epsilon_\mathrm{rel} = \epsilon_\mathrm{abs} =
@@ -566,6 +573,22 @@ does so in a very efficient fashion.
 
 \subsection{Spatial resolution}
 
+Figure~\ref{fig:res_panel} shows a time sequence of the simplified-SDC
+simulation with CFL = 0.2 and our standard tolerances
+($\epsilon_\mathrm{abs} = \epsilon_\mathrm{rel} = 10^{-5}$ at 3
+diferent spatial resolutions: 40 km, 20 km, and 10 km.  For the 40 km
+run, we simply use one fewer levels of refinement compared to our base
+simulation.  For the 10 km run, we add an additional level of
+refinement that captures only the high temperature regions (including
+the initial He layer) but with the very center always refined by
+adding an additional refinement tagging criteria on densities $\rho >
+7.5\times 10^7~\gcc$.  The first column of the figure shows the
+initial grid structure---darker colors are higher levels of
+refinement.  Each of the boxes shown is a multiple of 32 zones in each
+dimension, with a maximum of 256 zones in any dimension.  This
+refinement for the highest resolution run ensures that we capture the
+convergence of the pressure wave at the center.  
+
 \begin{figure}[t]
 \centering
 \plotone{subch_Temp_res_compare}
@@ -574,6 +597,13 @@ does so in a very efficient fashion.
 \end{figure}
 
 
+As we see from the time-evolution, the three different resolutions all
+behave largely the same.  The timescale for the He detonaiton to
+propagate around the star and the timescale at which the second C
+detonation ignite match well.  Figure~\ref{fig:res} shows the
+\isot{Ni}{56} mass produced from the three different simulations.
+Again, the agreement is quite strong.
+
 \begin{figure}[t]
 \centering
 \plotone{subch_ni56_res}
@@ -581,7 +611,14 @@ does so in a very efficient fashion.
 \end{figure}
 
 
-
+We note that these resolution results differ from the conclusions of
+\citet{rivas:2022}.  There are a number of reasons why this might be
+the case.  First the initial models differ \MarginPar{details}.
+Second, we use a much larger reaction network here that better
+captures the energetics.  This means that the He detonation moves
+faster and the subsequent convergence of the pressure wave will be
+more on-center, meaning that the ignition of the C detonation occurs
+at a higher temperature.  Finally, we are using the simplified-SDC time-integration, which that work used Strang splitting \MarginPar{do they give details about e evolution?}
 
 \section{Summary}
 
