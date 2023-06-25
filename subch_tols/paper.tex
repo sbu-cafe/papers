@@ -344,16 +344,17 @@ floor on the mass fractions corresponding to $\epsilon_\mathrm{abs} =
 10^{-6}$.  Since the simplified-SDC update works in terms of the
 conserved variables, $\Uc$, we apply a density weighting to the absolute tolerances when comparing to the values used in Strang integration.
 
-
-
-\citet{castro_simple_sdc} looked at an extreme version of the
-double detonation scenario---a very large perturbation was applied
-to drive a detonation directly into the underlying
-carbon-oxygen white dwarf.  We showed in that paper that the Strang
-split integration method had difficulty with the integration unless
-we used tighter tolerances
-
-Summary of the SDC subch results form the original paper
+We considered an extreme version of the double detonation scenario in
+\citet{castro_simple_sdc}---a very large perturbation was applied to
+drive a detonation directly into the underlying carbon-oxygen white
+dwarf.  We showed that the Strang split integration method had
+difficulty with the integration unless we used tighter tolerances,
+while the simplified-SDC method was well-behaved.  Here we look at a
+more realistic setup for a double detonation, with a small
+perturbation that drives a He detonation around the star and a
+compression wave that results in the ignition of a C detonation near
+the center of the star.  We focus on the nucleosynthesis and the
+efficiency of the method.
 
 %======================================================================
 % Results
@@ -362,91 +363,118 @@ Summary of the SDC subch results form the original paper
 
 \subsection{Simulation setup}
 
-We use a 2d axisymmetric domain with a size of $5.12\times 10^9~\mathrm{cm}$ by $1.024\times 10^{10}~\mathrm{cm}$.  This is
-much larger than the initial size of the star, giving it plenty of
-room to expand.  The coarse grid is $640\times 1280$ zones and we use
-2 levels of refinement, giving a maximum resolution of
-$20~\mathrm{km}$.  The refinement strategy is picked to refine on the
-star and any regions where the temperature is greater than
-$10^8~\mathrm{K}$.  \castro\ uses subcycling, so finer grids are
-advanced at a smaller timestep than the coarse grids.  Self-gravity is
-done using a full Poisson solve using geometric multigrid, with
-Dirichlet boundary conditions on the domain boundary computed via a
-multipole expansion with a maximum order of 6.  For the low density
-regions outside of the star, we use a sponge term on the momentum
-equation to prevent the very low density material that is not in
-hydrostatic equilibrium from raining down on the star.
+We use the freely-available \castro\ simulation code for all the
+simulations shown here.  Our domain uses a 2D axisymmetric geomety
+with a size of $5.12\times 10^9~\mathrm{cm}$ by $1.024\times
+10^{10}~\mathrm{cm}$.  This is much larger than the initial size of
+the star, giving it plenty of room to expand (we note that the figures
+shown in the results section are all zoomed in on the star).  The
+coarse grid is $640\times 1280$ zones and we use 2 levels of
+refinement, each a jump of $2\times$, giving a maximum resolution of
+$20~\mathrm{km}$.  \castro\ uses the \amrex\ library
+\citep{amrex_joss} to manage the grid hierarchy.  The refinement
+strategy is picked to refine on the star and any regions where the
+temperature is greater than $10^8~\mathrm{K}$.  Finally, \castro\ uses
+subcycling, so finer grids are advanced at a smaller timestep than the
+coarse grids.
 
-Our default CFL number is 0.2 for these simulations, and the CFL constraint
-is the only timestep constraint used.  For larger CFL numbers, the ODE integration
-sometimes encounters problems \MarginPar{more}.
+As noted above, we use the unsplit PPM algorithm for advection, with
+the Riemann solver from \citet{colellaglaz:1985} and the general
+stellar equation of state of \citet{timmes_swesty:2000}.  In
+all simulations, the CFL constraint is the
+only timestep constraint used.  Self-gravity is done using a full
+Poisson solve using geometric multigrid, with Dirichlet boundary
+conditions on the domain boundary computed via a multipole expansion
+with a maximum order of 6.  For the low density regions outside of the
+star, we use a sponge term on the momentum equation to prevent the
+very low density material that is not in hydrostatic equilibrium from
+raining down on the star.
 
-All simulations use the same network, the {\tt subch\_simple} as
-described in \cite{zhi2023}.  This includes 22 nuclei and 94 rates
-from ReacLib \citep{reaclib} and is produced with \pynucastro\
-\citep{pynucastro2}.  Importantly, we include
+
+All simulations use the same reaction network: the {\tt subch\_simple}
+as described in \cite{zhi2023}.  This includes 22 nuclei and 94 rates
+from ReacLib \citep{reaclib} and is produced with
+\pynucastro\ \citep{pynucastro2}.  \MarginPar{show I show the
+  network?} Importantly, we include
 $\isotm{N}{14}(\alpha,\gamma)\isotm{F}{18}(\alpha,p)\isotm{Ne}{21}$
 which creates protons to allow for
 $\isotm{C}{12}(p,\gamma)\isotm{N}{13}(\alpha,p)\isotm{O}{16}$.  This
 sequence can be faster than
 $\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$, as pointed out by
 \citet{shenbildsten} and is important for getting the detonation speed
-correctly.  To reduce the size of the network, some
-$(\alpha,p)(p,\gamma)$ and $(\alpha,\gamma)$ rates are combined into
-an effective $(\alpha,\gamma)$ rate.  Screening is provided following
-the procedure in \citet{wallace:1982}, combining the screening
-functions of \citet{graboske:1973,alastuey:1978,itoh:1979}.
+correctly.  To reduce the size of the network, we have
+\pynucastro\ combine some $(\alpha,p)(p,\gamma)$ and $(\alpha,\gamma)$
+rates into an effective $(\alpha,\gamma)$ rate.  Screening is provided
+following the procedure in \citet{wallace:1982}, combining the
+screening functions of \citet{graboske:1973,alastuey:1978,itoh:1979}.
 
-The reaction system is integrated using a version of the VODE ODE integrator
-\citep{vode} ported to C++.  Our modifications to this integrator are described
-in \citet{castro_simple_sdc}.  We use an analytic approximation to the Jacobian
-and found that we get best results when we disable the caching of the Jacobian
-in the integrator.
+The reaction system is integrated using a version of the VODE ODE
+integrator \citep{vode} ported to C++.  Our modifications to this
+integrator are described in \citet{castro_simple_sdc}.  We use an
+analytic approximation to the Jacobian (the main approximation is that
+the species derivatives of the screening function are not included)
+and found that we get best results when we disable the caching of the
+Jacobian in the integrator.
 
-If during the advance of a timestep an error is generated (negative
-density, ODE integration fails, mass fractions don't sum to 1, CFL constraint violated at the new time), the
-step is thrown-out and retied with a smaller timestep.  This is done
-on a level-by-level basis in the overall AMR subcycling hierarchy.
+If during the advance of a timestep an
+error is generated (negative density, ODE integration fails, mass
+fractions don't sum to 1, CFL constraint violated at the new time),
+the step is thrown-out and retied with a smaller timestep.  This is
+done on a level-by-level basis in the overall AMR subcycling
+hierarchy.
 
-We will run a suite of simulations all using the same initial model.
-The initial model is constructed following the methodology in
-\citet{subchandra}.  We use an isothermal core of C/O of $1.1~M_\odot$
-with $T = 10^7~\mathrm{K}$ and a thin transition region where the
-temperature ramps up to $1.75\times 10^8~\mathrm{K}$ and the
-composition changes to 99\% \isot{He}{4} and 1\% \isot{N}{14}.    This He envelope is then integrated isentropically.  The
-density of the transition from the underlying CO white dwarf to the He
-envelope was selected to yield an envelope mass of $0.05~M_\odot$.
+We will run a suite of simulations all using the same initial model,
+constructed following the methodology in \citet{subchandra}.  We use
+an isothermal core of C/O of $1.1~M_\odot$ with $T = 10^7~\mathrm{K}$
+and a thin transition region where the temperature ramps up to
+$1.75\times 10^8~\mathrm{K}$ and the composition changes to 99\%
+\isot{He}{4} and 1\% \isot{N}{14}.  This He envelope is then
+integrated isentropically.  The density of the transition from the
+underlying CO white dwarf to the He envelope was selected to yield an
+envelope mass of $0.05~M_\odot$.  The code for generating the model is
+freely available at
+\url{https://github.com/amrex-astro/initial_models}.  \MarginPar{should
+  we do a zenodo release of this?}
 
 We place a small temperature perturbation in the He layer using the
 same form as in \citet{castro_simple_sdc}:
 \begin{equation}
-  T = T_0 \left [ 1 + X(\isotm{He}{4}) f (1 + \tanh(2 - r_1)) \right ]
+  T = T_0 \left \{ 1 + X(\isotm{He}{4}) f \left [1 + \tanh(2 - \sigma) \right ] \right \}
 \end{equation}
 where
 \begin{equation}
-  r_1 = \left [ x^2 + (y - r_0)^2 \right ]^{1/2} / \lambda
+  \sigma = \left [ x^2 + (y - R_0)^2 \right ]^{1/2} / \lambda
 \end{equation}
 and
 \begin{equation}
-  r_0 = r_\mathrm{pert} + r_\mathrm{base}
+  R_0 = R_\mathrm{pert} + R_\mathrm{base}
 \end{equation}
-Here, $r_\mathrm{base}$ is the radius at which the helium layer begins
-and $r_\mathrm{pert}$ is the distance above the base to put the
-perturbation.  We choose $r_\mathrm{pert} = 100~\mathrm{km}$.  The
+where, $R_\mathrm{base}$ is the radius at which the helium layer
+begins and $R_\mathrm{pert}$ is the distance above the base to put the
+perturbation.  We choose $R_\mathrm{pert} = 100~\mathrm{km}$.  The
 temperature is perturbed above the initial model value, denoted as
 $T_0$ here.  The amplitude of the perturbation is $f = 3$ and the
-scale of the perturbation is $\lambda = 12.5~\mathrm{km}$, and
-$r_\mathrm{pert} = 100~\mathrm{km}$.  This is a very small
-perturbation, but enough to seed the initial He detonation in the
-envelope.
+scale of the perturbation is $\lambda = 12.5~\mathrm{km}$.  This is a
+very small perturbation, but enough to seed the initial He detonation
+in the envelope.  \MarginPar{give the peak temperature}
 
-
+Our base simulation uses the simplified-SDC integration, a CFL number
+of $0.2$, and sets $\epsilon_\mathrm{rel} = \epsilon_\mathrm{abs} =
+10^{-5}$ for both the species and energy.  Overall, the simulation
+requires 21,784 coarse grid timesteps to evolve to $1.0~\mathrm{s}$ of
+simulation time.
 
 The simulations are all run on the OLCF Frontier machine, using 4
 nodes / 32 AMD GPUs.  The data is moved to the GPUs at the start of
 the simulation and all computation is done there.  Our GPU offloading
-strategy takes advantage of the \amrex\ C++ lambda-capturing
-functionality to be performance portable.
+strategy \citep{castro_gpu} takes advantage of the \amrex\ C++
+lambda-capturing functionality to be performance portable.
+All of the simulation code is on github at
+\url{https://github.com/amrex-astro/} and the inputs files, global
+diagnostics used to make the line plots shown below, and metadata
+describing the git hashes, compiler environment, and runtime
+parameters for all of the simulaitons is available at \MarginPar{add
+  Zenodo ref}.
 
 \begin{figure*}[t]
 \centering
@@ -454,28 +482,37 @@ functionality to be performance portable.
 \caption{\label{fig:temp_sequence} Time-sequence of the SDC run showing the temperature.}
 \end{figure*}
 
+Figure~\ref{fig:temp_sequence} shows the evolution of the temperature field for the base simulation.  The initial perturbation is placed at the north pole at $t=0$ and leads to a detonation in the He layer that begins to wrap around the star.  By $0.1~\mathrm{s}$ the detonation is almost halfway around the star and by $0.2~\mathrm{s}$ is almost at the south pole.  Figure~\ref{fig:lapl_rho_sequence} shows shows a Schlieren-style plot, which
+highlights density gradients.  It is constructed by plotting
+$\log_{10}(|\rho^{-1}\nabla^2\rho|)$.  This clearly shows a
+compression wave launched by the early evolution of the He detonation propagating inward toward
+the center of the white dwarf.  
+
 \begin{figure*}[t]
 \centering
 \plotone{subch_lap_rho_sequence}
 \caption{\label{fig:lap_rho_sequence} Time-sequence of the SDC run showing the compression.}
 \end{figure*}
 
-Figure~\ref{fig:lap_rho_sequence} shows a Schlieren-style plot, which
-highlights density gradients.  It is constructed by plotting
-$\log_{10}(|\rho^{-1}\nabla^2\rho|)$.  This clearly shows the
-compression wave launched by the He detonation propagating in toward
-the center of the white dwarf.  The middle row shows this compression
-wave converging slightly off-center which then leads to the ignition
-of the C detonation.  This also highlights how the speed of the He
-detonation is important in determining how off-center the C detonation
-ignition will be.  Our choice of network was motivated by ensuring
-that we capture the energy release from He burning accurately, in
-particular the inclusion of the
+Between $t = 0.3$ and $t = 0.7~\mathrm{s}$ the burning is confined to
+the outer layer, but the compression wave continues to advance inward,
+converging slightly off-center at around $t = 0.7~\mathrm{s}$.  This
+highlights how the speed of the He detonation is important in
+determining how off-center the C detonation ignition will be.  Our
+choice of network was motivated by ensuring that we capture the energy
+release from He burning accurately, in particular the inclusion of the
 $\isotm{C}{12}(p,\gamma)\isotm{N}{13}(\alpha,p)\isotm{O}{16}$
 sequence.
 
+In the bottom row of Figure~\ref{fig:temp_sequence}, we see
+the second detonation ignite near the center of the star and
+begin to propagate outward.  By $1.0~\mathrm{s}$ it has evolved
+past the initial radius of the star and is into the extended
+ash layer left behind by the previous He detonation.
 
 \subsection{Time-integration and Nucleosynthesis}
+
+We now look at how Strang integration to this base simulation.
 
 We run 3 different types of integration methods: traditional operator
 splitting, using Strang splitting, both with integration of the energy
