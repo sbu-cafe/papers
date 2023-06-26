@@ -587,7 +587,10 @@ initial grid structure---darker colors are higher levels of
 refinement.  Each of the boxes shown is a multiple of 32 zones in each
 dimension, with a maximum of 256 zones in any dimension.  This
 refinement for the highest resolution run ensures that we capture the
-convergence of the pressure wave at the center.  
+convergence of the pressure wave at the center.  For the 10 km resolution
+run, we needed to switch from an analytic approximation to the Jacobian
+to a numerical difference approximation once the C detonation ignited, because
+the evolution became too challenging for the ODE integrator otherwise.
 
 \begin{figure}[t]
 \centering
