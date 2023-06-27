@@ -4,9 +4,9 @@ from mpl_toolkits.axes_grid1.inset_locator import (InsetPosition, inset_axes,
                                                    mark_inset)
 
 sdc_files = [
-    ("subch_sdc_40km/species_diag.out", "SDC 40 km"), 
-    ("subch_sdc/species_diag.out", "SDC 20 km"), 
-    ("subch_sdc_10km_3lev/species_diag.out", "SDC 10 km"), 
+    ("subch_sdc_40km/species_diag.out", "SDC-40km"), 
+    ("subch_sdc/species_diag.out", "SDC-0.2"), 
+    ("subch_sdc_10km_3lev/species_diag.out", "SDC-10km"), 
     ]
 
 
