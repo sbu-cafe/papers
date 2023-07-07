@@ -14,8 +14,8 @@ strang_files = [
 #    ("subch_strang_cfl0.1/species_diag.out", "Strang CFL=0.1", "C1", "x"),
 #    ("subch_strang_noTevolve_fix/species_diag.out", "Strang, CFL=0.2, no T evolution", "C2", "s"),
     ("subch_strang_cfl0.05/species_diag.out", "Strang-0.05", "C0", "+"),
-    ("subch_strang_tol1e-6/species_diag.out", "Strang-tol1", "C1", "^"),
-    ("subch_strang_tol1.e-8/species_diag.out", "Strang-tol2", "C1", "x")]
+#    ("subch_strang_tol1e-6/species_diag.out", "Strang-tol1", "C1", "^"),
+    ("subch_strang_tol1.e-8/species_diag.out", "Strang-tol", "C1", "x")]
 
 fig, ax = plt.subplots()
 
