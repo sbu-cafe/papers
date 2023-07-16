@@ -12,7 +12,7 @@ sdc_files = [
 strang_files = [
     ("subch_strang/grid_diag.out", "Strang-0.2", "C0", "o"),
 #    ("subch_strang_cfl0.1/grid_diag.out", "Strang CFL=0.1", "C1", "x"),
-#    ("subch_strang_noTevolve_fix/grid_diag.out", "Strang, CFL=0.2, no T evolution", "C2", "s"),
+    ("subch_strang_noTevolve_fix/grid_diag.out", "Strang, CFL=0.2, no T evolution", "C2", "s"),
     ("subch_strang_cfl0.05/grid_diag.out", "Strang-0.05", "C0", "+"),
     ("subch_strang_tol1.e-8/grid_diag.out", "Strang-tol", "C1", "x")]
 

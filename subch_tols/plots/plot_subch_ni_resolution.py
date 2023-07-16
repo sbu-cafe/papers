@@ -7,6 +7,7 @@ sdc_files = [
     ("subch_sdc_40km/species_diag.out", "SDC-40km"), 
     ("subch_sdc/species_diag.out", "SDC-0.2"), 
     ("subch_sdc_10km_3lev/species_diag.out", "SDC-10km"), 
+    ("subch_sdc_5km_4lev/species_diag.out", "SDC-5km"), 
     ]
 
 
