@@ -446,7 +446,7 @@ A reaction rate cross section, $\sigma$, takes the form:
 \begin{equation}
     \sigma(E) = \frac{S(E)}{E} e^{-2\pi \eta}
 \end{equation}
-where $S(E)$ contains the details of the nuclear physics, $E$ is the energy of particle collisions in the center-of-mass frame, and $\eta$, accounts for Coulomb barrier penetration due to quantum effects \citep{Newton2007}. The reaction rate, $R_{\textrm{th}}$, is found by integrating the cross-section over the Maxwellian velocity distribution.  If the nuclei involved in the reaction are present in a high-density region that is permeated with plasma particles, then the strength of the Coulomb barrier would be reduced due to the plasma screening effect since the effective charge of the fusing nuclei \deleted{are} \edit1{is} reduced. The screening enhancement factor is usually expressed as
+where $S(E)$ contains the details of the nuclear physics, $E$ is the energy of particle collisions in the center-of-mass frame, and $\eta$, accounts for Coulomb barrier penetration due to quantum effects \citep{Newton2007}. The reaction rate, $R_{\textrm{th}}$, is found by integrating the cross-section over the Maxwellian velocity distribution.  If the nuclei involved in the reaction are present in a high-density region that is permeated with plasma particles, then the strength of the Coulomb barrier would be reduced due to the plasma screening effect since the effective charge of the fusing nuclei \edit1{is} reduced. The screening enhancement factor is usually expressed as
 \begin{equation}
     F_{\textrm{scr}} = \exp{(h)}
 \end{equation}
@@ -492,7 +492,7 @@ The overall procedure of {\tt SCREEN5} is summarized in the appendix of \cite{Wa
     \Gamma_e = \sqrt[3]{\frac{4\pi n_e}{3}}\frac{e^2}{k_BT}
 \end{equation}
 
-\deleted{we define $\Gamma = (2/(Z_1+Z_2))^{1/3}Z_1 Z_2 \Gamma_e$, where $\Gamma_e = e^2\sqrt[3]{(4\pi n_e/3)}/(k_BT)$ describes the thermodynamic condition at which the reaction takes place,} $Z$ is the charge of the fusing nuclei, \deleted{$\mu_{12} = $ is the reduced mass for the two fusing nuclei,} $e$ is the electron charge, $n_e$ is the electron number density, and $k_B$ is Boltzmann's constant. When the plasma screening effect is weak or $\Gamma < 0.3$, {\tt SCREEN5} utilizes the equation proposed by \cite{Graboske_1973, Dewitt_1973}, which assumes that the interacting nuclei are separated by zero distance. To account for the spatial dependence of the screening enhancement factor, a more precise description of the strong plasma screening limit is utilized when $\Gamma > 0.8$. In \cite{jancovici:1977}, a quadratic dependence of the separation distance between the interacting nuclei was shown. This idea was applied to a one-component plasma by \cite{alastuey:1978}. By following a similar procedure outlined in \cite{itoh:1979}, the screening routine for one-component plasma can be extended to a multi-component plasma, which is suitable for a general mixture of ions. Finally, in
+$Z$ is the charge of the fusing nuclei, $e$ is the electron charge, $n_e$ is the electron number density, and $k_B$ is Boltzmann's constant. When the plasma screening effect is weak or $\Gamma < 0.3$, {\tt SCREEN5} utilizes the equation proposed by \cite{Graboske_1973, Dewitt_1973}, which assumes that the interacting nuclei are separated by zero distance. To account for the spatial dependence of the screening enhancement factor, a more precise description of the strong plasma screening limit is utilized when $\Gamma > 0.8$. In \cite{jancovici:1977}, a quadratic dependence of the separation distance between the interacting nuclei was shown. This idea was applied to a one-component plasma by \cite{alastuey:1978}. By following a similar procedure outlined in \cite{itoh:1979}, the screening routine for one-component plasma can be extended to a multi-component plasma, which is suitable for a general mixture of ions. Finally, in
 the intermediate screening regime, $0.3 < \Gamma < 0.8$, a weighted average between the weak and strong screening enhancement functions is used.
 
 
@@ -822,7 +822,7 @@ Both fitting functions are applied for $t > 8$ ms, and the fitted parameters alo
 
 \begin{table*}
 \caption{\label{Tab:network_instan_vel}
-Instantaneous flame propagation speed at $t = 23$ ms and $t = 100$ ms for {\tt aprox13}, \edit1{{\tt subch\_full\_mod}, {\tt subch\_full}}, {\tt subch\_simple}, \edit1{and {\tt aprox13\_chu} are represented by $v_{23}$ and $v_{100}$, respectively.} \edit1{The acceleration phase for {\tt subch\_full} and {\tt subch\_simple} and the steady phase at the late-stage are represented by $t = 23$ ms and $t = 100$ ms, respectively.} \deleted{$t = 23$ ms and $t=100$ ms represent the acceleration phase for {\tt subch\_full} and {\tt subch\_simple} and the steady phase at the late-stage, respectively.} \edit1{The theoretical time for the flame to reach 30 km is represented by $t_{30}$.} \deleted{$t_{10}$ represents the theoretical time for the flame to reach 10 km.}
+Instantaneous flame propagation speed at $t = 23$ ms and $t = 100$ ms for {\tt aprox13}, \edit1{{\tt subch\_full\_mod}, {\tt subch\_full}}, {\tt subch\_simple}, \edit1{and {\tt aprox13\_chu} are represented by $v_{23}$ and $v_{100}$, respectively.} \edit1{The acceleration phase for {\tt subch\_full} and {\tt subch\_simple} and the steady phase at the late-stage are represented by $t = 23$ ms and $t = 100$ ms, respectively.} \edit1{The theoretical time for the flame to reach 30 km is represented by $t_{30}$.}
 }
 
 \begin{ruledtabular}
@@ -851,9 +851,9 @@ $t_{30}$ [s]
 \end{table*}
 
 
-Using the fitted parameters, the instantaneous speed of the flame front at different times can be calculated, as shown in Table \ref{Tab:network_instan_vel}. We observe that during the acceleration burst phase at $t = 23$ ms, the difference in the instantaneous speed between {\tt subch\_full} and {\tt subch\_simple} can be as much as 7 times higher compared to the other two simulations. Furthermore, {\tt subch\_full\_mod} accelerates towards the end since it still has a sufficient amount of ${}^{12}$C fuel due to the inefficient reaction flows to ${}^{16}$O. Even though the flame front for {\tt subch\_full\_mod} is expected to surpass {\tt subch\_full} and {\tt subch\_simple} at $t \sim 160$ ms, based on Figure \ref{fig:network_front}, $\dot{e}_{\textrm{nuc}}$ from Figure \ref{fig:network_time_profile} appears to reach its peak at $\sim 120$ ms. \deleted{Therefore, there is no guarantee that the lateral propagating flame for {\tt subch\_full\_mod} would exceed its counterparts} \edit1{In the event of extreme downturns in $\dot{e}_{\textrm{nuc}}$ in the future, there is no assurance that the lateral propagating flame for {\tt subch\_full\_mod} would surpass its counterparts.} 
+Using the fitted parameters, the instantaneous speed of the flame front at different times can be calculated, as shown in Table \ref{Tab:network_instan_vel}. We observe that during the acceleration burst phase at $t = 23$ ms, the difference in the instantaneous speed between {\tt subch\_full} and {\tt subch\_simple} can be as much as 7 times higher compared to the other two simulations. Furthermore, {\tt subch\_full\_mod} accelerates towards the end since it still has a sufficient amount of ${}^{12}$C fuel due to the inefficient reaction flows to ${}^{16}$O. Even though the flame front for {\tt subch\_full\_mod} is expected to surpass {\tt subch\_full} and {\tt subch\_simple} at $t \sim 160$ ms, based on Figure \ref{fig:network_front}, $\dot{e}_{\textrm{nuc}}$ from Figure \ref{fig:network_time_profile} appears to reach its peak at $\sim 120$ ms. \edit1{In the event of extreme downturns in $\dot{e}_{\textrm{nuc}}$ in the future, there is no assurance that the lateral propagating flame for {\tt subch\_full\_mod} would surpass its counterparts.} 
 
-Assuming that the fitting functions accurately describe the flame propagation, the expected time for the flame to \deleted{reach a typical neutron star radius of 10 km} \edit1{propagate laterally across a neutron star with a radius of 10 km or $\pi R \sim 30$ km}, $t_{30}$, can be calculated, as shown in Table \ref{Tab:network_instan_vel}.  \edit1{The quantity $t_{30}$} \deleted{$t_{10}$} serves as a rough prediction for the rise time of XRBs with a pure ${}^{4}$He accretion layer. \edit1{A basic calculation shows that $t_{30}$} \deleted{$t_{10}$} for all models are \deleted{$\lesssim 1$ s} \edit1{$\lesssim 2$ s}, whereas \deleted{$t_{10}$} \edit1{$t_{30}$} for {\tt subch\_full} is \deleted{$\sim 1$ s} \edit1{$\sim 2$ s}, consistent with previous observational studies \citep{galloway:2008}. \edit1{Here we emphasize that $t_{30}$ is extrapolated beyond the data with the assumption that the flame has a sustained constant acceleration. However, this assumption may not hold true. For instance, in the case of {\tt subch\_full\_mod}, $\dot{e}_{\textrm{nuc}}$ already reaches its peak at 120 ms, indicating that the flame's acceleration is not constant. Therefore, $t_{30}$ only serves as an order-of-magnitude calculation.} 
+Assuming that the fitting functions accurately describe the flame propagation, the expected time for the flame to \edit1{propagate laterally across a neutron star with a radius of 10 km or $\pi R \sim 30$ km}, $t_{30}$, can be calculated, as shown in Table \ref{Tab:network_instan_vel}.  \edit1{The quantity $t_{30}$}  serves as a rough prediction for the rise time of XRBs with a pure ${}^{4}$He accretion layer. \edit1{A basic calculation shows that $t_{30}$} for all models are \edit1{$\lesssim 2$ s}, whereas \edit1{$t_{30}$} for {\tt subch\_full} is \edit1{$\sim 2$ s}, consistent with previous observational studies \citep{galloway:2008}. \edit1{Here we emphasize that $t_{30}$ is extrapolated beyond the data with the assumption that the flame has a sustained constant acceleration. However, this assumption may not hold true. For instance, in the case of {\tt subch\_full\_mod}, $\dot{e}_{\textrm{nuc}}$ already reaches its peak at 120 ms, indicating that the flame's acceleration is not constant. Therefore, $t_{30}$ only serves as an order-of-magnitude calculation.} 
 
 
 \begin{comment}
@@ -1011,7 +1011,8 @@ The main advantage of the simplified-SDC integration lies in its stronger coupli
 \end{figure*}
 \end{comment}
 
-\deleted{As shown in \citet{castro_simple_sdc}, in regions where the burning
+\begin{comment}
+As shown in \citet{castro_simple_sdc}, in regions where the burning
 is vigorous, the simplified-SDC method provides a better solution
 than Strang splitting.  However, the XRB flame we simulate here
 are not very demanding, so the benefit is minimal.  
@@ -1019,7 +1020,8 @@ are not very demanding, so the benefit is minimal.
 As a result, the two simplified-SDC simulations were also more
 computationally-expensive than their Strang counterparts.
 This differs from the case in \citet{castro_simple_sdc} where 
-the simplified-SDC algorithm reduced computational expenses in extreme thermodynamic conditions by mitigating the stiffness of solving reaction equations.}
+the simplified-SDC algorithm reduced computational expenses in extreme thermodynamic conditions by mitigating the stiffness of solving reaction equations.
+\end{comment}
 
 
 \subsection{Computational Expenses}
@@ -1068,11 +1070,6 @@ nuclear physics: size of, and approximations in a reaction network, screening me
 
     \item \edit1{We investigated the performance of the simplified-SDC scheme in comparison to the traditional Strang-splitting.  For this problem, since the burning is not very vigorous, there is no strong benefit of using simplified-SDC over Strang-splitting.}
 \end{itemize}
-
-
-\deleted{Comparing the two screening routines, {\tt SCREEN5} and {\tt CHUNGUNOV2007}, we find that {\tt CHUGUNOV2007} has a slightly weaker screening effect in the weak and intermediate screening regimes. As a consequence, the weaker screening effect from {\tt CHUGUNOV2007} leads to a slightly slower flame compared to the {\tt SCREEN5} model. This result matches our expectations and is in agreement with \cite{Chugunov_2007}.}
-
-\deleted{Finally, we investigated the performance of the simplified-SDC scheme in comparison to the traditional Strang-splitting.  For this problem, since the burning is not very vigorous, there is no strong benefit of using simplified-SDC over Strang-splitting.}
 
 Overall, this study gives us confidence that, by using the {\tt subch\_simple} network for our future simulations, we can accurately capture the dynamics of the flame. Our next step is to adapt the current simulation methodology to model a full star flame propagation model. A full star flame propagation simulation allows us to explore how flame dynamics changes subject to the geometric influence, such as the variations in Coriolis force. As the flame encounters the strongest Coriolis force at the pole and the weakest at the equator, its behavior can alter significantly depending on its position. Additionally, a full star simulation provides a more precise estimate of the time required for the flame to engulf the neutron star, which serves as a better approximation of the XRB's rise time.
 
