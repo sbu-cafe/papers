@@ -1,5 +1,5 @@
 %\documentclass[12pt, preprint]{aastex}
-\documentclass[preprint,times,tighten,linenumbers]{aastex631}
+\documentclass[preprint,times,tighten,linenumbers,trackchanges]{aastex631}
 
 \usepackage{epsf,color,amsmath}
 
@@ -154,7 +154,8 @@ Berkeley, CA 94720-3411, USA}
 % Abstract and Keywords
 %======================================================================
 \begin{abstract}
-Through the use of axisymmetric 2D hydrodynamic simulations, we further investigate laterally propagating flames in X-ray bursts (XRBs). Our aim is to understand the sensitivity of a propagating helium flame to different nuclear physics.  Using the \castro\ simulation code, we confirm the phenomenon of enhanced energy generation shortly after a flame is established after by adding ${}^{12}\mbox{C}(\mbox{p}, \gamma) {}^{13}\mbox{N}(\alpha, \mbox{p}){}^{16}\mbox{O}$ to the network, in agreement with the past literature. This sudden outburst of energy leads to a short accelerating phase, causing a drastic alteration in the overall dynamics of the flame in XRBs. % that is crucial to accurately modeling the flame dynamics in XRBs. 
+Through the use of axisymmetric 2D hydrodynamic simulations, we further investigate laterally propagating flames in X-ray bursts (XRBs). Our aim is to understand the sensitivity of a propagating helium flame to different nuclear physics.  Using the \castro\ simulation code, we confirm the phenomenon of enhanced energy generation shortly after a flame is established after by adding ${}^{12}\mbox{C}(\mbox{p}, \gamma) {}^{13}\mbox{N}(\alpha, \mbox{p}){}^{16}\mbox{O}$ to the network, in agreement with the past literature. This sudden outburst of energy leads to a short accelerating phase, causing a drastic alteration in the overall dynamics of the flame in XRBs. 
+% that is crucial to accurately modeling the flame dynamics in XRBs. 
 %We discover that the approximations made in the traditional networks like {\tt aprox13} are still accurate in the context of XRB, but insufficient to correctly model the flame propagation due to the missing rates. 
 Furthermore, we investigate the influence of different plasma screening routines on the propagation of the XRB flame. We finally examine the performance of simplified-SDC, a novel approach to hydrodynamics and reaction coupling incorporated in \castro, as an alternative to operator-splitting.
 
@@ -167,11 +168,10 @@ Furthermore, we investigate the influence of different plasma screening routines
 % Introduction
 %======================================================================
 \section{Introduction}\label{Sec:Introduction}
-
-An X-ray burst (XRB) is a thermonuclear runaway caused by the ignition of the accreted fuel on the surface of a neutron star. Through Roche-lobe overflow, accreted matter is transferred from the companion star's envelope to the surface of the neutron star. The companion star is likely to have a similar composition to the Sun, i.e.\ a mixture of hydrogen, helium, and a small fraction of carbon, nitrogen, and oxygen \citep{Galloway_2020_basics_of_xrb}. Nuclear explosions are directly affected by the initial composition of the accreted layer and the accretion rate. XRBs found with a mixture of hydrogen and helium fuel layers show bursts with $\sim 5$ sec rise time, while a pure helium layer is typically more explosive and shows bursts with shorter rise times ($\sim 1$ sec). If the shell is enriched with carbon rather than helium, then the explosion is likely to have an extended rise duration, from minutes to hours known as a superburst \citep{Kuulkers_2002,Cumming_2001,Gupta_2007}. 
+An X-ray burst (XRB) is a thermonuclear runaway caused by the ignition of the accreted fuel on the surface of a neutron star. Through Roche-lobe overflow, accreted matter is transferred from the companion star's envelope to the surface of the neutron star. The companion star is likely to have a similar composition to the Sun, i.e.\ a mixture of hydrogen, helium, and a small fraction of carbon, nitrogen, and oxygen \citep{Galloway_2020_basics_of_xrb}. Nuclear explosions are directly affected by the initial composition of the accreted layer and the accretion rate. XRBs found with a mixture of hydrogen and helium fuel layers show bursts with $\sim 5$ s rise time, while a pure helium layer is typically more explosive and shows bursts with shorter rise times ($\sim 1$ s). If the shell is enriched with carbon rather than helium, then the explosion is likely to have an extended rise duration, from minutes to hours known as a superburst \citep{Kuulkers_2002,Cumming_2001,Gupta_2007}. 
 % This is in contrast to a few seconds in the case of regular type I XRBs, which are XRBs that have a rapid rise time followed by a gradual decline in the light curve. \MarginPar{this last sentence seems redundant}
 
-Since the timescale of accretion between each burst is in the order of $10^4$ secs while the rise time is in the order of $\sim 1 - 10$ sec \citep{Parikh_2013}, it is unlikely for the same thermodynamic condition to exist on the entire surface of the neutron star and for the entire surface to start burning simultaneously \citep{Shara_1982}. Therefore, nuclear ignition is likely to begin in a localized region, and spread to the rest of the neutron star \citep{Spitkovsky_2002}. This asymmetrical burning leads to modulations in the observed flux during the rotation of neutron stars, which causes asymmetrical surface brightness during XRBs \citep{strohmayer_2009}. This explains burst oscillation behavior, a millisecond period variation of XRB intensity during rise time, and the double-peak light curve for non-photospheric-radius-expansion XRBs discovered and supported by observational data \citep{Altamirano_2010,Chakraborty_2014,Bhattacharyya_2006, Kaaret_2007,Smith_1997}.  
+Since the timescale of accretion between each burst is in the order of $10^4$ s while the rise time is in the order of $\sim 1 - 10$ s \citep{Parikh_2013}, it is unlikely for the same thermodynamic condition to exist on the entire surface of the neutron star and for the entire surface to start burning simultaneously \citep{Shara_1982}. Therefore, nuclear ignition is likely to begin in a localized region, and spread to the rest of the neutron star \citep{Spitkovsky_2002}. This asymmetrical burning leads to modulations in the observed flux during the rotation of neutron stars, which causes asymmetrical surface brightness during XRBs \citep{strohmayer_2009}. This explains burst oscillation behavior, a millisecond period variation of XRB intensity during rise time, and the double-peak light curve for non-photospheric-radius-expansion XRBs discovered and supported by observational data \citep{Altamirano_2010,Chakraborty_2014,Bhattacharyya_2006, Kaaret_2007,Smith_1997}.  
 
 % On-sky observations and numerical simulations of XRBs are two approaches for studying the properties of the neutron star and the mechanism of XRBs. Even though there are many successes in constraining the equation of state and the structure of neutron stars through observational data of XRBs \citep{Ozel2016,Nattila2017,lattimer2014constraints,Steiner_2010}, numerical simulations are also critical to assist and complement the study of XRBs and neutron stars due to the limited events of XRBs and the limitations of observational techniques.\MarginPar{not sure we need this sentence justifying why we should do simulations}
 
@@ -199,8 +199,11 @@ integrators, equation of state \citep{timmes_swesty:2000}, thermal neutrino loss
 
 Our simulation setup is the same as described in \citep{eiden:2020, harpole:2021}, so here we only reiterate the essential points. The simulations are performed using a 2D r-z cylindrical geometry, assuming azimuthal symmetry. 
 The hydrodynamics is evolved using an unsplit piecewise parabolic method \citep{ppm,ppmunsplit,millercolella:2002}.
-We work with a corotating frame, and assume a rotational frequency $\Omega = 1000$ Hz for the neutron star.  Gravity is assumed to be constant, since the accreted layer is thin.  Our initial model is also unchanged from our previous papers.  We employ a hydrostatic initial model to represent the neutron star's initial thermodynamic conditions, with a hot model in the left part of the domain and a cool model in the right---this drives a rightward propagating flame (a spreading hotspot for our geometry).  By default, reactions are incorporated using
+We work with a corotating frame, and assume a rotational frequency $\Omega = 1000$ Hz for the neutron star.  Gravity is assumed to be constant, since the accreted layer is thin.  Our initial model is also unchanged from our previous papers.  We employ a hydrostatic initial model to represent the neutron star's initial thermodynamic conditions, with a hot model in the left part of the domain and a cool model in the right---this drives a rightward propagating flame (a spreading hotspot for our geometry). \edit1{The initial composition can be broadly divided into two large regions. The base region ($0 < z < 2000$ cm) is composed of pure ${}^{56}$Ni, representing the underlying neutron star. On the other hand, the region beyond $z > 2000$ cm consists of pure ${}^{4}$He to represent the accretion layer.} By default, reactions are incorporated using
 operator-splitting.
+
+\edit1{{\castro} uses the adaptive mesh refinement system from {\amrex} \citep{amrex_joss}. The same simulation domain of $r = 1.8432 \times 10^5$ cm and $z = 3.072 \times 10^4$ cm is used for all of our models. At the coarse grid, we again used $1152 \times 192$ zones or a coarse resolution of $160$ cm with two additional refinement levels with refinement ratios of 4 and 2. This means that the first refinement level is 4 times finer than the coarse level and the finest level is 2 times finer than the first level. This enables us to achieve a finest level with $9216 \times 1536$ zones, corresponding to a resolution of 20 cm. Grid refinement is limited to regions where $\rho > 2.5 \times 10^4 \ \textrm{g} \ \textrm{cm}^{-3}$ in order to avoid unnecessary computational costs. The total simulation time is $\sim 120$ ms to avoid flame propagating outside of the domain.}
+
 
 %the atmosphere divided into distinct regions based on height, $z$. The isothermal base region ($0 < z < H_*$) represents the underlying neutron star and consists of the pure ${}^{56}$Ni with a temperature of $T_*$. The hyperbolic tangent transition phase ($H_* < z < H_* + 3 \delta_{\textrm{atm}}$) is characterized by a prescribed temperature and composition profile that transitions from the base region to the pure ${}^{4}$He isentropic atmosphere. The isentropic atmosphere ($z > H_* + 3 \delta_{\textrm{atm}}$) is solved for the corresponding temperature and density, subject to the hydrostatic and isentropic constraints, with the minimum temperature and density set as $T_{\textrm{lo}}$ and $\rho_{\textrm{cutoff}}$, respectively. The prescribed hyperbolic tangent transition profile on the left side of the domain ($r < r_{\textrm{pert}}$) is higher than the other side ($r > r_{\textrm{pert}}$), representing the initial temperature perturbation where the thermonuclear flame initiates.
 
@@ -443,7 +446,7 @@ A reaction rate cross section, $\sigma$, takes the form:
 \begin{equation}
     \sigma(E) = \frac{S(E)}{E} e^{-2\pi \eta}
 \end{equation}
-where $S(E)$ contains the details of the nuclear physics, $E$ is the energy of particle collisions in the center-of-mass frame, and $\eta$, accounts for Coulomb barrier penetration due to quantum effects \citep{Newton2007}. The reaction rate, $R_{\textrm{th}}$, is found by integrating the cross-section over the Maxwellian velocity distribution.  If the nuclei involved in the reaction are present in a high-density region that is permeated with plasma particles, then the strength of the Coulomb barrier would be reduced due to the plasma screening effect since the effective charge of the fusing nuclei are reduced. The screening enhancement factor is usually expressed as
+where $S(E)$ contains the details of the nuclear physics, $E$ is the energy of particle collisions in the center-of-mass frame, and $\eta$, accounts for Coulomb barrier penetration due to quantum effects \citep{Newton2007}. The reaction rate, $R_{\textrm{th}}$, is found by integrating the cross-section over the Maxwellian velocity distribution.  If the nuclei involved in the reaction are present in a high-density region that is permeated with plasma particles, then the strength of the Coulomb barrier would be reduced due to the plasma screening effect since the effective charge of the fusing nuclei \deleted{are} \edit1{is} reduced. The screening enhancement factor is usually expressed as
 \begin{equation}
     F_{\textrm{scr}} = \exp{(h)}
 \end{equation}
@@ -477,7 +480,19 @@ into weak and strong plasma screening regimes depending on the Coulomb coupling 
 \subsubsection{{\tt SCREEN5}}
 
 {\tt SCREEN5} is the name of a widely-circulated screening routine (originally written in Fortran) that was the original screening routine used by \castro.
-The overall procedure of {\tt SCREEN5} is summarized in the appendix of \cite{Wallace:1982}. In {\tt SCREEN5}, we define $\Gamma = (2/(Z_1+Z_2))^{1/3}Z_1 Z_2 \Gamma_e$, where $\Gamma_e = e^2\sqrt[3]{(4\pi n_e/3)}/(k_BT)$ describes the thermodynamic condition at which the reaction takes place, $Z$ is the charge of the fusing nuclei, $\mu_{12}$ is the reduced mass for the two fusing nuclei, $e$ is the electron charge, $n_e$ is the electron number density, and $k_B$ is Boltzmann's constant. When the plasma screening effect is weak or $\Gamma < 0.3$, {\tt SCREEN5} utilizes the equation proposed by \cite{Graboske_1973, Dewitt_1973}, which assumes that the interacting nuclei are separated by zero distance. To account for the spatial dependence of the screening enhancement factor, a more precise description of the strong plasma screening limit is utilized when $\Gamma > 0.8$. In \cite{jancovici:1977}, a quadratic dependence of the separation distance between the interacting nuclei was shown. This idea was applied to a one-component plasma by \cite{alastuey:1978}. By following a similar procedure outlined in \cite{itoh:1979}, the screening routine for one-component plasma can be extended to a multi-component plasma, which is suitable for a general mixture of ions. Finally, in
+The overall procedure of {\tt SCREEN5} is summarized in the appendix of \cite{Wallace:1982}. In {\tt SCREEN5}, \edit1{the Coulomb coupling parameter, $\Gamma$, is defined in Eq. \ref{Eq:gamma_eq}}, 
+
+\begin{equation}\label{Eq:gamma_eq}
+    \Gamma = \sqrt[3]{\frac{2}{Z_1+Z_2}}Z_1 Z_2 \Gamma_e
+\end{equation}
+
+\edit1{where $\Gamma_e$ describes the thermodynamic condition at which the reaction takes place and is defined in Eq. \ref{Eq:gamma_e_eq},} 
+
+\begin{equation}\label{Eq:gamma_e_eq}
+    \Gamma_e = \sqrt[3]{\frac{4\pi n_e}{3}}\frac{e^2}{k_BT}
+\end{equation}
+
+\deleted{we define $\Gamma = (2/(Z_1+Z_2))^{1/3}Z_1 Z_2 \Gamma_e$, where $\Gamma_e = e^2\sqrt[3]{(4\pi n_e/3)}/(k_BT)$ describes the thermodynamic condition at which the reaction takes place,} $Z$ is the charge of the fusing nuclei, \deleted{$\mu_{12} = $ is the reduced mass for the two fusing nuclei,} $e$ is the electron charge, $n_e$ is the electron number density, and $k_B$ is Boltzmann's constant. When the plasma screening effect is weak or $\Gamma < 0.3$, {\tt SCREEN5} utilizes the equation proposed by \cite{Graboske_1973, Dewitt_1973}, which assumes that the interacting nuclei are separated by zero distance. To account for the spatial dependence of the screening enhancement factor, a more precise description of the strong plasma screening limit is utilized when $\Gamma > 0.8$. In \cite{jancovici:1977}, a quadratic dependence of the separation distance between the interacting nuclei was shown. This idea was applied to a one-component plasma by \cite{alastuey:1978}. By following a similar procedure outlined in \cite{itoh:1979}, the screening routine for one-component plasma can be extended to a multi-component plasma, which is suitable for a general mixture of ions. Finally, in
 the intermediate screening regime, $0.3 < \Gamma < 0.8$, a weighted average between the weak and strong screening enhancement functions is used.
 
 
@@ -611,12 +626,13 @@ Screening
 \colrule
 
 {\tt aprox13} & {\tt aprox13} & Strang-splitting & {\tt SCREEN5} \\
-{\tt subch\_full} & {\tt subch\_full} & Strang-splitting & {\tt SCREEN5} \\
 {\tt subch\_full\_mod} & {\tt subch\_full\_mod} & Strang-splitting & {\tt SCREEN5} \\
+{\tt subch\_full} & {\tt subch\_full} & Strang-splitting & {\tt SCREEN5} \\
 {\tt subch\_simple} & {\tt subch\_simple} & Strang-splitting & {\tt SCREEN5} \\
+{\tt aprox13\_chu} & {\tt aprox13} & Strang-splitting & {\tt CHUGUNOV2007}\\
 {\tt aprox13\_sdc} & {\tt aprox13} & simplified SDC & {\tt SCREEN5} \\
 {\tt subch\_full\_sdc} & {\tt subch\_full} & simplified SDC & {\tt SCREEN5} \\
-{\tt aprox13\_chu} & {\tt aprox13} & Strang-splitting & {\tt CHUGUNOV2007} 
+
 
 \end{tabular}
 \end{ruledtabular}
@@ -632,14 +648,14 @@ Screening
 \begin{figure*}
 \centering
 \plotone{network_abar_50ms.pdf}
-\caption{\label{fig:network_abar_50ms} Slice plots comparing $\Bar{A}$ for {\tt aprox13} (top panel), {\tt subch\_full} (second panel from top), {\tt subch\_full\_mod} (third panel), and {\tt subch\_simple} (last panel) at 50 ms. }
+\caption{\label{fig:network_abar_50ms} Slice plots comparing $\Bar{A}$ for {\tt aprox13} (top panel), {\tt subch\_full\_mod} (second panel from top), {\tt subch\_full} (third panel), and {\tt subch\_simple} (last panel) at 50 ms. \edit1{The vertical scaling is stretched to provide better clarity in the vertical flame structure.}}
 \end{figure*}
 
 
 \begin{figure*}
 \centering
 \plotone{network_enuc_50ms.pdf}
-\caption{\label{fig:network_enuc_50ms} Slice plots comparing $\dot{e}_{\textrm{nuc}}$ for {\tt aprox13} (top panel), {\tt subch\_full} (second panel from top), {\tt subch\_full\_mod} (third panel), and {\tt subch\_simple} (last panel) at 50 ms.}
+\caption{\label{fig:network_enuc_50ms} Slice plots comparing $\dot{e}_{\textrm{nuc}}$ for various models at 50 ms. \edit1{The vertical scaling is stretched to provide better clarity in the vertical flame structure.}}
 \end{figure*}
 
 % \begin{figure*}
@@ -680,20 +696,22 @@ Unlike {\tt subch\_full} or {\tt subch\_simple}, {\tt aprox13} and {\tt subch\_f
 \begin{figure*}
     \centering
     \plotone{network_aprox13_nuc_frac.pdf}
-    \caption{\label{fig:network_aprox13_nuc} Slice plots showing the mass fractions of ${}^{12}$C, ${}^{16}$O, and ${}^{28}$Si for {\tt aprox13} at 20 ms.}
-\end{figure*}
-
-\begin{figure*}
-    \centering
-    \plotone{network_subch_nuc_frac.pdf}
-    \caption{\label{fig:network_subch_nuc} Slice plots showing the mass fractions of ${}^{12}$C, ${}^{16}$O, and ${}^{28}$Si for {\tt subch\_full} at 20 ms.}
+    \caption{\label{fig:network_aprox13_nuc} Slice plots showing the mass fractions of ${}^{12}$C, ${}^{16}$O, and ${}^{28}$Si for {\tt aprox13} at 20 ms. \edit1{The vertical scaling is stretched to provide better clarity in the vertical flame structure.}}
 \end{figure*}
 
 \begin{figure*}
     \centering
     \plotone{network_subch_mod_nuc_frac.pdf}
-    \caption{\label{fig:network_subch_mod_nuc} Slice plots showing the mass fractions of ${}^{12}$C, ${}^{16}$O, and ${}^{28}$Si for {\tt subch\_full\_mod} at 20 ms.}
+    \caption{\label{fig:network_subch_mod_nuc} Slice plots showing the mass fractions of ${}^{12}$C, ${}^{16}$O, and ${}^{28}$Si for {\tt subch\_full\_mod} at 20 ms. \edit1{The vertical scaling is stretched to provide better clarity in the vertical flame structure.}}
 \end{figure*}
+
+\begin{figure*}
+    \centering
+    \plotone{network_subch_nuc_frac.pdf}
+    \caption{\label{fig:network_subch_nuc} Slice plots showing the mass fractions of ${}^{12}$C, ${}^{16}$O, and ${}^{28}$Si for {\tt subch\_full} at 20 ms. \edit1{The vertical scaling is stretched to provide better clarity in the vertical flame structure.}}
+\end{figure*}
+
+
 
 \subsubsection{Nucleosynthesis}
 
@@ -712,7 +730,7 @@ Similar to {\tt aprox13}, {\tt subch\_full\_mod} exhibits a considerable amount 
 \begin{figure*}
     \centering
     \plotone{network_species_summary_log.pdf}
-    \caption{\label{fig:network_species_summary} The overall evolution of the total mass for ${}^{12}$C, ${}^{16}$O, ${}^{20}$Ne, ${}^{24}$Mg, ${}^{28}$Si, and ${}^{32}$S for the 4 simulations models: {\tt aprox13}, {\tt subch\_full}, {\tt subch\_full\_mod}, and {\tt subch\_simple}.}
+    \caption{\label{fig:network_species_summary} The overall evolution of the total mass for ${}^{12}$C, ${}^{16}$O, ${}^{20}$Ne, ${}^{24}$Mg, ${}^{28}$Si, and ${}^{32}$S for the 4 simulations models: {\tt aprox13},  {\tt subch\_full\_mod}, {\tt subch\_full}, and {\tt subch\_simple}.}
 \end{figure*}
 
 Figure \ref{fig:network_species_summary} shows the total mass of the key $\alpha$-chain isotopes to track their evolution. The initial spike in the production of ${}^{16}$O, ${}^{20}$Ne, ${}^{24}$Mg, corresponds to the initial peak in energy generation rates for all {\tt subch} networks shown in Figure \ref{fig:network_time_profile}. Although ${}^{12}\mbox{C}(\mbox{p}, \gamma) {}^{13}\mbox{N}(\alpha, \mbox{p}){}^{16}\mbox{O}$ efficiently burns ${}^{12}$C into ${}^{16}$O, resulting in a lower abundance of ${}^{12}$C in {\tt subch\_full} and {\tt subch\_simple}, a considerable amount of ${}^{12}$C still accumulates before $t \sim 18$ ms. Nevertheless, when $t \gtrsim 18$ms, corresponding to $T \sim 1.3 \times 10^9$ K, the flow from ${}^{12}$C to ${}^{16}$O can surpass the triple-$\alpha$ process, resulting in a depletion of ${}^{12}$C. This phenomenon is consistent with results in \cite{Weinberg2007, fisker:2008}. Consequently, there is an amplification in the nuclear energy generation rates and the mass production of heavy isotopes such as ${}^{28}$Si. The early exhaustion of ${}^{12}$C also causes a shortage of burning fuels during the subsequent burning stage for {\tt subch\_full} and {\tt subch\_simple}. This is because the nuclear burning process is now bottle-necked by the triple-$\alpha$ process, corresponding to an overall decline in the energy generation rate following the outburst. In contrast, both {\tt aprox13} and {\tt subch\_full\_mod} exhibit a continuous accumulation of ${}^{12}$C since the networks are bottle-necked by the inefficient $\alpha$-capture rate on ${}^{12}$C to ${}^{16}$O. However, unlike {\tt aprox13}, {\tt subch\_full\_mod} demonstrates slightly more effective burning paths for burning ${}^{12}$C at $t \gtrsim 70$ ms. This phenomenon likely accelerates the overall nuclear burning process, resulting in significantly higher nuclear energy generation compared to {\tt aprox13} during the late-stage burning, as shown in Figure \ref{fig:network_time_profile}.
@@ -722,9 +740,13 @@ Figure \ref{fig:network_species_summary} shows the total mass of the key $\alpha
 
 \begin{figure*}
     \centering
-    \plotone{network_u_v_enuc_25ms.pdf}
-    \plotone{network_u_v_enuc_100ms.pdf}
-    \caption{\label{fig:network_u_v_enuc} $u-v$ phase plots for {\tt aprox13} (panels in the first column on the left), {\tt subch\_full} (second column), {\tt subch\_full\_mod} (third column), {\tt subch\_simple} (fourth column) at $t = 25$ ms (top 4 panels) and $t = 100$ ms (bottom 4 panels). The x-axis, $u$, shows the velocity in the $r$ direction, whereas the y-axis, $v$, shows the velocity in the $z$ direction. The color bar shows $\dot{e}_{\textrm{nuc}}$.}
+    \plotone{network_u_v_enuc_aprox13.pdf}
+    \plotone{network_u_v_enuc_subch_full_mod.pdf}
+    \plotone{network_u_v_enuc_subch_full.pdf}
+    \plotone{network_u_v_enuc_subch_simple.pdf}
+    %\plotone{network_u_v_enuc_25ms.pdf}
+    %\plotone{network_u_v_enuc_100ms.pdf}
+    \caption{\label{fig:network_u_v_enuc} $u-v$ phase plots for {\tt aprox13} \edit1{(panels in the first row), {\tt subch\_full\_mod} (second row), {\tt subch\_full} (third row), {\tt subch\_simple} (fourth row) at $t = 25$ ms (4 panels on the first column) and $t = 100$ ms (4 panels on the second column)}. The x-axis, $u$, shows the velocity in the $r$ direction, whereas the y-axis, $v$, shows the velocity in the $z$ direction. The color bar shows $\dot{e}_{\textrm{nuc}}$.}
 \end{figure*}
 
 
@@ -747,7 +769,7 @@ To examine the overall impact of different reaction networks on the dynamics of 
 
 \begin{table*}
 \caption{\label{Tab:network_fitted_param}
-Fitted parameters of the fitting functions Eq. \ref{Eq:quadratic_fit} and \ref{Eq:tanh_fit} for {\tt aprox13}, {\tt subch\_full}, {\tt subch\_full\_mod}, and {\tt aprox13\_chu}. The fitting function is applied for $t > 8$ ms.
+Fitted parameters of the fitting functions Eq. \ref{Eq:quadratic_fit} and \ref{Eq:tanh_fit} for {\tt aprox13}, \edit1{{\tt subch\_full\_mod}, {\tt subch\_full}}, and {\tt aprox13\_chu}. The fitting function is applied for $t > 8$ ms.
 }
 
 \begin{ruledtabular}
@@ -768,9 +790,9 @@ C
 \colrule
 {\tt aprox13} & $24.22 \pm 0.23$ & $2.812 \pm 0.015$ & $0.7680\pm 0.0004 $ & N/A & N/A & N/A\\
 
-{\tt subch\_full} & $9.22 \pm 0.82$ & $4.489 \pm 0.067$ & $0.8646 \pm 0.0014$ & $0.150 \pm 0.001$ & $0.0093 \pm 0.0001$ & $-2.551 \pm 0.035$ \\
+{\tt subch\_full\_mod} & $58.53 \pm 0.24$ & $2.122 \pm 0.016$ & $0.7773 \pm 0.0004$ & N/A & N/A & N/A\\
 
-{\tt subch\_full\_mod} & $58.53 \pm 0.24$ & $2.122 \pm 0.016$ & $0.7773 \pm 0.0004$ & N/A & N/A & N/A \\
+{\tt subch\_full} & $9.22 \pm 0.82$ & $4.489 \pm 0.067$ & $0.8646 \pm 0.0014$ & $0.150 \pm 0.001$ & $0.0093 \pm 0.0001$ & $-2.551 \pm 0.035$ \\
 
 {\tt subch\_simple} & $15.60 \pm 0.93$ & $3.961 \pm 0.076$ & $0.8745 \pm 0.0016$ & $0.153 \pm 0.002$ & $0.0091 \pm 0.0001$ & $-2.575 \pm 0.040$\\
  
@@ -800,7 +822,7 @@ Both fitting functions are applied for $t > 8$ ms, and the fitted parameters alo
 
 \begin{table*}
 \caption{\label{Tab:network_instan_vel}
-Instantaneous flame propagation speed at $t = 23$ ms and $t = 100$ ms for {\tt aprox13}, {\tt subch\_full}, {\tt subch\_full\_mod}, {\tt subch\_simple}, and {\tt aprox13\_chu}. $t = 23$ ms and $t=100$ ms represent the acceleration phase for {\tt subch\_full} and {\tt subch\_simple} and the steady phase at the late-stage, respectively. $t_{10}$ represents the theoretical time for the flame to reach 10 km.
+Instantaneous flame propagation speed at $t = 23$ ms and $t = 100$ ms for {\tt aprox13}, \edit1{{\tt subch\_full\_mod}, {\tt subch\_full}}, {\tt subch\_simple}, \edit1{and {\tt aprox13\_chu} are represented by $v_{23}$ and $v_{100}$, respectively.} \edit1{The acceleration phase for {\tt subch\_full} and {\tt subch\_simple} and the steady phase at the late-stage are represented by $t = 23$ ms and $t = 100$ ms, respectively.} \deleted{$t = 23$ ms and $t=100$ ms represent the acceleration phase for {\tt subch\_full} and {\tt subch\_simple} and the steady phase at the late-stage, respectively.} \edit1{The theoretical time for the flame to reach 30 km is represented by $t_{30}$.} \deleted{$t_{10}$ represents the theoretical time for the flame to reach 10 km.}
 }
 
 \begin{ruledtabular}
@@ -812,15 +834,15 @@ Instantaneous flame propagation speed at $t = 23$ ms and $t = 100$ ms for {\tt a
 Name &
 $v_{23}$ [$\mbox{km} \ \mbox{s}^{-1}$] &
 $v_{100}$ [$\mbox{km} \ \mbox{s}^{-1}$] &
-$t_{10}$ [s]
+$t_{30}$ [s]
 \\
 \colrule
 
-{\tt aprox13} & $3.369 \pm 0.016$ & $5.234 \pm 0.027$ & 0.7647 \\
-{\tt subch\_full} & $20.732 \pm 0.284$ & $5.411 \pm 0.105$ & 0.9917 \\
-{\tt subch\_full\_mod} & $3.468 \pm 0.017$ & $7.975 \pm 0.029$ & 0.4873 \\
-{\tt subch\_simple} & $21.095 \pm 0.332$ & $5.521 \pm 0.120$ & 0.8483 \\
-{\tt aprox13\_chu} & $3.106 \pm 0.014$ & $4.874 \pm 0.024$ & 0.7912 \\
+{\tt aprox13} & $3.369 \pm 0.016$ & $5.234 \pm 0.027$ & $1.4419 \pm 0.0064$\\
+{\tt subch\_full\_mod} & $3.468 \pm 0.017$ & $7.975 \pm 0.029$ & $0.9697 \pm 0.0019$ \\
+{\tt subch\_full} & $20.732 \pm 0.284$ & $5.411 \pm 0.105$ & $2.0717 \pm 0.0749$ \\
+{\tt subch\_simple} & $21.095 \pm 0.332$ & $5.521 \pm 0.120$ & $1.6918 \pm 0.0441$ \\
+{\tt aprox13\_chu} & $3.106 \pm 0.014$ & $4.874 \pm 0.024$ & $1.4872 \pm 0.0060$ \\
 % {\tt aprox13\_sdc} & $3.039 \pm 0.014$ & $5.201 \pm 0.024$ & $5.764 \pm 0.027$\\
 % {\tt subch\_full\_sdc} & $19.811 \pm 0.248$ & $5.181 \pm 0.096$ & $5.228 \pm 0.108$\\
 \end{tabular}
@@ -829,9 +851,9 @@ $t_{10}$ [s]
 \end{table*}
 
 
-Using the fitted parameters, the instantaneous speed of the flame front at different times can be calculated, as shown in Table \ref{Tab:network_instan_vel}. We observe that during the acceleration burst phase at $t = 23$ ms, the difference in the instantaneous speed between {\tt subch\_full} and {\tt subch\_simple} can be as much as 7 times higher compared to the other two simulations. Furthermore, {\tt subch\_full\_mod} accelerates towards the end since it still has a sufficient amount of ${}^{12}$C fuel due to the inefficient reaction flows to ${}^{16}$O. Even though the flame front for {\tt subch\_full\_mod} is expected to surpass {\tt subch\_full} and {\tt subch\_simple} at $t \sim 160$ ms, based on Figure \ref{fig:network_front}, $\dot{e}_{\textrm{nuc}}$ from Figure \ref{fig:network_time_profile} appears to reach its peak at $120$ ms. Therefore, there is no guarantee that the lateral propagating flame for {\tt subch\_full\_mod} would exceed its counterparts. 
+Using the fitted parameters, the instantaneous speed of the flame front at different times can be calculated, as shown in Table \ref{Tab:network_instan_vel}. We observe that during the acceleration burst phase at $t = 23$ ms, the difference in the instantaneous speed between {\tt subch\_full} and {\tt subch\_simple} can be as much as 7 times higher compared to the other two simulations. Furthermore, {\tt subch\_full\_mod} accelerates towards the end since it still has a sufficient amount of ${}^{12}$C fuel due to the inefficient reaction flows to ${}^{16}$O. Even though the flame front for {\tt subch\_full\_mod} is expected to surpass {\tt subch\_full} and {\tt subch\_simple} at $t \sim 160$ ms, based on Figure \ref{fig:network_front}, $\dot{e}_{\textrm{nuc}}$ from Figure \ref{fig:network_time_profile} appears to reach its peak at $\sim 120$ ms. \deleted{Therefore, there is no guarantee that the lateral propagating flame for {\tt subch\_full\_mod} would exceed its counterparts} \edit1{In the event of extreme downturns in $\dot{e}_{\textrm{nuc}}$ in the future, there is no assurance that the lateral propagating flame for {\tt subch\_full\_mod} would surpass its counterparts.} 
 
-Assuming that the fitting functions accurately describe the flame propagation, the expected time for the flame to reach a typical neutron star radius of 10 km, $t_{10}$, can be calculated, as shown in Table \ref{Tab:network_instan_vel}. $t_{10}$ serves as a rough prediction for the rise time of XRBs with a pure ${}^{4}$He accretion layer. $t_{10}$ for all models are $\lesssim 1$ sec, whereas $t_{10}$ for {\tt subch\_full} is $\sim 1$ sec, consistent with previous observational studies \citep{galloway:2008}.
+Assuming that the fitting functions accurately describe the flame propagation, the expected time for the flame to \deleted{reach a typical neutron star radius of 10 km} \edit1{propagate laterally across a neutron star with a radius of 10 km or $\pi R \sim 30$ km}, $t_{30}$, can be calculated, as shown in Table \ref{Tab:network_instan_vel}.  \edit1{The quantity $t_{30}$} \deleted{$t_{10}$} serves as a rough prediction for the rise time of XRBs with a pure ${}^{4}$He accretion layer. \edit1{A basic calculation shows that $t_{30}$} \deleted{$t_{10}$} for all models are \deleted{$\lesssim 1$ s} \edit1{$\lesssim 2$ s}, whereas \deleted{$t_{10}$} \edit1{$t_{30}$} for {\tt subch\_full} is \deleted{$\sim 1$ s} \edit1{$\sim 2$ s}, consistent with previous observational studies \citep{galloway:2008}. \edit1{Here we emphasize that $t_{30}$ is extrapolated beyond the data with the assumption that the flame has a sustained constant acceleration. However, this assumption may not hold true. For instance, in the case of {\tt subch\_full\_mod}, $\dot{e}_{\textrm{nuc}}$ already reaches its peak at 120 ms, indicating that the flame's acceleration is not constant. Therefore, $t_{30}$ only serves as an order-of-magnitude calculation.} 
 
 
 \begin{comment}
@@ -873,38 +895,38 @@ In order to give an overview of the computational expenses needed for each simul
 \begin{figure*}
 \centering
 \plotone{screen_temp_50ms.pdf}
-\caption{\label{fig:screen_temp} Slice plots comparing temperature for {\tt aprox13} (top panel) and {\tt aprox13\_chu} (bottom panel) at $t = 50$ ms.}
+\caption{\label{fig:screen_temp} Slice plots comparing temperature for {\tt aprox13} (top panel) and {\tt aprox13\_chu} (bottom panel) at $t = 50$ ms. \edit1{The vertical scaling is stretched to provide better clarity in the vertical flame structure.}}
 \end{figure*}
 
 
 \begin{figure*}
 \centering
-\plotone{screen_gamma_50ms.pdf}
-\caption{\label{fig:screen_gamma_50ms} Slice plots comparing $\Gamma_e$ for {\tt aprox13} (top panel) and {\tt aprox13\_chu} (bottom panel) at $t = 50$ ms.}
+\plotone{screen_gamma_e_50ms.pdf}
+\caption{\label{fig:screen_gamma_50ms} Slice plots comparing $\Gamma_e$ for {\tt aprox13} (top panel) and {\tt aprox13\_chu} (bottom panel) at $t = 50$ ms. \edit1{The vertical scaling is stretched to provide better clarity in the vertical flame structure.}}
 \end{figure*}
 
 
 \begin{figure*}
 \centering
-\plotone{screen_gamma_100ms.pdf}
-\caption{\label{fig:screen_gamma_100ms} Slice plots comparing $\Gamma_e$ for {\tt aprox13} (top panel) and {\tt aprox13\_chu} (bottom panel) at $t = 100$ ms.}
+\plotone{screen_gamma_e_100ms.pdf}
+\caption{\label{fig:screen_gamma_100ms} Slice plots comparing $\Gamma_e$ for {\tt aprox13} (top panel) and {\tt aprox13\_chu} (bottom panel) at $t = 100$ ms. \edit1{The vertical scaling is stretched to provide better clarity in the vertical flame structure.}}
 \end{figure*}
 
-We now present a comparison between the effects of {\tt SCREEN5} and {\tt CHUGUNOV2007} screening routines on the dynamics of the propagating flame in XRBs. Figure \ref{fig:screen_temp} shows the temperature for {\tt aprox13} and {\tt aprox13\_chu} at $t = 50$ ms, which suggests that there are no significant differences in the flame structure between the two models. Figure \ref{fig:screen_gamma_50ms} and \ref{fig:screen_gamma_100ms} show $\Gamma_e$, a measure to determine the approximate screening regime for the flame, at $t = 50$ ms and $t = 100$ ms. 
+We now present a comparison between the effects of {\tt SCREEN5} and {\tt CHUGUNOV2007} screening routines on the dynamics of the propagating flame in XRBs. Figure \ref{fig:screen_temp} shows the temperature for {\tt aprox13} and {\tt aprox13\_chu} at $t = 50$ ms, which suggests that there are no significant differences in the flame structure between the two models. Figure \ref{fig:screen_gamma_50ms} and \ref{fig:screen_gamma_100ms} show $\Gamma_e$ \edit1{(defined in Eq. \ref{Eq:gamma_e_eq})}, \edit1{which} provides a measure to determine the approximate screening regime for the flame, at $t = 50$ ms and $t = 100$ ms. 
 
-Although a general trend of decreasing $\Gamma_e$ is observed as the flame progress, it is noteworthy that there are more fusion processes involving heavier nuclei at later stages of burning. Assuming triple-$\alpha$ process, it can inferred that the Coulomb coupling parameter, $\Gamma \sim 0.05$ and $0.025$ for $t = 50$ ms and $t = 100$ ms. Meanwhile, for oxygen burning at $t = 50$ ms and 100 ms, $\Gamma \sim 0.48$ and $0.32$, respectively. These results indicate that helium burning occurs in the weak screening regime, while heavier nuclei burning processes occur in the intermediate screening regime and gradually transition into the weak regime.
-
-
+Although a general trend of decreasing $\Gamma_e$ is observed as the flame progress, it is noteworthy that there are more fusion processes involving heavier nuclei at later stages of burning. Assuming triple-$\alpha$ process, it can inferred that the Coulomb coupling parameter \edit1{$\Gamma$ (defined in Eq. \ref{Eq:gamma_eq})} $\sim 0.05$ for $t = 50$ ms and $0.025$ for $t = 100$ ms. Meanwhile, for oxygen burning at $t = 50$ ms and 100 ms, $\Gamma \sim 0.48$ and $0.32$, respectively. These results indicate that helium burning occurs in the weak screening regime, while heavier nuclei burning processes occur in the intermediate screening regime and gradually transition into the weak regime.
 
 
-\begin{figure*}
-\centering
-\plotone{screen_time_profile.pdf}
-\caption{\label{fig:screen_profile} Time profiles showing the weighted temperature and energy generation rate of the burning front for {\tt aprox13} and {\tt aprox13\_chu}.}
-\end{figure*}
 
 
-The comparison between {\tt aprox13} and {\tt aprox13\_chu} regarding the weighted temperature and energy generate rate is illustrated in Figure \ref{fig:screen_profile}. This plot illustrates that overall the nuclear energy generation rate of {\tt aprox13} is higher and exhibits a faster increasing rate compared to {\tt aprox13\_chu}. At $t \sim 10$ ms, when the temperature of the two models are approximately equal, the difference in the nuclear energy generation rate indicates that {\tt SCREEN5} provides a stronger screening effect during the initial flame propagation phase compared to {\tt CHUGUNOV2007}.
+% \begin{figure*}
+% \centering
+% \plotone{screen_time_profile.pdf}
+% \caption{\label{fig:screen_profile} Time profiles showing the weighted temperature and energy generation rate of the burning front for {\tt aprox13} and {\tt aprox13\_chu}.}
+% \end{figure*}
+
+
+The comparison between {\tt aprox13} and {\tt aprox13\_chu} regarding the weighted temperature and energy generate rate is illustrated in Figure \edit1{\ref{fig:network_time_profile}}. This plot illustrates that overall the nuclear energy generation rate of {\tt aprox13} is higher and exhibits a faster increasing rate compared to {\tt aprox13\_chu}. At $t \sim 10$ ms, when the temperature of the two models are approximately equal, the difference in the nuclear energy generation rate indicates that {\tt SCREEN5} provides a stronger screening effect during the initial flame propagation phase compared to {\tt CHUGUNOV2007}.
 
 % In order to assess the impact of plasma screening from the two models, we examine the time period $t \sim 10$ ms, when the temperature of the two models are approximately equal to mitigate the influence of temperature on the nuclear energy generation rate. Even during this time interval, the nuclear energy generation rate of {\tt aprox13} remains slightly higher than that of {\tt aprox13\_chu}, indicating that {\tt SCREEN5} provides a stronger screening effect during the initial flame propagation compared to {\tt CHUGUNOV2007}.
 
@@ -918,13 +940,13 @@ It should be emphasized that {\tt SCREEN5} uses calculation routines from \cite{
 %As the system transitions from the weak screening regime in the early stage, the discrepancy in the screening effect becomes more pronounced as we gradually approach the intermediate screening regime, where calculations from \cite{Alastuey_Jancovici:1978} are used.
 
 
-\begin{figure*}
-\centering
-\plotone{screen_front.pdf}
-\caption{\label{fig:screen_front} Flame front position as a function of time for {\tt aprox13} and {\tt aprox13\_chu}. The dashed lines are the fitted curves using Eq. \ref{Eq:quadratic_fit}.}
-\end{figure*}
+% \begin{figure*}
+% \centering
+% \plotone{screen_front.pdf}
+% \caption{\label{fig:screen_front} Flame front position as a function of time for {\tt aprox13} and {\tt aprox13\_chu}. The dashed lines are the fitted curves using Eq. \ref{Eq:quadratic_fit}.}
+% \end{figure*}
 
-Figure \ref{fig:screen_front} depicts the evolution of the flame front position over time. It is observed that the flame speed for {\tt aprox13\_chu} is slower compared to {\tt aprox13} due to the smaller value of $\dot{e}_{\textrm{nuc}}$ at later times. However, the influence of the two screening methods on the overall flame dynamics is minimal. After fitting the data using Eq. \ref{Eq:quadratic_fit}, the fitted parameters and the instantaneous velocity at various times are shown in Table \ref{Tab:network_fitted_param}. 
+Figure \ref{fig:network_front} depicts the evolution of the flame front position over time \edit1{for {\tt aprox13\_chu} comparing to other models}. It is observed that the flame speed for {\tt aprox13\_chu} is slower compared to {\tt aprox13} due to the smaller value of $\dot{e}_{\textrm{nuc}}$ at later times. However, the influence of the two screening methods on the overall flame dynamics is minimal. After fitting the data using Eq. \ref{Eq:quadratic_fit}, the fitted parameters and the instantaneous velocity at various times are shown in Table \ref{Tab:network_fitted_param}. 
 
 % One interesting phenomenon to {\tt aprox13\_chu} is the $u-v$ phase plot for {\tt aprox13\_chu} at $t = 50$ ms and $t = 100$ ms shown in Figure \ref{fig:screen_u_v_enuc}. A similar distribution is observed for {\tt aprox13} at $t = 50$ ms (top left first panel in Figure \ref{fig:network_u_v_enuc}), where the region with high $\dot{e}_{\textrm{nuc}}$ is uniformly distributed around the center. However, high $\dot{e}_{\textrm{nuc}}$ appears to favor regions with positive $u$ as opposed to negative $u$ at $t = 100$ ms, contrary to all the previous models. This phenomenon is suspected to occur due to the comparatively slow instantaneous propagation speed of {\tt aprox13\_chu}. At $t = 120$ ms, $v_{120}$ for {\tt aprox13\_chu} begins to match $v_{100}$ for the other models (see Table \ref{Tab:network_instan_vel}), resulting in a shift of high $\dot{e}_{\textrm{nuc}}$ from the positive $u$ to the negative $u$ at $t=120$ ms. 
 
@@ -953,17 +975,16 @@ Figure \ref{fig:screen_front} depicts the evolution of the flame front position 
 % \end{figure*}
 
 
-\begin{figure*}
-\centering
-\plotone{integration_enuc_50ms.pdf}
-\caption{\label{fig:integration_enuc} Slice plots comparing $\dot{e}_{\textrm{nuc}}$ for {\tt aprox13\_sdc} (top panel) and {\tt subch\_full\_sdc} (bottom panel) at $t = 50$ ms.}
-\end{figure*}
+% \begin{figure*}
+% \centering
+% \plotone{integration_enuc_50ms.pdf}
+% \caption{\label{fig:integration_enuc} Slice plots comparing $\dot{e}_{\textrm{nuc}}$ for {\tt aprox13\_sdc} (top panel) and {\tt subch\_full\_sdc} (bottom panel) at $t = 50$ ms.}
+% \end{figure*}
 
 
 Finally, we compare the simplified-SDC scheme with the traditional Strang-splitting. The overall results using the simplified-SDC scheme are nearly identical to the models that employed Strang-splitting.
 % Figure \ref{fig:integration_abar} shows the mean molecular weight of the flame for {\tt aprox13\_sdc} and {\tt subch\_full\_sdc}, which used the simplified-SDC scheme. This result is nearly identical to the models that employed Strang-splitting as shown in Figure \ref{fig:network_abar_50ms}. 
-One consequence of the strong coupling between advection and reactions is, that to make the energy generation plot, we need to derive the nuclear energy release by subtracting off the advection contribution over a timestep.  In regions where there is not much burning, roundoff error can introduce some noise into the energy generation plot, which is seen as the multiple dotted regions in the $\dot{e}_{\textrm{nuc}}$ plot for {\tt aprox13\_sdc} and {\tt subch\_full\_sdc}.  This is simply an artifact of how we do
-the derivation.
+One consequence of the strong coupling between advection and reactions is, that to make the energy generation plot \edit1{shown in Fig \ref{fig:network_enuc_50ms}}, we need to derive the nuclear energy release by subtracting off the advection contribution over a timestep. In regions where there is not much burning, roundoff error can introduce some noise into the energy generation plot, which is seen as the multiple dotted regions in the $\dot{e}_{\textrm{nuc}}$ plot for {\tt aprox13\_sdc} and {\tt subch\_full\_sdc}.  This is simply an artifact of how we do the derivation.
 
 
 \begin{figure*}
@@ -990,39 +1011,46 @@ The main advantage of the simplified-SDC integration lies in its stronger coupli
 \end{figure*}
 \end{comment}
 
-As shown in \citet{castro_simple_sdc}, in regions where the burning
+\deleted{As shown in \citet{castro_simple_sdc}, in regions where the burning
 is vigorous, the simplified-SDC method provides a better solution
 than Strang splitting.  However, the XRB flame we simulate here
 are not very demanding, so the benefit is minimal.  
-\begin{comment}
-is not extreme enough for nuclear statistical equilibrium to occur, any difference between simplified-SDC and Strang-splitting schemes is expected to be negligible. This is supported by the temperature and $\dot{e}_{\textrm{nuc}}$ profiles for {\tt aprox13\_sdc} and {\tt subch\_full\_sdc} shown in Figure \ref{fig:integration_profile}, which are almost identical, except for minor variations in $\dot{e}_{\textrm{nuc}}$ for {\tt subch\_full} and {\tt subch\_full\_sdc}. Similarly, the flame front position plots shown in Figure \ref{fig:integration_front} for the simplified-SDC simulations are nearly identical compared to their counterparts, with minor variations (Table \ref{Tab:network_instan_vel}) in the instantaneous flame speed calculated using the the fitting function. 
-\end{comment}
+%is not extreme enough for nuclear statistical equilibrium to occur, any difference between simplified-SDC and Strang-splitting schemes is expected to be negligible. This is supported by the temperature and $\dot{e}_{\textrm{nuc}}$ profiles for {\tt aprox13\_sdc} and {\tt subch\_full\_sdc} shown in Figure \ref{fig:integration_profile}, which are almost identical, except for minor variations in $\dot{e}_{\textrm{nuc}}$ for {\tt subch\_full} and {\tt subch\_full\_sdc}. Similarly, the flame front position plots shown in Figure \ref{fig:integration_front} for the simplified-SDC simulations are nearly identical compared to their counterparts, with minor variations (Table \ref{Tab:network_instan_vel}) in the instantaneous flame speed calculated using the the fitting function. 
 As a result, the two simplified-SDC simulations were also more
 computationally-expensive than their Strang counterparts.
-This differs than the case in \citet{castro_simple_sdc} where 
-the simplified-SDC algorithm reduced computational expenses in extreme thermodynamic conditions by mitigating the stiffness of solving reaction equations.
+This differs from the case in \citet{castro_simple_sdc} where 
+the simplified-SDC algorithm reduced computational expenses in extreme thermodynamic conditions by mitigating the stiffness of solving reaction equations.}
 
 
-% \subsection{Computational Expenses}
+\subsection{Computational Expenses}
 
-% \begin{figure*}
-% \centering
-% \plotone{integration_wallclock.pdf}
-% \caption{\label{fig:wallclock_time} Wallclock time used per simulation time as function of simulation time. Wallclock time analysis is only conducted for $t > 40$ ms as our simulation models utilized a combination of CPU and GPU for $t < 40$ ms.}
-% \end{figure*}
-
-
-% In order to give an overview of the computational expenses needed for each simulation models, Figure \ref{fig:wallclock_time} shows the wallclock time used per simulation time as a function of simulation time for all models. As some models utilized CPU while others used GPU for $t < 40$ ms, a wallclock time analysis fails to provide an accurate estimate of the computational expenses incurred by each model for during this time frame. Therefore, we have limited the presentation of our data to $t > 40$ ms. The results indicate that the four simulation models, which differ only in terms of their reaction networks, exhibit the expected trends. Specifically, the simulation model with the smallest network, {\tt aprox13}, that has the fewest isotopes and reaction rates requires the least amount of wallclock hours for $1$ ms of simulation time. Conversely, the largest network, {\tt subch\_full}, requires $\sim 3-4$ times the wallclock time needed by {\tt aprox13} to complete the same simulation. Notably, the computational cost for {\tt subch\_full]\_mod} gradually increases over time, ultimately exceeding {\tt subch\_full}. {\tt aprox13} and {\tt aprox13\_chu} only show negligible differences in the computational cost shown in Figure \ref{fig:wallclock_time}. Regarding the simulation models that utilized different integration methods, both {\tt aprox13\_sdc} and {\tt subch\_full\_sdc} models, which employed simplified-SDC, were found to be more computationally expensive compared to their counterparts, {\tt aprox13} and {\tt subch\_full}, which utilized Strang-splitting. Despite the fact that simplified-SDC is expected to reduce computational expenses in extreme thermodynamic conditions by mitigating the stiffness of solving reaction equations, Figure \ref{fig:wallclock_time} suggests that it may increase computational costs under non-extreme conditions.
+\begin{figure*}
+\centering
+\plotone{integration_wallclock.pdf}
+\caption{\label{fig:wallclock_time} Wallclock time used per ms of simulation time as a function of simulation time. Wallclock time analysis is only conducted for $t > 40$ ms as our simulation models utilized a combination of CPU and GPU for $t < 40$ ms.}
+\end{figure*}
 
 
+\edit1{In order to give an overview of the computational expenses needed for each simulation models, Figure \ref{fig:wallclock_time} shows the wallclock time used per ms of simulation time as a function of simulation time for all models. As some models utilized CPU while others used GPU for $t < 40$ ms, a wallclock time analysis fails to provide an accurate estimate of the computational expenses incurred by each model during this time frame. Therefore, we have limited the presentation of our data to $t > 40$ ms. The results indicate that the four simulation models, which differ only in terms of their reaction networks, exhibit the expected trends. Specifically, the simulation model with the smallest network ({\tt aprox13}) that has the fewest isotopes and reaction rates requires the smallest number of wallclock hours for $1$ ms of simulation time. Conversely, the largest network, {\tt subch\_full}, requires $\sim 3-4$ times the wallclock time needed by {\tt aprox13} to complete the same simulation. Notably, the computational cost for {\tt subch\_full\_mod} gradually increases over time, ultimately exceeding {\tt subch\_full}. {\tt aprox13} and {\tt aprox13\_chu} only show negligible differences in the computational cost shown in Figure \ref{fig:wallclock_time}. }
+
+\edit1{Regarding the simulation models that utilized different integration methods, both {\tt aprox13\_sdc} and {\tt subch\_full\_sdc} models, which employed simplified-SDC, were found to be more computationally expensive compared to their counterparts, {\tt aprox13} and {\tt subch\_full}, which utilized Strang-splitting. As shown in \citet{castro_simple_sdc}, in regions where the burning
+is vigorous, the simplified-SDC method provides a better solution
+than Strang splitting.  However, the XRB flame we simulate here
+is not very demanding, so the benefit is minimal. 
+%As a result, the two simplified-SDC simulations were also more computationally-expensive than their Strang counterparts.
+This differs from the case in \citet{castro_simple_sdc} where 
+the simplified-SDC algorithm reduced computational expenses in extreme thermodynamic conditions by mitigating the stiffness of solving reaction equations.}
+
+%Despite the fact that simplified-SDC is expected to reduce computational expenses in extreme thermodynamic conditions by mitigating the stiffness of solving reaction equations, Figure \ref{fig:wallclock_time} suggests that it may increase computational costs under non-extreme conditions.
 
 
 
 \section{Summary}
 
 We explored the sensitivity of an XRB flame to the details of the
-nuclear physics: size of, and approximations in a reaction network, screening methods, and time-integration strategies. The main
-differences observed with reaction network are:
+nuclear physics: size of, and approximations in a reaction network, screening methods, and time-integration strategies. \edit1{The main takeaways from this study are:}
+
+%The main differences observed with reaction network are:
 
 \begin{itemize}
     \item The $(\alpha, \mbox{p})(\mbox{p}, \gamma)$ approximation continues to be an accurate approach in simulating thermonuclear flames in XRBs. Up to $t = 120$ ms, the attained temperature during propagation of the thermonuclear flame is $\lesssim 2.5 \times 10^9$ K, and any minor errors associated with the approximation do not significantly affect the overall flame propagation. This conclusion is supported by the similar profiles observed between {\tt subch\_full} and {\tt subch\_simple} networks.
@@ -1033,15 +1061,18 @@ differences observed with reaction network are:
     Another possibility that caused the disparity between {\tt subch\_full\_mod} and {\tt aprox13} is the utilization of updated rates from {\sf REACLIB} library in {\tt subch\_full\_mod}, whereas {\tt aprox13} didn't employ the most up-to-date rates. It is plausible that the contemporary adjustments made to the various reaction rates have contributed to the discrepancy between the two networks. However, further investigations are necessary to confirm this hypothesis.
 
     \item  Among the four reaction networks used to simulate He flame propagation in XRBs, the {\tt subch\_simple} network proved to be the most effective. It is the smallest network that captures the initial acceleration of the propagating flame, which drastically alters the overall flame dynamics.
-    
+   
     %the additional rates such as ${}^{14}\mbox{N}(\alpha,\gamma){}^{18}\mbox{F}(\alpha, \mbox{p}){}^{21}\mbox{Ne}$ and could be the leading cause, although further investigation is needed.
+    
+    \item \edit1{Comparing the two screening routines, {\tt SCREEN5} and {\tt CHUNGUNOV2007}, we find that {\tt CHUGUNOV2007} has a slightly weaker screening effect in the weak and intermediate screening regimes. As a consequence, the weaker screening effect from {\tt CHUGUNOV2007} leads to a slightly slower flame compared to the {\tt SCREEN5} model. This result matches our expectations and is in agreement with \cite{Chugunov_2007}.}
+
+    \item \edit1{We investigated the performance of the simplified-SDC scheme in comparison to the traditional Strang-splitting.  For this problem, since the burning is not very vigorous, there is no strong benefit of using simplified-SDC over Strang-splitting.}
 \end{itemize}
 
 
-Comparing the two screening routines, {\tt SCREEN5} and {\tt CHUNGUNOV2007}, we find that {\tt CHUGUNOV2007} has a slightly weaker screening effect in the weak and intermediate screening regimes. As a consequence, the weaker screening effect from {\tt CHUGUNOV2007} leads to a slightly slower flame compared to the {\tt SCREEN5} model. This result matches our expectations and is in agreement with \cite{Chugunov_2007}.
+\deleted{Comparing the two screening routines, {\tt SCREEN5} and {\tt CHUNGUNOV2007}, we find that {\tt CHUGUNOV2007} has a slightly weaker screening effect in the weak and intermediate screening regimes. As a consequence, the weaker screening effect from {\tt CHUGUNOV2007} leads to a slightly slower flame compared to the {\tt SCREEN5} model. This result matches our expectations and is in agreement with \cite{Chugunov_2007}.}
 
-Finally, we investigated the performance of the simplified-SDC scheme in comparison to the traditional Strang-splitting.  For this problem, since the burning is not very vigorous, there is no strong benefit of using simplified-SDC over Strang-splitting.
-
+\deleted{Finally, we investigated the performance of the simplified-SDC scheme in comparison to the traditional Strang-splitting.  For this problem, since the burning is not very vigorous, there is no strong benefit of using simplified-SDC over Strang-splitting.}
 
 Overall, this study gives us confidence that, by using the {\tt subch\_simple} network for our future simulations, we can accurately capture the dynamics of the flame. Our next step is to adapt the current simulation methodology to model a full star flame propagation model. A full star flame propagation simulation allows us to explore how flame dynamics changes subject to the geometric influence, such as the variations in Coriolis force. As the flame encounters the strongest Coriolis force at the pole and the weakest at the equator, its behavior can alter significantly depending on its position. Additionally, a full star simulation provides a more precise estimate of the time required for the flame to engulf the neutron star, which serves as a better approximation of the XRB's rise time.
 
@@ -1053,7 +1084,7 @@ Overall, this study gives us confidence that, by using the {\tt subch\_simple} n
 
 \begin{acknowledgements}
 \castro\ is open-source and freely available at
-\url{http://github.com/AMReX-Astro/Castro}.  The work at Stony Brook was supported by DOE/Office
+\url{http://github.com/AMReX-Astro/Castro}. \edit1{Metadata, input files, scripts to generate plots, etc, are available at \citep{metadata_for_xrb5}.} The work at Stony Brook was supported by DOE/Office
 of Nuclear Physics grant DE-FG02-87ER40317. This research was supported by the Exascale Computing 
 Project (17-SC-20-SC), a collaborative effort of the U.S. Department of Energy
 Office of Science and the National Nuclear Security Administration. This research used
@@ -1082,8 +1113,10 @@ Services.
           valgrind \citep{valgrind},
           VODE \citep{vode},
           yt \citep{yt}
-          pynucastro \citep{pynucastro, pynucastro2,the_pynucastro_development_2022_7239007}}
-% Appendix
+          pynucastro \citep{pynucastro, pynucastro2,the_pynucastro_development_2022_7239007},
+          uncertainties \citep{uncertainties}
+          }
+         % Appendix
 %\appendix
 
 
