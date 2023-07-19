@@ -1,0 +1,695 @@
+\documentclass[modern]{aastex631}
+
+%\usepackage{xcolor,amsmath}
+
+\usepackage[T1]{fontenc}
+
+\newcommand{\sfrac}[2]{\mathchoice%
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptfont0 #1}\kern-.15em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptfont0 #2}}
+  {\kern0em\raise.5ex\hbox{\the\scriptscriptfont0 #1}\kern-.2em/
+    \kern-.15em\lower.25ex\hbox{\the\scriptscriptfont0 #2}} {#1\!/#2}}
+
+\newcommand{\myhalf}{\sfrac{1}{2}}
+\newcommand{\nph}{{n+\myhalf}}
+\newcommand{\nmh}{{n-\myhalf}}
+
+\newcommand{\inp}{\mathrm{in}}
+\newcommand{\outp}{\mathrm{out}}
+
+% boldsymbol means bold italic
+\newcommand{\eb}{{\bf{e}}}
+\newcommand{\Ub}{{\bf{U}}}
+\newcommand{\xb}{{\bf{x}}}
+\newcommand{\kb}{{\bf{k}}}
+\newcommand{\Vb}{{\bf{V}}_n}
+\newcommand{\Vbhat}{{\bf{\widehat{V}}}_n}
+\newcommand{\Omegab}{{\bf{\Omega}}}
+\newcommand{\gb}{{\bf{g}}}
+\newcommand{\rb}{{\bf{r}}}
+
+\newcommand{\pb}{p_\mathrm{base}}
+\newcommand{\epsdot}{\dot{\epsilon}}
+\newcommand{\qburn}{q_\mathrm{burn}}
+\newcommand{\rt}{\tilde{r}_0}
+
+
+\newcommand{\nablab}{\mathbf{\nabla}}
+\newcommand{\dt}{\Delta\ t}
+
+\newcommand{\omegadot}{\dot{\omega}}
+
+\newcommand{\Hext}{H_{\rm ext}}
+\newcommand{\Hnuc}{H_{\rm nuc}}
+\newcommand{\kth}{k_{\rm th}}
+
+\newcommand{\Gammaonebar}{\overline{\Gamma}_1}
+\newcommand{\Sbar}{\overline{S}}
+
+\newcommand{\etarho}{\eta_\rho}
+\newcommand{\etarhoh}{\eta_{\rho~h}}
+
+\newcommand{\Ubt}{\widetilde{\Ub}}
+\newcommand{\wt}{\widetilde{w}}
+
+\newcommand{\He}{$^4$He}
+\newcommand{\C}{$^{12}$C}
+\newcommand{\Fe}{$^{56}$Fe}
+
+\newcommand{\isot}[2]{$^{#2}\mathrm{#1}$}
+\newcommand{\isotm}[2]{{}^{#2}\mathrm{#1}}
+
+\newcommand{\maestro}{{\sf MAESTRO}}
+\newcommand{\castro}{{\sf Castro}}
+\newcommand{\amrex}{{\sf AMReX}}
+\newcommand{\pynucastro}{{\sf pynucastro}}
+
+\newcommand{\avg}[1]{\overline{#1}}
+\newcommand{\avgtwod}[1]{\langle~#1 \rangle}
+\newcommand{\rms}[2]{\left(\delta#1\right)_{r_{#2}}}
+\newcommand{\mymax}[1]{\left(#1\right)_{\rm max}}
+
+\newcommand{\Tb}{\ensuremath{T_\mathrm{base}}}
+\newcommand{\gcc}{\mathrm{g~cm^{-3} }}
+\newcommand{\cms}{\mathrm{cm~s^{-1} }}
+
+\newcommand{\half}{\frac{1}{2}}
+
+
+\newcommand{\ddx}[1]{{\frac{{\partial#1}}{\partial x}}}
+\newcommand{\ddxs}[1]{{\frac{{\partial}}{\partial x}}#1}
+\newcommand{\ddt}[1]{{\frac{{\partial#1}}{\partial t}}}
+\newcommand{\odt}[1]{{\frac{{d#1}}{dt}}}
+\newcommand{\divg}[1]{{\nablab \cdot \left (#1\right)}}
+\newcommand{\dedr}{\left . {\partial{}e}/{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedrd}{\left . \frac{\partial{}e}{\partial\rho}\right |_{T, X_k}}
+\newcommand{\dedX}{\left . {\partial{}e}/{\partial{}X_k} \right |_{\rho, T}}
+\newcommand{\dedXd}{\left . \frac{\partial{}e}{\partial{}X_k} \right |_{\rho, T, X_{j,j\ne k}}}
+\newcommand{\dedT}{\left . {\partial{}e}/{\partial{}T} \right |_{\rho,X_k}}
+\newcommand{\dedTd}{\left . \frac{\partial{}e}{\partial{}T} \right |_{\rho,X_k}}
+
+\newcommand{\Ic}{{\boldsymbol{\mathcal{I}}}}
+\newcommand{\Ics}{{\mathcal{I}}}
+\newcommand{\kmax}{{k_\mathrm{max}}}
+\usepackage{bm}
+
+\newcommand{\Uc}{{\,\bm{\mathcal{U}}}}
+\newcommand{\Fb}{\mathbf{F}}
+\newcommand{\Sc}{\mathbf{S}}
+
+\newcommand{\xv}{{(x)}}
+\newcommand{\yv}{{(y)}}
+\newcommand{\zv}{{(z)}}
+
+\newcommand{\ex}{{\bf e}_x}
+\newcommand{\ey}{{\bf e}_y}
+\newcommand{\ez}{{\bf e}_z}
+
+\newcommand{\Ab}{{\bf A}}
+\newcommand{\Sq}{{\bf S}_\qb}
+\newcommand{\Sqhydro}{{\Sq^{\mathrm{hydro}}}}
+\newcommand{\qb}{{\bf q}}
+
+\newcommand{\Gb}{{\bf G}}
+\newcommand{\Rb}{{\bf R}}
+\newcommand{\Rq}{{\bf R}}
+\newcommand{\Adv}[1]{{\left [\boldsymbol{\mathcal{A}} \left(#1\right)\right]}}
+\newcommand{\Advt}[1]{{\left [\boldsymbol{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
+\newcommand{\Advss}[1]{{\left [{\mathcal{{A}}} \left(#1\right)\right]}}
+\newcommand{\Advsst}[1]{{\left [{\mathcal{\tilde{A}}} \left(#1\right)\right]}}
+\newcommand{\Advs}[1]{\boldsymbol{\mathcal{A}} \left(#1\right)}
+
+
+
+\setlength{\marginparwidth}{0.5in}
+
+\newcommand{\MarginPar}[1]{
+    \marginpar{\vskip-\baselineskip%
+               \raggedright%
+               \tiny\sffamily%
+               {\color{red}\hrule%
+               \smallskip%
+               #1\par%
+               \smallskip%
+               \hrule}}%
+}
+
+\newcommand{\AssignTo}[1]{
+    \marginpar{\vskip-\baselineskip%
+               \raggedright%
+               \tiny\sffamily%
+               {\color{blue}\hrule%
+               \smallskip%
+               #1\par%
+               \smallskip%
+               \hrule}}%
+}
+
+\begin{document}
+%======================================================================
+% Title
+%======================================================================
+\title{Influence of Time Integration Methodology on Double Detonation Type
+Ia Supernova Nucleosynthesis}
+
+\shorttitle{Integration Methods and SNe Ia Nucleosynthesis}
+
+\author[0000-0001-8401-030X]{Michael Zingale}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+             Stony Brook, NY 11794-3800, USA}
+
+\author[0000-0002-2839-107X]{Zhi Chen}
+\affiliation{Department of Physics and Astronomy,
+Stony Brook University,
+Stony Brook, NY 11794-3800, USA}
+
+
+\author{Melissa Rasmussen}
+\affiliation{Stony Brook? Utah?}
+
+\author{Abigail Polin}
+\affiliation{Caltech}
+
+\author[0000-0003-0439-4556]{Max Katz}
+\affiliation{Dept.\ of Physics and Astronomy, Stony Brook University,
+             Stony Brook, NY 11794-3800, USA}
+
+
+\author[0000-0001-5961-1680]{Alexander Smith Clark}
+\affiliation{Department of Physics and Astronomy,
+Stony Brook University,
+Stony Brook, NY 11794-3800, USA}
+
+\author[0000-0003-3603-6868]{Eric T. Johnson}
+\affiliation{Department of Physics and Astronomy,
+Stony Brook University,
+Stony Brook, NY 11794-3800, USA}
+
+\correspondingauthor{Michael Zingale}
+\email{michael.zingale@stonybrook.edu}
+
+
+%======================================================================
+% Abstract and Keywords
+%======================================================================
+\begin{abstract}
+We study the coupling of hydrodynamics and reactions in simulations of
+the double detonation model for Type Ia supernovae.  When assessing the
+convergence of simulations, the focus is usually on spatial resolution, 
+however, the method of coupling the physics together as well as the
+tolerances used in integrating a reaction network also play an important role.
+In this paper, we explore how the choices made in both coupling and integrating the reaction
+portion of a simulation influences the accuracy, efficiency, and the nucleosynthesis
+of simulations of the double detonation model of Type Ia supernovae.
+We find that the stronger coupling between hydrodynamics and reactions,
+afforded by the simplified spectral deferred corrections method introduced
+previousl,y provides a more accurate and efficient result than standard
+operator splitting.  We also find no need to limit reactions rates or reduce the
+simulation timestep to the reaction timescale.  The entire simulation
+methodology used here is freely available as part of the \castro\ simulation
+code.
+\end{abstract}
+
+\keywords{convection---hydrodynamics---methods: numerical}
+
+%======================================================================
+% Introduction
+%======================================================================
+\section{Introduction}\label{Sec:Introduction}
+
+There are many different progenitor models for Type Ia supernova (SN Ia) that
+are currently being explored to explain the observed diversity of SN Ia explosions \cite{taubenberger:2017}.  The double detonation model
+\citep{fink:2007} involves a sub-Chandrasekhar mass white dwarf with a
+thin accreted He layer.  A detonation in the He layer propagates
+around the star while sending a compression wave converging toward the
+center.  This compression wave ignites a carbon detonation that then
+propagates outward from the center of the white dwarf.  Many groups
+have modeled this scenario, varying the initial conditions,
+resolution \citep{rivas:2022}, and reaction networks to understand the robustness of this
+model as well as its connection to observations.
+
+\citep{townsley:2019} \citep{gronow:2020}, \citep{gronow:2021}, \citep{glasner:2018}, \citep{roy:2022}, \citep{shenbildsten:2014}, \cite{polin:2019}, \citep{kushnirkatz:2020}
+
+
+These events are modeled using the Euler equations with reactive and
+gravitational sources:
+\begin{eqnarray}
+\ddt{\rho} + \nabla \cdot (\rho \Ub) &=& 0 \\
+\ddt{(\rho \Ub)} + \nabla \cdot (\rho \Ub \Ub) + \nabla p &=& \rho \gb \\
+\ddt{(\rho E)} + \nabla \cdot (\rho \Ub E + \Ub p) &=& \rho \Ub \cdot \gb + \rho \dot{S} \\
+\ddt{(\rho X_k)} + \nabla \cdot (\rho \Ub X_k) &=& \rho \omegadot_k
+\end{eqnarray}
+where $\rho$ is the mass density, $\Ub$ is the velocity, $E$ is the specific
+total energy, $p$ is the pressure, and $X_k$ are the mass fractions
+of the nuclei that react.  The sources are the gravitational acceleration,
+$\gb$, which is obtained by solving the the Poisson equation
+\begin{equation}
+\nabla^2 \Phi = 4 \pi G \rho
+\end{equation}
+(where $G$ is Newton's constant) for the gravitational potential, $\Phi$, and defining $\gb = -\nabla \Phi$.
+The reaction network provides the species creation rate, $\omegadot$ and the energy generation rate, $\dot{S}$.
+Finally, the system is closed via the equation of state:
+\begin{equation}
+p = p(\rho, e, X_k)
+\end{equation}
+where $e$ is the specific internal energy, obtained as $e = E - |\Ub|^2/2$.
+
+Simulation codes use different methods to advance this system of equations.  For hydrodynamics,
+explicit-in-time integration is usually used, with the timestep, $\Delta t$, restricted by the Courant limit.  In two-dimensions, this is:
+\begin{equation}
+\Delta t = C \min_{i,j} \left \{ \frac{\Delta x}{|u_{i,j}| + c_{i,j}}, \frac{\Delta y}{|v_{i,j}| + c_{i,j}}  \right \}
+\end{equation}
+where $\Delta x$ and $\Delta y$ are the grid width in the $x$- and $y$-directions, $u$ and $v$
+are the $x$- and $y$-components of the velocity and $c$ is the sound
+speed, and the minimum is taken over all zones on the grid.  Here, the
+Courant number, $C$ is required to be $C < 1$ for stability.  We note that
+this is the form of the stability criterion for the corner transport upwind
+formulation \citep{ppmunsplit} of hydrodynamics we use.  Dimensionally-split
+or method-of-lines formulations will have a slighly more restrictive criteria.
+Reactions, on the other hand, tend to be stiff, and are usually evolved
+using implicit-in-time integration, with many small steps taken to
+make up the hydrodynamics timestep $\Delta t$.
+
+A key concern in modeling astrophysical reacting flows is the coupling
+of hydrodynamics and reactions.  If a large amount of energy is dumped
+into a zone, then a large flow will result to carry away this energy,
+requiring tight communication between the reaction and hydrodynamics
+solvers.  This coupling takes various forms in astrophysical
+simulation codes.  The most common method is via operator splitting:
+the advection and reactive terms are treated independently, with each
+process working on the result of the other.  Often, Strang-splitting
+\citep{strang:1968} is used, which alternates advection and reaction
+to yield second-order accuracy in time.  The primary appeal of operator
+splitting is that it is easy to implement---the hydrodynamics and reaction
+solvers are largely independent of one another.
+
+When using operator-splitting, the density remains constant, since there
+is no reaction source in the mass continuity equation.  The mass
+fractions, $X_k$, and energy evolve according to:
+\begin{eqnarray}
+\frac{dX_k}{dt} &= \omegadot_k(\rho, T, X_k) \label{eq:stranga} \\
+\frac{de}{dt} &= \dot{S}(\rho, T, X_k) \\
+T &= T(\rho, e, X_k) \label{eq:strangc}
+\end{eqnarray}
+In the simplest approximation of operator splitting, the
+evolution of the mass fractions is solved alone, without integrating
+the temperature or energy.  This is the form that was used, e.g., in FLASH
+\citep{flash}.  A more accurate operator splitting also includes the
+energy evolution (perhaps in terms of temperature), solving the system Eqs.~\ref{eq:stranga}--\ref{eq:strangc}.  This will require
+calling the equation of state each time we evaluate the righthand side
+of the ODE system, potentially increasing the computational expense.  However, as we showed in
+\citet{strang_rnaas}, this is needed to get second-order convergence.
+
+Detonations can be difficult to model numerically.  One common
+approach is to use a simultion timestep based on the reaction
+timescale, as discussed in \citet{prometheus}, instead of the
+hydrodynamics timescale.  For the double detonation scenario, the
+ignition of the second detonation can be very sensitive to how the
+simulation is run \MarginPar{refs}.  Artifically limiting the
+rates \MarginPar{ref}
+
+In \citet{castro_simple_sdc}, we introduced a method based on the
+ideas of spectral deferred corrections for coupling reactions and
+hydrodyamics (that we called ``simplified-SDC'').  Here, the overall
+time-integration is done iteratively, with the hydrodynamics seeing an
+explicit reactive source, and the reaction update evolving an ODE
+system that includes a piecewise-constant-in-time advective source,
+$\Adv{\Uc}^{n+1/2}$,
+\begin{equation}
+\label{eq:simplesdc}
+\ddt{\Uc} = \Rb(\Uc) + \Adv{\Uc}^{n+1/2}
+\end{equation}
+Here, $\Uc$ is the conserved state, $\Uc = (\rho, \rho \Ub, \rho E,
+\rho X_k)^\intercal$, $\Rb(\Uc)$ are the reactive sources, and
+$\Adv{\Uc}^{n+1/2}$ is an approximation to the advective update over
+the timestep, as computed by the corner transport upwind formulation
+of the piecewise parabolic method
+\citep{ppmunsplit,millercolella:2002,ppm}. Crucially, this advective
+term includes an explicit reaction source term and the update,
+Eq.~\ref{eq:simplesdc} means that the reactions will ``see'' what
+advection is doing as the reaction network is integrated.
+
+In addition to the time-integration strategy, integrating the reaction
+ODE system requires specifying tolerances, usually both an absolute, $\epsilon_\mathrm{abs}$, and relative tolerance, $\epsilon_\mathrm{rel}$, that are combined together into a weight of the form:
+\begin{equation}
+w_i = \epsilon_{\mathrm{abs},i} + \epsilon_{\mathrm{rel},i} |y_i|
+\end{equation}
+where the $y_i$ is one of the variables being integrated by the ODE
+integrator and $i$ is the index, indicating that different tolerances
+can be used for each variable.  Traditionally one set of tolerances is
+used for the mass fractions and another for the energy (if it is
+integrated).  Unfortunately, the tolerances used by simulations are
+not normally reported in papers, and in many cases, may not be easily
+controlled by a code user at runtime (and therefore, users may not be
+aware of what they are using).  Some examples can be found in publicly
+available networks.  For example, the freely available version of the
+{\tt aprox13} network uses $\epsilon_\mathrm{rel} = 10^{-5}$ and a
+floor on the mass fractions corresponding to $\epsilon_\mathrm{abs} =
+10^{-6}$.  Since the simplified-SDC update works in terms of the
+conserved variables, $\Uc$, we apply a density weighting to the absolute tolerances when comparing to the values used in Strang integration.
+
+We considered an extreme version of the double detonation scenario in
+\citet{castro_simple_sdc}---a very large perturbation was applied to
+drive a detonation directly into the underlying carbon-oxygen white
+dwarf.  We showed that the Strang split integration method had
+difficulty with the integration unless we used tighter tolerances,
+while the simplified-SDC method was well-behaved.  Here we look at a
+more realistic setup for a double detonation, with a small
+perturbation that drives a He detonation around the star and a
+compression wave that results in the ignition of a C detonation near
+the center of the star.  We focus on the nucleosynthesis and the
+efficiency of the method.
+
+%======================================================================
+% Results
+%======================================================================
+\section{Simulations and Results}\label{Sec:results}
+
+\subsection{Simulation setup}
+
+We use the freely-available \castro\ simulation code for all the
+simulations shown here.  Our domain uses a 2D axisymmetric geomety
+with a size of $5.12\times 10^9~\mathrm{cm}$ by $1.024\times
+10^{10}~\mathrm{cm}$.  This is much larger than the initial size of
+the star, giving it plenty of room to expand (we note that the figures
+shown in the results section are all zoomed in on the star).  The
+coarse grid is $640\times 1280$ zones and we use 2 levels of
+refinement, each a jump of $2\times$, giving a maximum resolution of
+$20~\mathrm{km}$.  \castro\ uses the \amrex\ library
+\citep{amrex_joss} to manage the grid hierarchy.  The refinement
+strategy is picked to refine on the star and any regions where the
+temperature is greater than $10^8~\mathrm{K}$.  Finally, \castro\ uses
+subcycling, so finer grids are advanced at a smaller timestep than the
+coarse grids.
+
+As noted above, we use the unsplit PPM algorithm for advection, with
+the Riemann solver from \citet{colellaglaz:1985} and the general
+stellar equation of state of \citet{timmes_swesty:2000}.  In
+all simulations, the CFL constraint is the
+only timestep constraint used.  Self-gravity is done using a full
+Poisson solve using geometric multigrid, with Dirichlet boundary
+conditions on the domain boundary computed via a multipole expansion
+with a maximum order of 6.  For the low density regions outside of the
+star, we use a sponge term on the momentum equation to prevent the
+very low density material that is not in hydrostatic equilibrium from
+raining down on the star.
+
+
+All simulations use the same reaction network: the {\tt subch\_simple}
+as described in \cite{zhi2023}.  This includes 22 nuclei and 94 rates
+from ReacLib \citep{reaclib} and is produced with
+\pynucastro\ \citep{pynucastro2}.  \MarginPar{show I show the
+  network?} Importantly, we include
+$\isotm{N}{14}(\alpha,\gamma)\isotm{F}{18}(\alpha,p)\isotm{Ne}{21}$
+which creates protons to allow for
+$\isotm{C}{12}(p,\gamma)\isotm{N}{13}(\alpha,p)\isotm{O}{16}$.  This
+sequence can be faster than
+$\isotm{C}{12}(\alpha,\gamma)\isotm{O}{16}$, as pointed out by
+\citet{shenbildsten} and is important for getting the detonation speed
+correctly.  To reduce the size of the network, we have
+\pynucastro\ combine some $(\alpha,p)(p,\gamma)$ and $(\alpha,\gamma)$
+rates into an effective $(\alpha,\gamma)$ rate.  Screening is provided
+following the procedure in \citet{wallace:1982}, combining the
+screening functions of \citet{graboske:1973,alastuey:1978,itoh:1979}.
+
+The reaction system is integrated using a version of the VODE ODE
+integrator \citep{vode} ported to C++.  Our modifications to this
+integrator are described in \citet{castro_simple_sdc}.  We use an
+analytic approximation to the Jacobian (the main approximation is that
+the species derivatives of the screening function are not included)
+and found that we get best results when we disable the caching of the
+Jacobian in the integrator.
+
+If during the advance of a timestep an
+error is generated (negative density, ODE integration fails, mass
+fractions don't sum to 1, CFL constraint violated at the new time),
+the step is thrown-out and retied with a smaller timestep.  This is
+done on a level-by-level basis in the overall AMR subcycling
+hierarchy.
+
+We will run a suite of simulations all using the same initial model,
+constructed following the methodology in \citet{subchandra}.  We use
+an isothermal core of C/O of $1.1~M_\odot$ with $T = 10^7~\mathrm{K}$
+and a thin transition region where the temperature ramps up to
+$1.75\times 10^8~\mathrm{K}$ and the composition changes to 99\%
+\isot{He}{4} and 1\% \isot{N}{14}.  This He envelope is then
+integrated isentropically.  The density of the transition from the
+underlying CO white dwarf to the He envelope was selected to yield an
+envelope mass of $0.05~M_\odot$.  The code for generating the model is
+freely available at
+\url{https://github.com/amrex-astro/initial_models}.  \MarginPar{should
+  we do a zenodo release of this?}
+
+We place a small temperature perturbation in the He layer using the
+same form as in \citet{castro_simple_sdc}:
+\begin{equation}
+  T = T_0 \left \{ 1 + X(\isotm{He}{4}) f \left [1 + \tanh(2 - \sigma) \right ] \right \}
+\end{equation}
+where
+\begin{equation}
+  \sigma = \left [ x^2 + (y - R_0)^2 \right ]^{1/2} / \lambda
+\end{equation}
+and
+\begin{equation}
+  R_0 = R_\mathrm{pert} + R_\mathrm{base}
+\end{equation}
+where, $R_\mathrm{base}$ is the radius at which the helium layer
+begins and $R_\mathrm{pert}$ is the distance above the base to put the
+perturbation.  We choose $R_\mathrm{pert} = 100~\mathrm{km}$.  The
+temperature is perturbed above the initial model value, denoted as
+$T_0$ here.  The amplitude of the perturbation is $f = 3$ and the
+scale of the perturbation is $\lambda = 12.5~\mathrm{km}$.  This is a
+very small perturbation, with a peak temperature of about $1.1\times
+10^9~\mathrm{K}$, but enough to seed the initial He detonation in the
+envelope.
+
+Our base simulation uses the simplified-SDC integration, a CFL number
+of $0.2$, and sets $\epsilon_\mathrm{rel} = \epsilon_\mathrm{abs} =
+10^{-5}$ for both the species and energy.  Overall, the simulation
+requires 21,784 coarse grid timesteps to evolve to $1.0~\mathrm{s}$ of
+simulation time.
+
+The simulations are all run on the OLCF Frontier machine, using 4
+nodes / 32 AMD GPUs.  The data is moved to the GPUs at the start of
+the simulation and all computation is done there.  Our GPU offloading
+strategy \citep{castro_gpu} takes advantage of the \amrex\ C++
+lambda-capturing functionality to be performance portable.
+All of the simulation code is on github at
+\url{https://github.com/amrex-astro/} and the inputs files, global
+diagnostics used to make the line plots shown below, and metadata
+describing the git hashes, compiler environment, and runtime
+parameters for all of the simulaitons is available at \MarginPar{add
+  Zenodo ref}.
+
+\begin{figure*}[t]
+\centering
+\plotone{subch_Temp_sequence}
+\caption{\label{fig:temp_sequence} Time-sequence of the SDC run showing the temperature.}
+\end{figure*}
+
+Figure~\ref{fig:temp_sequence} shows the evolution of the temperature field for the base simulation.  The initial perturbation is placed at the north pole at $t=0$ and leads to a detonation in the He layer that begins to wrap around the star.  By $0.1~\mathrm{s}$ the detonation is almost halfway around the star and by $0.2~\mathrm{s}$ is almost at the south pole.  Figure~\ref{fig:lapl_rho_sequence} shows shows a Schlieren-style plot, which
+highlights density gradients.  It is constructed by plotting
+$\log_{10}(|\rho^{-1}\nabla^2\rho|)$.  This clearly shows a
+compression wave launched by the early evolution of the He detonation propagating inward toward
+the center of the white dwarf.  
+
+\begin{figure*}[t]
+\centering
+\plotone{subch_lap_rho_sequence}
+\caption{\label{fig:lap_rho_sequence} Time-sequence of the SDC run showing the compression.}
+\end{figure*}
+
+Between $t = 0.3$ and $t = 0.7~\mathrm{s}$ the burning is confined to
+the outer layer, but the compression wave continues to advance inward,
+converging slightly off-center at around $t = 0.7~\mathrm{s}$.  This
+highlights how the speed of the He detonation is important in
+determining how off-center the C detonation ignition will be.  Our
+choice of network was motivated by ensuring that we capture the energy
+release from He burning accurately, in particular the inclusion of the
+$\isotm{C}{12}(p,\gamma)\isotm{N}{13}(\alpha,p)\isotm{O}{16}$
+sequence.
+
+In the bottom row of Figure~\ref{fig:temp_sequence}, we see
+the second detonation ignite near the center of the star and
+begin to propagate outward.  By $1.0~\mathrm{s}$ it has evolved
+past the initial radius of the star and is into the extended
+ash layer left behind by the previous He detonation.
+
+\subsection{Time-integration and Nucleosynthesis}
+
+We now look at how Strang integration to this base simulation.
+
+We run 3 different types of integration methods: traditional operator
+splitting, using Strang splitting, both with integration of the energy
+equation and without any temperature evolution during the
+burn.  \MarginPar{comment about the EOS}.  These methods are compared
+to the simplified-SDC integtation.  We also vary the CFL number and
+the integration tolerances.
+
+\begin{figure}[t]
+\centering
+\plotone{subch_ni56}
+\caption{\label{fig:ni56} \isot{Ni}{56} mass vs.\ time for the different simulations.}
+\end{figure}
+
+Figure~\ref{fig:ni56} shows the total amount of \isot{Ni}{56} as a function of time for
+a suite of simulations.  
+
+To understand the difference in the \isot{Ni}{56} mass between the SDC and Strang simulations at 
+CFL = 0.2, 
+
+\begin{figure}[t]
+\centering
+\plotone{sdc_strang_compare_abar_summary_plot}
+\caption{\label{fig:abar_sdc_strang} Comparison of the mean molecular weight between SDC and Strang (both run with CFL = 0.2) at $t = 0.2~\mathrm{s}$.}
+\end{figure}
+
+
+
+\begin{figure}[t]
+\centering
+\plotone{subch_cpu}
+\caption{\label{fig:cpu} node hours of GPU time for the different simulations.}
+\end{figure}
+
+
+
+
+Figure~\ref{fig:cpu} shows the computational expense of the
+simulations, in terms of node hours.  All simulations were run on 4
+nodes (32 AMD GPUs total).  We note that we have not spent any time on
+load-balancing these simulations, so we should consider this to be
+only a guide.  At the start of the simulation, there are 56 boxes on
+the finest grid (representing 0.77\% of the domain) and at 1 s of
+evolution there is are 60 boxes covering 5.64\% of the domain.  The
+figure shows that the Strang simulation with a CFL of 0.2 is the
+cheapest, but as we saw above, this does not get the nucleosynthesis
+correct.  All of the other Strang simulations are more costly than the
+baseline SDC simulation.  This shows that not only does the
+simplified-SDC simulation accurately evolve the nucleosynthesis, it
+does so in a very efficient fashion.
+
+\subsection{Spatial resolution}
+
+Figure~\ref{fig:res_panel} shows a time sequence of the simplified-SDC
+simulation with CFL = 0.2 and our standard tolerances
+($\epsilon_\mathrm{abs} = \epsilon_\mathrm{rel} = 10^{-5}$ at 3
+diferent spatial resolutions: 40 km, 20 km, and 10 km.  For the 40 km
+run, we simply use one fewer levels of refinement compared to our base
+simulation.  For the 10 km run, we add an additional level of
+refinement that captures only the high temperature regions (including
+the initial He layer) but with the very center always refined by
+adding an additional refinement tagging criteria on densities $\rho >
+7.5\times 10^7~\gcc$.  The first column of the figure shows the
+initial grid structure---darker colors are higher levels of
+refinement.  Each of the boxes shown is a multiple of 32 zones in each
+dimension, with a maximum of 256 zones in any dimension.  This
+refinement for the highest resolution run ensures that we capture the
+convergence of the pressure wave at the center.  For the 10 km resolution
+run, we needed to switch from an analytic approximation to the Jacobian
+to a numerical difference approximation once the C detonation ignited, because
+the evolution became too challenging for the ODE integrator otherwise.
+
+\begin{figure}[t]
+\centering
+\plotone{subch_Temp_res_compare}
+\caption{\label{fig:res_panel} Temperature evolution for SDC simulations with CFL=0.2 at 40, 20, and 10 km.  For the earliest time
+  in each resolution, the AMR grid structure is shown.}
+\end{figure}
+
+
+As we see from the time-evolution, the three different resolutions all
+behave largely the same.  The timescale for the He detonaiton to
+propagate around the star and the timescale at which the second C
+detonation ignite match well.  Figure~\ref{fig:res} shows the
+\isot{Ni}{56} mass produced from the three different simulations.
+Again, the agreement is quite strong.
+
+\begin{figure}[t]
+\centering
+\plotone{subch_ni56_res}
+\caption{\label{fig:res} \isot{Ni}{56} mass vs.\ time for 3 different spatial resolutions, using the simplified-SDC time integration method.}
+\end{figure}
+
+
+We note that these resolution results differ from the conclusions of
+\citet{rivas:2022}.  There are a number of reasons why this might be
+the case.  First the initial models differ \MarginPar{details}.
+Second, we use a much larger reaction network here that better
+captures the energetics.  This means that the He detonation moves
+faster and the subsequent convergence of the pressure wave will be
+more on-center, meaning that the ignition of the C detonation occurs
+at a higher temperature.  Finally, we are using the simplified-SDC time-integration, which that work used Strang splitting \MarginPar{do they give details about e evolution?}
+
+\section{Summary}
+
+Our results suggest that exploring the time-integration method and
+integrator tolerances is an important part of demonstrating
+convergence of simulations involving explosive reacting flows in
+astrophysics.
+
+The ignition of the carbon detonation remains numerically challenging
+for the ODE integrator, especially with large
+timesteps.  \MarginPar{add some info on why it fails} In the near
+future we will show how to include various nuclear statistical
+equilibrium approximations into the simplified-SDC formalism while
+retaining second-order accuracy.  We will also explore different
+integrators and auto-differentiation for the Jacobian (in particular,
+the compositional contribution from the screening)
+
+We encourage authors to include a discussion about the reaction
+integration algorithm and tolerances in papers to permit comparisons
+in the future.
+
+\begin{acknowledgements}
+\castro\ is open-source and freely available at
+\url{http://github.com/AMReX-Astro/Castro}.  The problem setup used
+here is available in the git repo as {\tt subchandra}.  
+
+The work at Stony Brook was supported by DOE/Office of Nuclear
+Physics grant DE-FG02-87ER40317.  This research used resources of the
+National Energy Research Scientific Computing Center, a DOE Office of
+Science User Facility supported by the Office of Science of the
+U.~S.\ Department of Energy under Contract No.\ DE-AC02-05CH11231.
+This research was supported by the Exascale Computing Project
+(17-SC-20-SC), a collaborative effort of the U.S. Department of Energy
+Office of Science and the National Nuclear Security Administration.
+This research used resources of the Oak Ridge Leadership Computing
+Facility at the Oak Ridge National Laboratory, which is supported by
+the Office of Science of the U.S. Department of Energy under Contract
+No. DE-AC05-00OR22725, awarded through the DOE INCITE program.  We
+thank NVIDIA Corporation for the donation of a Titan X and Titan V GPU
+through their academic grant program.  This research has made use of
+NASA's Astrophysics Data System Bibliographic Services.
+\end{acknowledgements}
+
+\facilities{NERSC, OLCF}
+
+\software{\amrex~\citep{amrex_joss},
+          \castro~\citep{castro,castro_joss},
+          GCC (\url{https://gcc.gnu.org/}),
+          helmeos \citep{timmes_swesty:2000},
+          linux (\url{https://www.kernel.org/}),
+          matplotlib (\citealt{Hunter:2007}, \url{http://matplotlib.org/}),
+          NetworkX \citep{networkx},
+          NumPy \citep{numpy,numpy2},
+          pynucastro \citep{pynucastro,pynucastro2},
+          python (\url{https://www.python.org/}),
+          SymPy \citep{sympy},
+          valgrind \citep{valgrind},
+          VODE \citep{vode},
+          yt \citep{yt}}
+
+
+
+%======================================================================
+% References
+%======================================================================
+
+\bibliographystyle{aasjournal}
+\bibliography{ws}
+
+
+\end{document}
