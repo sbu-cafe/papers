@@ -22,12 +22,13 @@ for diag_file, label, color, ls in sdc_files + strang_files:
 
     ax.plot(data[:,1], data[:,2]/8, label=label, color=color, marker=ls, markevery=0.025)
 
-ax.legend(fontsize="small")
+ax.legend(fontsize="medium")
 ax.set_xlim(0.0, 1.0)
 
 ax.grid(linestyle=":", which="both")
 
 ax.set_xlabel("time (s)")
 ax.set_ylabel("node hours")
-fig.set_size_inches((8, 8))
+fig.set_size_inches((6, 6))
+fig.tight_layout()
 fig.savefig("subch_cpu.pdf")
