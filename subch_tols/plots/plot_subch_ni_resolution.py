@@ -29,7 +29,7 @@ for diag_file, label in sdc_files:
 
     ax.plot(data[:,1], data[:,23], label=label)
 
-ax.legend(fontsize="small")
+ax.legend(fontsize="medium")
 ax.set_xlim(0.0, 1.0)
 ax.set_ylim(1.e-2, 1.0)
 ax.set_yscale("log")
@@ -58,5 +58,6 @@ ax2.set_xlim(0.77, 0.7975)
 ax2.set_yscale("log")
 ax2.set_ylim(0.0175, 0.04)
 
-fig.set_size_inches((8, 8))
+fig.set_size_inches((6, 6))
+fig.tight_layout()
 fig.savefig("subch_ni56_res.pdf")

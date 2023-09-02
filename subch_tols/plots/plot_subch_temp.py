@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import ticker
 from mpl_toolkits.axes_grid1.inset_locator import (InsetPosition, inset_axes,
                                                    mark_inset)
 
@@ -12,7 +13,7 @@ sdc_files = [
 strang_files = [
     ("subch_strang/grid_diag.out", "Strang-0.2", "C0", "o"),
 #    ("subch_strang_cfl0.1/grid_diag.out", "Strang CFL=0.1", "C1", "x"),
-    ("subch_strang_noTevolve_fix/grid_diag.out", "Strang, CFL=0.2, no T evolution", "C2", "s"),
+#    ("subch_strang_noTevolve_fix/grid_diag.out", "Strang, CFL=0.2, no T evolution", "C2", "s"),
     ("subch_strang_cfl0.05/grid_diag.out", "Strang-0.05", "C0", "+"),
     ("subch_strang_tol1.e-8/grid_diag.out", "Strang-tol", "C1", "x")]
 
@@ -34,15 +35,17 @@ for diag_file, label, color, ls in sdc_files + strang_files:
 
     ax.plot(data[:,1], data[:,20], label=label, color=color, marker=ls, markevery=0.025)
 
-ax.legend(fontsize="small")
+ax.legend(fontsize="medium")
 ax.set_xlim(0.0, 1.0)
 #ax.set_ylim(1.e-2, 1.0)
 #ax.set_yscale("log")
 ax.grid(linestyle=":", which="both")
+ax.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
 
 ax.set_xlabel("time (s)")
 ax.set_ylabel("peak T (K)")
 
 
-fig.set_size_inches((8, 8))
+fig.set_size_inches((6, 6))
+fig.tight_layout()
 fig.savefig("subch_temp.pdf")

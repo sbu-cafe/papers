@@ -36,7 +36,7 @@ for diag_file, label, color, ls in sdc_files + strang_files:
     mass = data[:,15] + data[:,16] + data[:,17] + data[:,18] + data[:,19] + data[:,20]
     ax.plot(data[:,1], mass, label=label, color=color, marker=ls, markevery=0.025)
 
-ax.legend(fontsize="small")
+ax.legend(fontsize="medium")
 ax.set_xlim(0.0, 1.0)
 ax.set_ylim(1.e-3, 1.0)
 ax.set_yscale("log")
@@ -67,5 +67,6 @@ ax2.set_yscale("log")
 ax2.set_ylim(0.006, 0.01)
 
 
-fig.set_size_inches((8, 8))
+fig.set_size_inches((6, 6))
+fig.tight_layout()
 fig.savefig("subch_intermediate.pdf")

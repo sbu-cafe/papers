@@ -10,7 +10,7 @@ d40 = np.loadtxt("subch_sdc_40km_plt17272.slice")
 fig = plt.figure()
 ax = fig.add_subplot(211)
 
-ax.set_yscale("symlog", linthresh=1.e10)
+ax.set_yscale("symlog", linthresh=1.e12)
 
 ax.plot(d5[:,0], d5[:,3], label="5 km")
 ax.plot(d10[:,0], d10[:,3], label="10 km")
